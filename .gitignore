@@ -3,4 +3,8 @@
 /lib
 /test-result
 /logs
+/eclipse
+.classpath
+.project
+/.settings
 /conf/application.conf
