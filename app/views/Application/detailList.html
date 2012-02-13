@@ -3,9 +3,42 @@
 
 <h1>HouseholdAccounts</h1>
 
-<table>
-	<tr><td><a href="@{Application.index}">Home</a></td><td><a href="@{Application.detailList}">明細表</a></td></tr>
-</table>
-<br>
-明細表画面
+<h2>
+	<table>
+		<tr><td><a href="@{Application.index}">Home</a></td><td>明細表</td></tr>
+	</table>
+</h2>
 
+#{form @detailList()}
+	#{field 'yearFr'}
+	年：<input type="text"　name="${field.name}" />
+	～
+	#{/field}
+#{/form}
+	
+<br>
+
+#{if records.size() > 0}
+<table border="1">
+	<tr>
+		<th>日付</th>
+		<th>項目</th>
+	</tr>
+	#{list items:records, as:'record'}
+		<tr>
+			<td>
+				<input type="text" value="${record.payment_date.format('yyyy/MM/dd')}"
+					size="12" /> 
+			</td>
+			<td>
+				<select size="1">
+					<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+					<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+					<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
+				</select>
+			</td>
+		</tr>
+	#{/list}
+</table>
+
+#{/if}
