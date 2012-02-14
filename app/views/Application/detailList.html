@@ -9,11 +9,12 @@
 	</table>
 </h2>
 
-#{form @detailList()}
+#{form @dtlSrch()}
 	#{field 'yearFr'}
 	年：<input type="text"　name="${field.name}" />
 	～
 	#{/field}
+	<input type="submit" value="絞込" />
 #{/form}
 	
 <br>

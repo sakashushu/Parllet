@@ -27,7 +27,6 @@ public class Application extends Controller {
 //    	Record record = new Record(date, 1, "食費");
 //    	record.save();
     	
-    	
     	String sQuely = "";
     	if(yearFr == null) {
     		Calendar calendar = Calendar.getInstance();
@@ -37,13 +36,12 @@ public class Application extends Controller {
     	}
     	sQuely += " order by payment_date desc";
     	
-    	
     	List<Record> records = Record.find(
     			sQuely).from(0).fetch(50);
-        render(records, yearFr);
+    	
+    	render(records, yearFr);
     }
 	
-    public static void dtlSrch(
-    		) {
+    public static void dtlSrch(String yearFr) {
     }
 }
