@@ -44,4 +44,8 @@ public class Application extends Controller {
 	
     public static void dtlSrch(String yearFr) {
     }
+
+    public static void dtlEdit() {
+    }
+    
 }
