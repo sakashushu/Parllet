@@ -10,15 +10,24 @@
 </h2>
 
 #{form @detailList()}
-	年：<input type="text" name="yearFr" id="yearFr" value="${params.yearFr}" />
+	年：
+	<select size="1" name="yearFr" id="yearFr">
+		<option value="2011"${yFr=='2011' ? ' selected' : ''}>2011</option>
+		<option value="2012"${yFr=='2012' ? ' selected' : ''}>2012</option>
+		<option value="2013"${yFr=='2013' ? ' selected' : ''}>2013</option>
+	</select>
 	～
+	<select size="1" name="yearTo" id="yearTo">
+		<option value="2011"${yTo=='2011' ? ' selected' : ''}>2011</option>
+		<option value="2012"${yTo=='2012' ? ' selected' : ''}>2012</option>
+		<option value="2013"${yTo=='2013' ? ' selected' : ''}>2013</option>
+	</select>
 	<input type="submit" value="絞込" />
 #{/form}
 	
 <br>
 
 #{if records.size() > 0}
-	#{form @dtlEdit()}
 		<table border="1">
 			<tr>
 				<th>日付</th>
@@ -40,5 +49,4 @@
 				</tr>
 			#{/list}
 		</table>
-	#{/form}
 #{/if}

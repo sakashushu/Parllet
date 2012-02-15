@@ -15,31 +15,25 @@ public class Application extends Controller {
         render();
     }
 
-    public static void detailList(String yearFr) {
-    	
-//    	Date date = null;
-//		try {
-//			date = DateFormat.getDateInstance().parse("2012/2/13");
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//    	Record record = new Record(date, 1, "食費");
-//    	record.save();
-    	
+    public static void detailList(String yearFr, String yearTo) {
     	String sQuely = "";
     	if(yearFr == null) {
     		Calendar calendar = Calendar.getInstance();
-    		sQuely = "payment_date >= '" + String.format("%1$tY/%1$tm/%1$td", calendar.getTime()) + "'";
-    	} else {
-    		sQuely = "payment_date >= '" + yearFr + "/01/01'";
+    		yearTo = String.format("%1$tY", calendar.getTime());
+    		calendar.add(Calendar.YEAR, -1);
+//    		yearFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+    		yearFr = String.format("%1$tY", calendar.getTime());
     	}
+   		sQuely = "payment_date between '" + yearFr + "/01/01' and '" + yearTo + "/12/31'";
     	sQuely += " order by payment_date desc";
     	
     	List<Record> records = Record.find(
     			sQuely).from(0).fetch(50);
     	
-    	render(records, yearFr);
+    	String yFr = yearFr;
+    	String yTo = yearTo;
+    	
+    	render(records, yFr, yTo);
     }
 	
     public static void dtlSrch(String yearFr) {
