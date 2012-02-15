@@ -25,6 +25,13 @@
 	<input type="submit" value="絞込" />
 #{/form}
 	
+<form name="calendar"">
+  <input type="text" name="p1" id="p1" size="30" maxlength="10"><input 
+         name="Calendar" 
+         type="button" value="日付セット" 
+         onClick="wrtCalendar(event,this.form.p1,'yyyy/m/d')">
+</form>
+	
 <br>
 
 #{if records.size() > 0}
