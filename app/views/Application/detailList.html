@@ -10,12 +10,13 @@
 </h2>
 
 #{form @detailList()}
-	年：
-	<select size="1" name="yearFr" id="yearFr">
-		<option value="2011"${yFr=='2011' ? ' selected' : ''}>2011</option>
-		<option value="2012"${yFr=='2012' ? ' selected' : ''}>2012</option>
-		<option value="2013"${yFr=='2013' ? ' selected' : ''}>2013</option>
-	</select>
+	日付範囲：
+	<input type="text" id="datepicker" name="dateFr" size="8" value="${dFr}">
+	<script type="text/javascript">
+		$(function(){
+		　$("#datepicker").datepicker();
+		});
+	</script>
 	～
 	<select size="1" name="yearTo" id="yearTo">
 		<option value="2011"${yTo=='2011' ? ' selected' : ''}>2011</option>
@@ -25,13 +26,7 @@
 	<input type="submit" value="絞込" />
 #{/form}
 	
-<form name="calendar"">
-  <input type="text" name="p1" id="p1" size="30" maxlength="10"><input 
-         name="Calendar" 
-         type="button" value="日付セット" 
-         onClick="wrtCalendar(event,this.form.p1,'yyyy/m/d')">
-</form>
-	
+
 <br>
 
 #{if records.size() > 0}
