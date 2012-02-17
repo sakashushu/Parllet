@@ -10,19 +10,37 @@
 </h2>
 
 #{form @detailList()}
-	日付範囲：
-	<input type="text" id="datepicker" name="dateFr" size="8" value="${dFr}">
-	<script type="text/javascript">
-		$(function(){
-		　$("#datepicker").datepicker();
+	<script>
+	$(function() {
+		var dates = $( "#from, #to" ).datepicker({
+			defaultDate: "+1w",
+			changeMonth: true,
+			numberOfMonths: 1,
+			showOtherMonths: true,
+			selectOtherMonths: true,
+			showAnim: "drop",
+			changeMonth: true,
+			changeYear: true,
+			yearRange: '2000:2020',
+			onSelect: function( selectedDate ) {
+				var option = this.id == "from" ? "minDate" : "maxDate",
+					instance = $( this ).data( "datepicker" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates.not( this ).datepicker( "option", option, date );
+			}
 		});
+	});
 	</script>
-	～
-	<select size="1" name="yearTo" id="yearTo">
-		<option value="2011"${yTo=='2011' ? ' selected' : ''}>2011</option>
-		<option value="2012"${yTo=='2012' ? ' selected' : ''}>2012</option>
-		<option value="2013"${yTo=='2013' ? ' selected' : ''}>2013</option>
-	</select>
+
+	<label for="from">日付範囲：</label>
+	<input type="text" id="from" name="dateFr" size="13" value="${dFr}" />
+	<label for="to">～</label>
+	<input type="text" id="to" name="dateTo" size="13" value="${dTo}" />
+
+	
 	<input type="submit" value="絞込" />
 #{/form}
 	
@@ -39,7 +57,7 @@
 				<tr>
 					<td>
 						<input type="text" value="${record.payment_date.format('yyyy/MM/dd')}"
-							size="12" /> 
+							size="13" /> 
 					</td>
 					<td>
 						<select size="1">
