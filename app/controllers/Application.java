@@ -15,7 +15,14 @@ public class Application extends Controller {
         render();
     }
 
-    public static void detailList(String dateFr, String dateTo) {
+    public static void detailList(
+    		String dateFr,	/* 絞込日時範囲（開始） */
+    		String dateTo,	/* 絞込日時範囲（終了） */
+    		List<String> e_payment_date,	/* 変更行の支払日 */
+    		List<Integer> e_item_id,		/* 変更行の項目ＩＤ */
+    		String srch,	/* 「絞込」ボタン */
+    		String save		/* 「保存」ボタン */
+    		) {
     	String sQuely = "";
     	if(dateFr == null) {
     		Calendar calendar = Calendar.getInstance();
@@ -23,27 +30,38 @@ public class Application extends Controller {
     		calendar.add(Calendar.YEAR, -1);
     		dateFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
     	}
-   		sQuely = "payment_date between '" + dateFr + "' and '" + dateTo + "'";
-    	sQuely += " order by payment_date desc";
-    	
-    	List<Record> records = Record.find(
-    			sQuely).from(0).fetch(50);
+
+    	List<Record> records = null;
     	
     	String dFr = dateFr;
     	String dTo = dateTo;
+	    	
+    	// 「保存」ボタンが押された場合
+    	if(save == "保存") {
+    		
+    	}
+
+    	// 検索処理
+   		sQuely = "payment_date between '" + dateFr + "' and '" + dateTo + "'";
+    	sQuely += " order by payment_date desc";
+    	records = Record.find(
+    			sQuely).from(0).fetch(50);
     	
     	render(records, dFr, dTo);
     }
 	
-    public static void dtlSave(String e_payment_date) {
+    public static void dtlSave(List<String> e_payment_date, List<Integer> e_item_id) {
     	String sQuely = "";
-   		sQuely = "payment_date1 > '" + e_payment_date + "'";
+    	Iterator<Integer> iEItemId = e_item_id.iterator();
+    	for (String str : e_payment_date) {
+    		sQuely += "payment_date1 > '" + str + "' itemid(" + iEItemId.next() + ") ";
+    	}
     	sQuely += " order by payment_date desc";
     	
-    	List<Record> records = Record.find(
-    			sQuely).from(0).fetch(50);
+//    	List<Record> records = Record.find(
+//    			sQuely).from(0).fetch(50);
     	
-    	detailList(null, null);
+//    	detailList(null, null, null);
     }
     
 }

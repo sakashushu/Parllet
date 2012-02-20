@@ -22,6 +22,7 @@
 			changeMonth: true,
 			changeYear: true,
 			yearRange: '2000:2020',
+			dateFormat: 'yy/mm/dd',
 			onSelect: function( selectedDate ) {
 				var option = this.id == "from" ? "minDate" : "maxDate",
 					instance = $( this ).data( "datepicker" ),
@@ -41,14 +42,12 @@
 	<input type="text" id="to" name="dateTo" size="13" value="${dTo}" />
 
 	
-	<input type="submit" value="絞込" />
-#{/form}
+	<input type="submit" name="srch" value="絞込" />
 	
 
 <br>
 
 #{if records.size() > 0}
-	#{form @dtlSave()}
 		<table border="1">
 			<tr>
 				<th>日付</th>
@@ -77,7 +76,6 @@
 						 -->
 
 						<select id="combobox" name="e_item_id">
-							<option value=" "${record.item_id==' ' ? ' selected' : ''}>---</option>
 							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
 							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
 							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
@@ -102,6 +100,9 @@
 			</tr>
 		</table>
 		
-		<input type="submit" value="保存" />
-	#{/form}
+		
+		
+		<input type="submit" name="save" value="保存" />
 #{/if}
+
+#{/form}
