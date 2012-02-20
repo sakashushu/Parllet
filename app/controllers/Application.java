@@ -18,12 +18,13 @@ public class Application extends Controller {
     public static void detailList(
     		String dateFr,	/* 絞込日時範囲（開始） */
     		String dateTo,	/* 絞込日時範囲（終了） */
+    		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
     		List<Integer> e_item_id,		/* 変更行の項目ＩＤ */
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
     		) {
-    	String sQuely = "";
+    	String strSrchSql = "";
     	if(dateFr == null) {
     		Calendar calendar = Calendar.getInstance();
     		dateTo = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
@@ -37,15 +38,21 @@ public class Application extends Controller {
     	String dTo = dateTo;
 	    	
     	// 「保存」ボタンが押された場合
-    	if(save == "保存") {
-    		
+    	if(save.equals("保存")) {
+    		String strSaveSql = "";
+    		for (Long lId : e_id) {
+    			strSaveSql = "id = " + lId;
+    			
+    			Record rec = Record.findById(lId);
+//    			rec.payment_date = 
+    		}
     	}
 
     	// 検索処理
-   		sQuely = "payment_date between '" + dateFr + "' and '" + dateTo + "'";
-    	sQuely += " order by payment_date desc";
+   		strSrchSql += "payment_date between '" + dateFr + "' and '" + dateTo + "'";
+    	strSrchSql += " order by payment_date desc";
     	records = Record.find(
-    			sQuely).from(0).fetch(50);
+    			strSrchSql).from(0).fetch(50);
     	
     	render(records, dFr, dTo);
     }
