@@ -35,10 +35,15 @@ public class Application extends Controller {
     	render(records, dFr, dTo);
     }
 	
-    public static void dtlSrch(String yearFr) {
-    }
-
-    public static void dtlEdit() {
+    public static void dtlSave(String e_payment_date) {
+    	String sQuely = "";
+   		sQuely = "payment_date1 > '" + e_payment_date + "'";
+    	sQuely += " order by payment_date desc";
+    	
+    	List<Record> records = Record.find(
+    			sQuely).from(0).fetch(50);
+    	
+    	detailList(null, null);
     }
     
 }

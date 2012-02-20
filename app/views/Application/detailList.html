@@ -48,6 +48,7 @@
 <br>
 
 #{if records.size() > 0}
+	#{form @dtlSave()}
 		<table border="1">
 			<tr>
 				<th>日付</th>
@@ -55,140 +56,16 @@
 			</tr>
 			<!-- 取得レコード(編集可) -->
 			
-				<style>
-				.ui-button { margin-left: -1px; }
-				.ui-button-icon-only .ui-button-text { padding: 0.35em; } 
-				.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
-				</style>
-				<script>
-				(function( $ ) {
-					$.widget( "ui.combobox", {
-						_create: function() {
-							var self = this,
-								select = this.element.hide(),
-								selected = select.children( ":selected" ),
-								value = selected.val() ? selected.text() : "";
-							var input = this.input = $( "<input>" )
-								.insertAfter( select )
-								.val( value )
-								.autocomplete({
-									delay: 0,
-									minLength: 0,
-									source: function( request, response ) {
-										var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-										response( select.children( "option" ).map(function() {
-											var text = $( this ).text();
-											if ( this.value && ( !request.term || matcher.test(text) ) )
-												return {
-													label: text.replace(
-														new RegExp(
-															"(?![^&;]+;)(?!<[^<>]*)(" +
-															$.ui.autocomplete.escapeRegex(request.term) +
-															")(?![^<>]*>)(?![^&;]+;)", "gi"
-														), "<strong>$1</strong>" ),
-													value: text,
-													option: this
-												};
-										}) );
-									},
-									select: function( event, ui ) {
-										ui.item.option.selected = true;
-										self._trigger( "selected", event, {
-											item: ui.item.option
-										});
-									},
-									change: function( event, ui ) {
-										if ( !ui.item ) {
-											var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
-												valid = false;
-											select.children( "option" ).each(function() {
-												if ( $( this ).text().match( matcher ) ) {
-													this.selected = valid = true;
-													return false;
-												}
-											});
-											if ( !valid ) {
-												// remove invalid value, as it didn't match anything
-												$( this ).val( "" );
-												select.val( "" );
-												input.data( "autocomplete" ).term = "";
-												return false;
-											}
-										}
-									}
-								})
-								.addClass( "ui-widget ui-widget-content ui-corner-left" );
-			
-							input.data( "autocomplete" )._renderItem = function( ul, item ) {
-								return $( "<li></li>" )
-									.data( "item.autocomplete", item )
-									.append( "<a>" + item.label + "</a>" )
-									.appendTo( ul );
-							};
-			
-							this.button = $( "<button type='button'>&nbsp;</button>" )
-								.attr( "tabIndex", -1 )
-								.attr( "title", "Show All Items" )
-								.insertAfter( input )
-								.button({
-									icons: {
-										primary: "ui-icon-triangle-1-s"
-									},
-									text: false
-								})
-								.removeClass( "ui-corner-all" )
-								.addClass( "ui-corner-right ui-button-icon" )
-								.click(function() {
-									// close if already visible
-									if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
-										input.autocomplete( "close" );
-										return;
-									}
-			
-									// work around a bug (likely same cause as #5265)
-									$( this ).blur();
-			
-									// pass empty string as value to search for, displaying all results
-									input.autocomplete( "search", "" );
-									input.focus();
-								});
-						},
-			
-						destroy: function() {
-							this.input.remove();
-							this.button.remove();
-							this.element.show();
-							$.Widget.prototype.destroy.call( this );
-						}
-					});
-				})( jQuery );
-			
-				$(function() {
-					$( "#combobox" ).combobox();
-					$( "#toggle" ).click(function() {
-						$( "#combobox" ).toggle();
-					});
-				});
-				</script>
-			
-			
-				
-			<div class="demo">
-			
-			<div class="ui-widget">
-				<label>Your preferred programming language: </label>
-			</div>
-			<button id="toggle">Show underlying select</button>
-			
-			</div><!-- End demo -->
-
-
+			<script>
+			$(function() {
+				$( "#combobox" ).combobox();
+			});
+			</script>
 			
 			#{list items:records, as:'record'}
 				<tr>
 					<td>
-						<input type="text" value="${record.payment_date.format('yyyy/MM/dd')}"
-							size="13" /> 
+						<input type="text" name="e_payment_date" value="${record.payment_date.format('yyyy/MM/dd')}" size="13" /> 
 					</td>
 					<td>
 						<!-- 
@@ -199,7 +76,8 @@
 						</select>
 						 -->
 
-						<select id="combobox">
+						<select id="combobox" name="e_item_id">
+							<option value=" "${record.item_id==' ' ? ' selected' : ''}>---</option>
 							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
 							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
 							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
@@ -207,12 +85,23 @@
 					</td>
 				</tr>
 			#{/list}
+			
 			<!-- 新規レコード -->
 			<tr>
 				<td>
-					<input type="text" />
+					<input type="text" name="n_payment_date" size="13" />
 				</td>
-				
+				<td>
+					<select id="combobox" name="n_item_id">
+						<option value=" " selected="selected">---</option>
+						<option value="1">食費</option>
+						<option value="2">家財住居</option>
+						<option value="3">水道光熱</option>
+					</select>
+				</td>
 			</tr>
 		</table>
+		
+		<input type="submit" value="保存" />
+	#{/form}
 #{/if}
