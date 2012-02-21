@@ -38,14 +38,43 @@ public class Application extends Controller {
     	String dTo = dateTo;
 	    	
     	// 「保存」ボタンが押された場合
-    	if(save.equals("保存")) {
-    		String strSaveSql = "";
-    		for (Long lId : e_id) {
-    			strSaveSql = "id = " + lId;
-    			
-    			Record rec = Record.findById(lId);
-//    			rec.payment_date = 
-    		}
+    	if(save != null) {
+	    	if(save.equals("保存")) {
+	    		// 更新
+	    		String strSaveSql = "";
+	    		
+	    		Iterator<String> strEPayDt = e_payment_date.iterator();
+	    		Iterator<Integer> intEItemId = e_item_id.iterator();
+	    		for (Long lId : e_id) {
+	    			strSaveSql = "id = " + lId;
+	    			
+	    			Record rec = Record.findById(lId);
+	    			
+	    			try {
+						rec.payment_date = DateFormat.getDateInstance().parse(strEPayDt.next());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+	    			rec.item_id = intEItemId.next();
+	    			
+	    			// Validate
+				    validation.valid(rec);
+				    if(validation.hasErrors()) {
+				    	// 以下の描画では駄目かも？
+				        render(records, dFr, dTo);
+				    }
+				    
+				    // 保存
+				    rec.save();
+				    
+	    		}
+	    		
+	    		
+	    		// 新規
+	    		
+	    	}
     	}
 
     	// 検索処理
