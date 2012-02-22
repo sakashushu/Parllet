@@ -100,4 +100,8 @@ public class Application extends Controller {
 //    	detailList(null, null, null);
     }
     
+    public static void test() {
+        render();
+    }
+
 }

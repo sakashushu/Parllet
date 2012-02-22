@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="@{'/public/javascripts/test.js'}"></script>
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+		<script type="text/javascript">google.load('jquery', '1')</script>
+		<script type="text/javascript">google.load('jqueryui', '1')</script>
+		<script type="text/javascript">
+		$(function(){
+		    $('li').addClass('txtBold');
+		    $('li:first-child').addClass('txtRed');
+		    $('li:gt(5)').addClass('txtBlue');
+		    $('li:lt(3)').addClass('txtUnder');
+		    $('li:contains("5")').addClass('txtBig');
+		    $('li:last-child').removeClass();
+		});
+		</script>
+		<noscript>このページは javascript が有効になっている必要があります。</noscript>
+		<link href="@{'/public/stylesheets/test.css'}" rel="stylesheet" type="text/css" />
+		<title>test</title>
+	</head>
+	<body>
+		<div id="result"></div>
+		
+		<br>
+		
+		<ul id="samp1">
+		    <li>サンプルリスト1</li>
+		    <li>サンプルリスト2</li>
+		    <li>サンプルリスト3</li>
+		    <li>サンプルリスト4</li>
+		    <li>サンプルリスト5</li>
+		    <li>サンプルリスト6</li>
+		    <li>サンプルリスト7</li>
+		    <li>サンプルリスト8</li>
+		    <li>サンプルリスト9</li>
+		    <li>サンプルリスト10</li>
+		</ul>
+	</body>
+</html>

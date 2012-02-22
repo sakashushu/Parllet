@@ -1,0 +1,20 @@
+#result {
+	font-size:24px;
+	color:#0000cc;
+}
+
+.txtBold{
+    font-weight: bold;
+}
+.txtRed{
+    color: #ff0000;
+}
+.txtBlue{
+    color: #0000ff;
+}
+.txtUnder{
+    text-decoration: underline;
+}
+.txtBig{
+    font-size:122%;
+}
