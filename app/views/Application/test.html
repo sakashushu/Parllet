@@ -14,6 +14,9 @@
 		    $('li:contains("5")').addClass('txtBig');
 		    $('li:last-child').removeClass();
 		});
+		$(function(){
+		    $('a[href^="http://"]').addClass('exlink');
+		});
 		</script>
 		<noscript>このページは javascript が有効になっている必要があります。</noscript>
 		<link href="@{'/public/stylesheets/test.css'}" rel="stylesheet" type="text/css" />
@@ -36,5 +39,10 @@
 		    <li>サンプルリスト9</li>
 		    <li>サンプルリスト10</li>
 		</ul>
+		
+		<a href="/">このサイトのトップへ</a><br>
+		<a href="http://moto-mono.net/" target="_blank">5509</a><br>
+		<a href="http://h2ham.seesaa.net/" target="_blank">THE HAM MEDIA</a><br>
+		
 	</body>
 </html>

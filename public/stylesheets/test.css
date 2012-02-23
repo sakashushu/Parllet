@@ -18,3 +18,8 @@
 .txtBig{
     font-size:122%;
 }
+
+a.exlink{
+    background: url(/public/images/newwinicon.gif) no-repeat center right;
+    padding-right: 20px;
+}
