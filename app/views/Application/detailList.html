@@ -66,28 +66,20 @@
 					<td>
 						<script type="text/javascript">
 							<!--
-							function Blur(){
-//    		String dateFr,	/* 絞込日時範囲（開始） */
-//    		String dateTo,	/* 絞込日時範囲（終了） */
-//    		List<Long> e_id,				/* 変更行のID */
-//    		List<String> e_payment_date,	/* 変更行の支払日 */
-//    		List<Integer> e_item_id,		/* 変更行の項目ＩＤ */
-//    		String srch,	/* 「絞込」ボタン */
-//    		String save		/* 「保存」ボタン */
-								
-								var listAction = #{jsAction @detailList(':dateFr', ':dateTo', ':e_id', ':e_payment_date', ':e_item_id', ':srch', ':save') /}
-								$('#result').load(
-								    listAction({search: 'x', size: '10', page: '1'}), 
-								    function() {
-								        $('#content').css('visibility', 'visible')
-								    }
-								)
-							}
-							-->
+							var saveAction = #{jsAction @dtlSave(':e_id', ':e_payment_date') /};
+							$(document).ready(function(){
+								$("#btn").click(
+									$('#result').load(
+										saveAction({e_id: 55, e_payment_date: '2012/02/17'})
+									);
+								);
+							});
+							// -->
 						</script>
 						<input type="text" name="e_payment_date"
 							value="${record.payment_date.format('yyyy/MM/dd')}" size="13"
-							onblur="Blur()" /> 
+							id="blr" />
+						<input type="button" value="Click" id="btn">
 					</td>
 					<td>
 						<!-- 

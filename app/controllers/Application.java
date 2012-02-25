@@ -41,13 +41,9 @@ public class Application extends Controller {
     	if(save != null) {
 	    	if(save.equals("保存")) {
 	    		// 更新
-	    		String strSaveSql = "";
-	    		
 	    		Iterator<String> strEPayDt = e_payment_date.iterator();
 	    		Iterator<Integer> intEItemId = e_item_id.iterator();
 	    		for (Long lId : e_id) {
-	    			strSaveSql = "id = " + lId;
-	    			
 	    			Record rec = Record.findById(lId);
 	    			
 	    			try {
@@ -86,18 +82,22 @@ public class Application extends Controller {
     	render(records, dFr, dTo);
     }
 	
-    public static void dtlSave(List<String> e_payment_date, List<Integer> e_item_id) {
-    	String sQuely = "";
-    	Iterator<Integer> iEItemId = e_item_id.iterator();
-    	for (String str : e_payment_date) {
-    		sQuely += "payment_date1 > '" + str + "' itemid(" + iEItemId.next() + ") ";
-    	}
-    	sQuely += " order by payment_date desc";
-    	
-//    	List<Record> records = Record.find(
-//    			sQuely).from(0).fetch(50);
-    	
-//    	detailList(null, null, null);
+    public static void dtlSave(
+    		Long e_id,				/* 変更行のID */
+    		String e_payment_date	/* 変更行の支払日 */
+    		) {
+		// 更新
+		Record rec = Record.findById(e_id);
+//		Record rec = Record.find("id1 = " + e_id).first();
+		try {
+			rec.payment_date = DateFormat.getDateInstance().parse(e_payment_date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	    // 保存
+	    rec.save();
     }
     
     public static void test() {
