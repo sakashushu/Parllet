@@ -87,8 +87,8 @@ public class Application extends Controller {
     		String e_payment_date	/* 変更行の支払日 */
     		) {
 		// 更新
-		Record rec = Record.findById(e_id);
-//		Record rec = Record.find("id1 = " + e_id).first();
+//		Record rec = Record.findById(e_id);
+		Record rec = Record.find("id1 = " + e_id).first();
 		try {
 			rec.payment_date = DateFormat.getDateInstance().parse(e_payment_date);
 		} catch (ParseException e) {

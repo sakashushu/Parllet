@@ -66,20 +66,22 @@
 					<td>
 						<script type="text/javascript">
 							<!--
-							var saveAction = #{jsAction @dtlSave(':e_id', ':e_payment_date') /};
-							$(document).ready(function(){
-								$("#btn").click(
-									$('#result').load(
-										saveAction({e_id: 55, e_payment_date: '2012/02/17'})
-									);
+							$("#btn").click(
+								function(){#{jsAction @dtlSave(':e_id', ':e_payment_date') /};}
+							)
+							function aClick() {
+								var saveAction = #{jsAction @dtlSave(':e_id', ':e_payment_date') /};
+								$('#result').load(
+									saveAction({e_id: 60, e_payment_date: '2012/02/17'})
 								);
-							});
+							}
 							// -->
 						</script>
 						<input type="text" name="e_payment_date"
 							value="${record.payment_date.format('yyyy/MM/dd')}" size="13"
 							id="blr" />
 						<input type="button" value="Click" id="btn">
+						<div id="result"></div>
 					</td>
 					<td>
 						<!-- 
