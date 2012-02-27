@@ -11,8 +11,8 @@
 
 #{form @detailList()}
 	<script>
-	$(function() {
-		var dates = $( "#from, #to" ).datepicker({
+	jQuery(function() {
+		var dates = jQuery( "#from, #to" ).datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
 			numberOfMonths: 1,
@@ -47,81 +47,112 @@
 
 <br>
 
-#{if records.size() > 0}
-		<table border="1">
-			<tr>
-				<th>日付</th>
-				<th>項目</th>
-			</tr>
-			<!-- 取得レコード(編集可) -->
-			
-			<script>
-			$(function() {
-				$( "#combobox" ).combobox();
-			});
-			</script>
-			
-			#{list items:records, as:'record'}
-				<tr>
-					<td>
-						<script type="text/javascript">
-							<!--
-							$("#btn").click(
-								function(){#{jsAction @dtlSave(':e_id', ':e_payment_date') /};}
-							)
-							function aClick() {
-								var saveAction = #{jsAction @dtlSave(':e_id', ':e_payment_date') /};
-								$('#result').load(
-									saveAction({e_id: 60, e_payment_date: '2012/02/17'})
-								);
-							}
-							// -->
-						</script>
-						<input type="text" name="e_payment_date"
-							value="${record.payment_date.format('yyyy/MM/dd')}" size="13"
-							id="blr" />
-						<input type="button" value="Click" id="btn">
-						<div id="result"></div>
-					</td>
-					<td>
-						<!-- 
-						<select size="1">
-							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-						</select>
-						 -->
 
-						<select id="combobox" name="e_item_id">
-							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-						</select>
-					</td>
-				</tr>
-				
-				<input type="hidden" name="e_id" value="${record.id}"/>
+<br>
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function()
+{
+	var mydata = [
+	    #{if records.size() > 0}
+			#{list items:records, as:'record'}
+				{e_g_payDt:"${record.payment_date.format('yyyy/MM/dd')}", e_g_itemId:"${record.item_id}", e_g_itemNm:"${record.item_name}"},
 			#{/list}
-			
-			<!-- 新規レコード -->
+		#{/if}
+	];
+
+	jQuery("#list").jqGrid({
+                    data: mydata,
+		datatype: "local",
+		colNames:['日付', '項目ID', '項目名'],
+		colModel:[
+			{name:'e_g_payDt'},
+			{name:'e_g_itemId'},
+			{name:'e_g_itemNm'},
+		],
+		multiselect: false,
+		caption: '会社一覧'
+	});	
+});
+// -->
+</script>
+
+
+
+#{if records.size() > 0}
+	<table border="1"　id="test">
+		<tr>
+			<th>日付</th>
+			<th>項目</th>
+		</tr>
+		<!-- 取得レコード(編集可) -->
+		
+		<script type="text/javascript">
+		<!--
+		jQuery(function() {
+			jQuery( "#combobox" ).combobox();
+		});
+		// -->
+		</script>
+		
+		#{list items:records, as:'record'}
 			<tr>
 				<td>
-					<input type="text" name="n_payment_date" size="13" />
+					<input type="text" name="e_payment_date"
+						value="${record.payment_date.format('yyyy/MM/dd')}" size="13"
+						id="blr" />
 				</td>
 				<td>
-					<select id="combobox" name="n_item_id">
-						<option value=" " selected="selected">---</option>
-						<option value="1">食費</option>
-						<option value="2">家財住居</option>
-						<option value="3">水道光熱</option>
+					<!-- 
+					<select size="1">
+						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
+					</select>
+					 -->
+
+					<select id="combobox" name="e_item_id">
+						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
 					</select>
 				</td>
 			</tr>
-		</table>
+			
+			<input type="hidden" name="e_id" value="${record.id}"/>
+		#{/list}
 		
+		<!-- 新規レコード -->
+		<tr>
+			<td>
+				<input type="text" name="n_payment_date" size="13" />
+			</td>
+			<td>
+				<select id="combobox" name="n_item_id">
+					<option value=" " selected="selected">---</option>
+					<option value="1">食費</option>
+					<option value="2">家財住居</option>
+					<option value="3">水道光熱</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	
+	
+	
+	<input type="submit" name="save" value="保存" />
+	
+	<br>
+	<br>
+	<table id="list">
+	</table>
+
 		
-		
-		<input type="submit" name="save" value="保存" />
 #{/if}
 
+
+
+
+
 #{/form}
+
