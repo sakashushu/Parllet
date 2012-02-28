@@ -62,16 +62,26 @@ jQuery(document).ready(function()
 	];
 
 	jQuery("#list").jqGrid({
-                    data: mydata,
+        data: mydata,
 		datatype: "local",
 		colNames:['日付', '項目ID', '項目名'],
 		colModel:[
-			{name:'e_g_payDt'},
-			{name:'e_g_itemId'},
-			{name:'e_g_itemNm'},
+			{name:'e_g_payDt', name:'e_g_payDt', width:150,
+				editoptions:{maxlength:10}, editable:true},
+			{name:'e_g_itemId', name:'e_g_itemId', width:100,
+				editoptions:{maxlength:10}, editable:true},
+			{name:'e_g_itemNm', name:'e_g_itemNm', width:200},
 		],
-		multiselect: false,
-		caption: '会社一覧'
+		width: 450,
+		height: 100,
+		cellEdit: true,
+		cellsubmit: 'clientArray',
+		rowNum: ${records.size()},
+		scroll: true,
+		sortname: 'rid',
+		sortorder: "ASC",
+		multiselect: true,
+		caption: '明細表'
 	});	
 });
 // -->
