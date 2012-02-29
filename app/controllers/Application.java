@@ -104,4 +104,45 @@ public class Application extends Controller {
         render();
     }
 
+    
+	/**
+	 * グリッドデータをロードする。
+	 */
+	public static void load(int total, int page, int records, int rows,
+	        String shainId, String shainMei) {
+	    List l = new ArrayList<Employee>();
+	    long count = 0;
+	    if (shainId != null && !shainId.equals("")) {
+	        count = MEmployee.count("byShainId", shainId);
+	        l.addAll(MEmployee.find("byShainId", shainId).fetch(page, rows));
+	    } else if (shainMei != null && !shainMei.equals("")) {
+	        count = MEmployee.count("byShainMeiLike", "%" + shainMei + "%");
+	        l.addAll(MEmployee.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
+	    } else {
+	        count = MEmployee.findAll().size();
+	        l.addAll(MEmployee.all().fetch(page, rows));
+	    }
+	    // データをJson形式に変換する
+	    renderJSON(Common.readJson(l, page, count, rows));
+	
+	}
+	
+	/**
+	 * グリッドデータを保存する。
+	 * @param body
+	 */
+	public static void save(String body) {
+	    // グリッド→エンティティ変換にjsonicを利用
+	    MEmployee[] data = JSON.decode(body, MEmployee[].class);
+	    for (int i = 0; i < data.length; i++) {
+	        // jpaの問題か？エンティティを再取得しなければデータを更新できないので検索処理を実行
+	        MEmployee e = MEmployee.findById(data[i].id);
+	        if (e != null) {
+	            Common.Update(data[i], Employee.class.tostring());
+	            Common.copyField(data[i], e);
+	            e.save();
+	        }
+	    }
+	}
+    
 }

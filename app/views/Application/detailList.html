@@ -89,6 +89,75 @@ jQuery(document).ready(function()
 
 
 
+
+<script type="text/javascript">
+<!--
+//jQuery処理の開始
+jQuery(function() {
+    //-- グリッド定義
+    jQuery("#list2").jqGrid({
+        width: 1200,
+        cellEdit: true,
+        datatype: "json",
+        viewrecords: true,
+        pager: jQuery("#pager"),
+        // play側のメソッド名
+        url: '@{Employee.load()}',
+        mtype: 'POST',
+        cellsubmit: 'clientArray',
+        rowNum: 10,
+        jsonReader: {
+            repeatitems: false,    // オブジェクトの配列をデータとして受け取る
+        },
+        //-- ページング時にcall
+        onPaging: function (b) {
+            reload();
+        }
+    });
+    // 削除ボタンの作成
+    gridComplete: function() {
+        var ids = jQuery("#list2").jqGrid('getDataIDs');
+        for(var i=0; i < ids.length; i++) {
+            var cl = ids[i];
+            be = "<input type='button' value='削除' onclick=\"jQuery('#list').editRow('"+cl+"');\" />"
+            jQuery("#list").jqGrid('setRowData',ids[i],{ddate:be});
+        }
+    }
+    // ページング時のデータポスト処理
+    function reload() {
+        jQuery("#list2").setGridParam({
+            postData: {
+                shainId: jQuery("#shainId").val(),
+                shainMei: jQuery("#shainMei").val()}
+        });
+        jQuery("#list2").trigger("reloadGrid");
+    }
+    // データ保存処理
+    function saveGrid() {
+        var gridData = jQuery("#list2").getChangedCells();
+        var postData = JSON.stringify(gridData);
+        $.ajax({
+                type: "POST",
+                url: "@{Employee.save()}",
+                data: postData,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function(response, textStatus, xhr) {
+                    alert("更新しました。");
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("更新できませんでした。");
+                }
+        );
+    }
+
+});
+// -->
+</script>
+
+
+
+
 #{if records.size() > 0}
 	<table border="1"　id="test">
 		<tr>
