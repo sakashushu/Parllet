@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
 
+import net.arnx.jsonic.JSON;
+
 import models.*;
 
 public class Application extends Controller {
@@ -110,17 +112,17 @@ public class Application extends Controller {
 	 */
 	public static void load(int total, int page, int records, int rows,
 	        String shainId, String shainMei) {
-	    List l = new ArrayList<Employee>();
+	    List l = new ArrayList<AryRecord>();
 	    long count = 0;
 	    if (shainId != null && !shainId.equals("")) {
-	        count = MEmployee.count("byShainId", shainId);
-	        l.addAll(MEmployee.find("byShainId", shainId).fetch(page, rows));
+	        count = Record.count("byShainId", shainId);
+	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
 	    } else if (shainMei != null && !shainMei.equals("")) {
-	        count = MEmployee.count("byShainMeiLike", "%" + shainMei + "%");
-	        l.addAll(MEmployee.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
+	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
+	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
 	    } else {
-	        count = MEmployee.findAll().size();
-	        l.addAll(MEmployee.all().fetch(page, rows));
+	        count = Record.findAll().size();
+	        l.addAll(Record.all().fetch(page, rows));
 	    }
 	    // データをJson形式に変換する
 	    renderJSON(Common.readJson(l, page, count, rows));
@@ -133,12 +135,12 @@ public class Application extends Controller {
 	 */
 	public static void save(String body) {
 	    // グリッド→エンティティ変換にjsonicを利用
-	    MEmployee[] data = JSON.decode(body, MEmployee[].class);
+	    Record[] data = JSON.decode(body, Record[].class);
 	    for (int i = 0; i < data.length; i++) {
 	        // jpaの問題か？エンティティを再取得しなければデータを更新できないので検索処理を実行
-	        MEmployee e = MEmployee.findById(data[i].id);
+	        Record e = Record.findById(data[i].id);
 	        if (e != null) {
-	            Common.Update(data[i], Employee.class.tostring());
+	            Common.Update(data[i], AryRecord.class.toString());
 	            Common.copyField(data[i], e);
 	            e.save();
 	        }

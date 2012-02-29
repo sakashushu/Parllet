@@ -102,7 +102,7 @@ jQuery(function() {
         viewrecords: true,
         pager: jQuery("#pager"),
         // play側のメソッド名
-        url: '@{Employee.load()}',
+        url: '@{Application.load()}',
         mtype: 'POST',
         cellsubmit: 'clientArray',
         rowNum: 10,
@@ -119,8 +119,8 @@ jQuery(function() {
         var ids = jQuery("#list2").jqGrid('getDataIDs');
         for(var i=0; i < ids.length; i++) {
             var cl = ids[i];
-            be = "<input type='button' value='削除' onclick=\"jQuery('#list').editRow('"+cl+"');\" />"
-            jQuery("#list").jqGrid('setRowData',ids[i],{ddate:be});
+            be = "<input type='button' value='削除' onclick=\"jQuery('#list2').editRow('"+cl+"');\" />"
+            jQuery("#list2").jqGrid('setRowData',ids[i],{ddate:be});
         }
     }
     // ページング時のデータポスト処理
@@ -138,7 +138,7 @@ jQuery(function() {
         var postData = JSON.stringify(gridData);
         $.ajax({
                 type: "POST",
-                url: "@{Employee.save()}",
+                url: "@{Application.save()}",
                 data: postData,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",

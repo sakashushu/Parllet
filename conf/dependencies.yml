@@ -2,3 +2,11 @@
 
 require:
     - play
+    - provided -> jsonic 1.2.10
+    
+repositories: 
+    - provided: 
+        type:       local 
+        artifact:   "${application.path}/jar/[module]-[revision].jar" 
+        contains: 
+            - provided -> * 
