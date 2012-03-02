@@ -110,41 +110,69 @@ public class Application extends Controller {
 	/**
 	 * グリッドデータをロードする。
 	 */
-	public static void load(int total, int page, int records, int rows,
-	        String shainId, String shainMei) {
-	    List l = new ArrayList<AryRecord>();
-	    long count = 0;
-	    if (shainId != null && !shainId.equals("")) {
-	        count = Record.count("byShainId", shainId);
-	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
-	    } else if (shainMei != null && !shainMei.equals("")) {
-	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
-	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
-	    } else {
-	        count = Record.findAll().size();
-	        l.addAll(Record.all().fetch(page, rows));
-	    }
-	    // データをJson形式に変換する
-	    renderJSON(Common.readJson(l, page, count, rows));
-	
+	public static void load() {
+//	    List l = new ArrayList<AryRecord>();
+//	    long count = 0;
+//	    if (shainId != null && !shainId.equals("")) {
+//	        count = Record.count("byShainId", shainId);
+//	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
+//	    } else if (shainMei != null && !shainMei.equals("")) {
+//	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
+//	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
+//	    } else {
+//	        count = Record.findAll().size();
+//	        l.addAll(Record.all().fetch(page, rows));
+//	    }
+//	    // データをJson形式に変換する
+//	    renderJSON(Common.readJson(l, page, count, rows));
+		List<Record> rec = Record.findAll();
+		
+		List<String[]> list = new ArrayList<String[]>();
+		String[] strList = {"\"payment_date\":\"2011/03/02\"", "\"item_id\":3", "\"item_name\":\"交通費\""};
+		list.add(strList);
+		
+		renderJSON(list);
 	}
-	
-	/**
-	 * グリッドデータを保存する。
-	 * @param body
-	 */
-	public static void save(String body) {
-	    // グリッド→エンティティ変換にjsonicを利用
-	    Record[] data = JSON.decode(body, Record[].class);
-	    for (int i = 0; i < data.length; i++) {
-	        // jpaの問題か？エンティティを再取得しなければデータを更新できないので検索処理を実行
-	        Record e = Record.findById(data[i].id);
-	        if (e != null) {
-	            Common.Update(data[i], AryRecord.class.toString());
-	            Common.copyField(data[i], e);
-	            e.save();
-	        }
-	    }
-	}
+
+    
+//	/**
+//	 * グリッドデータをロードする。
+//	 */
+//	public static void load(int total, int page, int records, int rows,
+//	        String shainId, String shainMei) {
+//	    List l = new ArrayList<AryRecord>();
+//	    long count = 0;
+//	    if (shainId != null && !shainId.equals("")) {
+//	        count = Record.count("byShainId", shainId);
+//	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
+//	    } else if (shainMei != null && !shainMei.equals("")) {
+//	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
+//	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
+//	    } else {
+//	        count = Record.findAll().size();
+//	        l.addAll(Record.all().fetch(page, rows));
+//	    }
+//	    // データをJson形式に変換する
+//	    renderJSON(Common.readJson(l, page, count, rows));
+//	
+//	}
+//	
+//	/**
+//	 * グリッドデータを保存する。
+//	 * @param body
+//	 */
+//	public static void save(String body) {
+//	    // グリッド→エンティティ変換にjsonicを利用
+//	    Record[] data = JSON.decode(body, Record[].class);
+//	    for (int i = 0; i < data.length; i++) {
+//	        // jpaの問題か？エンティティを再取得しなければデータを更新できないので検索処理を実行
+//	        Record e = Record.findById(data[i].id);
+//	        if (e != null) {
+//	            Common.Update(data[i], AryRecord.class.toString());
+//	            Common.copyField(data[i], e);
+//	            e.save();
+//	        }
+//	    }
+//	}
     
 }

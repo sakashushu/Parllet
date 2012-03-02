@@ -48,6 +48,8 @@
 <br>
 
 
+
+
 <br>
 <script type="text/javascript">
 <!--
@@ -61,16 +63,16 @@ jQuery(document).ready(function()
 		#{/if}
 	];
 
-	jQuery("#list").jqGrid({
+	jQuery("#list2").jqGrid({
         data: mydata,
 		datatype: "local",
 		colNames:['日付', '項目ID', '項目名'],
 		colModel:[
-			{name:'e_g_payDt', name:'e_g_payDt', width:150,
+			{name:'e_g_payDt', width:150,
 				editoptions:{maxlength:10}, editable:true},
-			{name:'e_g_itemId', name:'e_g_itemId', width:100,
+			{name:'e_g_itemId', width:100,
 				editoptions:{maxlength:10}, editable:true},
-			{name:'e_g_itemNm', name:'e_g_itemNm', width:200},
+			{name:'e_g_itemNm', width:200},
 		],
 		width: 450,
 		height: 100,
@@ -82,6 +84,42 @@ jQuery(document).ready(function()
 		sortorder: "ASC",
 		multiselect: true,
 		caption: '明細表'
+	});
+	
+	
+	
+	$("#list").jqGrid({
+		datatype:"local",
+		mtype:'POST',
+		loadError: function (xhr, status, error)
+		{
+		    alert(xhr.statusText)
+		},
+		colNames:['日付', '項目ID', '項目名'],
+		colModel:[
+			{name:'payment_date', index:'payment_date', width:150,
+				editoptions:{maxlength:10}, editable:true},
+			{name:'item_id', index:'item_id', width:100,
+				editoptions:{maxlength:10}, editable:true},
+			{name:'item_name', index:'item_name', width:200},
+		],
+		rownumbers: true,
+		jsonReader :{
+				repeatitems: false			// オブジェクトの配列をデータとして受け取る
+		},
+		caption: 'jsonファイルにアクセスしてグリッド表示する'
+	});
+
+	$("#read_json").click( function(e)
+	{
+		var loadAction = #{jsAction @load() /}
+		// jqGridに指定するオプション
+		var opts = { url     : loadAction,
+		             datatype: "json"  };
+
+		$("#list").setGridParam(opts);
+		$("#list").clearGridData();
+		$("#list").trigger("reloadGrid");
 	});	
 });
 // -->
@@ -89,71 +127,6 @@ jQuery(document).ready(function()
 
 
 
-
-<script type="text/javascript">
-<!--
-//jQuery処理の開始
-jQuery(function() {
-    //-- グリッド定義
-    jQuery("#list2").jqGrid({
-        width: 1200,
-        cellEdit: true,
-        datatype: "json",
-        viewrecords: true,
-        pager: jQuery("#pager"),
-        // play側のメソッド名
-        url: '@{Application.load()}',
-        mtype: 'POST',
-        cellsubmit: 'clientArray',
-        rowNum: 10,
-        jsonReader: {
-            repeatitems: false,    // オブジェクトの配列をデータとして受け取る
-        },
-        //-- ページング時にcall
-        onPaging: function (b) {
-            reload();
-        }
-    });
-    // 削除ボタンの作成
-    gridComplete: function() {
-        var ids = jQuery("#list2").jqGrid('getDataIDs');
-        for(var i=0; i < ids.length; i++) {
-            var cl = ids[i];
-            be = "<input type='button' value='削除' onclick=\"jQuery('#list2').editRow('"+cl+"');\" />"
-            jQuery("#list2").jqGrid('setRowData',ids[i],{ddate:be});
-        }
-    }
-    // ページング時のデータポスト処理
-    function reload() {
-        jQuery("#list2").setGridParam({
-            postData: {
-                shainId: jQuery("#shainId").val(),
-                shainMei: jQuery("#shainMei").val()}
-        });
-        jQuery("#list2").trigger("reloadGrid");
-    }
-    // データ保存処理
-    function saveGrid() {
-        var gridData = jQuery("#list2").getChangedCells();
-        var postData = JSON.stringify(gridData);
-        $.ajax({
-                type: "POST",
-                url: "@{Application.save()}",
-                data: postData,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function(response, textStatus, xhr) {
-                    alert("更新しました。");
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    alert("更新できませんでした。");
-                }
-        );
-    }
-
-});
-// -->
-</script>
 
 
 
@@ -226,7 +199,10 @@ jQuery(function() {
 	<table id="list">
 	</table>
 
-		
+	<div>
+	  <button id="read_json">JSONファイル読み込み</button>
+	</div>
+
 #{/if}
 
 
