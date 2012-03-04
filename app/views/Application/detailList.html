@@ -88,12 +88,12 @@ jQuery(document).ready(function()
 	
 	
 	
-	$("#list").jqGrid({
+	jQuery("#list").jqGrid({
 		datatype:"local",
 		mtype:'POST',
 		loadError: function (xhr, status, error)
 		{
-		    alert(xhr.statusText)
+			alert(xhr.statusText)
 		},
 		colNames:['日付', '項目ID', '項目名'],
 		colModel:[
@@ -110,11 +110,11 @@ jQuery(document).ready(function()
 		caption: 'jsonファイルにアクセスしてグリッド表示する'
 	});
 
-	$("#read_json").click( function(e)
+	jQuery("#read_json").click( function(e)
 	{
 		var loadAction = #{jsAction @load() /}
 		// jqGridに指定するオプション
-		var opts = { url     : loadAction,
+		var opts = { url     : '@{Application.load}',
 		             datatype: "json"  };
 
 		$("#list").setGridParam(opts);
@@ -202,6 +202,9 @@ jQuery(document).ready(function()
 	<div>
 	  <button id="read_json">JSONファイル読み込み</button>
 	</div>
+
+	<table id="list2">
+	</table>
 
 #{/if}
 

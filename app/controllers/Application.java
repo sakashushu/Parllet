@@ -5,6 +5,7 @@ import play.mvc.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import net.arnx.jsonic.JSON;
@@ -131,7 +132,17 @@ public class Application extends Controller {
 		String[] strList = {"\"payment_date\":\"2011/03/02\"", "\"item_id\":3", "\"item_name\":\"交通費\""};
 		list.add(strList);
 		
-		renderJSON(list);
+		List<ARecord> aList = new ArrayList<ARecord>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		for (int i = 0; i < rec.size(); i++) {
+			ARecord arec = new ARecord();
+			arec.setPayment_date(sdf.format(rec.get(i).payment_date));
+			arec.setItem_id(rec.get(i).item_id);
+			arec.setItem_name(rec.get(i).item_name);
+			aList.add(arec);
+		}
+		
+		renderJSON(aList);
 	}
 
     
