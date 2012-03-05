@@ -115,6 +115,8 @@ public class Application extends Controller {
         render();
     }
 
-    
+    public static void sample2_load() {
+    	render();
+    }
     
 }

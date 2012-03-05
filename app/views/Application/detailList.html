@@ -136,11 +136,32 @@
 <script type="text/javascript">
 <!--
 jQuery(document).ready(function() {
-	jQuery("button").click(function() {
-		jQuery("p").load("../public/sv_ajax.txt");
+	jQuery("#b1").click(function() {
+		jQuery("div").load("@{Application.sample2_load} p");
 	});
 });
 // -->
 </script>
-<button>変更</button>
-<p>変更前</p>
+<button id="b1">変更</button>
+<div><p>変更前</p></div>
+
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	jQuery("#b2").click(function() {
+	    jQuery.ajax({
+	        url: '/public/sample3.xml',
+	        dataType: 'xml',
+	        success : function(data){
+	            jQuery("item",data).each(function(){
+	                jQuery("dl").append("<dt><a href='"+jQuery("link",this).text()+"'>"+jQuery("title",this).text()+"</a></dt><dd>"+jQuery("description",this).text()+"</dd>");
+	            });
+	        }
+	    });
+	});
+});
+// -->
+</script>
+<button id="b2">rss</button>
+<dl></dl>
