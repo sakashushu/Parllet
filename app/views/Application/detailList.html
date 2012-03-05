@@ -8,11 +8,13 @@
 		<tr><td><a href="@{Application.index}">Home</a></td><td>明細表</td></tr>
 	</table>
 </h2>
+<br>
 
 #{form @detailList()}
-	<script>
-	jQuery(function() {
-		var dates = jQuery( "#from, #to" ).datepicker({
+	<script type="text/javascript">
+	<!--
+	jQuery(document).ready(function() {
+		var dates = jQuery("#from, #to").datepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
 			numberOfMonths: 1,
@@ -21,196 +23,124 @@
 			showAnim: "drop",
 			changeMonth: true,
 			changeYear: true,
-			yearRange: '2000:2020',
+			yearRange: '1900:2999',
 			dateFormat: 'yy/mm/dd',
 			onSelect: function( selectedDate ) {
 				var option = this.id == "from" ? "minDate" : "maxDate",
-					instance = $( this ).data( "datepicker" ),
-					date = $.datepicker.parseDate(
+					instance = jQuery( this ).data( "datepicker" ),
+					date = jQuery.datepicker.parseDate(
 						instance.settings.dateFormat ||
-						$.datepicker._defaults.dateFormat,
+						jQuery.datepicker._defaults.dateFormat,
 						selectedDate, instance.settings );
 				dates.not( this ).datepicker( "option", option, date );
 			}
 		});
 	});
+	// -->
 	</script>
 
-	<label for="from">日付範囲：</label>
-	<input type="text" id="from" name="dateFr" size="13" value="${dFr}" />
-	<label for="to">～</label>
-	<input type="text" id="to" name="dateTo" size="13" value="${dTo}" />
-
 	
-	<input type="submit" name="srch" value="絞込" />
-	
-
-<br>
-
-
-
-
-<br>
-<script type="text/javascript">
-<!--
-jQuery(document).ready(function()
-{
-	var mydata = [
-	    #{if records.size() > 0}
-			#{list items:records, as:'record'}
-				{e_g_payDt:"${record.payment_date.format('yyyy/MM/dd')}", e_g_itemId:"${record.item_id}", e_g_itemNm:"${record.item_name}"},
-			#{/list}
-		#{/if}
-	];
-
-	jQuery("#list2").jqGrid({
-        data: mydata,
-		datatype: "local",
-		colNames:['日付', '項目ID', '項目名'],
-		colModel:[
-			{name:'e_g_payDt', width:150,
-				editoptions:{maxlength:10}, editable:true},
-			{name:'e_g_itemId', width:100,
-				editoptions:{maxlength:10}, editable:true},
-			{name:'e_g_itemNm', width:200},
-		],
-		width: 450,
-		height: 100,
-		cellEdit: true,
-		cellsubmit: 'clientArray',
-		rowNum: ${records.size()},
-		scroll: true,
-		sortname: 'rid',
-		sortorder: "ASC",
-		multiselect: true,
-		caption: '明細表'
-	});
-	
-	
-	
-	jQuery("#list").jqGrid({
-		datatype:"local",
-		mtype:'POST',
-		loadError: function (xhr, status, error)
-		{
-			alert(xhr.statusText)
-		},
-		colNames:['日付', '項目ID', '項目名'],
-		colModel:[
-			{name:'payment_date', index:'payment_date', width:150,
-				editoptions:{maxlength:10}, editable:true},
-			{name:'item_id', index:'item_id', width:100,
-				editoptions:{maxlength:10}, editable:true},
-			{name:'item_name', index:'item_name', width:200},
-		],
-		rownumbers: true,
-		jsonReader :{
-				repeatitems: false			// オブジェクトの配列をデータとして受け取る
-		},
-		caption: 'jsonファイルにアクセスしてグリッド表示する'
-	});
-
-	jQuery("#read_json").click( function(e)
-	{
-		var loadAction = #{jsAction @load() /}
-		// jqGridに指定するオプション
-		var opts = { url     : '/Application/load',
-		             datatype: "json"  };
-
-		$("#list").setGridParam(opts);
-		$("#list").clearGridData();
-		$("#list").trigger("reloadGrid");
-	});	
-});
-// -->
-</script>
-
-
-
-
-
-
-
-#{if records.size() > 0}
 	<table border="1"　id="test">
 		<tr>
-			<th>日付</th>
-			<th>項目</th>
-		</tr>
-		<!-- 取得レコード(編集可) -->
-		
-		<script type="text/javascript">
-		<!--
-		jQuery(function() {
-			jQuery( "#combobox" ).combobox();
-		});
-		// -->
-		</script>
-		
-		#{list items:records, as:'record'}
-			<tr>
-				<td>
-					<input type="text" name="e_payment_date"
-						value="${record.payment_date.format('yyyy/MM/dd')}" size="13"
-						id="blr" />
-				</td>
-				<td>
-					<!-- 
-					<select size="1">
-						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-					</select>
-					 -->
-
-					<select id="combobox" name="e_item_id">
-						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-					</select>
-				</td>
-			</tr>
-			
-			<input type="hidden" name="e_id" value="${record.id}"/>
-		#{/list}
-		
-		<!-- 新規レコード -->
-		<tr>
-			<td>
-				<input type="text" name="n_payment_date" size="13" />
-			</td>
-			<td>
-				<select id="combobox" name="n_item_id">
-					<option value=" " selected="selected">---</option>
-					<option value="1">食費</option>
-					<option value="2">家財住居</option>
-					<option value="3">水道光熱</option>
+			<th>
+				<input type="submit" name="srch" value="絞込" />
+			</th>
+			<th>日付<br>
+				<input type="text" id="from" name="h_payment_date_fr" size="13" value="${h_payment_date_fr}" />
+				<label for="to">～</label><br>
+				<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
+			</th>
+			<th>項目<br>
+				<select id="h_combo" name="h_item_id">
+					<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
+					<option value="1"${h_item_id==1 ? ' selected' : ''}>食費</option>
+					<option value="2"${h_item_id==2 ? ' selected' : ''}>家財住居</option>
+					<option value="3"${h_item_id==3 ? ' selected' : ''}>水道光熱</option>
 				</select>
-			</td>
+			</th>
 		</tr>
+		#{if records.size() > 0}
+			<!-- 取得レコード(編集可) -->
+			
+			#{list items:records, as:'record'}
+				<tr>
+					<td>
+
+					</td>
+					<td>
+						<script type="text/javascript">
+						<!--
+						jQuery(document).ready(function() {
+							var dates = jQuery("#datepicker_${record.id}").datepicker({
+								defaultDate: "+1w",
+								changeMonth: true,
+								numberOfMonths: 1,
+								showOtherMonths: true,
+								selectOtherMonths: true,
+								showAnim: "drop",
+								changeMonth: true,
+								changeYear: true,
+								yearRange: '1900:2999',
+								dateFormat: 'yy/mm/dd'
+							});
+						});
+						// -->
+						</script>
+					
+						<input type="text" id="datepicker_${record.id}" name="e_payment_date"
+							value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
+					</td>
+					<td>
+						<script type="text/javascript">
+						<!--
+						jQuery(document).ready(function() {
+							// コンボボックスの要素の変更のイベントハンドラー
+							jQuery("#e_combo_${record.id}").bind('change', function() {
+								var selval = jQuery('#e_combo_${record.id} option:selected').val();
+								if(selval=="999") {
+									window.alert('新規です');
+								}
+							});
+						});
+						// -->
+						</script>
+					
+						<select id="e_combo_${record.id}" name="e_item_id">
+							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
+							<option value="999">新規作成</option>
+						</select>
+					</td>
+				</tr>
+				
+				<input type="hidden" name="e_id" value="${record.id}"/>
+			#{/list}
+		#{/if}
 	</table>
-	
-	
-	
-	<input type="submit" name="save" value="保存" />
+		
+		
+		
+	#{if records.size() > 0}
+		<input type="submit" name="save" value="保存" />
+	#{/if}
 	
 	<br>
 	<br>
-	<table id="list">
-	</table>
-
-	<div>
-	  <button id="read_json">JSONファイル読み込み</button>
-	</div>
-
-	<table id="list2">
-	</table>
-
-#{/if}
-
-
+	
 
 
 
 #{/form}
 
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function() {
+	jQuery("button").click(function() {
+		jQuery("p").load("../public/sv_ajax.txt");
+	});
+});
+// -->
+</script>
+<button>変更</button>
+<p>変更前</p>

@@ -18,9 +18,10 @@ public class Application extends Controller {
         render();
     }
 
-    public static void detailList(
-    		String dateFr,	/* 絞込日時範囲（開始） */
-    		String dateTo,	/* 絞込日時範囲（終了） */
+	public static void detailList(
+    		String h_payment_date_fr,	/* 絞込日時範囲（開始） */
+    		String h_payment_date_to,	/* 絞込日時範囲（終了） */
+    		Integer h_item_id,	/* 絞込項目ＩＤ */
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
     		List<Integer> e_item_id,		/* 変更行の項目ＩＤ */
@@ -28,162 +29,92 @@ public class Application extends Controller {
     		String save		/* 「保存」ボタン */
     		) {
     	String strSrchSql = "";
-    	if(dateFr == null) {
+    	if(h_payment_date_fr == null) {
     		Calendar calendar = Calendar.getInstance();
-    		dateTo = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-    		calendar.add(Calendar.YEAR, -1);
-    		dateFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+    		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
     	}
 
     	List<Record> records = null;
     	
-    	String dFr = dateFr;
-    	String dTo = dateTo;
-	    	
     	// 「保存」ボタンが押された場合
     	if(save != null) {
 	    	if(save.equals("保存")) {
+			    records = new ArrayList<Record>();
 	    		// 更新
 	    		Iterator<String> strEPayDt = e_payment_date.iterator();
 	    		Iterator<Integer> intEItemId = e_item_id.iterator();
 	    		for (Long lId : e_id) {
 	    			Record rec = Record.findById(lId);
-	    			
 	    			try {
-						rec.payment_date = DateFormat.getDateInstance().parse(strEPayDt.next());
+	    				// 変更有無チェック用のレコードにセット
+	    				Record eRec = new Record(
+	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
+	    						intEItemId.next(),
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						0,
+	    						0,
+	    						"",
+	    						null,
+	    						"",
+	    						"",
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						"");
+	    				
+		    			// Validate
+					    validation.valid(eRec);
+					    if(validation.hasErrors()) {
+					    	// 以下の描画では駄目かも？
+					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					    }
+	    				// 何れかの項目が変更されていた行だけ更新
+	    				if (rec.payment_date != eRec.payment_date ||
+	    						rec.item_id != eRec.item_id) {
+							rec.payment_date = eRec.payment_date;
+			    			rec.item_id = eRec.item_id;
+						    
+						    // 保存
+						    rec.save();
+	    				}
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
-	    			rec.item_id = intEItemId.next();
-	    			
-	    			// Validate
-				    validation.valid(rec);
-				    if(validation.hasErrors()) {
-				    	// 以下の描画では駄目かも？
-				        render(records, dFr, dTo);
-				    }
-				    
-				    // 保存
-				    rec.save();
-				    
+	    			// 編集後の行をそのまま戻す
+				    records.add(rec);
 	    		}
-	    		
-	    		
-	    		// 新規
-	    		
 	    	}
+    	} else {
+	    	// 検索処理
+	    	//  日付範囲
+	   		strSrchSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
+	    	//  項目
+	   		if(h_item_id != null) {
+	   			if(h_item_id != 0) {
+	   				strSrchSql += " and item_id = " + h_item_id;
+	   			}
+	   		}
+	    	strSrchSql += " order by payment_date";
+	    	records = Record.find(
+	    			strSrchSql).from(0).fetch(50);
     	}
 
-    	// 検索処理
-   		strSrchSql += "payment_date between '" + dateFr + "' and '" + dateTo + "'";
-    	strSrchSql += " order by payment_date desc";
-    	records = Record.find(
-    			strSrchSql).from(0).fetch(50);
-    	
-    	render(records, dFr, dTo);
+    	render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
     }
 	
-    public static void dtlSave(
-    		Long e_id,				/* 変更行のID */
-    		String e_payment_date	/* 変更行の支払日 */
-    		) {
-		// 更新
-//		Record rec = Record.findById(e_id);
-		Record rec = Record.find("id1 = " + e_id).first();
-		try {
-			rec.payment_date = DateFormat.getDateInstance().parse(e_payment_date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	    // 保存
-	    rec.save();
-    }
-    
-    public static void test() {
+	public static void test() {
         render();
     }
 
     
-	/**
-	 * グリッドデータをロードする。
-	 */
-	public static void load() {
-//	    List l = new ArrayList<AryRecord>();
-//	    long count = 0;
-//	    if (shainId != null && !shainId.equals("")) {
-//	        count = Record.count("byShainId", shainId);
-//	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
-//	    } else if (shainMei != null && !shainMei.equals("")) {
-//	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
-//	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
-//	    } else {
-//	        count = Record.findAll().size();
-//	        l.addAll(Record.all().fetch(page, rows));
-//	    }
-//	    // データをJson形式に変換する
-//	    renderJSON(Common.readJson(l, page, count, rows));
-		List<Record> rec = Record.findAll();
-		
-		List<String[]> list = new ArrayList<String[]>();
-		String[] strList = {"\"payment_date\":\"2011/03/02\"", "\"item_id\":3", "\"item_name\":\"交通費\""};
-		list.add(strList);
-		
-		List<ARecord> aList = new ArrayList<ARecord>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		for (int i = 0; i < rec.size(); i++) {
-			ARecord arec = new ARecord();
-			arec.setPayment_date(sdf.format(rec.get(i).payment_date));
-			arec.setItem_id(rec.get(i).item_id);
-			arec.setItem_name(rec.get(i).item_name);
-			aList.add(arec);
-		}
-		
-		renderJSON(aList);
-	}
-
-    
-//	/**
-//	 * グリッドデータをロードする。
-//	 */
-//	public static void load(int total, int page, int records, int rows,
-//	        String shainId, String shainMei) {
-//	    List l = new ArrayList<AryRecord>();
-//	    long count = 0;
-//	    if (shainId != null && !shainId.equals("")) {
-//	        count = Record.count("byShainId", shainId);
-//	        l.addAll(Record.find("byShainId", shainId).fetch(page, rows));
-//	    } else if (shainMei != null && !shainMei.equals("")) {
-//	        count = Record.count("byShainMeiLike", "%" + shainMei + "%");
-//	        l.addAll(Record.find("byShainMeiLike", "%" + shainMei + "%").fetch(page, rows));
-//	    } else {
-//	        count = Record.findAll().size();
-//	        l.addAll(Record.all().fetch(page, rows));
-//	    }
-//	    // データをJson形式に変換する
-//	    renderJSON(Common.readJson(l, page, count, rows));
-//	
-//	}
-//	
-//	/**
-//	 * グリッドデータを保存する。
-//	 * @param body
-//	 */
-//	public static void save(String body) {
-//	    // グリッド→エンティティ変換にjsonicを利用
-//	    Record[] data = JSON.decode(body, Record[].class);
-//	    for (int i = 0; i < data.length; i++) {
-//	        // jpaの問題か？エンティティを再取得しなければデータを更新できないので検索処理を実行
-//	        Record e = Record.findById(data[i].id);
-//	        if (e != null) {
-//	            Common.Update(data[i], AryRecord.class.toString());
-//	            Common.copyField(data[i], e);
-//	            e.save();
-//	        }
-//	    }
-//	}
     
 }
