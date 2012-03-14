@@ -57,6 +57,54 @@ function view(data) {
     videos.appendChild(a);
   }
 }
+
+function list1() {
+	// オブジェクトの生成
+	var obj = {"color": "green"};
+
+	// "color" プロパティにアクセス
+	alert(obj.color);       // "green"
+	
+	alert(obj["color"]);    // "green"
+}
+function list2() {
+	// 配列の生成
+	var array = ["red", "green", "blue"];
+	
+	// 配列の各要素にアクセス
+	alert(array[0]);    // "red"
+	alert(array[1]);    // "green"
+	alert(array[2]);    // "blue"
+}
+function list3() {
+	// オブジェクトの生成
+	var obj = {
+	    "title" : "reunion",
+	    "users": [
+	        {
+	            "name": "aoki",
+	            "code": "0001",
+	            "age": 34
+	        },
+	        {
+	            "name": "ueno",
+	            "code": "0002",
+	            "age": 33
+	        }
+	    ]
+	};
+	
+	// 各メンバにアクセス
+	alert(obj.title);            // "reunion"
+	
+	alert(obj.users[0].name);    // "aoki"
+	alert(obj.users[0].code);    // "0001"
+	alert(obj.users[0].age);     // "34"
+	
+	alert(obj.users[1].name);    // "ueno"
+	alert(obj.users[1].code);    // "0002"
+	alert(obj.users[1].age);     // "33"
+}
 // -->
 </script>
 
@@ -66,3 +114,13 @@ function view(data) {
 </form>
 <div id="videos"></div>
 
+<br>
+<form onsubmit="list1(); return false;">
+  <input type="submit" value="list1">
+</form>
+<form onsubmit="list2(); return false;">
+  <input type="submit" value="list2">
+</form>
+<form onsubmit="list3(); return false;">
+  <input type="submit" value="list3">
+</form>
