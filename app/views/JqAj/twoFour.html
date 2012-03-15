@@ -1,0 +1,48 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function() {
+	// submitイベントハンドラ
+	jQuery("#frmSearch").submit(function(){
+		search(jQuery("#keyword").val());
+		return false;
+	});
+});
+
+function search(keyword) {
+	// (1) 表示領域を初期化します。
+	jQuery("#videos").text("Loading...");
+
+	// (2) ajax通信を行います。
+	jQuery.ajax({
+		dataType: "jsonp",  // (3) データ形式はJSONPを指定します。
+		data: {				// (4) リクエストパラメータを定義します。
+			"vq": keyword,
+			"max-results": "10",
+			"alt": "json-in-script"
+		},
+		cache: true,		// (5) キャッシュを使用します。
+		url: "http://gdata.youtube.com/feeds/api/videos",
+		success: function (data) {	// (6) データ取得に成功した場合の処理を定義します。
+			jQuery("#videos").empty();
+			jQuery.each(data.feed.entry, function(i, item) {	// (7) entryの各要素へアクセスします。
+				var group = item.media$group;
+				
+				jQuery("<a/>")														// (8) a要素を生成
+					.attr("href", group.media$player[0].url)						// (9) a要素のhref属性を設定
+					.append("<img src='" + group.media$thumbnail[0].url + "'/>")	// (10) a要素の子要素にimg要素を追加
+					.appendTo("#videos");											// (11) a要素を表示領域の子要素に追加
+			});
+		}
+	});
+}
+// -->
+</script>
+
+<form id="frmSearch">
+  <input type="text" id="keyword">
+  <input type="submit" value="検索">
+</form>
+<div id="videos"></div>
