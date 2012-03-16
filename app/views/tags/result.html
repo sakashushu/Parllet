@@ -1,6 +1,13 @@
 <h3>result</h3>
+#{if results}
 <ul>
 	#{list items:results, as:'result' }
 	<li>${result}</li>
 	#{/list}
 </ul>
+#{/if}
+#{else}
+no results
+<br>
+<br>
+#{/else}
