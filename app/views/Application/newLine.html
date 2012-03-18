@@ -1,0 +1,57 @@
+#{extends 'main.html' /}
+#{set title:'新規行' /}
+
+<p>
+<tr>
+	<td>
+
+	</td>
+	<td>
+		<script type="text/javascript">
+		<!--
+		jQuery(document).ready(function() {
+			var dates = jQuery("#datepicker_new").datepicker({
+				defaultDate: "+1w",
+				changeMonth: true,
+				numberOfMonths: 1,
+				showOtherMonths: true,
+				selectOtherMonths: true,
+				showAnim: "drop",
+				changeMonth: true,
+				changeYear: true,
+				yearRange: '1900:2999',
+				dateFormat: 'yy/mm/dd'
+			});
+		});
+		// -->
+		</script>
+	
+		<input type="text" id="datepicker_new" name="e_payment_date" size="13" />
+	</td>
+	<td>
+		<script type="text/javascript">
+		<!--
+		jQuery(document).ready(function() {
+			// コンボボックスの要素の変更のイベントハンドラー
+			jQuery("#e_combo_${record.id}").bind('change', function() {
+				var selval = jQuery('#e_combo_new option:selected').val();
+				if(selval=="999") {
+					window.alert('新規です');
+				}
+			});
+		});
+		// -->
+		</script>
+	
+		<select id="e_combo_new" name="e_item_id">
+			<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+			<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+			<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
+			<option value="999">新規作成</option>
+		</select>
+	</td>
+</tr>
+
+<input type="hidden" name="e_id" value="${record.id}"/>
+
+</p>
