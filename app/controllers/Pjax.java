@@ -36,11 +36,4 @@ public class Pjax extends Controller {
 			return false;
 		}
 	}
-	
-	public static void test() {
-		List<String> results = new ArrayList<String>();
-		results.add("test1");
-		results.add("test2");
-		render(results);
-	}
 }

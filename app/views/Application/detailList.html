@@ -117,51 +117,26 @@
 				<input type="hidden" name="e_id" value="${record.id}"/>
 			#{/list}
 		#{/if}
+		<div id="new">
+		<p></p>
+		</div>
 	</table>
-		
-		
+	
+	<script type="text/javascript">
+	<!--
+	jQuery(document).ready(function() {
+		jQuery("#b1").click(function() {
+			jQuery("#new").load("@{Application.newLine} p");
+		});
+	});
+	// -->
+	</script>	
+	<button id="b1"; return false;>行追加</button>
+	<br>
 		
 	#{if records.size() > 0}
 		<input type="submit" name="save" value="保存" />
 	#{/if}
 	
-	<br>
-	<br>
-	
-
-
-
 #{/form}
 
-<script type="text/javascript">
-<!--
-jQuery(document).ready(function() {
-	jQuery("#b1").click(function() {
-		jQuery("div").load("@{Application.sample2_load} p");
-	});
-});
-// -->
-</script>
-<button id="b1">変更</button>
-<div><p>変更前</p></div>
-
-
-<script type="text/javascript">
-<!--
-jQuery(document).ready(function(){
-	jQuery("#b2").click(function() {
-	    jQuery.ajax({
-	        url: '/public/sample3.xml',
-	        dataType: 'xml',
-	        success : function(data){
-	            jQuery("item",data).each(function(){
-	                jQuery("dl").append("<dt><a href='"+jQuery("link",this).text()+"'>"+jQuery("title",this).text()+"</a></dt><dd>"+jQuery("description",this).text()+"</dd>");
-	            });
-	        }
-	    });
-	});
-});
-// -->
-</script>
-<button id="b2">rss</button>
-<dl></dl>

@@ -1,0 +1,23 @@
+#{extends 'main.html' /}
+#{set title:'jQueryでAjaxを利用する基本チュートリアル P3' /}
+
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	jQuery("#b2").click(function() {
+	    jQuery.ajax({
+	        url: '/public/sample3.xml',
+	        dataType: 'xml',
+	        success : function(data){
+	            jQuery("item",data).each(function(){
+	                jQuery("dl").append("<dt><a href='"+jQuery("link",this).text()+"'>"+jQuery("title",this).text()+"</a></dt><dd>"+jQuery("description",this).text()+"</dd>");
+	            });
+	        }
+	    });
+	});
+});
+// -->
+</script>
+<button id="b2">rss</button>
+<dl></dl>
