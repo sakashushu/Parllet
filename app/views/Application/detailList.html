@@ -10,6 +10,46 @@
 </h2>
 <br>
 
+
+	<script type="text/javascript">
+	<!--
+	jQuery(document).ready(function() {
+	    jQuery( 'button', '.jquery-ui-button' ) . button();
+	    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
+	        jQuery( '#jquery-ui-dialog' ) . dialog( 'open' );
+	    } );
+	    var name = jQuery( '#jquery-ui-dialog-form-name' );
+	    var comment = jQuery( '#jquery-ui-dialog-form-comment' );
+	    jQuery( '#jquery-ui-dialog' ) . dialog( {
+	        autoOpen: false,
+	        width: 350,
+	        show: 'explode',
+	        hide: 'explode',
+	        modal: true,
+	        buttons: {
+	            '行追加': function() {
+	                if ( name . val() || comment . val() ) {
+	                    jQuery( '#jquery-ui-dialog-table tbody' ) . append(
+	                        '<tr><td></td>' + 
+	                        '<td>' + name.val() +
+	                        '</td>' +
+	                        '<td></td>' +
+	                        '</tr>'
+	                    );
+	                    jQuery( this ).dialog( 'close' );
+	                }
+	                jQuery( this ) . dialog( 'close' );
+	            },
+	            'キャンセル': function() {
+	                jQuery( this ) . dialog( 'close' );
+	            },
+	        }
+	    } );
+	} );
+	// -->
+	</script>
+
+
 #{form @detailList()}
 	<script type="text/javascript">
 	<!--
@@ -40,25 +80,28 @@
 	</script>
 
 	
-	<table border="1"　id="test">
-		<tr>
-			<th>
-				<input type="submit" name="srch" value="絞込" />
-			</th>
-			<th>日付<br>
-				<input type="text" id="from" name="h_payment_date_fr" size="13" value="${h_payment_date_fr}" />
-				<label for="to">～</label><br>
-				<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
-			</th>
-			<th>項目<br>
-				<select id="h_combo" name="h_item_id">
-					<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
-					<option value="1"${h_item_id==1 ? ' selected' : ''}>食費</option>
-					<option value="2"${h_item_id==2 ? ' selected' : ''}>家財住居</option>
-					<option value="3"${h_item_id==3 ? ' selected' : ''}>水道光熱</option>
-				</select>
-			</th>
-		</tr>
+	<table border="1"　id="jquery-ui-dialog-table" class="ui-widget ui-widget-content">
+		<thead>
+			<tr>
+				<th>
+					<input type="submit" name="srch" value="絞込" />
+				</th>
+				<th>日付<br>
+					<input type="text" id="from" name="h_payment_date_fr" size="13" value="${h_payment_date_fr}" />
+					<label for="to">～</label><br>
+					<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
+				</th>
+				<th>項目<br>
+					<select id="h_combo" name="h_item_id">
+						<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
+						<option value="1"${h_item_id==1 ? ' selected' : ''}>食費</option>
+						<option value="2"${h_item_id==2 ? ' selected' : ''}>家財住居</option>
+						<option value="3"${h_item_id==3 ? ' selected' : ''}>水道光熱</option>
+					</select>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
 		#{if records.size() > 0}
 			<!-- 取得レコード(編集可) -->
 			
@@ -117,26 +160,33 @@
 				<input type="hidden" name="e_id" value="${record.id}"/>
 			#{/list}
 		#{/if}
-		<div id="new">
-		<p></p>
-		</div>
+		</tbody>
+		
 	</table>
 	
-	<script type="text/javascript">
-	<!--
-	jQuery(document).ready(function() {
-		jQuery("#b1").click(function() {
-			jQuery("#new").load("@{Application.newLine} p");
-		});
-	});
-	// -->
-	</script>	
-	<button id="b1"; return false;>行追加</button>
-	<br>
-		
+
+
+
 	#{if records.size() > 0}
 		<input type="submit" name="save" value="保存" />
 	#{/if}
 	
 #{/form}
 
+	<div class="jquery-ui-button">
+	    <button id="jquery-ui-dialog-opener">行追加</button>
+	</div>
+	<div id="jquery-ui-dialog" title="行追加">
+	    <form>
+	    <fieldset>
+	        <p>名前とコメントを入力して行追加ボタンを押してください。</p>
+	            <label for="jquery-ui-dialog-form-name">名前</label>
+	            <input type="text" name="jquery-ui-dialog-form-name" id="jquery-ui-dialog-form-name" class="text ui-widget-content ui-corner-all" />
+	        </p>
+	        <p>
+	            <label for="jquery-ui-dialog-form-comment">コメント</label>
+	            <input type="text" name="jquery-ui-dialog-form-comment" id="jquery-ui-dialog-form-comment" class="text ui-widget-content ui-corner-all" />
+	        </p>
+	    </fieldset>
+	    </form>
+	</div>

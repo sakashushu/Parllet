@@ -114,8 +114,4 @@ public class Application extends Controller {
 	public static void test() {
         render();
     }
-
-	public static void newLine() {
-        render();
-    }
 }
