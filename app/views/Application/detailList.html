@@ -4,50 +4,49 @@
 <h1>HouseholdAccounts</h1>
 
 <h2>
-	<table>
+	<table id="pages">
 		<tr><td><a href="@{Application.index}">Home</a></td><td>明細表</td></tr>
 	</table>
 </h2>
 <br>
 
-
-	<script type="text/javascript">
-	<!--
-	jQuery(document).ready(function() {
-	    jQuery( 'button', '.jquery-ui-button' ) . button();
-	    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
-	        jQuery( '#jquery-ui-dialog' ) . dialog( 'open' );
-	    } );
-	    var name = jQuery( '#jquery-ui-dialog-form-name' );
-	    var comment = jQuery( '#jquery-ui-dialog-form-comment' );
-	    jQuery( '#jquery-ui-dialog' ) . dialog( {
-	        autoOpen: false,
-	        width: 350,
-	        show: 'explode',
-	        hide: 'explode',
-	        modal: true,
-	        buttons: {
-	            '行追加': function() {
-	                if ( name . val() || comment . val() ) {
-	                    jQuery( '#jquery-ui-dialog-table tbody' ) . append(
-	                        '<tr><td></td>' + 
-	                        '<td>' + name.val() +
-	                        '</td>' +
-	                        '<td></td>' +
-	                        '</tr>'
-	                    );
-	                    jQuery( this ).dialog( 'close' );
-	                }
-	                jQuery( this ) . dialog( 'close' );
-	            },
-	            'キャンセル': function() {
-	                jQuery( this ) . dialog( 'close' );
-	            },
-	        }
-	    } );
-	} );
-	// -->
-	</script>
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function() {
+    jQuery( 'button', '.jquery-ui-button' ) . button();
+    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
+        jQuery( '#jquery-ui-dialog' ) . dialog( 'open' );
+    } );
+    var name = jQuery( '#jquery-ui-dialog-form-name' );
+    var comment = jQuery( '#jquery-ui-dialog-form-comment' );
+    jQuery( '#jquery-ui-dialog' ) . dialog( {
+        autoOpen: false,
+        width: 350,
+        show: 'explode',
+        hide: 'explode',
+        modal: true,
+        buttons: {
+            '行追加': function() {
+                if ( name . val() || comment . val() ) {
+                    jQuery( '#jquery-ui-dialog-table tbody' ) . append(
+                        '<tr><td></td>' + 
+                        '<td>' + name.val() +
+                        '</td>' +
+                        '<td></td>' +
+                        '</tr>'
+                    );
+                    jQuery( this ).dialog( 'close' );
+                }
+                jQuery( this ) . dialog( 'close' );
+            },
+            'キャンセル': function() {
+                jQuery( this ) . dialog( 'close' );
+            },
+        }
+    } );
+} );
+// -->
+</script>
 
 
 #{form @detailList()}
@@ -80,7 +79,7 @@
 	</script>
 
 	
-	<table border="1"　id="jquery-ui-dialog-table" class="ui-widget ui-widget-content">
+	<table id="jquery-ui-dialog-table" class="ui-widget ui-widget-content" border="1">
 		<thead>
 			<tr>
 				<th>
@@ -164,17 +163,8 @@
 		
 	</table>
 	
-
-
-
-	#{if records.size() > 0}
-		<input type="submit" name="save" value="保存" />
-	#{/if}
-	
-#{/form}
-
 	<div class="jquery-ui-button">
-	    <button id="jquery-ui-dialog-opener">行追加</button>
+	    <a id="jquery-ui-dialog-opener" href="#">行追加</a>
 	</div>
 	<div id="jquery-ui-dialog" title="行追加">
 	    <form>
@@ -190,3 +180,10 @@
 	    </fieldset>
 	    </form>
 	</div>
+
+	#{if records.size() > 0}
+		<input type="submit" name="save" value="保存" />
+	#{/if}
+
+#{/form}
+
