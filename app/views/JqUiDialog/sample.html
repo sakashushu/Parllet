@@ -1,0 +1,72 @@
+#{extends 'main.html' /}
+#{set title:'jQuery UI の Dialog プラグインのダイアログを使ったフォーム' /}
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready( function() {
+    jQuery( 'button', '.jquery-ui-button' ) . button();
+    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
+        jQuery( '#jquery-ui-dialog' ) . dialog( 'open' );
+    } );
+    var name = jQuery( '#jquery-ui-dialog-form-name' );
+    var comment = jQuery( '#jquery-ui-dialog-form-comment' );
+    jQuery( '#jquery-ui-dialog' ) . dialog( {
+        autoOpen: false,
+        width: 350,
+        show: 'explode',
+        hide: 'explode',
+        modal: true,
+        buttons: {
+            '追加': function() {
+                if ( name . val() || comment . val() ) {
+                    jQuery( '#jquery-ui-dialog-table tbody' ) . append(
+                        '<tr>' +
+                        '<td>' + name . val() + '</td>' +
+                        '<td>' + comment . val() + '</td>' +
+                        '</tr>'
+                    );
+                    jQuery( this ).dialog( 'close' );
+                }
+                jQuery( this ) . dialog( 'close' );
+            },
+            'キャンセル': function() {
+                jQuery( this ) . dialog( 'close' );
+            },
+        }
+    } );
+} );
+// -->
+</script>
+
+
+<table id="jquery-ui-dialog-table" class="ui-widget ui-widget-content">
+    <thead>
+        <tr class="ui-widget-header ">
+            <th id="table-th-name">名前</th>
+            <th id="table-th-comment">コメント</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ALPHASIS</td>
+            <td>Hellow!</td>
+        </tr>
+    </tbody>
+</table>
+<div class="jquery-ui-button">
+    <button id="jquery-ui-dialog-opener">追加</button>
+</div>
+<div id="jquery-ui-dialog" title="追加">
+    <form>
+    <fieldset>
+        <p>名前とコメントを入力して追加ボタンを押してください。</p>
+            <label for="jquery-ui-dialog-form-name">名前</label>
+            <input type="text" name="jquery-ui-dialog-form-name" id="jquery-ui-dialog-form-name" class="text ui-widget-content ui-corner-all" />
+        </p>
+        <p>
+            <label for="jquery-ui-dialog-form-comment">コメント</label>
+            <input type="text" name="jquery-ui-dialog-form-comment" id="jquery-ui-dialog-form-comment" class="text ui-widget-content ui-corner-all" />
+        </p>
+    </fieldset>
+    </form>
+</div>

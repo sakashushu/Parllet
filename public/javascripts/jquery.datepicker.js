@@ -1,6 +1,5 @@
 jQuery(function() {
-	var dates = jQuery(".datepicker").datepicker({
-		defaultDate: "+1w",
+	jQuery(".datepicker").datepicker({
 		changeMonth: true,
 		numberOfMonths: 1,
 		showOtherMonths: true,
