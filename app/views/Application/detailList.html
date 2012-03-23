@@ -15,7 +15,7 @@
 <script type="text/javascript">
 <!--
 jQuery(document).ready(function() {
-    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
+    jQuery( '#jquery-ui-dialog-opener-1' ) . click( function() {
 		jQuery( '#jquery-ui-dialog-table tbody' ) . append(
 		    '<tr><td></td>' +
 		    '<script type="text/javascript">' +
@@ -36,6 +36,42 @@ jQuery(document).ready(function() {
 		);
     } );
 } );
+
+function AddRow() {
+	var i,j,objNode,objNodeList,nLength,objResult;
+
+	// 結果表示用 DIV
+	objResult = document.getElementById( "result" );
+	// 対象テーブル
+	objNode = document.getElementById( "jquery-ui-dialog-table" );
+
+	// 対象テーブル内の TR ノード
+	objNodeList = objNode.getElementsByTagName( "TR" );
+
+	// 行数
+	nLength = objNodeList.length;
+
+	// 一行目のクローンを作成 ( TH があるので、最初の行は 1 )
+	var cloneNode = objNodeList.item(1).cloneNode( true );
+	// クローンノードの設定
+	var nodeTDList = cloneNode.getElementsByTagName( "TD" );
+	nodeTDList.item( 0 ).firstChild.nodeValue = "[0001]";
+	nodeTDList.item( 1 ).style.cssText = "font-weight: bold";
+	// 個別設定
+//	nodeTDList.item( 1 ).style.fontWeight = "bold";
+	nodeTDList.item( 2 ).setAttribute("align", "right");
+
+	// ２行目の前に追加
+	// insertBefore を実行する為に、TR ノードの親ノードを取得
+	var parentNode = objNodeList.item(1).parentNode;
+	parentNode.insertBefore( cloneNode, objNodeList[2] );
+
+	alert( parentNode.nodeName );
+	// 以下でも同様
+//	var parentNode = objNode.getElementsByTagName( "TBODY" )[0];
+//	parentNode.insertBefore( cloneNode, objNodeList[2] );
+
+}
 // -->
 </script>
 
@@ -97,7 +133,7 @@ jQuery(document).ready(function() {
 			#{list items:records, as:'record'}
 				<tr>
 					<td>
-
+test
 					</td>
 					<td>
 						<input type="text" class="datepicker" name="e_payment_date"
@@ -135,7 +171,7 @@ jQuery(document).ready(function() {
 	</table>
 	
     <br>
-    <a id="jquery-ui-dialog-opener" class="aBtn" href="#">行追加</a>
+    <a id="jquery-ui-dialog-opener" class="aBtn" onClick='AddRow()' href="#">行追加</a>
     <br>
     <br>
 
