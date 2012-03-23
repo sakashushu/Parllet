@@ -63,7 +63,7 @@ Home画面
 jQuery(document).ready( function() {
     var name = jQuery( '#jquery-ui-dialog-form-name' );
     var comment = jQuery( '#jquery-ui-dialog-form-comment' );
-    jQuery( '#jquery-ui-dialog' ) . dialog( {
+    jQuery( '#jquery-ui-dialog').dialog( {
         autoOpen: false,
         width: 350,
         show: 'explode',
@@ -87,7 +87,10 @@ jQuery(document).ready( function() {
     	.button()
     	.click( function() {
         	jQuery("#jquery-ui-dialog").dialog("open");
-    	});
+    });
+    jQuery( '#jquery-ui-dialog').blur(function() {
+    	jQuery(this).dialog("close");
+    })
 } );
 // -->
 </script>

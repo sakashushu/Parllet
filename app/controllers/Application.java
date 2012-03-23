@@ -25,6 +25,8 @@ public class Application extends Controller {
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
     		List<Integer> e_item_id,		/* 変更行の項目ＩＤ */
+    		List<String> n_payment_date,	/* 変更行の支払日 */
+    		List<Integer> n_item_id,		/* 変更行の項目ＩＤ */
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
     		) {
@@ -41,7 +43,8 @@ public class Application extends Controller {
     	if(save != null) {
 	    	if(save.equals("保存")) {
 			    records = new ArrayList<Record>();
-	    		// 更新
+
+			    // 更新
 	    		Iterator<String> strEPayDt = e_payment_date.iterator();
 	    		Iterator<Integer> intEItemId = e_item_id.iterator();
 	    		for (Long lId : e_id) {
@@ -92,6 +95,52 @@ public class Application extends Controller {
 	    			// 編集後の行をそのまま戻す
 				    records.add(rec);
 	    		}
+
+
+			    // 新規作成
+	    		Iterator<Integer> intNItemId = n_item_id.iterator();
+	    		for (String spDt : n_payment_date) {
+	    			Record nRec = null;
+	    			try {
+	    				// 新規作成用のレコードにセット
+	    				nRec = new Record(
+	    						DateFormat.getDateInstance().parse(spDt),
+	    						intNItemId.next(),
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						0,
+	    						0,
+	    						"",
+	    						null,
+	    						"",
+	    						"",
+	    						"",
+	    						0,
+	    						"",
+	    						0,
+	    						"");
+	    				
+		    			// Validate
+					    validation.valid(nRec);
+					    if(validation.hasErrors()) {
+					    	// 以下の描画では駄目かも？
+					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					    }
+					    // 保存
+					    nRec.save();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+	    			// 作成後の行をそのまま戻す
+				    records.add(nRec);
+	    		}
+	    		
 	    	}
     	} else {
 	    	// 検索処理
