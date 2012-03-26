@@ -26,7 +26,7 @@ public class Echo extends Controller {
 					
 					// 本題のechoサーバとは何の関係もありませんが、
 					// このように、HTTP用のControllerから利用していたModelをWebSocketControllerからも普通に利用することができます。Interoperability!
-					new LoggedMessage(message);
+					new LoggedMessage(message).save();
 				}
 			}
 		}
