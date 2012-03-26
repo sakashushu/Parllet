@@ -19,7 +19,11 @@
 </div>
 
 <script>
-    var ws = new WebSocket("@@{Echo.WebSocketEcho.listen()}");
+	WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
+	WEB_SOCKET_DEBUG = false;
+	
+	var ws;
+    ws = new WebSocket("@@{Echo.WebSocketEcho.listen()}");
 
     ws.onmessage = function(event) {
         $('#messages').append('<div>' + event.data + '</div>');
