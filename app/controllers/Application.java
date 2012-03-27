@@ -8,8 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import net.arnx.jsonic.JSON;
-
 import models.*;
 
 public class Application extends Controller {
