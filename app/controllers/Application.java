@@ -10,6 +10,8 @@ import java.util.*;
 
 import models.*;
 
+import static play.mvc.Http.WebSocketEvent.TextFrame;
+
 public class Application extends Controller {
 
     public static void index() {
@@ -161,4 +163,58 @@ public class Application extends Controller {
 	public static void test() {
         render();
     }
+	
+	public static class WebSocketEcho extends WebSocketController {
+		public static void listen() {
+			// WebSocketが接続されている間、isbound.isOpen()はtrue
+			while(inbound.isOpen()) {
+				// クライアントから送られるメッセージを、継続を使って非同期で待ちます。
+				Http.WebSocketEvent event = await(inbound.nextEvent());
+
+				// メッセージがテキストであればfor内が実行されます。
+				// パターンマッチにfor文を使うのは珍しいですね。
+				for(String message : TextFrame.match(event)) {
+					// クライアントにメッセージを返送します。
+					outbound.send(message);
+					
+	    			// 新規作成用のレコードにセット
+	    			Record nRec = null;
+					try {
+						nRec = new Record(
+								DateFormat.getDateInstance().parse(message),
+								0,
+								"",
+								0,
+								"",
+								0,
+								"",
+								0,
+								0,
+								0,
+								"",
+								null,
+								"",
+								"",
+								"",
+								0,
+								"",
+								0,
+								"");
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	    			
+		    		// Validate
+					validation.valid(nRec);
+					if(validation.hasErrors()) {
+						// 以下の描画では駄目かも？
+					    //render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					}
+					// 保存
+					nRec.save();
+				}
+			}
+		}
+	}
 }

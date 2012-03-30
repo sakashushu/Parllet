@@ -18,7 +18,6 @@ public class Echo extends Controller {
 			while(inbound.isOpen()) {
 				// クライアントから送られるメッセージを、継続を使って非同期で待ちます。
 				Http.WebSocketEvent event = await(inbound.nextEvent());
-				Http.WebSocketFrame frame = (Http.WebSocketFrame)event;
 
 				// メッセージがテキストであればfor内が実行されます。
 				// パターンマッチにfor文を使うのは珍しいですね。

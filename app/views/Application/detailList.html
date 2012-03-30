@@ -17,12 +17,21 @@
 jQuery(document).ready(function() {
     jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
 		jQuery( '#jquery-ui-dialog-table tbody' ) . append(
-		    '<tr><td></td>' +
+		    '<tr>' +
 		    '<script type="text/javascript">' +
 		    '<!-- ' +
 		    'jQuery.getScript("/public/javascripts/jquery.datepicker.js");' +
+		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
+		    'WEB_SOCKET_DEBUG = false;' +
+		    'var ws;' +
+		    'ws = new WebSocket("@@{Application.WebSocketEcho.listen()}");' +
+		    'jQuery("#ins").click(function() {' +
+		    '    var $datepicker = jQuery(".datepicker");' +
+		    '    ws.send($datepicker.val());' +
+		    '});' +
 		    '// -->' +
 		    '</scri' + 'pt>' +
+		    '<td><a id="ins" href="#">更新</a></td>' +
 		    '<td><input type="text" class="datepicker" name="n_payment_date "size="13" />' +
 		    '</td>' +
 		    '<td><select name="n_item_id">' + 
