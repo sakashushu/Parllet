@@ -173,15 +173,16 @@ public class Application extends Controller {
 
 				// メッセージがテキストであればfor内が実行されます。
 				// パターンマッチにfor文を使うのは珍しいですね。
-				for(String message : TextFrame.match(event)) {
-					// クライアントにメッセージを返送します。
-					outbound.send(message);
+				for(String data : TextFrame.match(event)) {
+					// クライアントにメッセージを返送します。(今のところ返送する意味はない。)
+					outbound.send(data);
 					
-	    			// 新規作成用のレコードにセット
+    				// 変更有無チェック用のレコードにセット
+	    			//Record rec = Record.findById(data.);
 	    			Record nRec = null;
 					try {
 						nRec = new Record(
-								DateFormat.getDateInstance().parse(message),
+								DateFormat.getDateInstance().parse(data),
 								0,
 								"",
 								0,

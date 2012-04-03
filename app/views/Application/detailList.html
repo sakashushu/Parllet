@@ -106,11 +106,33 @@ jQuery(document).ready(function() {
 			<!-- 取得レコード(編集可) -->
 			#{list items:records, as:'record'}
 				<tr>
+					<script type="text/javascript">
+					<!--
+						WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
+						WEB_SOCKET_DEBUG = false;
+						
+						var ws;
+					    ws = new WebSocket("@@{Application.WebSocketEcho.listen()}");
+					
+					    //ws.onmessage = function(event) {
+					    //    $('#messages').append('<div>' + event.data + '</div>');
+					    //};
+					
+					    jQuery("#e_payment_date_${record.id}").blur(function() {
+							var data = {
+								"id": jQuery("#e_id_${record.id}").val(),
+								"payment_date": jQuery("#e_payment_date_${record.id}").val()
+							}
+					        ws.send(data);
+					    });
+					// -->
+					</script>
+				
 					<td>
-
+						<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
 					</td>
 					<td>
-						<input type="text" class="datepicker" name="e_payment_date"
+						<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
 							value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
 					</td>
 					<td>
@@ -137,7 +159,6 @@ jQuery(document).ready(function() {
 					</td>
 				</tr>
 				
-				<input type="hidden" name="e_id" value="${record.id}"/>
 			#{/list}
 		#{/if}
 		</tbody>
