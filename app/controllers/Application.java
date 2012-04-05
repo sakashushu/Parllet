@@ -3,6 +3,7 @@ package controllers;
 import play.*;
 import play.mvc.*;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -177,43 +178,19 @@ public class Application extends Controller {
 					// クライアントにメッセージを返送します。(今のところ返送する意味はない。)
 					outbound.send(data);
 					
-    				// 変更有無チェック用のレコードにセット
-	    			//Record rec = Record.findById(data.);
-	    			Record nRec = null;
-					try {
-						nRec = new Record(
-								DateFormat.getDateInstance().parse(data),
-								0,
-								"",
-								0,
-								"",
-								0,
-								"",
-								0,
-								0,
-								0,
-								"",
-								null,
-								"",
-								"",
-								"",
-								0,
-								"",
-								0,
-								"");
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	    			
-		    		// Validate
-					validation.valid(nRec);
-					if(validation.hasErrors()) {
-						// 以下の描画では駄目かも？
-					    //render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
-					}
-					// 保存
-					nRec.save();
+//					ObjectMapper mapper = new ObjectMapper();
+//					// JSON文字列
+//					String json = "{\"name\": \"Foo\", \"age\": 20}";
+//					// JSON文字列 を Bean に変換する
+//					Record bean = mapper.readValue(json, Record.class);
+//					// Bean の内容を標準出力に書き出す
+//					System.out.println(bean);
+//					// Bean を JSON文字列 に変換して標準出力に書き出す
+//					mapper.writeValue(System.out, bean);
+					
+					
+					
+					
 				}
 			}
 		}
