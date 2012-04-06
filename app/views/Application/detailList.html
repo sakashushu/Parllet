@@ -114,15 +114,17 @@ jQuery(document).ready(function() {
 						var ws;
 					    ws = new WebSocket("@@{Application.WebSocketEcho.listen()}");
 					
-					    //ws.onmessage = function(event) {
-					    //    $('#messages').append('<div>' + event.data + '</div>');
-					    //};
+					    ws.onmessage = function(event) {
+					        //$('#messages').append('<div>' + event.data + '</div>');
+					        alert(event.data);
+					    };
 					
-					    jQuery("#e_payment_date_${record.id}").blur(function() {
-							var data = {
-								"id": jQuery("#e_id_${record.id}").val(),
-								"payment_date": jQuery("#e_payment_date_${record.id}").val()
-							}
+					    jQuery("#e_payment_date_${record.id}").click(function() {
+							//var data = {
+							//	"id": jQuery("#e_id_${record.id}").val(),
+							//	"payment_date": jQuery("#e_payment_date_${record.id}").val()
+							//}
+							var data = "test":
 					        ws.send(data);
 					    });
 					// -->

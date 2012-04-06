@@ -3,11 +3,16 @@ package controllers;
 import play.*;
 import play.mvc.*;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import models.*;
 
@@ -178,15 +183,42 @@ public class Application extends Controller {
 					// クライアントにメッセージを返送します。(今のところ返送する意味はない。)
 					outbound.send(data);
 					
-//					ObjectMapper mapper = new ObjectMapper();
-//					// JSON文字列
-//					String json = "{\"name\": \"Foo\", \"age\": 20}";
-//					// JSON文字列 を Bean に変換する
-//					Record bean = mapper.readValue(json, Record.class);
-//					// Bean の内容を標準出力に書き出す
-//					System.out.println(bean);
-//					// Bean を JSON文字列 に変換して標準出力に書き出す
-//					mapper.writeValue(System.out, bean);
+					ObjectMapper mapper = new ObjectMapper();
+					// JSON文字列 を Bean に変換する
+					RecPaymentDate eRec;
+					try {
+						eRec = mapper.readValue(data, RecPaymentDate.class);
+						
+//						// Bean の内容を標準出力に書き出す
+//						System.out.println(bean);
+//						// Bean を JSON文字列 に変換して標準出力に書き出す
+//						mapper.writeValue(System.out, bean);
+						
+						Record rec = Record.findById(eRec.id);
+	    				
+		    			// Validate
+					    validation.valid(eRec);
+					    if(validation.hasErrors()) {
+					    	// 以下の描画では駄目かも？
+//					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					    }
+	    				// 項目が変更されていた場合だけ更新
+	    				if (rec.payment_date != eRec.payment_date) {
+							rec.payment_date = eRec.payment_date;
+						    
+						    // 保存
+						    rec.save();
+	    				}
+					} catch (JsonParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonMappingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					
 					
@@ -195,4 +227,5 @@ public class Application extends Controller {
 			}
 		}
 	}
+	
 }
