@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
 		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
 		    'WEB_SOCKET_DEBUG = false;' +
 		    'var ws;' +
-		    'ws = new WebSocket("@@{Application.WebSocketEcho.listen()}");' +
+		    'ws = new WebSocket("@@{Application.WebSocketApp.listen()}");' +
 		    'jQuery("#ins").click(function() {' +
 		    '    var $datepicker = jQuery(".datepicker");' +
 		    '    ws.send($datepicker.val());' +
@@ -50,7 +50,7 @@ jQuery(document).ready(function() {
 </script>
 
 
-#{form @detailList()}
+
 	<script type="text/javascript">
 	<!--
 	jQuery(document).ready(function() {
@@ -106,32 +106,10 @@ jQuery(document).ready(function() {
 			<!-- 取得レコード(編集可) -->
 			#{list items:records, as:'record'}
 				<tr>
-					<script type="text/javascript">
-					<!--
-						WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
-						WEB_SOCKET_DEBUG = false;
-						
-						var ws;
-					    ws = new WebSocket("@@{Application.WebSocketEcho.listen()}");
-					
-					    ws.onmessage = function(event) {
-					        //$('#messages').append('<div>' + event.data + '</div>');
-					        alert(event.data);
-					    };
-					
-					    jQuery("#e_payment_date_${record.id}").click(function() {
-							//var data = {
-							//	"id": jQuery("#e_id_${record.id}").val(),
-							//	"payment_date": jQuery("#e_payment_date_${record.id}").val()
-							//}
-							var data = "test":
-					        ws.send(data);
-					    });
-					// -->
-					</script>
-				
 					<td>
 						<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
+					    <a id="e_upd_${record.id}" href="#">更新</a>
+					    <input type="button" id="say" value="送信" />
 					</td>
 					<td>
 						<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
@@ -159,6 +137,33 @@ jQuery(document).ready(function() {
 							<option value="999">新規作成</option>
 						</select>
 					</td>
+
+
+					<script type="text/javascript">
+					<!--
+						WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
+						WEB_SOCKET_DEBUG = false;
+						
+						var ws;
+					    ws = new WebSocket("@@{Application.WebSocketApp.listen()}");
+					
+					    ws.onmessage = function(event) {
+					        //$('#messages').append('<div>' + event.data + '</div>');
+					        alert(event.data);
+					    };
+					
+//					    jQuery("#e_upd_${record.id}").click(function() {
+					    jQuery("#say").click(function() {
+							//var data = {
+							//	"id": jQuery("#e_id_${record.id}").val(),
+							//	"payment_date": jQuery("#e_payment_date_${record.id}").val()
+							//}
+							var data = "test";
+					        ws.send(data);
+					    });
+					// -->
+					</script>
+				
 				</tr>
 				
 			#{/list}
@@ -176,5 +181,4 @@ jQuery(document).ready(function() {
 		<input type="submit" name="save" value="保存" />
 	#{/if}
 
-#{/form}
 

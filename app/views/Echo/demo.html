@@ -18,7 +18,8 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
+<!--
 	WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
 	WEB_SOCKET_DEBUG = false;
 	
@@ -27,11 +28,15 @@
 
     ws.onmessage = function(event) {
         $('#messages').append('<div>' + event.data + '</div>');
+					        alert(event.data);
     };
 
     $('#say').click(function() {
-        var $what = $('#what');
-        ws.send($what.val());
-        $what.focus();
+//        var $what = $('#what');
+//        ws.send($what.val());
+//        $what.focus();
+							var data = "test";
+					        ws.send(data);
     });
+// -->
 </script>

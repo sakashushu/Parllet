@@ -5,7 +5,9 @@
 # Home page
 GET     /                                       Application.index
 
+# WebSocket detailList
 GET		/detailList								Application.detailList
+WS      /detailList                             Application.WebSocketApp.listen
 
 # WebSocket Demo
 GET     /echo                                   Echo.demo
