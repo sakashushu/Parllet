@@ -184,42 +184,46 @@ public class Application extends Controller {
 					// クライアントにメッセージを返送します。(今のところ返送する意味はない。)
 					outbound.send(data);
 					
-//					ObjectMapper mapper = new ObjectMapper();
-//					// JSON文字列 を Bean に変換する
-//					RecPaymentDate eRec;
-//					try {
-//						eRec = mapper.readValue(data, RecPaymentDate.class);
-//						
-////						// Bean の内容を標準出力に書き出す
-////						System.out.println(bean);
-////						// Bean を JSON文字列 に変換して標準出力に書き出す
-////						mapper.writeValue(System.out, bean);
-//						
-//						Record rec = Record.findById(eRec.id);
-//	    				
-//		    			// Validate
-//					    validation.valid(eRec);
-//					    if(validation.hasErrors()) {
-//					    	// 以下の描画では駄目かも？
-////					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
-//					    }
-//	    				// 項目が変更されていた場合だけ更新
-//	    				if (rec.payment_date != eRec.payment_date) {
-//							rec.payment_date = eRec.payment_date;
-//						    
-//						    // 保存
-//						    rec.save();
-//	    				}
-//					} catch (JsonParseException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (JsonMappingException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
+					ObjectMapper mapper = new ObjectMapper();
+					// JSON文字列 を Bean に変換する
+					RecPaymentDate eRec;
+					try {
+						eRec = mapper.readValue(data, RecPaymentDate.class);
+						
+//						// Bean の内容を標準出力に書き出す
+//						System.out.println(bean);
+//						// Bean を JSON文字列 に変換して標準出力に書き出す
+//						mapper.writeValue(System.out, bean);
+						
+						Record rec = Record.findById(eRec.id);
+	    				
+		    			// Validate
+					    validation.valid(eRec);
+					    if(validation.hasErrors()) {
+					    	// 以下の描画では駄目かも？
+//					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					    }
+	    				// 項目が変更されていた場合だけ更新
+					    Date ePayDate = DateFormat.getDateInstance().parse(eRec.payment_date);
+	    				if (rec.payment_date != ePayDate) {
+							rec.payment_date = ePayDate;
+						    
+						    // 保存
+						    rec.save();
+	    				}
+	    			} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonMappingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 					
 					
