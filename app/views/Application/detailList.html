@@ -108,7 +108,9 @@ jQuery(document).ready(function() {
 				<tr>
 					<td>
 						<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
+						<!--
 					    <a id="e_upd_${record.id}" href="#">更新</a>
+						-->
 					</td>
 					<td>
 						<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
@@ -148,11 +150,11 @@ jQuery(document).ready(function() {
 					
 					    ws.onmessage = function(event) {
 					        //$('#messages').append('<div>' + event.data + '</div>');
-					        alert(event.data);
+					        //alert(event.data);
 					    };
-					
-//					    jQuery("#e_upd_${record.id}").click(function() {
-					    jQuery("#e_upd_${record.id}").click(function() {
+						
+					    //jQuery("#e_upd_${record.id}").click(function() {
+					    jQuery("#e_payment_date_${record.id}").change(function() {
 							var data = "{"
 								+ "\"id\": "
 								+ jQuery("#e_id_${record.id}").val()
