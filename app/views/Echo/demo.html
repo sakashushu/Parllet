@@ -28,15 +28,12 @@
 
     ws.onmessage = function(event) {
         $('#messages').append('<div>' + event.data + '</div>');
-					        alert(event.data);
     };
 
     $('#say').click(function() {
-//        var $what = $('#what');
-//        ws.send($what.val());
-//        $what.focus();
-							var data = "test";
-					        ws.send(data);
+        var $what = $('#what');
+        ws.send($what.val());
+        $what.focus();
     });
 // -->
 </script>
