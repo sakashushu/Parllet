@@ -154,19 +154,31 @@ jQuery(document).ready(function() {
 					    };
 						
 					    //jQuery("#e_upd_${record.id}").click(function() {
-					    jQuery("#e_payment_date_${record.id}").change(function() {
-							var data = "{"
-								+ "\"act_type\": "
-								+ "\"upd_ePaymentDate\"" + ","
-								+ "\"id\": "
-								+ jQuery("#e_id_${record.id}").val() + ","
-								+ "\"payment_date\": \""
-								+ jQuery("#e_payment_date_${record.id}").val()
-								+ "\"" 
-								+"}";
-					        ws.send(data);
-					    });
+						jQuery(document).ready(function() {
+						    jQuery("#e_payment_date_${record.id}").change(function() {
+								var data = "{"
+									+ "\"act_type\": "
+									+ "\"upd_ePaymentDate\"" + ","
+									+ "\"id\": "
+									+ jQuery("#e_id_${record.id}").val() + ","
+									+ "\"payment_date\": \""
+									+ jQuery("#e_payment_date_${record.id}").val()
+									+ "\"" 
+									+"}";
+						        ws.send(data);
+						    });
+						});
 					    
+						jQuery(document).ready(function() {
+							// コンボボックスのクリックイベント
+							jQuery("#e_combo_${record.id}").click(function() {
+								var data = "{"
+									+ "\"act_type\": "
+									+ "\"dsp_eCmb\""
+									+"}";
+						        ws.send(data);
+							});
+						});
 					    
 					// -->
 					</script>

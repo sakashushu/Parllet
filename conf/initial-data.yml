@@ -10,11 +10,89 @@
 # Test data
 
 Record(test1):
-    payment_date: '2012-02-13T00:00:00'
-    item_id: 1
-    item_name: 食費
+    payment_date:     '2012-04-13T00:00:00'
+    item_id:          1
+    item_name:        食費
 
 Record(test2):
-    payment_date: '2012-02-14T00:00:00'
-    item_id: 2
-    item_name: 家財住居
+    payment_date:     '2012-04-14T00:00:00'
+    item_id:          2
+    item_name:        家財住居
+
+ActualTypeMst(in):
+    actual_type_id:   0
+    actual_type_name: 収入
+
+ActualTypeMst(out):
+    actual_type_id:   1
+    actual_type_name: 支出
+
+ItemMst(in1):
+    actual_type_id:   in
+    item_id:          1
+    item_name:        給与
+
+ItemMst(in2):
+    actual_type_id:   in
+    item_id:          2
+    item_name:        その他収入
+
+ItemMst(out1):
+    actual_type_id:   out
+    item_id:          101
+    item_name:        食費
+
+ItemMst(out2):
+    actual_type_id:   out
+    item_id:          102
+    item_name:        衣類
+
+ItemMst(out3):
+    actual_type_id:   out
+    item_id:          103
+    item_name:        居住
+
+ItemMst(out4):
+    actual_type_id:   out
+    item_id:          104
+    item_name:        水道光熱
+
+ItemMst(out5):
+    actual_type_id:   out
+    item_id:          105
+    item_name:        健康
+
+ItemMst(out6):
+    actual_type_id:   out
+    item_id:          106
+    item_name:        教育
+
+ItemMst(out7):
+    actual_type_id:   out
+    item_id:          107
+    item_name:        娯楽
+
+ItemMst(out8):
+    actual_type_id:   out
+    item_id:          108
+    item_name:        通信
+
+ItemMst(out9):
+    actual_type_id:   out
+    item_id:          109
+    item_name:        交通
+
+ItemMst(out10):
+    actual_type_id:   out
+    item_id:          110
+    item_name:        交際
+
+ItemMst(out11):
+    actual_type_id:   out
+    item_id:          111
+    item_name:        保険
+
+ItemMst(out12):
+    actual_type_id:   out
+    item_id:          112
+    item_name:        その他
