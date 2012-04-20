@@ -140,50 +140,6 @@ jQuery(document).ready(function() {
 					</td>
 
 
-					<script type="text/javascript">
-					<!--
-						WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
-						WEB_SOCKET_DEBUG = false;
-						
-						var ws;
-					    ws = new WebSocket("@@{Application.WebSocketApp.listen()}");
-					
-					    ws.onmessage = function(event) {
-					        //$('#messages').append('<div>' + event.data + '</div>');
-					        //alert(event.data);
-					        //jQuery("#e_combo_${record.id}").append('<option value="9999">test</option>');
-					        alert("test");
-					    };
-						
-					    //jQuery("#e_upd_${record.id}").click(function() {
-						jQuery(document).ready(function() {
-						    jQuery("#e_payment_date_${record.id}").change(function() {
-								var data = "{"
-									+ "\"act_type\": "
-									+ "\"upd_ePaymentDate\"" + ","
-									+ "\"id\": "
-									+ jQuery("#e_id_${record.id}").val() + ","
-									+ "\"payment_date\": \""
-									+ jQuery("#e_payment_date_${record.id}").val()
-									+ "\"" 
-									+"}";
-						        ws.send(data);
-						    });
-						});
-					    
-						jQuery(document).ready(function() {
-							// コンボボックスのクリックイベント
-							jQuery("#e_combo_${record.id}").click(function() {
-								var data = "{"
-									+ "\"act_type\": "
-									+ "\"dsp_eCmb\""
-									+"}";
-						        ws.send(data);
-							});
-						});
-					    
-					// -->
-					</script>
 				
 				</tr>
 				
@@ -200,6 +156,54 @@ jQuery(document).ready(function() {
 
 	#{if records.size() > 0}
 		<input type="submit" name="save" value="保存" />
+
+		<script type="text/javascript">
+		<!--
+		WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
+		WEB_SOCKET_DEBUG = false;
+		
+		var ws;
+	    ws = new WebSocket("@@{Application.WebSocketApp.listen()}");
+	
+	    ws.onmessage = function(event) {
+	        //$('#messages').append('<div>' + event.data + '</div>');
+	        //alert(event.data);
+	        //jQuery("#e_combo_${record.id}").append('<option>test</option>');
+	        //alert("test");
+	    };
+					
+		#{list items:records, as:'record'}
+		    //jQuery("#e_upd_${record.id}").click(function() {
+			jQuery(document).ready(function() {
+			    jQuery("#e_payment_date_${record.id}").change(function() {
+					var data = "{"
+						+ "\"act_type\": "
+						+ "\"upd_ePaymentDate\"" + ","
+						+ "\"id\": "
+						+ jQuery("#e_id_${record.id}").val() + ","
+						+ "\"payment_date\": \""
+						+ jQuery("#e_payment_date_${record.id}").val()
+						+ "\"" 
+						+"}";
+			        ws.send(data);
+			    });
+			});
+		    
+			jQuery(document).ready(function() {
+				// コンボボックスのクリックイベント
+				jQuery("#e_combo_${record.id}").click(function() {
+					var data = "{"
+						+ "\"act_type\": "
+						+ "\"dsp_eCmb\""
+						+"}";
+			        ws.send(data);
+				});
+			});
+		    
+		#{/list}
+		// -->
+		</script>
 	#{/if}
+
 
 #{/form}
