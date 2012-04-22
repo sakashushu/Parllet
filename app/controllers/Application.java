@@ -45,6 +45,8 @@ public class Application extends Controller {
     	}
 
     	List<Record> records = null;
+    	List<ItemMst> items = null;
+    	
     	
     	// 「保存」ボタンが押された場合
     	if(save != null) {
@@ -149,8 +151,14 @@ public class Application extends Controller {
 //	    		}
 //	    		
 	    	}
+	    	
+	    	
+	    	
     	} else {
-	    	// 検索処理
+	    	// 検索処理(ItemMst)
+    		//items = ItemMst.find(query, params)
+    		
+	    	// 検索処理(Record)
 	    	//  日付範囲
 	   		strSrchSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
 	    	//  項目

@@ -9,16 +9,6 @@
 
 # Test data
 
-Record(test1):
-    payment_date:     '2012-04-13T00:00:00'
-    item_id:          1
-    item_name:        食費
-
-Record(test2):
-    payment_date:     '2012-04-14T00:00:00'
-    item_id:          2
-    item_name:        家財住居
-
 ActualTypeMst(in):
     actual_type_id:   0
     actual_type_name: 収入
@@ -26,6 +16,42 @@ ActualTypeMst(in):
 ActualTypeMst(out):
     actual_type_id:   1
     actual_type_name: 支出
+
+BalanceTypeMst(simple_in):
+    balance_type_id:   1
+    balance_type_name: 単純収入
+    actual_type_id:    in
+
+BalanceTypeMst(simple_out):
+    balance_type_id:   2
+    balance_type_name: 単純支出
+    actual_type_id:    out
+
+BalanceTypeMst(bank_in):
+    balance_type_id:   3
+    balance_type_name: 口座預入
+
+BalanceTypeMst(bank_out):
+    balance_type_id:   4
+    balance_type_name: 口座引出
+
+BalanceTypeMst(my_savings_in):
+    balance_type_id:   5
+    balance_type_name: マイ貯金預入
+
+BalanceTypeMst(from_my_savings_out):
+    balance_type_id:   6
+    balance_type_name: マイ貯金から直接支払
+    actual_type_id:    out
+
+BalanceTypeMst(my_savings_out):
+    balance_type_id:   7
+    balance_type_name: マイ貯金引出
+
+BalanceTypeMst(to_my_savings_in):
+    balance_type_id:   8
+    balance_type_name: マイ貯金に直接預入
+    actual_type_id:    in
 
 ItemMst(in1):
     actual_type_id:   in
@@ -96,3 +122,13 @@ ItemMst(out12):
     actual_type_id:   out
     item_id:          112
     item_name:        その他
+
+Record(test1):
+    payment_date:     '2012-04-13T00:00:00'
+    item_id:          1
+    item_name:        食費
+
+Record(test2):
+    payment_date:     '2012-04-14T00:00:00'
+    item_id:          2
+    item_name:        家財住居

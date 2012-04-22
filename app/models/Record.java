@@ -24,8 +24,8 @@ public class Record extends Model {
 	public String store;
 	public String remarks;
 	public String secret_remarks;
-	public int type_id;
-	public String type_name;
+	public int balance_type_id;
+	public String balance_type_name;
 	public int ideal_deposit_id;
 	public String ideal_deposit_name;
 	
@@ -45,8 +45,8 @@ public class Record extends Model {
 			String store,
 			String remarks,
 			String secret_remarks,
-			int type_id,
-			String type_name,
+			int balance_type_id,
+			String balance_type_name,
 			int ideal_deposit_id,
 			String ideal_deposit_name
 			) {
@@ -65,8 +65,8 @@ public class Record extends Model {
 		this.store = store;
 		this.remarks = remarks;
 		this.secret_remarks = secret_remarks;
-		this.type_id = type_id;
-		this.type_name = type_name;
+		this.balance_type_id = balance_type_id;
+		this.balance_type_name = balance_type_name;
 		this.ideal_deposit_id = ideal_deposit_id;
 		this.ideal_deposit_name = ideal_deposit_name;
 	}
