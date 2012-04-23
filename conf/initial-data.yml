@@ -127,8 +127,10 @@ Record(test1):
     payment_date:     '2012-04-13T00:00:00'
     item_id:          1
     item_name:        食費
+    balance_type_id:  2
 
 Record(test2):
     payment_date:     '2012-04-14T00:00:00'
     item_id:          2
     item_name:        家財住居
+    balance_type_id:  2

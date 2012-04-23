@@ -91,6 +91,14 @@ jQuery(document).ready(function() {
 					<label for="to">～</label><br>
 					<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
 				</th>
+				<th>収支種類<br>
+					<select name="h_balance_type_id">
+						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>すべて</option>
+						#{list items:bTypes, as:'bType'}
+						<option value="${bType.balance_type_id}"${h_balance_type_id==bType.balance_type_id ? ' selected' : ''}>${bType.balance_type_name}</option>
+						#{/list}
+					</select>
+				</th>
 				<th>項目<br>
 					<select id="h_combo" name="h_item_id">
 						<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
@@ -105,44 +113,50 @@ jQuery(document).ready(function() {
 		#{if records.size() > 0}
 			<!-- 取得レコード(編集可) -->
 			#{list items:records, as:'record'}
-				<tr>
-					<td>
-						<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
-						<!--
-					    <a id="e_upd_${record.id}" href="#">更新</a>
-						-->
-					</td>
-					<td>
-						<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
-							value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
-					</td>
-					<td>
-						<script type="text/javascript">
-						<!--
-						jQuery(document).ready(function() {
-							// コンボボックスの要素の変更のイベントハンドラー
-							jQuery("#e_combo_${record.id}").bind('change', function() {
-								var selval = jQuery('#e_combo_${record.id} option:selected').val();
-								if(selval=="999") {
-									window.alert('新規です');
-								}
-							});
+			<tr>
+				<td>
+					<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
+					<!--
+				    <a id="e_upd_${record.id}" href="#">更新</a>
+					-->
+				</td>
+				<td>
+					<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
+						value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
+				</td>
+				<td>
+					<select id=e_bType_combo_${record.id}>
+						#{list items:bTypes, as:'bType'}
+						<option value="${bType.balance_type_id}"${record.balance_type_id==bType.balance_type_id ? ' selected' : ''}>${bType.balance_type_name}</option>
+						#{/list}
+					</select>
+				</td>
+				<td>
+					<script type="text/javascript">
+					<!--
+					jQuery(document).ready(function() {
+						// コンボボックスの要素の変更のイベントハンドラー
+						jQuery("#e_combo_${record.id}").bind('change', function() {
+							var selval = jQuery('#e_combo_${record.id} option:selected').val();
+							if(selval=="999") {
+								window.alert('新規です');
+							}
 						});
-						// -->
-						</script>
-					
-						<select id="e_combo_${record.id}" name="e_item_id">
-							<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-							<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-							<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-							<option value="999">新規作成</option>
-						</select>
-					</td>
+					});
+					// -->
+					</script>
+				
+					<select id="e_combo_${record.id}" name="e_item_id">
+						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
+						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
+						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
+						<option value="999">新規作成</option>
+					</select>
+				</td>
 
 
-				
-				</tr>
-				
+			
+			</tr>
 			#{/list}
 		#{/if}
 		</tbody>

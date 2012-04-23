@@ -28,6 +28,7 @@ public class Application extends Controller {
 	public static void detailList(
     		String h_payment_date_fr,	/* 絞込日時範囲（開始） */
     		String h_payment_date_to,	/* 絞込日時範囲（終了） */
+    		Integer h_balance_type_id,  /* 絞込収支種類ID */
     		Integer h_item_id,	/* 絞込項目ＩＤ */
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
@@ -45,7 +46,7 @@ public class Application extends Controller {
     	}
 
     	List<Record> records = null;
-    	List<ItemMst> items = null;
+    	List<BalanceTypeMst> bTypes = null;
     	
     	
     	// 「保存」ボタンが押された場合
@@ -85,7 +86,7 @@ public class Application extends Controller {
 					    validation.valid(eRec);
 					    if(validation.hasErrors()) {
 					    	// 以下の描画では駄目かも？
-					        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+					    	render(bTypes, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
@@ -155,8 +156,8 @@ public class Application extends Controller {
 	    	
 	    	
     	} else {
-	    	// 検索処理(ItemMst)
-    		//items = ItemMst.find(query, params)
+	    	// 検索処理(BalanceTypeMst)
+    		bTypes = BalanceTypeMst.find("order by balance_type_id").fetch();
     		
 	    	// 検索処理(Record)
 	    	//  日付範囲
@@ -172,7 +173,7 @@ public class Application extends Controller {
 	    			strSrchSql).from(0).fetch(50);
     	}
 
-    	render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
+    	render(bTypes, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
     }
 	
 	public static void test() {
