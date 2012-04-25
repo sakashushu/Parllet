@@ -6,6 +6,7 @@
 GET     /                                       Application.index
 
 # WebSocket detailList
+POST	/detailList								Application.detailList
 GET		/detailList								Application.detailList
 WS      /detailList                             Application.WebSocketApp.listen
 

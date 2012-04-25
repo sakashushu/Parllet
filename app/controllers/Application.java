@@ -38,7 +38,7 @@ public class Application extends Controller {
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
     		) {
-    	String strSrchSql = "";
+    	String strSrchRecSql = "";
     	if(h_payment_date_fr == null) {
     		Calendar calendar = Calendar.getInstance();
     		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
@@ -161,16 +161,22 @@ public class Application extends Controller {
     		
 	    	// 検索処理(Record)
 	    	//  日付範囲
-	   		strSrchSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
+	   		strSrchRecSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
+	   		//  収支種類
+	   		if(h_balance_type_id != null) {
+	   			if(h_balance_type_id != 0) {
+	   				strSrchRecSql += " and balance_type_id = " + h_balance_type_id;
+	   			}
+	   		}
 	    	//  項目
 	   		if(h_item_id != null) {
 	   			if(h_item_id != 0) {
-	   				strSrchSql += " and item_id = " + h_item_id;
+	   				strSrchRecSql += " and item_id = " + h_item_id;
 	   			}
 	   		}
-	    	strSrchSql += " order by payment_date";
+	    	strSrchRecSql += " order by payment_date";
 	    	records = Record.find(
-	    			strSrchSql).from(0).fetch(50);
+	    			strSrchRecSql).from(0).fetch(50);
     	}
 
     	render(bTypes, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
