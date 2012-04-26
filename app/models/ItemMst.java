@@ -13,7 +13,7 @@ public class ItemMst extends Model {
 	@ManyToOne
 	public ActualTypeMst actual_type_id;
 	
-	public int item_id;
+	public int item_id;  //不要？
 	public String item_name;
 	
 	public ItemMst(

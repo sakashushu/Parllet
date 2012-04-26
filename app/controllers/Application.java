@@ -47,7 +47,10 @@ public class Application extends Controller {
 
     	List<Record> records = null;
     	List<BalanceTypeMst> bTypes = null;
-    	
+    	ActualTypeMst aTypeIn = null;
+    	ActualTypeMst aTypeOut = null;
+    	List<ItemMst> itemsIn = null;
+    	List<ItemMst> itemsOut = null;
     	
     	// 「保存」ボタンが押された場合
     	if(save != null) {
@@ -60,10 +63,11 @@ public class Application extends Controller {
 	    		for (Long lId : e_id) {
 	    			Record rec = Record.findById(lId);
 	    			try {
+	    				ItemMst item = ItemMst.findById(intEItemId.next());
 	    				// 変更有無チェック用のレコードにセット
 	    				Record eRec = new Record(
 	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
-	    						intEItemId.next(),
+	    						item,
 	    						"",
 	    						0,
 	    						"",
@@ -77,7 +81,7 @@ public class Application extends Controller {
 	    						"",
 	    						"",
 	    						"",
-	    						0,
+	    						rec.balance_type_id,  //変更しない
 	    						"",
 	    						0,
 	    						"");
@@ -86,7 +90,7 @@ public class Application extends Controller {
 					    validation.valid(eRec);
 					    if(validation.hasErrors()) {
 					    	// 以下の描画では駄目かも？
-					    	render(bTypes, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
+					    	render(bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
@@ -158,8 +162,16 @@ public class Application extends Controller {
     	} else {
 	    	// 検索処理(BalanceTypeMst)
     		bTypes = BalanceTypeMst.find("order by balance_type_id").fetch();
+
+	    	// 検索処理(ItemMst(収入))
+    		aTypeIn = ActualTypeMst.find("actual_type_name = '収入'").first();
+    		itemsIn = ItemMst.find("byActual_type_id", aTypeIn).fetch();
     		
-	    	// 検索処理(Record)
+	    	// 検索処理(ItemMst(支出))
+    		aTypeOut = ActualTypeMst.find("actual_type_name = '支出'").first();
+    		itemsOut = ItemMst.find("byActual_type_id", aTypeOut).fetch();
+
+    		// 検索処理(Record)
 	    	//  日付範囲
 	   		strSrchRecSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
 	   		//  収支種類
@@ -179,7 +191,7 @@ public class Application extends Controller {
 	    			strSrchRecSql).from(0).fetch(50);
     	}
 
-    	render(bTypes, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
+    	render(bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
     }
 	
 	public static void test() {
@@ -201,9 +213,9 @@ public class Application extends Controller {
 					
 					ObjectMapper mapper = new ObjectMapper();
 					// JSON文字列 を Bean に変換する
-					RecPaymentDate eRec;
+					RecSingleColumn eRec;
 					try {
-						eRec = mapper.readValue(data, RecPaymentDate.class);
+						eRec = mapper.readValue(data, RecSingleColumn.class);
 						
 //						// Bean の内容を標準出力に書き出す
 //						System.out.println(bean);
@@ -211,7 +223,7 @@ public class Application extends Controller {
 //						mapper.writeValue(System.out, bean);
 
 						// 変更
-						if(eRec.act_type.equals("upd_ePaymentDate")) {
+						if(eRec.act_type.equals("update")) {
 							Record rec = Record.findById(eRec.id);
 		    				
 			    			// Validate
@@ -220,14 +232,28 @@ public class Application extends Controller {
 						    	// 以下の描画では駄目かも？
 //						        render(records, h_payment_date_fr, h_payment_date_to, h_item_id);
 						    }
-		    				// 項目が変更されていた場合だけ更新
-						    Date ePayDate = DateFormat.getDateInstance().parse(eRec.payment_date);
-		    				if (rec.payment_date != ePayDate) {
-								rec.payment_date = ePayDate;
-							    // 保存
-							    rec.save();
-		    				}
-							
+						    
+						    // 支払日
+						    if(eRec.edited_col.equals("payment_date")) {
+			    				// 項目が変更されていた場合だけ更新
+							    Date ePayDate = DateFormat.getDateInstance().parse(eRec.col_val);
+			    				if (rec.payment_date != ePayDate) {
+									rec.payment_date = ePayDate;
+								    // 保存
+								    rec.save();
+			    				}
+			    				
+//						    // 収支種類
+//						    } else if(eRec.edited_col.equals("balance_type_id")) {
+//			    				// 項目が変更されていた場合だけ更新
+//							    int eBTypeId = Integer.parseInt(eRec.col_val);
+//			    				if (rec.balance_type_id != eBTypeId) {
+//									rec.balance_type_id = eBTypeId;
+//								    // 保存
+//								    rec.save();
+//			    				}
+//						    	
+						    }
 						}
 	    			} catch (ParseException e) {
 						// TODO Auto-generated catch block

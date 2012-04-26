@@ -14,6 +14,7 @@
 
 <script type="text/javascript">
 <!--
+// 「行追加」　をしようとしたコード
 jQuery(document).ready(function() {
     jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
 		jQuery( '#jquery-ui-dialog-table tbody' ) . append(
@@ -115,42 +116,59 @@ jQuery(document).ready(function() {
 			#{list items:records, as:'record'}
 			<tr>
 				<td>
+					<!-- id -->
 					<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
 					<!--
 				    <a id="e_upd_${record.id}" href="#">更新</a>
 					-->
 				</td>
 				<td>
+					<!-- 支払日 -->
 					<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
 						value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
 				</td>
 				<td>
-					<select id=e_bType_combo_${record.id}>
+					<!-- 収支種類 -->
+					<!-- 
+					編集不可項目にしたため、下記はコメントアウト
+					<select id="e_bType_combo_${record.id}">
 						#{list items:bTypes, as:'bType'}
 						<option value="${bType.balance_type_id}"${record.balance_type_id==bType.balance_type_id ? ' selected' : ''}>${bType.balance_type_name}</option>
 						#{/list}
 					</select>
+					 -->
+					#{list items:bTypes, as:'bType'}
+					${record.balance_type_id==bType ? bType.balance_type_name : ""}
+					#{/list}
 				</td>
 				<td>
 					<script type="text/javascript">
 					<!--
-					jQuery(document).ready(function() {
-						// コンボボックスの要素の変更のイベントハンドラー
-						jQuery("#e_combo_${record.id}").bind('change', function() {
-							var selval = jQuery('#e_combo_${record.id} option:selected').val();
-							if(selval=="999") {
-								window.alert('新規です');
-							}
-						});
-					});
+//					コンボの最後に、項目の新規作成ロジックを作ろうとしたコード
+//					jQuery(document).ready(function() {
+//						// コンボボックスの要素の変更のイベントハンドラー
+//						jQuery("#e_combo_${record.id}").bind('change', function() {
+//							var selval = jQuery('#e_combo_${record.id} option:selected').val();
+//							if(selval=="999") {
+//								window.alert('新規です');
+//							}
+//						});
+//					});
 					// -->
 					</script>
-				
+
+					<!-- 項目 -->
 					<select id="e_combo_${record.id}" name="e_item_id">
-						<option value="1"${record.item_id==1 ? ' selected' : ''}>食費</option>
-						<option value="2"${record.item_id==2 ? ' selected' : ''}>家財住居</option>
-						<option value="3"${record.item_id==3 ? ' selected' : ''}>水道光熱</option>
-						<option value="999">新規作成</option>
+					#{if record.item_id.actual_type_id.actual_type_name == "収入"}
+						#{list items:itemsIn, as:'itemIn'}
+						<option value="${itemIn.id}"${record.item_id==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
+						#{/list}
+					#{/if}
+					#{elseif record.item_id.actual_type_id.actual_type_name == "支出"}
+						#{list items:itemsOut, as:'itemOut'}
+						<option value="${itemOut.id}"${record.item_id==itemOut ? ' selected' : ''}>${itemOut.item_name}</option>
+						#{/list}
+					#{/elseif}
 					</select>
 				</td>
 
@@ -189,20 +207,41 @@ jQuery(document).ready(function() {
 		#{list items:records, as:'record'}
 		    //jQuery("#e_upd_${record.id}").click(function() {
 			jQuery(document).ready(function() {
-			    jQuery("#e_payment_date_${record.id}").change(function() {
+				// 支払日の変更イベント
+				jQuery("#e_payment_date_${record.id}").change(function() {
 					var data = "{"
 						+ "\"act_type\": "
-						+ "\"upd_ePaymentDate\"" + ","
+						+ "\"update\"" + ","
+						+ "\"edited_col\": "
+						+ "\"payment_date\"" + ","
 						+ "\"id\": "
 						+ jQuery("#e_id_${record.id}").val() + ","
-						+ "\"payment_date\": \""
+						+ "\"col_val\": \""
 						+ jQuery("#e_payment_date_${record.id}").val()
 						+ "\"" 
 						+"}";
 			        ws.send(data);
 			    });
 			});
-		    
+				
+			jQuery(document).ready(function() {
+				// 収支種類の変更イベント
+				jQuery("#e_bType_combo_${record.id}").change(function() {
+					var data = "{"
+						+ "\"act_type\": "
+						+ "\"update\"" + ","
+						+ "\"edited_col\": "
+						+ "\"balance_type_id\"" + ","
+						+ "\"id\": "
+						+ jQuery("#e_id_${record.id}").val() + ","
+						+ "\"col_val\": \""
+						+ jQuery("#e_bType_combo_${record.id}").val()
+						+ "\"" 
+						+"}";
+			        ws.send(data);
+			    });
+			});
+				
 			jQuery(document).ready(function() {
 				// コンボボックスのクリックイベント
 				jQuery("#e_combo_${record.id}").click(function() {

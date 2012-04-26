@@ -10,7 +10,7 @@ import play.db.jpa.Model;
 @Entity
 public class BalanceTypeMst extends Model {
 
-	public int balance_type_id;
+	public int balance_type_id;  //不要？
 	public String balance_type_name;
 
 	@ManyToOne

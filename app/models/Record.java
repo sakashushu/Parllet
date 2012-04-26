@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import play.db.jpa.Model;
 
@@ -10,9 +11,10 @@ import play.db.jpa.Model;
 public class Record extends Model {
 
 	public Date payment_date;
-	public int item_id;
-	public String item_name;
-	public int detail_id;
+	@ManyToOne
+	public ItemMst item_id;
+	public String item_name;  //不要？
+	public int detail_id;  //不要？
 	public String detail_name;
 	public int amount;
 	public String goods;
@@ -24,14 +26,15 @@ public class Record extends Model {
 	public String store;
 	public String remarks;
 	public String secret_remarks;
-	public int balance_type_id;
-	public String balance_type_name;
+	@ManyToOne
+	public BalanceTypeMst balance_type_id;
+	public String balance_type_name;  //不要？
 	public int ideal_deposit_id;
 	public String ideal_deposit_name;
 	
 	public Record(
 			Date payment_date,
-			int item_id,
+			ItemMst item_id,
 			String item_name,
 			int detail_id,
 			String detail_name,
@@ -45,7 +48,7 @@ public class Record extends Model {
 			String store,
 			String remarks,
 			String secret_remarks,
-			int balance_type_id,
+			BalanceTypeMst balance_type_id,
 			String balance_type_name,
 			int ideal_deposit_id,
 			String ideal_deposit_name

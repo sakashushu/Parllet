@@ -10,21 +10,19 @@
 # Test data
 
 ActualTypeMst(in):
-    actual_type_id:   0
     actual_type_name: 収入
 
 ActualTypeMst(out):
-    actual_type_id:   1
     actual_type_name: 支出
 
 BalanceTypeMst(simple_in):
     balance_type_id:   1
-    balance_type_name: 単純収入
+    balance_type_name: 収入
     actual_type_id:    in
 
 BalanceTypeMst(simple_out):
     balance_type_id:   2
-    balance_type_name: 単純支出
+    balance_type_name: 支出
     actual_type_id:    out
 
 BalanceTypeMst(bank_in):
@@ -39,19 +37,19 @@ BalanceTypeMst(my_savings_in):
     balance_type_id:   5
     balance_type_name: マイ貯金預入
 
-BalanceTypeMst(from_my_savings_out):
-    balance_type_id:   6
-    balance_type_name: マイ貯金から直接支払
-    actual_type_id:    out
+#  BalanceTypeMst(from_my_savings_out):
+#     balance_type_id:   6
+#     balance_type_name: マイ貯金から直接支払
+#     actual_type_id:    out
 
 BalanceTypeMst(my_savings_out):
     balance_type_id:   7
     balance_type_name: マイ貯金引出
 
-BalanceTypeMst(to_my_savings_in):
-    balance_type_id:   8
-    balance_type_name: マイ貯金に直接預入
-    actual_type_id:    in
+# BalanceTypeMst(to_my_savings_in):
+#     balance_type_id:   8
+#     balance_type_name: マイ貯金に直接預入
+#     actual_type_id:    in
 
 ItemMst(in1):
     actual_type_id:   in
@@ -125,12 +123,18 @@ ItemMst(out12):
 
 Record(test1):
     payment_date:     '2012-04-13T00:00:00'
-    item_id:          1
-    item_name:        食費
-    balance_type_id:  2
+    item_id:          in1
+    item_name:        収入
+    balance_type_id:  simple_in
 
 Record(test2):
     payment_date:     '2012-04-14T00:00:00'
-    item_id:          2
-    item_name:        家財住居
-    balance_type_id:  2
+    item_id:          out1
+    item_name:        食費
+    balance_type_id:  simple_out
+
+Record(test3):
+    payment_date:     '2012-04-15T00:00:00'
+    item_id:          out3
+    item_name:        居住
+    balance_type_id:  simple_out
