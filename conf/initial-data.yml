@@ -16,125 +16,104 @@ ActualTypeMst(out):
     actual_type_name: 支出
 
 BalanceTypeMst(simple_in):
-    balance_type_id:   1
     balance_type_name: 収入
-    actual_type_id:    in
+    actual_type_mst:   in
 
 BalanceTypeMst(simple_out):
-    balance_type_id:   2
     balance_type_name: 支出
-    actual_type_id:    out
+    actual_type_mst:   out
 
 BalanceTypeMst(bank_in):
-    balance_type_id:   3
     balance_type_name: 口座預入
 
 BalanceTypeMst(bank_out):
-    balance_type_id:   4
     balance_type_name: 口座引出
 
 BalanceTypeMst(my_savings_in):
-    balance_type_id:   5
     balance_type_name: マイ貯金預入
 
 #  BalanceTypeMst(from_my_savings_out):
-#     balance_type_id:   6
 #     balance_type_name: マイ貯金から直接支払
-#     actual_type_id:    out
+#     actual_type_mst:   out
 
 BalanceTypeMst(my_savings_out):
-    balance_type_id:   7
     balance_type_name: マイ貯金引出
 
 # BalanceTypeMst(to_my_savings_in):
-#     balance_type_id:   8
 #     balance_type_name: マイ貯金に直接預入
-#     actual_type_id:    in
+#     actual_type_mst:   in
 
 ItemMst(in1):
-    actual_type_id:   in
-    item_id:          1
+    actual_type_mst:  in
     item_name:        給与
 
 ItemMst(in2):
-    actual_type_id:   in
-    item_id:          2
+    actual_type_mst:  in
     item_name:        その他収入
 
 ItemMst(out1):
-    actual_type_id:   out
-    item_id:          101
+    actual_type_mst:  out
     item_name:        食費
 
 ItemMst(out2):
-    actual_type_id:   out
-    item_id:          102
+    actual_type_mst:  out
     item_name:        衣類
 
 ItemMst(out3):
-    actual_type_id:   out
-    item_id:          103
+    actual_type_mst:  out
     item_name:        居住
 
 ItemMst(out4):
-    actual_type_id:   out
-    item_id:          104
+    actual_type_mst:  out
     item_name:        水道光熱
 
 ItemMst(out5):
-    actual_type_id:   out
-    item_id:          105
+    actual_type_mst:  out
     item_name:        健康
 
 ItemMst(out6):
-    actual_type_id:   out
-    item_id:          106
+    actual_type_mst:  out
     item_name:        教育
 
 ItemMst(out7):
-    actual_type_id:   out
-    item_id:          107
+    actual_type_mst:  out
     item_name:        娯楽
 
 ItemMst(out8):
-    actual_type_id:   out
-    item_id:          108
+    actual_type_mst:  out
     item_name:        通信
 
 ItemMst(out9):
-    actual_type_id:   out
-    item_id:          109
+    actual_type_mst:  out
     item_name:        交通
 
 ItemMst(out10):
-    actual_type_id:   out
-    item_id:          110
+    actual_type_mst:  out
     item_name:        交際
 
 ItemMst(out11):
-    actual_type_id:   out
-    item_id:          111
+    actual_type_mst:  out
     item_name:        保険
 
 ItemMst(out12):
-    actual_type_id:   out
-    item_id:          112
+    actual_type_mst:  out
     item_name:        その他
 
 Record(test1):
     payment_date:     '2012-04-13T00:00:00'
-    item_id:          in1
+    item_mst:         in1
     item_name:        収入
-    balance_type_id:  simple_in
+    balance_type_mst: simple_in
 
 Record(test2):
     payment_date:     '2012-04-14T00:00:00'
-    item_id:          out1
+    item_mst:         out1
     item_name:        食費
-    balance_type_id:  simple_out
+    content:          カレー
+    balance_type_mst: simple_out
 
 Record(test3):
     payment_date:     '2012-04-15T00:00:00'
-    item_id:          out3
+    item_mst:         out3
     item_name:        居住
-    balance_type_id:  simple_out
+    balance_type_mst: simple_out

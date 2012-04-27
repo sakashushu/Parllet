@@ -96,17 +96,22 @@ jQuery(document).ready(function() {
 					<select name="h_balance_type_id">
 						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>すべて</option>
 						#{list items:bTypes, as:'bType'}
-						<option value="${bType.balance_type_id}"${h_balance_type_id==bType.balance_type_id ? ' selected' : ''}>${bType.balance_type_name}</option>
+						<option value="${bType.id}"${h_balance_type_id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 						#{/list}
 					</select>
 				</th>
 				<th>項目<br>
-					<select id="h_combo" name="h_item_id">
+					<select id="h_combo" name="h_item_id" style="width:100px;">
 						<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
-						<option value="1"${h_item_id==1 ? ' selected' : ''}>食費</option>
-						<option value="2"${h_item_id==2 ? ' selected' : ''}>家財住居</option>
-						<option value="3"${h_item_id==3 ? ' selected' : ''}>水道光熱</option>
+						#{list items:itemsIn, as:'itemIn'}
+						<option value="${itemIn.id}"${h_item_id==itemIn.id ? ' selected' : ''}>${itemIn.item_name}</option>
+						#{/list}
+						#{list items:itemsOut, as:'itemOut'}
+						<option value="${itemOut.id}"${h_item_id==itemOut.id ? ' selected' : ''}>${itemOut.item_name}</option>
+						#{/list}
 					</select>
+				</th>
+				<th>内容<br>
 				</th>
 			</tr>
 		</thead>
@@ -133,12 +138,12 @@ jQuery(document).ready(function() {
 					編集不可項目にしたため、下記はコメントアウト
 					<select id="e_bType_combo_${record.id}">
 						#{list items:bTypes, as:'bType'}
-						<option value="${bType.balance_type_id}"${record.balance_type_id==bType.balance_type_id ? ' selected' : ''}>${bType.balance_type_name}</option>
+						<option value="${bType.id}"${record.balance_type_mst==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 						#{/list}
 					</select>
 					 -->
 					#{list items:bTypes, as:'bType'}
-					${record.balance_type_id==bType ? bType.balance_type_name : ""}
+					${record.balance_type_mst==bType ? bType.balance_type_name : ""}
 					#{/list}
 				</td>
 				<td>
@@ -158,21 +163,24 @@ jQuery(document).ready(function() {
 					</script>
 
 					<!-- 項目 -->
-					<select id="e_combo_${record.id}" name="e_item_id">
-					#{if record.item_id.actual_type_id.actual_type_name == "収入"}
+					<select id="e_combo_${record.id}" name="e_item_id" style="width:100px;">
+					#{if record.item_mst.actual_type_mst.actual_type_name == "収入"}
 						#{list items:itemsIn, as:'itemIn'}
-						<option value="${itemIn.id}"${record.item_id==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
+						<option value="${itemIn.id}"${record.item_mst==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
 						#{/list}
 					#{/if}
-					#{elseif record.item_id.actual_type_id.actual_type_name == "支出"}
+					#{elseif record.item_mst.actual_type_mst.actual_type_name == "支出"}
 						#{list items:itemsOut, as:'itemOut'}
-						<option value="${itemOut.id}"${record.item_id==itemOut ? ' selected' : ''}>${itemOut.item_name}</option>
+						<option value="${itemOut.id}"${record.item_mst==itemOut ? ' selected' : ''}>${itemOut.item_name}</option>
 						#{/list}
 					#{/elseif}
 					</select>
 				</td>
-
-
+				<td>
+					<!-- 内容 -->
+					<input type="text" id="e_content_${record.id}" name="e_content"
+						value="${record.content}" size="13" />
+				</td>
 			
 			</tr>
 			#{/list}

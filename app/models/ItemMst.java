@@ -11,18 +11,15 @@ import play.db.jpa.Model;
 public class ItemMst extends Model {
 
 	@ManyToOne
-	public ActualTypeMst actual_type_id;
+	public ActualTypeMst actual_type_mst;
 	
-	public int item_id;  //不要？
 	public String item_name;
 	
 	public ItemMst(
-			ActualTypeMst actual_type_id,
-			int item_id,
+			ActualTypeMst actual_type_mst,
 			String item_name
 			) {
-		this.actual_type_id = actual_type_id;
-		this.item_id = item_id;
+		this.actual_type_mst = actual_type_mst;
 		this.item_name = item_name;
 	}
 }

@@ -28,7 +28,7 @@ public class Application extends Controller {
 	public static void detailList(
     		String h_payment_date_fr,	/* 絞込日時範囲（開始） */
     		String h_payment_date_to,	/* 絞込日時範囲（終了） */
-    		Integer h_balance_type_id,  /* 絞込収支種類ID */
+    		Long h_balance_type_id,  /* 絞込収支種類ID */
     		Integer h_item_id,	/* 絞込項目ＩＤ */
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
@@ -81,7 +81,7 @@ public class Application extends Controller {
 	    						"",
 	    						"",
 	    						"",
-	    						rec.balance_type_id,  //変更しない
+	    						rec.balance_type_mst,  //変更しない
 	    						"",
 	    						0,
 	    						"");
@@ -94,9 +94,9 @@ public class Application extends Controller {
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
-	    						rec.item_id != eRec.item_id) {
+	    						rec.item_mst != eRec.item_mst) {
 							rec.payment_date = eRec.payment_date;
-			    			rec.item_id = eRec.item_id;
+			    			rec.item_mst = eRec.item_mst;
 						    
 						    // 保存
 						    rec.save();
@@ -161,15 +161,15 @@ public class Application extends Controller {
 	    	
     	} else {
 	    	// 検索処理(BalanceTypeMst)
-    		bTypes = BalanceTypeMst.find("order by balance_type_id").fetch();
+    		bTypes = BalanceTypeMst.find("order by id").fetch();
 
 	    	// 検索処理(ItemMst(収入))
     		aTypeIn = ActualTypeMst.find("actual_type_name = '収入'").first();
-    		itemsIn = ItemMst.find("byActual_type_id", aTypeIn).fetch();
+    		itemsIn = ItemMst.find("byActual_type_mst", aTypeIn).fetch();
     		
 	    	// 検索処理(ItemMst(支出))
     		aTypeOut = ActualTypeMst.find("actual_type_name = '支出'").first();
-    		itemsOut = ItemMst.find("byActual_type_id", aTypeOut).fetch();
+    		itemsOut = ItemMst.find("byActual_type_mst", aTypeOut).fetch();
 
     		// 検索処理(Record)
 	    	//  日付範囲
@@ -177,13 +177,13 @@ public class Application extends Controller {
 	   		//  収支種類
 	   		if(h_balance_type_id != null) {
 	   			if(h_balance_type_id != 0) {
-	   				strSrchRecSql += " and balance_type_id = " + h_balance_type_id;
+	   				strSrchRecSql += " and balance_type_mst.id = " + h_balance_type_id;
 	   			}
 	   		}
 	    	//  項目
 	   		if(h_item_id != null) {
 	   			if(h_item_id != 0) {
-	   				strSrchRecSql += " and item_id = " + h_item_id;
+	   				strSrchRecSql += " and item_mst.id = " + h_item_id;
 	   			}
 	   		}
 	    	strSrchRecSql += " order by payment_date";
