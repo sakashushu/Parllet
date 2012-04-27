@@ -22,4 +22,8 @@ public class BalanceTypeMst extends Model {
 		this.balance_type_name = balance_type_name;
 		this.actual_type_mst = actual_type_mst;
 	}
+	
+	public String toString() {
+        return balance_type_name;
+	}
 }

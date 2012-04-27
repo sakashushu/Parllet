@@ -1,0 +1,14 @@
+payment_date=日付
+balance_type_mst=収支種類
+item_mst=項目
+detail_mst=項目詳細
+amount=金額
+content=内容
+store=お店
+price=単価
+quantity=数量
+handling_mst=取扱
+debit_date=引落日
+remarks=備考
+secret_remarks=備考（非公開）
+ideal_deposit_mst=マイ貯金

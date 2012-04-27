@@ -22,13 +22,13 @@ public class Record extends Model {
 	@ManyToOne
 	public ItemMst item_mst;				//項目
 	public int detail_mst;					//項目詳細
-	@Required
-	public int amount;						//金額
 	public String content;					//内容
 	public String store;					//お店
+	@Required
+	public int amount;						//金額
 	public int price;						//単価
 	public int quantity;					//数量
-	public int handling_mst;					//取扱
+	public int handling_mst;				//取扱
 	public Date debit_date;					//引落日
 	@MaxSize(10000)
 	public String remarks;					//備考
@@ -41,9 +41,9 @@ public class Record extends Model {
 			BalanceTypeMst balance_type,
 			ItemMst item,
 			int detail_mst,
-			int amount,
 			String content,
 			String store,
+			int amount,
 			int price,
 			int quantity,
 			int handling_mst,
@@ -56,9 +56,9 @@ public class Record extends Model {
 		this.balance_type_mst = balance_type;
 		this.item_mst = item;
 		this.detail_mst = detail_mst;
-		this.amount = amount;
 		this.content = content;
 		this.store = store;
+		this.amount = amount;
 		this.price = price;
 		this.quantity = quantity;
 		this.handling_mst = handling_mst;

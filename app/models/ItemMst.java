@@ -22,4 +22,8 @@ public class ItemMst extends Model {
 		this.actual_type_mst = actual_type_mst;
 		this.item_name = item_name;
 	}
+	
+	public String toString() {
+        return item_name;
+	}
 }
