@@ -111,8 +111,8 @@ jQuery(document).ready(function() {
 						#{/list}
 					</select>
 				</th>
-				<th>内容<br>
-				</th>
+				<th>内容<br></th>
+				<th>お店<br></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -180,6 +180,11 @@ jQuery(document).ready(function() {
 					<!-- 内容 -->
 					<input type="text" id="e_content_${record.id}" name="e_content"
 						value="${record.content}" size="13" />
+				</td>
+				<td>
+					<!-- お店 -->
+					<input type="text" id="e_store_${record.id}" name="e_store"
+						value="${record.store}" size="13" />
 				</td>
 			
 			</tr>

@@ -101,19 +101,17 @@ ItemMst(out12):
 
 Record(test1):
     payment_date:     '2012-04-13T00:00:00'
-    item_mst:         in1
-    item_name:        収入
     balance_type_mst: simple_in
+    item_mst:         in1
 
 Record(test2):
     payment_date:     '2012-04-14T00:00:00'
-    item_mst:         out1
-    item_name:        食費
-    content:          カレー
     balance_type_mst: simple_out
+    item_mst:         out1
+    content:          カレー
 
 Record(test3):
     payment_date:     '2012-04-15T00:00:00'
-    item_mst:         out3
-    item_name:        居住
     balance_type_mst: simple_out
+    item_mst:         out3
+    store:            ハンズマン

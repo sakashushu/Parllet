@@ -67,24 +67,19 @@ public class Application extends Controller {
 	    				// 変更有無チェック用のレコードにセット
 	    				Record eRec = new Record(
 	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
+	    						rec.balance_type_mst,  //変更しない
 	    						item,
-	    						"",
-	    						0,
-	    						"",
-	    						0,
-	    						"",
-	    						0,
 	    						0,
 	    						0,
 	    						"",
+	    						"",
+	    						0,
+	    						0,
+	    						0,
 	    						null,
 	    						"",
 	    						"",
-	    						"",
-	    						rec.balance_type_mst,  //変更しない
-	    						"",
-	    						0,
-	    						"");
+	    						0);
 	    				
 		    			// Validate
 					    validation.valid(eRec);
@@ -268,9 +263,6 @@ public class Application extends Controller {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					
-					
 					
 				}
 			}
