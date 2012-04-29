@@ -16,4 +16,8 @@ public class ActualTypeMst extends Model {
 			) {
 		this.actual_type_name = actual_type_name;
 	}
+
+	public String toString() {
+        return actual_type_name;
+	}
 }

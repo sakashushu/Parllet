@@ -1,0 +1,49 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.show.title', type.modelName) /}
+
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<!-- datepickerの見た目の調整 -->
+<style>
+.ui-datepicker td span, .ui-datepicker td a {
+    text-align: center;    /* 日付はセンタリングの方が好き */
+}
+.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
+    width: auto;    /* そのままだと改行してしまう */
+}
+.ui-datepicker select.ui-datepicker-month {
+    margin-left: 1em;    /* ちょっと離すほうが好き */
+}
+</style>
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+
+<div id="crudShow" class="${type.name}">
+
+    <h2 id="crudShowTitle">&{'crud.show.title', type.modelName}</h2>
+
+    <div class="objectForm">
+    #{form action:@save(object._key()), enctype:'multipart/form-data'}
+        #{crud.form}
+        	#{crud.custom 'payment_date'}
+	            #{crud.dateField name:"payment_date", value:${payment_date} : null) /}
+	            %{ am = messages.get('crud.help.dateformat',play.libs.I18N.getDateFormat()) }%
+        	#{/crud.custom}
+        #{/crud.form}
+        <p class="crudButtons">
+            <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />
+            <input type="submit" name="_saveAndContinue" value="&{'crud.saveAndContinue', type.modelName}" />
+        </p>
+    #{/form}
+    </div>
+
+    #{form @delete(object._key())}
+        <p class="crudDelete">
+            <input type="submit" value="&{'crud.delete', type.modelName}" />
+        </p>
+    #{/form}
+
+</div>

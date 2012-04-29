@@ -1,0 +1,30 @@
+#{extends 'CRUD/layout.html' /}
+#{set title:messages.get('crud.list.title', type.name) /}
+
+<div id="crudList" class="${type.name}">
+
+    <h2 id="crudListTitle">&{'crud.list.title', type.name}</h2>
+
+    <div id="crudListSearch">
+        #{crud.search /}
+    </div>
+
+    <div id="crudListTable">
+        #{crud.table fields:['payment_date', 'balance_type_mst', 'item_mst']}
+        	#{crud.custom 'payment_date'}
+        		<a href="@{Records.show(object.id)}">
+        		${object.payment_date.format("yyyy年MM月dd日(E)　HH:mm:ss", "ja")}
+        		</a>
+        	#{/crud.custom}
+        #{/crud.table}
+    </div>
+
+    <div id="crudListPagination">
+        #{crud.pagination /}
+    </div>
+
+    <p id="crudListAdd">
+        <a href="@{blank()}">&{'crud.add', type.modelName}</a>
+    </p>
+
+</div>
