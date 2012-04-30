@@ -1,13 +1,30 @@
 # テーブル
-Record=収支データ
-Records=収支データ
 ActualTypeMst=実収支種類
 ActualTypeMsts=実収支種類
+BalanceTypeMst=収支種類
+BalanceTypeMsts=収支種類
+HandlingTypeMst=取扱種類
+HandlingTypeMsts=取扱種類
+HaUser=家計簿ユーザー
+HaUsers=家計簿ユーザー
+ItemMst=項目
+ItemMsts=項目
+HandlingMst=取扱
+HandlingMsts=取扱
+IdealDepositMst=マイ貯金
+IdealDepositMsts=マイ貯金
+Record=収支データ
+Records=収支データ
 
-# ActualTypeMstの項目名
+# ActualTypeMst(実収支種類)の項目名
 actual_type_name=実収支種類名称
 
+# BalanceTypeMst(収支種類)の項目名
+balance_type_name=収支種類名称
+actual_type_mst=実収支種類
+
 # Recordの項目名
+ha_user=家計簿ユーザー
 payment_date=日付
 balance_type_mst=収支種類
 item_mst=項目

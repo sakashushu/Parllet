@@ -10,13 +10,7 @@
     </div>
 
     <div id="crudListTable">
-        #{crud.table fields:['payment_date', 'balance_type_mst', 'item_mst']}
-        	#{crud.custom 'payment_date'}
-        		<a href="@{Records.show(object.id)}">
-        		${object.payment_date.format("yyyy年MM月dd日(E)", "ja")}
-        		</a>
-        	#{/crud.custom}
-        #{/crud.table}
+        #{crud.table fields:['ha_user', 'handling_type_mst', 'handling_name'] /}
     </div>
 
     <div id="crudListPagination">

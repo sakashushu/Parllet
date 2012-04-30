@@ -6,7 +6,7 @@
 <script type="text/javascript">google.load('jquery', '1')</script>
 <script type="text/javascript">google.load('jqueryui', '1')</script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker_crud.js'}" ></script>
 <!-- datepicker‚ÌŒ©‚½–Ú‚Ì’²® -->
 <style>
 .ui-datepicker td span, .ui-datepicker td a {
@@ -28,10 +28,33 @@
     <div class="objectForm">
     #{form action:@save(object._key()), enctype:'multipart/form-data'}
         #{crud.form}
-        	#{crud.custom 'payment_date'}
-	            #{crud.dateField name:"payment_date", value:${payment_date} : null) /}
-	            %{ am = messages.get('crud.help.dateformat',play.libs.I18N.getDateFormat()) }%
-        	#{/crud.custom}
+			#{crud.custom 'payment_date' }
+            	#{field fieldName}
+            	<label for="${field.id}">
+            	&{'payment_date'}
+                </label>
+                <input id="${field.id}" class="datepicker" type="text" name="${field.name}" value="${object.payment_date?.format()}" size="10" />
+                #{ifError fieldName}
+                    <span class="error">${field.error.raw()}</span>
+                #{/ifError}
+                #{/field}
+                 <span class="crudHelp">
+                    &{'crud.help.required'}
+                 </span>
+           #{/crud.custom}        	
+			#{crud.custom 'debit_date' }
+            	#{field fieldName}
+            	<label for="${field.id}">
+            	&{'debit_date'}
+                </label>
+                <input id="${field.id}" class="datepicker" type="text" name="${field.name}" value="${object.debit_date?.format()}" size="10" />
+                #{ifError fieldName}
+                    <span class="error">${field.error.raw()}</span>
+                #{/ifError}
+                #{/field}
+                 <span class="crudHelp">
+                 </span>
+           #{/crud.custom}        	
         #{/crud.form}
         <p class="crudButtons">
             <input type="submit" name="_save" value="&{'crud.save', type.modelName}" />

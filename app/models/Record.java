@@ -15,42 +15,48 @@ import play.db.jpa.Model;
 public class Record extends Model {
 	
 	@Required
-	public Date payment_date;				//日付
+	@ManyToOne
+	public HaUser ha_user;						//家計簿ユーザー
+	@Required
+	public Date payment_date;					//日付
 	@ManyToOne
 	@Required
-	public BalanceTypeMst balance_type_mst;	//収支種類
+	public BalanceTypeMst balance_type_mst;		//収支種類
 	@ManyToOne
-	public ItemMst item_mst;				//項目
-	public int detail_mst;					//項目詳細
-	public String content;					//内容
-	public String store;					//お店
+	public ItemMst item_mst;					//項目
+	public String detail_mst;					//項目詳細
+	public String content;						//内容
+	public String store;						//お店
 	@Required
-	public int amount;						//金額
-	public int price;						//単価
-	public int quantity;					//数量
-	public int handling_mst;				//取扱
-	public Date debit_date;					//引落日
+	public int amount;							//金額
+	public int price;							//単価
+	public int quantity;						//数量
+	@ManyToOne
+	@Required
+	public HandlingMst handling_mst;			//取扱
+	public Date debit_date;						//引落日
 	@MaxSize(10000)
-	public String remarks;					//備考
+	public String remarks;						//備考
 	@MaxSize(10000)
-	public String secret_remarks;			//備考（非公開）
-	public int ideal_deposit_mst;			//マイ貯金
+	public String secret_remarks;				//備考（非公開）
+	@ManyToOne
+	public IdealDepositMst ideal_deposit_mst;	//マイ貯金
 	
 	public Record(
 			Date payment_date,
 			BalanceTypeMst balance_type,
 			ItemMst item,
-			int detail_mst,
+			String detail_mst,
 			String content,
 			String store,
 			int amount,
 			int price,
 			int quantity,
-			int handling_mst,
+			HandlingMst handling_mst,
 			Date debit_date,
 			String remarks,
 			String secret_remarks,
-			int ideal_deposit_mst
+			IdealDepositMst ideal_deposit_mst
 			) {
 		this.payment_date = payment_date;
 		this.balance_type_mst = balance_type;

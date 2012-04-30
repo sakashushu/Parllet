@@ -9,28 +9,30 @@ import play.data.validation.Required;
 import play.db.jpa.Model;
 
 @Entity
-public class ItemMst extends Model {
-
+public class HandlingMst extends Model {
+	
 	@Required
 	@ManyToOne
 	public HaUser ha_user;						//家計簿ユーザー
 	
+	@Required
 	@ManyToOne
-	public ActualTypeMst actual_type_mst;
+	public HandlingTypeMst handling_type_mst;
+
+	@Required
+	public String handling_name;
 	
-	public String item_name;
-	
-	public ItemMst(
+	public HandlingMst(
 			HaUser ha_user,
-			ActualTypeMst actual_type_mst,
-			String item_name
+			HandlingTypeMst handling_type_mst,
+			String handling_name
 			) {
 		this.ha_user = ha_user;
-		this.actual_type_mst = actual_type_mst;
-		this.item_name = item_name;
+		this.handling_type_mst = handling_type_mst;
+		this.handling_name = handling_name;
 	}
-	
+
 	public String toString() {
-        return item_name;
+        return handling_name;
 	}
 }

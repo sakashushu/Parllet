@@ -69,17 +69,17 @@ public class Application extends Controller {
 	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
 	    						rec.balance_type_mst,  //変更しない
 	    						item,
-	    						0,
 	    						"",
 	    						"",
+	    						"",
 	    						0,
 	    						0,
 	    						0,
-	    						0,
+	    						rec.handling_mst,
 	    						null,
 	    						"",
 	    						"",
-	    						0);
+	    						null);
 	    				
 		    			// Validate
 					    validation.valid(eRec);
