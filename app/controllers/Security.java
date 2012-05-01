@@ -9,4 +9,11 @@ public class Security extends Secure.Security {
 		return HaUser.connect(email, password) != null;
 	}
 	
+	static void onDisconnected() {
+		Application.index();
+	}
+	
+	static void onAuthenticated() {
+		Admin.index();
+	}
 }
