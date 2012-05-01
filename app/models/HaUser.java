@@ -33,6 +33,10 @@ public class HaUser extends Model {
 		this.isAdmin = isAdmin;
 	}
 
+    public static HaUser connect(String email, String password) {
+    	return find("byEmailAndPassword", email, password).first();
+    }
+    
 	public String toString() {
         return email;
 	}

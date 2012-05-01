@@ -36,6 +36,15 @@
         #{get 'moreScripts' /}
     </head>
     <body>
-        #{doLayout /}
+    	<div id="header">
+    		<ul id="tools">
+			    <li>
+			        <a href="@{Admin.index()}">Log in to write something</a>
+			    </li>
+			</ul>
+    	</div>
+    	<div id="main">
+	        #{doLayout /}
+    	</div>
     </body>
 </html>

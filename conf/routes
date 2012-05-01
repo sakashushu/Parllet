@@ -6,6 +6,7 @@
 GET     /                                       Application.index
 
 # Import CRUD routes
+GET	    /admin/?                                Admin.index
 *       /admin                                  module:crud
 
 # Import Secure routes
