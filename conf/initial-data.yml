@@ -15,6 +15,12 @@ HaUser(sakashushu):
     fullname:         坂元修一
     isAdmin:          true
 
+HaUser(member1):
+    email:            mem1@aaa.com
+    password:         secret
+    fullname:         会員一番
+    isAdmin:          false
+
 ActualTypeMst(in):
     actual_type_name: 収入
 

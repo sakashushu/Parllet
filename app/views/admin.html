@@ -28,6 +28,38 @@
     	</div>
     	
     	<div id="main">
+		    <ul id="adminMenu">
+		        <li class="${request.controller == 'Admin' ? 'selected' : ''}">
+		            <a href="@{Admin.index()}">My posts</a>
+		        </li>
+		        #{secure.check 'admin'}
+		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">
+		                <a href="@{HaUsers.list()}">HaUsers</a>
+		            </li>
+		            <li class="${request.controller == 'ActualTypeMsts' ? 'selected' : ''}">
+		                <a href="@{ActualTypeMsts.list()}">ActualTypeMsts</a>
+		            </li>
+		            <li class="${request.controller == 'BalanceTypeMsts' ? 'selected' : ''}">
+		                <a href="@{BalanceTypeMsts.list()}">BalanceTypeMsts</a>
+		            </li>
+		            <li class="${request.controller == 'HandlingTypeMsts' ? 'selected' : ''}">
+		                <a href="@{HandlingTypeMsts.list()}">HandlingTypeMsts</a>
+		            </li>
+		            <li class="${request.controller == 'ItemMsts' ? 'selected' : ''}">
+		                <a href="@{ItemMsts.list()}">ItemMsts</a>
+		            </li>
+		            <li class="${request.controller == 'HandlingMsts' ? 'selected' : ''}">
+		                <a href="@{HandlingMsts.list()}">HandlingMsts</a>
+		            </li>
+		            <li class="${request.controller == 'IdealDepositMsts' ? 'selected' : ''}">
+		                <a href="@{IdealDepositMsts.list()}">IdealDepositMsts</a>
+		            </li>
+		            <li class="${request.controller == 'Records' ? 'selected' : ''}">
+		                <a href="@{Records.list()}">Records</a>
+		            </li>
+		        #{/secure.check}
+		    </ul>
+        	
 	        #{doLayout /}
     	</div>
     	

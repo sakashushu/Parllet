@@ -42,7 +42,9 @@ public class Application extends Controller {
     	if(h_payment_date_fr == null) {
     		Calendar calendar = Calendar.getInstance();
     		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
+    		calendar.add(Calendar.MONTH, -1);
+//    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
+    		h_payment_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
     	}
 
     	List<Record> records = null;

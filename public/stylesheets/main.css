@@ -55,3 +55,36 @@ padding: 2px;
     color: #000080;
     text-decoration: none;
 }
+
+
+/** Admin **/
+
+.tags-list .tag {
+    cursor: pointer;
+    color: red;
+}
+
+#adminMenu {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+#adminMenu li {
+    display: inline;
+}
+
+#adminMenu li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 80%;
+    background: #591C64;
+    padding: 2px 10px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+}
+
+#adminMenu li.selected a {
+    background: #82A346;
+}
+
