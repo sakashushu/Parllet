@@ -25,8 +25,6 @@ public class Record extends Model {
 	@ManyToOne
 	public ItemMst item_mst;					//項目
 	public String detail_mst;					//項目詳細
-	public String content;						//内容
-	public String store;						//お店
 	@Required
 	public int amount;							//金額
 	public int price;							//単価
@@ -35,6 +33,8 @@ public class Record extends Model {
 	@Required
 	public HandlingMst handling_mst;			//取扱
 	public Date debit_date;						//引落日
+	public String content;						//内容
+	public String store;						//お店
 	@MaxSize(10000)
 	public String remarks;						//備考
 	@MaxSize(10000)
@@ -47,13 +47,13 @@ public class Record extends Model {
 			BalanceTypeMst balance_type,
 			ItemMst item,
 			String detail_mst,
-			String content,
-			String store,
 			int amount,
 			int price,
 			int quantity,
 			HandlingMst handling_mst,
 			Date debit_date,
+			String content,
+			String store,
 			String remarks,
 			String secret_remarks,
 			IdealDepositMst ideal_deposit_mst
@@ -62,13 +62,13 @@ public class Record extends Model {
 		this.balance_type_mst = balance_type;
 		this.item_mst = item;
 		this.detail_mst = detail_mst;
-		this.content = content;
-		this.store = store;
 		this.amount = amount;
 		this.price = price;
 		this.quantity = quantity;
 		this.handling_mst = handling_mst;
 		this.debit_date = debit_date;
+		this.content = content;
+		this.store = store;
 		this.remarks = remarks;
 		this.secret_remarks = secret_remarks;
 		this.ideal_deposit_mst = ideal_deposit_mst;

@@ -10,10 +10,10 @@
     </div>
 
     <div id="crudListTable">
-        #{crud.table fields:['payment_date', 'balance_type_mst', 'item_mst', 'amount']}
+        #{crud.table fields:['payment_date', 'balance_type_mst', 'item_mst', 'detail_mst', 'amount', 'handling_mst', 'debit_date', 'content', 'store', 'remarks', 'ideal_deposit_mst']}
         	#{crud.custom 'payment_date'}
         		<a href="@{Records.show(object.id)}">
-        		${object.payment_date.format("yyyy年MM月dd日(E)", "ja")}
+        		${object.payment_date.format("yyyy/MM/dd(E)", "ja")}
         		</a>
         	#{/crud.custom}
         	#{crud.custom 'amount'}

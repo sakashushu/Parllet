@@ -1,11 +1,16 @@
+html, body {
+    background: #FFFACD !important;
+    font-family: Helvetica, Arial, Sans !important;
+}
+
 body {
 font-size: 10pt;
-background-color: #F6FFFF;
-color: #003366;
+background-color: #FFFACD;
+color: #612d00;
 }
 h1 {
 font-size: 12pt;
-background-color: #CCDDFF;
+background-color: #dbb96b;
 padding: 3px;
 }
 h2 {
@@ -14,7 +19,7 @@ padding: 2px;
 }
 
 .aBtn {
-    background-color: #60ffa0;
+    background-color: #dbb96b;
     width: auto;
 }
 
@@ -29,7 +34,7 @@ padding: 2px;
     display: block;
     height: 49px;
     margin-left: 20px;
-    color: #000080;
+    color: #a34c00;
     font-size: 48px;
     font-weight: bold;
     letter-spacing: -4px;
@@ -52,7 +57,7 @@ padding: 2px;
 }
 
 #tools a {
-    color: #000080;
+    color: #612d00;
     text-decoration: none;
 }
 

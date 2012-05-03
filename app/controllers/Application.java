@@ -72,13 +72,13 @@ public class Application extends Controller {
 	    						rec.balance_type_mst,  //変更しない
 	    						item,
 	    						"",
-	    						"",
-	    						"",
 	    						0,
 	    						0,
 	    						0,
 	    						rec.handling_mst,
 	    						null,
+	    						"",
+	    						"",
 	    						"",
 	    						"",
 	    						null);
