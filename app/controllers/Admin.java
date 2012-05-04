@@ -24,4 +24,6 @@ public class Admin extends Controller {
 		List<Record> records = Record.find("ha_user.email", haUser).fetch();
 		render(records);
 	}
+	
+	
 }

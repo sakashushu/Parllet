@@ -12,6 +12,10 @@ GET	    /admin/?                                Admin.index
 # Import Secure routes
 *       /                                       module:secure
 
+# Admin new
+GET     /admin/new                              Admin.form
+POST    /admin/new                              Admin.save
+
 # WebSocket detailList
 POST	/detailList								Application.detailList
 GET		/detailList								Application.detailList

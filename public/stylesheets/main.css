@@ -95,3 +95,59 @@ padding: 2px;
     background: #82A346;
 }
 
+
+
+/** views.admin.adminMenu.member **/
+
+#admin .record {
+    background: #fff;
+    padding: 4px;
+    margin: 0;
+    font-size: 90%;
+}
+
+#admin .record.odd {
+/**
+	background: #C0CBE5;
+**/
+	background: #dbb96b;
+}
+
+#admin .record a {
+    color: #444;
+}
+
+#newRecord {
+    border-top: 1px dotted #C0CBE5;
+    padding-top: 15px;
+}
+
+#newRecord a {
+    background: #C88116;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 80%;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,.3);
+}
+
+#newRecord a span {
+    background: #7D510E;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    padding: 0 5px 2px 5px;
+    position: relative;
+    top: -1px;
+}
+
+#recordContent {
+    width: 100%;
+    height: 300px;
+}
+
+.hasError {
+    background: pink;
+}
