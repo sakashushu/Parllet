@@ -1,6 +1,9 @@
 package controllers;
 
+import java.util.List;
+
 import models.HaUser;
+import models.Record;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -17,6 +20,8 @@ public class Admin extends Controller {
 	}
 	
 	public static void index() {
-		render();
+		String haUser = Security.connected();
+		List<Record> records = Record.find("ha_user.email", haUser).fetch();
+		render(records);
 	}
 }

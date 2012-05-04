@@ -1,4 +1,15 @@
 #{extends 'admin.html' /}
 #{set title:'Home' /}
 
-&{'views.admin.index.welcome.before'} ${user}&{'views.admin.index.welcome.after'}
+<h3>&{'views.admin.index.welcome.before'} ${user}&{'views.admin.index.welcome.after'}
+</h3>
+
+#{list items:records, as:'record'}
+    <p class="record ${record_parity}">
+        <a href="#">${record.payment_date.format('yyyy/MM/dd')}</a>
+    </p>
+#{/list}
+ 
+<p id="newRecord" >
+    <a href="#"><span>+</span> write a new record</a>
+</p>

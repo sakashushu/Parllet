@@ -43,6 +43,7 @@ public class Record extends Model {
 	public IdealDepositMst ideal_deposit_mst;	//マイ貯金
 	
 	public Record(
+			HaUser ha_user,
 			Date payment_date,
 			BalanceTypeMst balance_type,
 			ItemMst item,
@@ -58,6 +59,7 @@ public class Record extends Model {
 			String secret_remarks,
 			IdealDepositMst ideal_deposit_mst
 			) {
+		this.ha_user = ha_user;
 		this.payment_date = payment_date;
 		this.balance_type_mst = balance_type;
 		this.item_mst = item;

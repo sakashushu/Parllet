@@ -68,6 +68,7 @@ public class Application extends Controller {
 	    				ItemMst item = ItemMst.findById(intEItemId.next());
 	    				// 変更有無チェック用のレコードにセット
 	    				Record eRec = new Record(
+	    						rec.ha_user,
 	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
 	    						rec.balance_type_mst,  //変更しない
 	    						item,
