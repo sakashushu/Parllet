@@ -40,6 +40,11 @@ remarks=備考
 secret_remarks=備考（非公開）
 ideal_deposit_mst=マイ貯金
 
+secure.username=Eメール:
+secure.password=パスワード:
+secure.signin=ログイン
+secure.remember=次回以降IDを省略
+
 views.main.tools.login=ログイン
 views.main.tools.logo=マイ貯金家計簿
 
