@@ -1,0 +1,41 @@
+#{extends 'admin.html' /}
+ 
+ <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+
+<h3>Write, <span>a new record</span></h3>
+ 
+#{form @save()}
+ 
+    #{ifErrors}
+        <p class="error">
+            Please correct these errors.
+        </p>
+    #{/ifErrors}
+     
+    <p>
+        #{field 'payment_date'}
+        <label>&{'payment_date'}:</label>
+        <input type="text" class="datepicker" name="${field.name}" 
+            value="${record?.payment_date?.format('yyyy/MM/dd')}" />
+        <span class="error">#{error 'record.payment_date' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'balance_type_mst'}
+        <label>&{'balance_type_mst'}:</label>
+		<select name="${field.name}">
+			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+			<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.balance_type_mst' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        <input type="submit" value="save" />
+    </p>
+    
+#{/form}

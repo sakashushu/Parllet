@@ -158,10 +158,10 @@ public class Application extends Controller {
 	    	
 	    	
     	} else {
-	    	// 検索処理(BalanceTypeMst)
+    		// 検索処理(BalanceTypeMst)
     		bTypes = BalanceTypeMst.find("order by id").fetch();
-
-	    	// 検索処理(ItemMst(収入))
+    		
+    		// 検索処理(ItemMst(収入))
     		aTypeIn = ActualTypeMst.find("actual_type_name = '収入'").first();
     		itemsIn = ItemMst.find("byActual_type_mst", aTypeIn).fetch();
     		

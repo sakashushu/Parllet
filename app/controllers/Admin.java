@@ -25,5 +25,11 @@ public class Admin extends Controller {
 		render(records);
 	}
 	
+	public static void form() {
+		render();
+	}
 	
+	public static void save() {
+		// Not implemented yet
+	}
 }
