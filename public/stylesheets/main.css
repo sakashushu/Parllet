@@ -34,47 +34,21 @@ padding: 2px;
 
 #logo-table {
     display: table;
-    width: 560px;
-}
-#logo-table-cell1 {
-    display: table-cell;
-    width: 30%;
-    background-color: green;
-}
-#logo-table-cell2 {
-    display: table-cell;
-    width: 70%;
-    background-color: white;
+    width: 500px;
 }
 
-#logo-pre1 {
-    display: block;
-    height: 25px;
-    margin-left: 10px;
+#logo-pre {
     color: #a34c00;
     font-size: 24px;
-    background-color: blue;
-}
-
-#logo-pre2 {
-    display: block;
-    height: 25px;
-    margin-left: 20px;
-    color: #a34c00;
-    font-size: 24px;
-    background-color: red;
+	padding-left: 20px;
 }
 
 #logo {
-    display: block;
-    height: 49px;
-    margin-left: 20px;
     color: #a34c00;
     font-size: 48px;
     font-weight: bold;
     letter-spacing: -4px;
     text-shadow: 1px 2px 2px #000;
-    background-color: yellow;
 }
 
 #logo span {

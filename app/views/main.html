@@ -7,7 +7,10 @@
         <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+        <!-- 
 		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+         -->
 		<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/jqgrid/css/ui.jqgrid.css'}" />
         <!-- 
         <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
@@ -37,21 +40,19 @@
     </head>
     <body>
     	<div id="header">
-    		<div id="logo-table">
-	    		<div id="logo-table-cell1">
-		    		<div id="logo-pre1">
-			   			&{'views.main.tools.logo.pre1'}
-		    		</div>
-		    		<div id="logo-pre2">
-			   			&{'views.main.tools.logo.pre2'}
-		    		</div>
-	    		</div>
-	    		<div id="logo-table-cell2">
-		    		<div id="logo">
-		    			&{'views.main.tools.logo'}
-		    		</div>
-	    		</div>
-    		</div>
+    		<table id="logo-table">
+    		<tr>
+	    		<td id="logo-pre">
+		   			&{'views.main.tools.logo.pre1'}
+		   			<br>
+		   			&nbsp;&nbsp;&nbsp;&nbsp;
+		   			&{'views.main.tools.logo.pre2'}
+	    		</td>
+	    		<td id="logo">
+	    			&{'views.main.tools.logo'}
+	    		</td>
+	    	</tr>
+    		</table>
     		<ul id="tools">
 			    <li>
 			        <a href="@{Admin.index()}">&{'views.main.tools.login'}</a>

@@ -35,6 +35,97 @@
     </p>
  
     <p>
+        #{field 'item_mst'}
+        <label>&{'item_mst'}:</label>
+		<select name="${field.name}">
+			<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+			#{list items:models.ItemMst.find("order by id").fetch(), as:'item'}
+			<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.item_mst' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'detail_mst'}
+        <label>&{'detail_mst'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.detail_mst}" />
+        <span class="error">#{error 'record.detail_mst' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'amount'}
+        <label>&{'amount'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.amount}" />
+        <span class="error">#{error 'record.amount' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'handling_mst'}
+        <label>&{'handling_mst'}:</label>
+		<select name="${field.name}">
+			<option value="0"${record?.handling_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+			#{list items:models.HandlingMst.find("order by id").fetch(), as:'handling'}
+			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.handling_mst' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'debit_date'}
+        <label>&{'debit_date'}:</label>
+        <input type="text" class="datepicker" name="${field.name}" 
+            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
+        <span class="error">#{error 'record.debit_date' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'content'}
+        <label>&{'content'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.content}" />
+        <span class="error">#{error 'record.content' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'store'}
+        <label>&{'store'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.store}" />
+        <span class="error">#{error 'record.store' /}</span>
+        #{/field}
+    </p>
+
+    <p>
+        #{field 'remarks'}
+        <label>&{'remarks'}:</label>
+        <textarea name="${field.name}" 
+            value="${record?.remarks}">
+        </textarea>
+        <span class="error">#{error 'record.remarks' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
+        #{field 'secret_remarks'}
+        <label>&{'secret_remarks'}:</label>
+        <textarea name="${field.name}" 
+            value="${record?.secret_remarks}">
+        </textarea>
+        <span class="error">#{error 'record.secret_remarks' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
         <input type="submit" value="save" />
     </p>
     
