@@ -126,6 +126,19 @@
     </p>
  
     <p>
+        #{field 'ideal_deposit_mst'}
+        <label>&{'ideal_deposit_mst'}:</label>
+		<select name="${field.name}">
+			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>(なし)</option>
+			#{list items:models.IdealDepositMst.find("order by id").fetch(), as:'idealDeposit'}
+			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
+        #{/field}
+    </p>
+ 
+    <p>
         <input type="submit" value="save" />
     </p>
     

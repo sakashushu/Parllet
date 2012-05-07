@@ -19,9 +19,10 @@ public class Record extends Model {
 	public HaUser ha_user;						//家計簿ユーザー
 	@Required
 	public Date payment_date;					//日付
-	@ManyToOne
 	@Required
+	@ManyToOne
 	public BalanceTypeMst balance_type_mst;		//収支種類
+	@Required
 	@ManyToOne
 	public ItemMst item_mst;					//項目
 	@MaxSize(40)
