@@ -6,7 +6,7 @@
 
 #{list items:records, as:'record'}
     <p class="record ${record_parity}">
-        <a href="#">${record.payment_date.format('yyyy/MM/dd')}</a>
+        <a href="@{form(record.id)}">${record.payment_date.format('yyyy/MM/dd')}</a>
     </p>
 #{/list}
  

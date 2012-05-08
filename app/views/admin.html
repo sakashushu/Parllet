@@ -29,9 +29,24 @@
     </head>
     <body id="admin">
     	<div id="header">
+<!-- 
     		<div id="logo">
     			&{'views.admin.logo'}.<span>&{'views.admin.logo.span'}</span>
     		</div>
+ -->
+    		<table id="logo-table">
+	    		<tr>
+		    		<td id="logo-pre">
+			   			&{'views.main.tools.logo.pre1'}
+			   			<br>
+			   			&nbsp;&nbsp;&nbsp;&nbsp;
+			   			&{'views.main.tools.logo.pre2'}
+		    		</td>
+		    		<td id="logo">
+		    			&{'views.main.tools.logo'}.<span>&{'views.admin.logo.span'}</span>
+		    		</td>
+		    	</tr>
+    		</table>
     		<ul id="tools">
 			    <li>
 			        <a href="@{Secure.logout()}">&{'views.admin.tools.logout'}</a>
@@ -43,6 +58,9 @@
 		    <ul id="adminMenu">
 		        <li class="${request.controller == 'Admin' ? 'selected' : ''}">
 		            <a href="@{Admin.index()}">&{'views.admin.adminMenu.member'}</a>
+		        </li>
+		        <li class="${request.controller == 'DetailList' ? 'selected' : ''}">
+		            <a href="@{DetailList.detailList()}">&{'views.application.tools.detaillist'}</a>
 		        </li>
 		        #{secure.check 'admin'}
 		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">

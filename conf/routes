@@ -13,7 +13,9 @@ GET	    /admin/?                                Admin.index
 *       /                                       module:secure
 
 # Admin new
+GET     /admin/myRecords/{id}                   Admin.form
 GET     /admin/new                              Admin.form
+POST    /admin/myRecords/{id}                   Admin.save
 POST    /admin/new                              Admin.save
 
 # WebSocket detailList

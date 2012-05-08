@@ -1,13 +1,15 @@
-#{extends 'main.html' /}
+#{extends 'admin.html' /}
 #{set title:'明細表' /}
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
+<!-- 
 <h2>
 	<table id="pages">
 		<tr><td><a href="@{Application.index}">&{'views.application.tools.home'}</a></td><td>&{'views.application.tools.detaillist'}</td></tr>
 	</table>
 </h2>
+ -->
 <br>
 
 <script type="text/javascript">
@@ -23,7 +25,7 @@ jQuery(document).ready(function() {
 		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
 		    'WEB_SOCKET_DEBUG = false;' +
 		    'var ws;' +
-		    'ws = new WebSocket("@@{Application.WebSocketApp.listen()}");' +
+		    'ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");' +
 		    'jQuery("#ins").click(function() {' +
 		    '    var $datepicker = jQuery(".datepicker");' +
 		    '    ws.send($datepicker.val());' +
@@ -206,7 +208,7 @@ jQuery(document).ready(function() {
 		WEB_SOCKET_DEBUG = false;
 		
 		var ws;
-	    ws = new WebSocket("@@{Application.WebSocketApp.listen()}");
+	    ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");
 	
 	    ws.onmessage = function(event) {
 	        //$('#messages').append('<div>' + event.data + '</div>');

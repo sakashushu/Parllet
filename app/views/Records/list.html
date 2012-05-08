@@ -21,6 +21,9 @@
         		${object.amount.format('#,##0')}
         		</div>
         	#{/crud.custom}
+        	#{crud.custom 'debit_date'}
+        		${object.debit_date?.format("yyyy/MM/dd(E)", "ja")}
+        	#{/crud.custom}
         #{/crud.table}
     </div>
 

@@ -2,9 +2,14 @@
  
  <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
-<h3>Write, <span>a new record</span></h3>
- 
-#{form @save()}
+#{ifnot record?.id}
+	<h3>Write, <span>a new record</span></h3>
+#{/ifnot}
+#{else}
+	<h3>Edit, <span>this record</span></h3>
+#{/else}
+
+#{form @save(record?.id)}
  
     #{ifErrors}
         <p class="error">
@@ -108,9 +113,7 @@
     <p>
         #{field 'remarks'}
         <label>&{'remarks'}:</label>
-        <textarea name="${field.name}" 
-            value="${record?.remarks}">
-        </textarea>
+        <textarea name="${field.name}">${record?.remarks}</textarea>
         <span class="error">#{error 'record.remarks' /}</span>
         #{/field}
     </p>
@@ -118,9 +121,7 @@
     <p>
         #{field 'secret_remarks'}
         <label>&{'secret_remarks'}:</label>
-        <textarea name="${field.name}" 
-            value="${record?.secret_remarks}">
-        </textarea>
+        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
         <span class="error">#{error 'record.secret_remarks' /}</span>
         #{/field}
     </p>
