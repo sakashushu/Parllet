@@ -111,8 +111,18 @@ jQuery(document).ready(function() {
 						#{/list}
 					</select>
 				</th>
+				<th>項目詳細<br></th>
+				<th>金額<br></th>
+				<th>取扱<br>
+					<select style="width:100px;">
+						<option value="0" selected>すべて</option>
+					</select>
+				</th>
+				<th>引落日<br></th>
 				<th>内容<br></th>
 				<th>お店<br></th>
+				<th>備考<br></th>
+				<th>マイ貯金<br></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -177,6 +187,26 @@ jQuery(document).ready(function() {
 					</select>
 				</td>
 				<td>
+					<!-- 項目詳細 -->
+					<input type="text" id="e_detail_mst_${record.id}" name="e_detail_mst"
+						value="${record.detail_mst}" size="13" />
+				</td>
+				<td>
+					<!-- 金額 -->
+					<input type="text" id="e_amount_${record.id}" name="e_amount"
+						value="${record.amount}" size="13" />
+				</td>
+				<td>
+					<!-- 取扱 -->
+					<input type="text" id="e_handling_mst_${record.id}" name="e_handling_mst"
+						value="" size="13" />
+				</td>
+				<td>
+					<!-- 引落日 -->
+					<input type="text" id="e_debit_date_${record.id}" name="e_debit_date"
+						value="" size="13" />
+				</td>
+				<td>
 					<!-- 内容 -->
 					<input type="text" id="e_content_${record.id}" name="e_content"
 						value="${record.content}" size="13" />
@@ -185,6 +215,16 @@ jQuery(document).ready(function() {
 					<!-- お店 -->
 					<input type="text" id="e_store_${record.id}" name="e_store"
 						value="${record.store}" size="13" />
+				</td>
+				<td>
+					<!-- 備考 -->
+					<input type="text" id="e_remarks_${record.id}" name="e_remarks"
+						value="${record.remarks}" size="13" />
+				</td>
+				<td>
+					<!-- マイ貯金 -->
+					<input type="text" id="e_ideal_deposit_mst_${record.id}" name="e_ideal_deposit_mst"
+						value="${record.ideal_deposit_mst}" size="8" />
 				</td>
 			
 			</tr>
