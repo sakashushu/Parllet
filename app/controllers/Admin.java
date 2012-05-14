@@ -28,7 +28,8 @@ public class Admin extends Controller {
 	
 	public static void index() {
 		String haUser = Security.connected();
-		List<Record> records = Record.find("ha_user.email", haUser).fetch();
+//		List<Record> records = Record.find("ha_user.email", haUser).fetch();
+		List<Record> records = Record.find("ha_user.email = '" + haUser + "' order by payment_date").fetch();
 		render(records);
 	}
 	
