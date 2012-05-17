@@ -162,7 +162,7 @@ HandlingMst(e-money1):
 
 Record(test1):
     ha_user:          sakashushu
-    payment_date:     '2012-04-13T00:00:00'
+    payment_date:     '2012-05-13T00:00:00'
     balance_type_mst: simple_in
     item_mst:         in1
     amount:           200000
@@ -170,7 +170,7 @@ Record(test1):
 
 Record(test2):
     ha_user:          sakashushu
-    payment_date:     '2012-04-14T00:00:00'
+    payment_date:     '2012-05-14T00:00:00'
     balance_type_mst: simple_out
     item_mst:         out1
     amount:           800
@@ -179,7 +179,7 @@ Record(test2):
 
 Record(test3):
     ha_user:          sakashushu
-    payment_date:     '2012-04-15T00:00:00'
+    payment_date:     '2012-05-15T00:00:00'
     balance_type_mst: simple_out
     item_mst:         out3
     amount:           1200

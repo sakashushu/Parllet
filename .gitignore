@@ -8,3 +8,9 @@
 .project
 /.settings
 /conf/application.conf
+/crud
+/secure
+/conf/crud
+/conf/secure
+/public/crud
+/public/secure
