@@ -56,7 +56,7 @@ views.application.tools.detaillist=明細表
 views.admin.logo=先取りMy貯金
 views.admin.logo.span=管理
 views.admin.tools.logout=ログアウト
-views.admin.adminMenu.member=マイ家計簿
+views.admin.adminMenu.member=家計簿入力
 
 views.admin.index.welcome.before=ようこそ！
 views.admin.index.welcome.after=さん

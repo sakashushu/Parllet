@@ -63,7 +63,7 @@ public class Admin extends Controller {
 			ItemMst itemMst = ItemMst.findById(item_mst);
 			HandlingMst handlingMst = HandlingMst.findById(handling_mst);
 			Date debitDate = null;
-			if(debit_date!=null) {
+			if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 				debitDate = DateFormat.getDateInstance().parse(debit_date);
 			}
 			IdealDepositMst idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst); 
@@ -118,6 +118,7 @@ public class Admin extends Controller {
 	    }
 		// 保存
 		record.save();
-		index();
+		//index();
+		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null);
 	}
 }

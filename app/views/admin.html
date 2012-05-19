@@ -56,11 +56,11 @@
     	
     	<div id="main">
 		    <ul id="adminMenu">
-		        <li class="${request.controller == 'Admin' ? 'selected' : ''}">
-		            <a href="@{Admin.index()}">&{'views.admin.adminMenu.member'}</a>
-		        </li>
 		        <li class="${request.controller == 'DetailList' ? 'selected' : ''}">
 		            <a href="@{DetailList.detailList()}">&{'views.application.tools.detaillist'}</a>
+		        </li>
+		        <li class="${request.controller == 'Admin' ? 'selected' : ''}">
+		            <a href="@{Admin.form()}">&{'views.admin.adminMenu.member'}</a>
 		        </li>
 		        #{secure.check 'admin'}
 		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">

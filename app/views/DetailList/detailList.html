@@ -130,12 +130,10 @@ jQuery(document).ready(function() {
 			<!-- 取得レコード(編集可) -->
 			#{list items:records, as:'record'}
 			<tr>
+				<!-- id -->
+				<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
 				<td>
-					<!-- id -->
-					<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
-					<!--
-				    <a id="e_upd_${record.id}" href="#">更新</a>
-					-->
+					<input type="button" value="編集" onClick="location.href='@{Admin.form(record.id)}'">
 				</td>
 				<td>
 					<!-- 支払日 -->
