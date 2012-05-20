@@ -52,6 +52,7 @@ views.main.tools.logo=先取りMy貯金
 
 views.application.tools.home=ホーム
 views.application.tools.detaillist=明細表
+views.application.tools.dailyaccount=日計表
 
 views.admin.logo=先取りMy貯金
 views.admin.logo.span=管理
