@@ -2,10 +2,14 @@
 #{set title:'日計表' /}
 
 
-<!-- 支払日 -->
-<input type="button" value="<<" />
-<input type="button" value="<" />
-<label>${yearMonth}</label>
-<input type="button" value=">" />
-<input type="button" value=">>" />
-<input type="button" value="今月" />
+#{form @jump(year, month)}
+
+	<!-- 対象年月 -->
+	<input type="submit" value="<<" name="prevYear" />
+	<input type="submit" value="<" name="prevMonth" />
+	<label>${year}年${month}月</label>
+	<input type="submit" value=">" name="nextMonth" />
+	<input type="submit" value=">>" name="nextYear" />
+	<input type="submit" value="今月" name="thisMonth" ${thisMonthFlg==1 ? ' disabled' : ''} />
+
+#{/form}
