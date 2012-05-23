@@ -12,4 +12,54 @@
 	<input type="submit" value=">>" name="nextYear" />
 	<input type="submit" value="今月" name="thisMonth" ${thisMonthFlg==1 ? ' disabled' : ''} />
 
+	<table>
+		<tr>
+		<td valign="top">
+			<table border="1">
+				<tr height="20">
+					<th></th>
+					<th></th>
+					<th>${month}月予算</th>
+					<th>${month}月計</th>
+				</tr>
+				#{list items:lWDA, as:'lwda'}
+					<tr height="20">
+						#{if lwda.sActualType != ''}
+							<td colspan="2">${lwda.sActualType}</td>
+							<td></td>
+						#{/if}
+						#{else}
+							<td></td>
+							<td>${lwda.sItem}</td>
+							<td></td>
+						#{/else}
+						<td>${lwda.biSumMonth}</td>
+					</tr>
+					
+				#{/list}
+			</table>
+		</td>
+		<td>
+			<div style="overflow-x:scroll;">
+			<table border="1">
+				<tr height="20">
+					#{list items:iAryDays, as:'iAryDay'}
+						<th style="width:50px;word-break:break-all">${month}/${iAryDay}</th>
+					#{/list}
+				</tr>
+				#{list items:lWDA, as:'lwda'}
+					<tr height="20">
+						#{list items:lwda.biAryDays, as:'biAryDay'}
+							<td style="width:50px;word-break:break-all">${biAryDay}</td>
+						#{/list}
+					</tr>
+					
+				#{/list}
+			</table>
+			</div>
+		</td>
+		</tr>
+
+	</table>
+
 #{/form}

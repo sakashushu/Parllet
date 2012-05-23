@@ -27,9 +27,6 @@ ActualTypeMst(in):
 ActualTypeMst(out):
     actual_type_name: 支出
 
-ActualTypeMst(other):
-    actual_type_name: 収支外
-
 BalanceTypeMst(simple_in):
     balance_type_name: 収入
     actual_type_mst:   in
@@ -81,7 +78,7 @@ ItemMst(out2):
 ItemMst(out3):
     ha_user:          sakashushu
     actual_type_mst:  out
-    item_name:        居住
+    item_name:        居住日用
 
 ItemMst(out4):
     ha_user:          sakashushu
@@ -106,24 +103,9 @@ ItemMst(out7):
 ItemMst(out8):
     ha_user:          sakashushu
     actual_type_mst:  out
-    item_name:        通信
+    item_name:        交通通信
 
 ItemMst(out9):
-    ha_user:          sakashushu
-    actual_type_mst:  out
-    item_name:        交通
-
-ItemMst(out10):
-    ha_user:          sakashushu
-    actual_type_mst:  out
-    item_name:        交際
-
-ItemMst(out11):
-    ha_user:          sakashushu
-    actual_type_mst:  out
-    item_name:        保険
-
-ItemMst(out12):
     ha_user:          sakashushu
     actual_type_mst:  out
     item_name:        その他
