@@ -171,18 +171,20 @@ jQuery(document).ready(function() {
 					</script>
 
 					<!-- 項目 -->
-					<select id="e_combo_${record.id}" name="e_item_id" style="width:100px;">
-					#{if record.item_mst.actual_type_mst.actual_type_name == "収入"}
-						#{list items:itemsIn, as:'itemIn'}
-						<option value="${itemIn.id}"${record.item_mst==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
-						#{/list}
+					#{if record?.item_mst?.actual_type_mst}
+						<select id="e_combo_${record.id}" name="e_item_id" style="width:100px;">
+						#{if record?.item_mst?.actual_type_mst?.actual_type_name == "収入"}
+							#{list items:itemsIn, as:'itemIn'}
+							<option value="${itemIn.id}"${record.item_mst==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
+							#{/list}
+						#{/if}
+						#{elseif record?.item_mst?.actual_type_mst?.actual_type_name == "支出"}
+							#{list items:itemsOut, as:'itemOut'}
+							<option value="${itemOut.id}"${record.item_mst==itemOut ? ' selected' : ''}>${itemOut.item_name}</option>
+							#{/list}
+						#{/elseif}
+						</select>
 					#{/if}
-					#{elseif record.item_mst.actual_type_mst.actual_type_name == "支出"}
-						#{list items:itemsOut, as:'itemOut'}
-						<option value="${itemOut.id}"${record.item_mst==itemOut ? ' selected' : ''}>${itemOut.item_name}</option>
-						#{/list}
-					#{/elseif}
-					</select>
 				</td>
 				<td>
 					<!-- 項目詳細 -->

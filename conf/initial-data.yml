@@ -42,17 +42,17 @@ BalanceTypeMst(bank_out):
     balance_type_name: 口座引出
 
 BalanceTypeMst(my_savings_in):
-    balance_type_name: マイ貯金預入
+    balance_type_name: My貯金預入
 
 #  BalanceTypeMst(from_my_savings_out):
-#     balance_type_name: マイ貯金から直接支払
+#     balance_type_name: My貯金から直接支払
 #     actual_type_mst:   out
 
 BalanceTypeMst(my_savings_out):
-    balance_type_name: マイ貯金引出
+    balance_type_name: My貯金引出
 
 # BalanceTypeMst(to_my_savings_in):
-#     balance_type_name: マイ貯金に直接預入
+#     balance_type_name: My貯金に直接預入
 #     actual_type_mst:   in
 
 ItemMst(in1):
@@ -142,6 +142,10 @@ HandlingMst(e-money1):
     handling_type_mst:    e-money
     handling_name:        ワオン
 
+IdealDepositMst(child-raising):
+    ha_user:          sakashushu
+    ideal_deposit_name:   子育て貯金
+
 Record(test1):
     ha_user:          sakashushu
     payment_date:     '2012-05-13T00:00:00'
@@ -167,3 +171,11 @@ Record(test3):
     amount:           1200
     handling_mst:     card1
     store:            ハンズマン
+
+Record(test4):
+    ha_user:              sakashushu
+    payment_date:         '2012-05-01T00:00:00'
+    balance_type_mst:     my_savings_in
+    amount:               10000
+    ideal_deposit_mst:    child-raising
+    store:                ハンズマン
