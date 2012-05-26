@@ -93,30 +93,40 @@ public class DailyAccount extends Controller {
 				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		
+   		//「差額」用 変数
+   		WorkDailyAccount wDaDiff = new WorkDailyAccount();
+		BigInteger biSumMonthDiff = new BigInteger("0");
+		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
+   		
+   		
    		//「収入」「支出」ループ
+   		String[] sInOut = {"収入", "支出"};
    		for(int i = 0; i < 2; i++) {
-   			String sInOut = "";
-   			switch(i) {
-   			case 0:
-   				sInOut = "収入";
-   				break;
-   			case 1:
-   				sInOut = "支出";
-   				break;
-   			}
-   			
 	   		//合計行
+	   		WorkDailyAccount wDA = new WorkDailyAccount();
+	   		
 			BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
 					
 					sSqlBase +
 					sSqlBaseG +
-					"   AND a.actual_type_name = '" + sInOut + "' " +
+					"   AND a.actual_type_name = '" + sInOut[i] + "' " +
 					"   AND r.ideal_deposit_mst_id IS NULL "
 					).getSingleResult();
+			//  「差額」に加算
+   			switch(i) {
+   			case 0:
+   				if(biSumMonthG != null) {
+   					biSumMonthDiff = biSumMonthDiff.add(biSumMonthG);
+   				}
+   				break;
+   			case 1:
+   				if(biSumMonthG != null) {
+   					biSumMonthDiff = biSumMonthDiff.subtract(biSumMonthG);
+   				}
+   				break;
+   			}
 			
-	   		WorkDailyAccount wDA = new WorkDailyAccount();
-	   		
-			wDA.setsActualType(sInOut);
+			wDA.setsActualType(sInOut[i]);
 			wDA.setsItem("");
 			wDA.setBiSumMonth(biSumMonthG);
 			
@@ -129,19 +139,38 @@ public class DailyAccount extends Controller {
 				biAryDaysG[iDay] = (BigInteger)JPA.em().createNativeQuery(
 						sSqlBase +
 						sSqlBaseD +
-						"   AND a.actual_type_name = '" + sInOut + "' " +
+						"   AND a.actual_type_name = '" + sInOut[i] + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL "
 						).getSingleResult();
+				
+				//  「差額」に加算
+	   			switch(i) {
+	   			case 0:
+	   				if(biAryDaysG[iDay] != null) {
+	   					biAryDaysDiff[iDay] = biAryDaysG[iDay]; 
+	   				} else {
+	   					biAryDaysDiff[iDay] = new BigInteger("0"); 
+	   				}
+	   				break;
+	   			case 1:
+	   				if(biAryDaysG[iDay] != null) {
+	   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysG[iDay]); 
+	   				}
+	   				break;
+	   			}
+
 			}
 			wDA.setBiAryDays(biAryDaysG);
 			
 			lWDA.add(wDA);
 	
 			//項目ごとのループ
-			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sInOut + "' ").fetch();
+			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sInOut[i] + "' ").fetch();
 			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
 				ItemMst itemMst = itrItem.next();
 				
+				WorkDailyAccount wDaItem = new WorkDailyAccount();
+
 				BigInteger biSumMonth = (BigInteger)JPA.em().createNativeQuery(
 						sSqlBase +
 						sSqlBaseG +
@@ -149,7 +178,6 @@ public class DailyAccount extends Controller {
 						"   AND r.ideal_deposit_mst_id IS NULL "
 						).getSingleResult();
 				
-				WorkDailyAccount wDaItem = new WorkDailyAccount();
 				wDaItem.setsActualType("");
 				wDaItem.setsItem(itemMst.item_name);
 				wDaItem.setBiSumMonth(biSumMonth);
@@ -175,9 +203,11 @@ public class DailyAccount extends Controller {
    			
    		}
    		
-   		//My貯金
-
+   		
+   		//「My貯金」
    		//合計行
+   		WorkDailyAccount wDaMyDp = new WorkDailyAccount();
+   		
 		BigInteger biSumMonthMyDpG = (BigInteger)JPA.em().createNativeQuery(
 				sSqlBase +
 				sSqlBaseG +
@@ -186,11 +216,14 @@ public class DailyAccount extends Controller {
 
 				).getSingleResult();
 		
-   		WorkDailyAccount wDAMyDp = new WorkDailyAccount();
-   		
-		wDAMyDp.setsActualType("My貯金");
-		wDAMyDp.setsItem("");
-		wDAMyDp.setBiSumMonth(biSumMonthMyDpG);
+		//  「差額」に加算
+		if(biSumMonthMyDpG != null) {
+			biSumMonthDiff = biSumMonthDiff.subtract(biSumMonthMyDpG);
+		}
+
+   		wDaMyDp.setsActualType("My貯金");
+		wDaMyDp.setsItem("");
+		wDaMyDp.setBiSumMonth(biSumMonthMyDpG);
 		
 		// 日毎
 		BigInteger[] biAryDaysMyDpG = new BigInteger[iDaysCnt];
@@ -204,16 +237,23 @@ public class DailyAccount extends Controller {
 					"   AND b.balance_type_name = 'My貯金預入' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL "
 					).getSingleResult();
+			//  「差額」に加算
+			if(biAryDaysMyDpG[iDay] != null) {
+				biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysMyDpG[iDay]);
+			}
 		}
-		wDAMyDp.setBiAryDays(biAryDaysMyDpG);
+		wDaMyDp.setBiAryDays(biAryDaysMyDpG);
 		
-		lWDA.add(wDAMyDp);
+		lWDA.add(wDaMyDp);
    		
+		
 		//My貯金ごとのループ
 		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
 		for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
 			IdealDepositMst idealDepositMst = itrIdealDeposit.next();
 			
+			WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
+
 			BigInteger biSumMonthMyDp = (BigInteger)JPA.em().createNativeQuery(
 					sSqlBase +
 					sSqlBaseG +
@@ -221,7 +261,6 @@ public class DailyAccount extends Controller {
 					"   AND r.ideal_deposit_mst_id IS NOT NULL "
 					).getSingleResult();
 			
-			WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
 			wDaIdealDepo.setsActualType("");
 			wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
 			wDaIdealDepo.setBiSumMonth(biSumMonthMyDp);
@@ -245,6 +284,88 @@ public class DailyAccount extends Controller {
 			
 		}
 
+		
+   		//「差額」
+   		
+		wDaDiff.setsActualType("差額");
+		wDaDiff.setsItem("");
+		wDaDiff.setBiSumMonth(biSumMonthDiff);
+		wDaDiff.setBiAryDays(biAryDaysDiff);
+		
+		lWDA.add(wDaDiff);
+		
+		
+		//「My貯金から支払」
+   		//合計行
+   		WorkDailyAccount wDaMyDpOut = new WorkDailyAccount();
+   		
+		BigInteger biSumMonthMyDpOutG = (BigInteger)JPA.em().createNativeQuery(
+				
+				sSqlBase +
+				sSqlBaseG +
+				"   AND a.actual_type_name = '支出' " +
+				"   AND r.ideal_deposit_mst_id IS NOT NULL "
+				).getSingleResult();
+		
+		wDaMyDpOut.setsActualType("My貯金から支払");
+		wDaMyDpOut.setsItem("");
+		wDaMyDpOut.setBiSumMonth(biSumMonthMyDpOutG);
+		
+		// 日毎
+		BigInteger[] biAryDaysMyDpOutG = new BigInteger[iDaysCnt];
+		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			calendar.set(year, month - 1, iDay + 1);
+	   		String sSqlBaseD = "" +
+					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+			biAryDaysMyDpOutG[iDay] = (BigInteger)JPA.em().createNativeQuery(
+					sSqlBase +
+					sSqlBaseD +
+					"   AND a.actual_type_name = '支出' " +
+					"   AND r.ideal_deposit_mst_id IS NOT NULL "
+					).getSingleResult();
+			
+		}
+		wDaMyDpOut.setBiAryDays(biAryDaysMyDpOutG);
+		
+		lWDA.add(wDaMyDpOut);
+		
+		//My貯金ごとのループ
+		for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
+			IdealDepositMst idealDepositMst = itrIdealDeposit.next();
+			
+			WorkDailyAccount wDaMyDpOutIdealDepo = new WorkDailyAccount();
+
+			BigInteger biSumMonthMyDpOut = (BigInteger)JPA.em().createNativeQuery(
+					sSqlBase +
+					sSqlBaseG +
+					"   AND b.balance_type_name = '支出' " +
+					"   AND r.ideal_deposit_mst_id IS NOT NULL "
+					).getSingleResult();
+			
+			wDaMyDpOutIdealDepo.setsActualType("");
+			wDaMyDpOutIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
+			wDaMyDpOutIdealDepo.setBiSumMonth(biSumMonthMyDpOut);
+
+			// 日毎
+			BigInteger[] biAryDaysMyDpOut = new BigInteger[iDaysCnt];
+			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+				calendar.set(year, month - 1, iDay + 1);
+		   		String sSqlBaseD = "" +
+						"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+				biAryDaysMyDpOut[iDay] = (BigInteger)JPA.em().createNativeQuery(
+						sSqlBase +
+						sSqlBaseD +
+						"   AND b.balance_type_name = '支出' " +
+						"   AND r.ideal_deposit_mst_id IS NOT NULL "
+						).getSingleResult();
+			}
+			wDaMyDpOutIdealDepo.setBiAryDays(biAryDaysMyDpOut);
+
+			lWDA.add(wDaMyDpOutIdealDepo);
+			
+		}
+		
+		
 		return lWDA;
 	}
 	
