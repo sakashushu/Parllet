@@ -1,5 +1,6 @@
 package controllers;
 
+import play.mvc.Before;
 import models.*;
 
 
@@ -22,5 +23,14 @@ public class Security extends Secure.Security {
 			return HaUser.find("byEmail", connected()).<HaUser>first().isAdmin;
 		}
 		return false;
+	}
+	
+	static String getUserFullname() {
+		if(HaUser.find("byEmail", connected()).<HaUser>first().fullname ==null) {
+			return "null";
+		} else {
+			return "not null";
+		}
+		//return HaUser.find("byEmail", connected()).<HaUser>first().fullname;
 	}
 }

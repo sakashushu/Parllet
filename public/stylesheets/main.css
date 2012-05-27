@@ -34,7 +34,7 @@ padding: 2px;
 
 #logo-table {
     display: table;
-    width: 600px;
+    width: 540px;
 }
 
 #logo-pre {
@@ -158,4 +158,23 @@ padding: 2px;
 
 .hasError {
     background: pink;
+}
+
+/*
+ * —×Ú‚·‚éü‚ğd‚Ë‚Ä•\¦
+ */
+.dailyAccountTbl {
+	border-collapse: collapse;
+}
+
+/*
+ * ‚·‚×‚Ä‚Ìü‚ğ•\¦
+ */
+.allLine {
+	border: 1px solid black;
+}
+
+.allLineNum {
+	border: 1px solid black;
+	text-align: right;
 }

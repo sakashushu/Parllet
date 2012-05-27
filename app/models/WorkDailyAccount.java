@@ -5,7 +5,7 @@ import java.math.BigInteger;
 public class WorkDailyAccount {
 	private String sActualType;
 	private String sItem;
-	private BigInteger biSumMonth;
+	private String sSumMonth;
 	private BigInteger[] biAryDays;
 	public String getsActualType() {
 		return sActualType;
@@ -19,11 +19,11 @@ public class WorkDailyAccount {
 	public void setsItem(String sItem) {
 		this.sItem = sItem;
 	}
-	public BigInteger getBiSumMonth() {
-		return biSumMonth;
+	public String getsSumMonth() {
+		return sSumMonth;
 	}
-	public void setBiSumMonth(BigInteger biSumMonth) {
-		this.biSumMonth = biSumMonth;
+	public void setsSumMonth(String sSumMonth) {
+		this.sSumMonth = sSumMonth;
 	}
 	public BigInteger[] getBiAryDays() {
 		return biAryDays;

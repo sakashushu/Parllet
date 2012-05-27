@@ -46,8 +46,8 @@ secure.signin=ログイン
 secure.remember=次回以降IDを省略
 
 views.main.tools.login=ログイン
-views.main.tools.logo.pre1=イメージ貯金で
-views.main.tools.logo.pre2=家計を管理
+views.main.tools.logo.pre1=イメージで
+views.main.tools.logo.pre2=貯金できる家計簿
 views.main.tools.logo=安心My貯金
 
 views.application.tools.home=ホーム

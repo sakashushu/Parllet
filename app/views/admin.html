@@ -43,13 +43,14 @@
 			   			&{'views.main.tools.logo.pre2'}
 		    		</td>
 		    		<td id="logo">
-		    			&{'views.main.tools.logo'}.<span>&{'views.admin.logo.span'}</span>
+		    			&{'views.main.tools.logo'}
 		    		</td>
 		    	</tr>
     		</table>
     		<ul id="tools">
-			    <li>
-			        <a href="@{Secure.logout()}">&{'views.admin.tools.logout'}</a>
+			    <li>	
+					${models.HaUser.find("byEmail", session.username).first()?.fullname}　
+					<a href="@{Secure.logout()}">&{'views.admin.tools.logout'}</a>
 			    </li>
 			</ul>
     	</div>

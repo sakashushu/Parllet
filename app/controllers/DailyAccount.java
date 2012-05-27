@@ -58,7 +58,7 @@ public class DailyAccount extends Controller {
 		
    		List<WorkDailyAccount> lWDA = makeWorkList(year, month, iDaysCnt);
    		
-		int iWidth = iDaysCnt * 57;
+		int iWidth = iDaysCnt * 53;
    		
 		render(year, month, thisMonthFlg, iAryDays, lWDA, iWidth);
 	}
@@ -128,7 +128,7 @@ public class DailyAccount extends Controller {
 			
 			wDA.setsActualType(sInOut[i]);
 			wDA.setsItem("");
-			wDA.setBiSumMonth(biSumMonthG);
+			wDA.setsSumMonth(biSumMonthG==null ? "" : String.format("%1$,3d", biSumMonthG));
 			
 			// 日毎
 			BigInteger[] biAryDaysG = new BigInteger[iDaysCnt];
@@ -180,7 +180,7 @@ public class DailyAccount extends Controller {
 				
 				wDaItem.setsActualType("");
 				wDaItem.setsItem(itemMst.item_name);
-				wDaItem.setBiSumMonth(biSumMonth);
+				wDaItem.setsSumMonth(biSumMonth==null ? "" : String.format("%1$,3d", biSumMonth));
 
 				// 日毎
 				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
@@ -223,7 +223,7 @@ public class DailyAccount extends Controller {
 
    		wDaMyDp.setsActualType("My貯金");
 		wDaMyDp.setsItem("");
-		wDaMyDp.setBiSumMonth(biSumMonthMyDpG);
+		wDaMyDp.setsSumMonth(biSumMonthMyDpG==null ? "" : String.format("%1$,3d", biSumMonthMyDpG));
 		
 		// 日毎
 		BigInteger[] biAryDaysMyDpG = new BigInteger[iDaysCnt];
@@ -263,7 +263,7 @@ public class DailyAccount extends Controller {
 			
 			wDaIdealDepo.setsActualType("");
 			wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
-			wDaIdealDepo.setBiSumMonth(biSumMonthMyDp);
+			wDaIdealDepo.setsSumMonth(biSumMonthMyDp==null ? "" : String.format("%1$,3d", biSumMonthMyDp));
 
 			// 日毎
 			BigInteger[] biAryDaysMyDp = new BigInteger[iDaysCnt];
@@ -289,7 +289,7 @@ public class DailyAccount extends Controller {
    		
 		wDaDiff.setsActualType("差額");
 		wDaDiff.setsItem("");
-		wDaDiff.setBiSumMonth(biSumMonthDiff);
+		wDaDiff.setsSumMonth(biSumMonthDiff==null ? "" : String.format("%1$,3d", biSumMonthDiff));
 		wDaDiff.setBiAryDays(biAryDaysDiff);
 		
 		lWDA.add(wDaDiff);
@@ -309,7 +309,7 @@ public class DailyAccount extends Controller {
 		
 		wDaMyDpOut.setsActualType("My貯金から支払");
 		wDaMyDpOut.setsItem("");
-		wDaMyDpOut.setBiSumMonth(biSumMonthMyDpOutG);
+		wDaMyDpOut.setsSumMonth(biSumMonthMyDpOutG==null ? "" : String.format("%1$,3d", biSumMonthMyDpOutG));
 		
 		// 日毎
 		BigInteger[] biAryDaysMyDpOutG = new BigInteger[iDaysCnt];
@@ -344,7 +344,7 @@ public class DailyAccount extends Controller {
 			
 			wDaMyDpOutIdealDepo.setsActualType("");
 			wDaMyDpOutIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
-			wDaMyDpOutIdealDepo.setBiSumMonth(biSumMonthMyDpOut);
+			wDaMyDpOutIdealDepo.setsSumMonth(biSumMonthMyDpOut==null ? "" : String.format("%1$,3d", biSumMonthMyDpOut));
 
 			// 日毎
 			BigInteger[] biAryDaysMyDpOut = new BigInteger[iDaysCnt];

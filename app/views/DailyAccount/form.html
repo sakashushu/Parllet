@@ -15,49 +15,60 @@
 	<table>
 		<tr>
 		<td valign="top">
-			<div style="width:250px;">
-			<table border="1">
-				<tr height="22">
-					<th style="width:20px;word-break:break-all"></th>
-					<th style="width:80px;word-break:break-all"></th>
-					<th style="width:60px;word-break:break-all">${month}月予算</th>
-					<th style="width:60px;word-break:break-all">${month}月計</th>
-				</tr>
-				#{list items:lWDA, as:'lwda'}
-					<tr height="22">
-						#{if lwda.sActualType != ''}
-							<td colspan="2">${lwda.sActualType}</td>
-							<td></td>
-						#{/if}
-						#{else}
-							<td></td>
-							<td>${lwda.sItem}</td>
-							<td></td>
-						#{/else}
-						<td>${lwda.biSumMonth}</td>
-					</tr>
-					
-				#{/list}
+			<div style="width:240px;">
+			<table>
+				<td></td>
+				<td>
+					<table class="dailyAccountTbl">
+						<tr height="22">
+							<th style="width:20px;word-break:break-all"></th>
+							<th style="width:90px;word-break:break-all"></th>
+							<th style="width:60px;word-break:break-all">${month}月予算</th>
+							<th style="width:60px;word-break:break-all">${month}月計</th>
+						</tr>
+						#{list items:lWDA, as:'lwda'}
+							<tr height="22">
+								#{if lwda.sActualType != ''}
+									<td class="allLine" colspan="2">${lwda.sActualType}</td>
+									<td class="allLine"></td>
+								#{/if}
+								#{else}
+									<td></td>
+									<td class="allLine">${lwda.sItem}</td>
+									<td class="allLine"></td>
+								#{/else}
+								<td class="allLineNum">${lwda.sSumMonth}</td>
+							</tr>
+							
+						#{/list}
+					</table>
+				</td>
 			</table>
 			</div>
 		</td>
 		<td>
 			<div style="width:600px;overflow-x:scroll;">
 			<div style="width:${iWidth}px">
-			<table border="1">
-				<tr height="22">
-					#{list items:iAryDays, as:'iAryDay'}
-						<th style="width:50px;word-break:break-all">${month}/${iAryDay}</th>
-					#{/list}
-				</tr>
-				#{list items:lWDA, as:'lwda'}
-					<tr height="22">
-						#{list items:lwda.biAryDays, as:'biAryDay'}
-							<td style="width:50px;word-break:break-all">${biAryDay}</td>
+			<table>
+				<td></td>
+				<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
+					<table class="dailyAccountTbl">
+						<tr height="22">
+							#{list items:iAryDays, as:'iAryDay'}
+								<th style="width:50px;word-break:break-all">${month}/${iAryDay}</th>
+							#{/list}
+						</tr>
+						#{list items:lWDA, as:'lwda'}
+							<tr height="22">
+								#{list items:lwda.biAryDays, as:'biAryDay'}
+									<!-- 下のtdのstyleをmain.css内に書くと何故かレイアウトが崩れまくる -->
+									<td style="border: 1px solid black;text-align: right;">${biAryDay}</td>
+								#{/list}
+							</tr>
+							
 						#{/list}
-					</tr>
-					
-				#{/list}
+					</table>
+				</td>
 			</table>
 			</div>
 			</div>
@@ -65,5 +76,4 @@
 		</tr>
 
 	</table>
-
 #{/form}
