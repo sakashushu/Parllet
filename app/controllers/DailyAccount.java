@@ -58,7 +58,7 @@ public class DailyAccount extends Controller {
 		
    		List<WorkDailyAccount> lWDA = makeWorkList(year, month, iDaysCnt);
    		
-		int iWidth = iDaysCnt * 53;
+		int iWidth = iDaysCnt * 93;
    		
 		render(year, month, thisMonthFlg, iAryDays, lWDA, iWidth);
 	}
@@ -97,6 +97,7 @@ public class DailyAccount extends Controller {
    		WorkDailyAccount wDaDiff = new WorkDailyAccount();
 		BigInteger biSumMonthDiff = new BigInteger("0");
 		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
+		String[] sAryDaysDiff = new String[iDaysCnt];
    		
    		
    		//「収入」「支出」ループ
@@ -132,6 +133,7 @@ public class DailyAccount extends Controller {
 			
 			// 日毎
 			BigInteger[] biAryDaysG = new BigInteger[iDaysCnt];
+			String[] sAryDaysG = new String[iDaysCnt];
 			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 				calendar.set(year, month - 1, iDay + 1);
 		   		String sSqlBaseD = "" +
@@ -142,6 +144,7 @@ public class DailyAccount extends Controller {
 						"   AND a.actual_type_name = '" + sInOut[i] + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL "
 						).getSingleResult();
+				sAryDaysG[iDay] = biAryDaysG[iDay]==null ? "" : String.format("%1$,3d", biAryDaysG[iDay]);
 				
 				//  「差額」に加算
 	   			switch(i) {
@@ -160,12 +163,12 @@ public class DailyAccount extends Controller {
 	   			}
 
 			}
-			wDA.setBiAryDays(biAryDaysG);
+			wDA.setsAryDays(sAryDaysG);
 			
 			lWDA.add(wDA);
 	
 			//項目ごとのループ
-			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sInOut[i] + "' ").fetch();
+			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sInOut[i] + "' order by id").fetch();
 			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
 				ItemMst itemMst = itrItem.next();
 				
@@ -184,6 +187,7 @@ public class DailyAccount extends Controller {
 
 				// 日毎
 				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
+				String[] sAryDays = new String[iDaysCnt];
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 					calendar.set(year, month - 1, iDay + 1);
 			   		String sSqlBaseD = "" +
@@ -194,8 +198,9 @@ public class DailyAccount extends Controller {
 							"   AND i.item_name = '" + itemMst.item_name + "' " +
 							"   AND r.ideal_deposit_mst_id IS NULL "
 							).getSingleResult();
+					sAryDays[iDay] = biAryDays[iDay]==null ? "" : String.format("%1$,3d", biAryDays[iDay]);
 				}
-				wDaItem.setBiAryDays(biAryDays);
+				wDaItem.setsAryDays(sAryDays);
 
 				lWDA.add(wDaItem);
 				
@@ -227,6 +232,7 @@ public class DailyAccount extends Controller {
 		
 		// 日毎
 		BigInteger[] biAryDaysMyDpG = new BigInteger[iDaysCnt];
+		String[] sAryDaysMyDpG = new String[iDaysCnt];
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			calendar.set(year, month - 1, iDay + 1);
 	   		String sSqlBaseD = "" +
@@ -237,12 +243,15 @@ public class DailyAccount extends Controller {
 					"   AND b.balance_type_name = 'My貯金預入' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL "
 					).getSingleResult();
+			sAryDaysMyDpG[iDay] = biAryDaysMyDpG[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDpG[iDay]);
 			//  「差額」に加算
+			sAryDaysDiff[iDay] = "";
 			if(biAryDaysMyDpG[iDay] != null) {
 				biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysMyDpG[iDay]);
+				sAryDaysDiff[iDay] = biAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", biAryDaysDiff[iDay]);
 			}
 		}
-		wDaMyDp.setBiAryDays(biAryDaysMyDpG);
+		wDaMyDp.setsAryDays(sAryDaysMyDpG);
 		
 		lWDA.add(wDaMyDp);
    		
@@ -267,6 +276,7 @@ public class DailyAccount extends Controller {
 
 			// 日毎
 			BigInteger[] biAryDaysMyDp = new BigInteger[iDaysCnt];
+			String[] sAryDaysMyDp = new String[iDaysCnt];
 			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 				calendar.set(year, month - 1, iDay + 1);
 		   		String sSqlBaseD = "" +
@@ -277,8 +287,9 @@ public class DailyAccount extends Controller {
 						"   AND b.balance_type_name = 'My貯金預入' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL "
 						).getSingleResult();
+				sAryDaysMyDp[iDay] = biAryDaysMyDp[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDp[iDay]);
 			}
-			wDaIdealDepo.setBiAryDays(biAryDaysMyDp);
+			wDaIdealDepo.setsAryDays(sAryDaysMyDp);
 
 			lWDA.add(wDaIdealDepo);
 			
@@ -290,7 +301,7 @@ public class DailyAccount extends Controller {
 		wDaDiff.setsActualType("差額");
 		wDaDiff.setsItem("");
 		wDaDiff.setsSumMonth(biSumMonthDiff==null ? "" : String.format("%1$,3d", biSumMonthDiff));
-		wDaDiff.setBiAryDays(biAryDaysDiff);
+		wDaDiff.setsAryDays(sAryDaysDiff);
 		
 		lWDA.add(wDaDiff);
 		
@@ -313,6 +324,7 @@ public class DailyAccount extends Controller {
 		
 		// 日毎
 		BigInteger[] biAryDaysMyDpOutG = new BigInteger[iDaysCnt];
+		String[] sAryDaysMyDpOutG = new String[iDaysCnt];
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			calendar.set(year, month - 1, iDay + 1);
 	   		String sSqlBaseD = "" +
@@ -323,9 +335,10 @@ public class DailyAccount extends Controller {
 					"   AND a.actual_type_name = '支出' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL "
 					).getSingleResult();
+			sAryDaysMyDpOutG[iDay] = biAryDaysMyDpOutG[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDpOutG[iDay]);
 			
 		}
-		wDaMyDpOut.setBiAryDays(biAryDaysMyDpOutG);
+		wDaMyDpOut.setsAryDays(sAryDaysMyDpOutG);
 		
 		lWDA.add(wDaMyDpOut);
 		
@@ -348,6 +361,7 @@ public class DailyAccount extends Controller {
 
 			// 日毎
 			BigInteger[] biAryDaysMyDpOut = new BigInteger[iDaysCnt];
+			String[] sAryDaysMyDpOut = new String[iDaysCnt];
 			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 				calendar.set(year, month - 1, iDay + 1);
 		   		String sSqlBaseD = "" +
@@ -358,8 +372,9 @@ public class DailyAccount extends Controller {
 						"   AND b.balance_type_name = '支出' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL "
 						).getSingleResult();
+				sAryDaysMyDpOut[iDay] = biAryDaysMyDpOut[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDpOut[iDay]);
 			}
-			wDaMyDpOutIdealDepo.setBiAryDays(biAryDaysMyDpOut);
+			wDaMyDpOutIdealDepo.setsAryDays(sAryDaysMyDpOut);
 
 			lWDA.add(wDaMyDpOutIdealDepo);
 			

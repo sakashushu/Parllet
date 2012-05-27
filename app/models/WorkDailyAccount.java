@@ -6,7 +6,7 @@ public class WorkDailyAccount {
 	private String sActualType;
 	private String sItem;
 	private String sSumMonth;
-	private BigInteger[] biAryDays;
+	private String[] sAryDays;
 	public String getsActualType() {
 		return sActualType;
 	}
@@ -25,10 +25,10 @@ public class WorkDailyAccount {
 	public void setsSumMonth(String sSumMonth) {
 		this.sSumMonth = sSumMonth;
 	}
-	public BigInteger[] getBiAryDays() {
-		return biAryDays;
+	public String[] getsAryDays() {
+		return sAryDays;
 	}
-	public void setBiAryDays(BigInteger[] biAryDays) {
-		this.biAryDays = biAryDays;
+	public void setsAryDays(String[] sAryDays) {
+		this.sAryDays = sAryDays;
 	}
 }

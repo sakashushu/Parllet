@@ -22,7 +22,6 @@ public class Record extends Model {
 	@Required
 	@ManyToOne
 	public BalanceTypeMst balance_type_mst;		//収支種類
-	@Required
 	@ManyToOne
 	public ItemMst item_mst;					//項目
 	@MaxSize(40)
@@ -32,7 +31,6 @@ public class Record extends Model {
 	public int price;							//単価
 	public int quantity;						//数量
 	@ManyToOne
-	@Required
 	public HandlingMst handling_mst;			//取扱
 	public Date debit_date;						//引落日
 	@MaxSize(100)
