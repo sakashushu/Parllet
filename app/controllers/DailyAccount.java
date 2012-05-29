@@ -95,6 +95,7 @@ public class DailyAccount extends Controller {
    		String sSql = "";
 		BigInteger biSumMonthDiff = wDaDiff.getBiSumMonth();
 		BigInteger[] biAryDaysDiff = wDaDiff.getBiAryDays();
+		String[] sAryDaysDiff = new String[iDaysCnt];
 		
    		//合計行
    		WorkDailyAccount wDA = new WorkDailyAccount();
@@ -107,7 +108,7 @@ public class DailyAccount extends Controller {
    		} else if(sLargeCategoryName.equals("My貯金")) {
    			sSql = sSqlBase +
    					sSqlBaseG +
-					"   AND b.balance_type_name = 'My貯金預入' " +
+					"   AND b.balance_type_name = 'My貯金' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		}
 		BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
@@ -120,7 +121,7 @@ public class DailyAccount extends Controller {
 			if(biSumMonthG != null) {
 				biSumMonthDiff = biSumMonthDiff.add(biSumMonthG);
 			}
-		} else if(sLargeCategoryName.equals("支出")) {
+		} else if(sLargeCategoryName.equals("支出") || sLargeCategoryName.equals("My貯金")) {
 			if(biSumMonthG != null) {
 				biSumMonthDiff = biSumMonthDiff.subtract(biSumMonthG);
 			}
@@ -138,12 +139,19 @@ public class DailyAccount extends Controller {
 			calendar.set(year, month - 1, iDay + 1);
 	   		String sSqlBaseD = "" +
 					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   		if(sLargeCategoryName.equals("収入") || sLargeCategoryName.equals("支出")) {
+	   			sSql = sSqlBase +
+						sSqlBaseD +
+						"   AND a.actual_type_name = '" + sLargeCategoryName + "' " +
+						"   AND r.ideal_deposit_mst_id IS NULL ";
+	   		} else if(sLargeCategoryName.equals("My貯金")) {
+	   			sSql = sSqlBase +
+						sSqlBaseD +
+						"   AND b.balance_type_name = 'My貯金' " +
+						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
+	   		}
 			biAryDaysG[iDay] = (BigInteger)JPA.em().createNativeQuery(
-					sSqlBase +
-					sSqlBaseD +
-					"   AND a.actual_type_name = '" + sLargeCategoryName + "' " +
-					"   AND r.ideal_deposit_mst_id IS NULL "
-					).getSingleResult();
+					sSql).getSingleResult();
 			sAryDaysG[iDay] = biAryDaysG[iDay]==null ? "" : String.format("%1$,3d", biAryDaysG[iDay]);
 			
 			//  「差額」に加算
@@ -154,10 +162,14 @@ public class DailyAccount extends Controller {
    				if(biAryDaysG[iDay] != null) {
    					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].add(biAryDaysG[iDay]); 
    				}
-			} else if(sLargeCategoryName.equals("支出")) {
+			} else if(sLargeCategoryName.equals("支出") || sLargeCategoryName.equals("My貯金")) {
    				if(biAryDaysG[iDay] != null) {
    					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysG[iDay]); 
    				}
+				if(sLargeCategoryName.equals("My貯金")) {
+					sAryDaysDiff[iDay] = biAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", biAryDaysDiff[iDay]);
+					wDaDiff.setsAryDays(sAryDaysDiff);
+				}
 			}
 			wDaDiff.setBiAryDays(biAryDaysDiff);
 
@@ -166,46 +178,85 @@ public class DailyAccount extends Controller {
 		
 		lWDA.add(wDA);
 
-		//項目ごとのループ
-		List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sLargeCategoryName + "' order by id").fetch();
-		for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
-			ItemMst itemMst = itrItem.next();
-			
-			WorkDailyAccount wDaItem = new WorkDailyAccount();
-
-			BigInteger biSumMonth = (BigInteger)JPA.em().createNativeQuery(
-					sSqlBase +
-					sSqlBaseG +
-					"   AND i.item_name = '" + itemMst.item_name + "' " +
-					"   AND r.ideal_deposit_mst_id IS NULL "
-					).getSingleResult();
-			
-			wDaItem.setsActualType("");
-			wDaItem.setsItem(itemMst.item_name);
-			wDaItem.setsSumMonth(biSumMonth==null ? "" : String.format("%1$,3d", biSumMonth));
-
-			// 日毎
-			BigInteger[] biAryDays = new BigInteger[iDaysCnt];
-			String[] sAryDays = new String[iDaysCnt];
-			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-				calendar.set(year, month - 1, iDay + 1);
-		   		String sSqlBaseD = "" +
-						"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-				biAryDays[iDay] = (BigInteger)JPA.em().createNativeQuery(
+		if(sLargeCategoryName.equals("収入") || sLargeCategoryName.equals("支出")) {
+			//項目ごとのループ
+			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst.actual_type_name = '" + sLargeCategoryName + "' order by id").fetch();
+			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
+				ItemMst itemMst = itrItem.next();
+				
+				WorkDailyAccount wDaItem = new WorkDailyAccount();
+	
+				BigInteger biSumMonth = (BigInteger)JPA.em().createNativeQuery(
 						sSqlBase +
-						sSqlBaseD +
+						sSqlBaseG +
 						"   AND i.item_name = '" + itemMst.item_name + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL "
 						).getSingleResult();
-				sAryDays[iDay] = biAryDays[iDay]==null ? "" : String.format("%1$,3d", biAryDays[iDay]);
+				
+				wDaItem.setsActualType("");
+				wDaItem.setsItem(itemMst.item_name);
+				wDaItem.setsSumMonth(biSumMonth==null ? "" : String.format("%1$,3d", biSumMonth));
+	
+				// 日毎
+				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
+				String[] sAryDays = new String[iDaysCnt];
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+					calendar.set(year, month - 1, iDay + 1);
+			   		String sSqlBaseD = "" +
+							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+					biAryDays[iDay] = (BigInteger)JPA.em().createNativeQuery(
+							sSqlBase +
+							sSqlBaseD +
+							"   AND i.item_name = '" + itemMst.item_name + "' " +
+							"   AND r.ideal_deposit_mst_id IS NULL "
+							).getSingleResult();
+					sAryDays[iDay] = biAryDays[iDay]==null ? "" : String.format("%1$,3d", biAryDays[iDay]);
+				}
+				wDaItem.setsAryDays(sAryDays);
+	
+				lWDA.add(wDaItem);
+				
 			}
-			wDaItem.setsAryDays(sAryDays);
-
-			lWDA.add(wDaItem);
-			
+		} else if(sLargeCategoryName.equals("My貯金")) {
+			//My貯金ごとのループ
+			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
+			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
+				IdealDepositMst idealDepositMst = itrIdealDeposit.next();
+				
+				WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
+	
+				BigInteger biSumMonthMyDp = (BigInteger)JPA.em().createNativeQuery(
+						sSqlBase +
+						sSqlBaseG +
+						"   AND b.balance_type_name = 'My貯金' " +
+						"   AND r.ideal_deposit_mst_id IS NOT NULL "
+						).getSingleResult();
+				
+				wDaIdealDepo.setsActualType("");
+				wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
+				wDaIdealDepo.setsSumMonth(biSumMonthMyDp==null ? "" : String.format("%1$,3d", biSumMonthMyDp));
+	
+				// 日毎
+				BigInteger[] biAryDaysMyDp = new BigInteger[iDaysCnt];
+				String[] sAryDaysMyDp = new String[iDaysCnt];
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+					calendar.set(year, month - 1, iDay + 1);
+			   		String sSqlBaseD = "" +
+							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+					biAryDaysMyDp[iDay] = (BigInteger)JPA.em().createNativeQuery(
+							sSqlBase +
+							sSqlBaseD +
+							"   AND b.balance_type_name = 'My貯金' " +
+							"   AND r.ideal_deposit_mst_id IS NOT NULL "
+							).getSingleResult();
+					sAryDaysMyDp[iDay] = biAryDaysMyDp[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDp[iDay]);
+				}
+				wDaIdealDepo.setsAryDays(sAryDaysMyDp);
+	
+				lWDA.add(wDaIdealDepo);
+				
+			}
 		}
-   			
-   		
 
 	}
 	
@@ -245,7 +296,6 @@ public class DailyAccount extends Controller {
 		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
 		wDaDiff.setBiSumMonth(biSumMonthDiff);
 		wDaDiff.setBiAryDays(biAryDaysDiff);
-		String[] sAryDaysDiff = new String[iDaysCnt];
    		
    		
 		//「収入」
@@ -256,104 +306,16 @@ public class DailyAccount extends Controller {
 		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser, wDaDiff,
 				"支出", lWDA);
 		
-		biSumMonthDiff = wDaDiff.getBiSumMonth();
-		biAryDaysDiff = wDaDiff.getBiAryDays();
+		//「My貯金」
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser, wDaDiff,
+				"My貯金", lWDA);
 		
-		
-   		
-   		//「My貯金」
-   		//合計行
-   		WorkDailyAccount wDaMyDp = new WorkDailyAccount();
-   		
-		BigInteger biSumMonthMyDpG = (BigInteger)JPA.em().createNativeQuery(
-				sSqlBase +
-				sSqlBaseG +
-				"   AND b.balance_type_name = 'My貯金預入' " +
-				"   AND r.ideal_deposit_mst_id IS NOT NULL "
 
-				).getSingleResult();
-		
-		//  「差額」に加算
-		if(biSumMonthMyDpG != null) {
-			biSumMonthDiff = biSumMonthDiff.subtract(biSumMonthMyDpG);
-		}
-
-   		wDaMyDp.setsActualType("My貯金");
-		wDaMyDp.setsItem("");
-		wDaMyDp.setsSumMonth(biSumMonthMyDpG==null ? "" : String.format("%1$,3d", biSumMonthMyDpG));
-		
-		// 日毎
-		BigInteger[] biAryDaysMyDpG = new BigInteger[iDaysCnt];
-		String[] sAryDaysMyDpG = new String[iDaysCnt];
-		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-			calendar.set(year, month - 1, iDay + 1);
-	   		String sSqlBaseD = "" +
-					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-			biAryDaysMyDpG[iDay] = (BigInteger)JPA.em().createNativeQuery(
-					sSqlBase +
-					sSqlBaseD +
-					"   AND b.balance_type_name = 'My貯金預入' " +
-					"   AND r.ideal_deposit_mst_id IS NOT NULL "
-					).getSingleResult();
-			sAryDaysMyDpG[iDay] = biAryDaysMyDpG[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDpG[iDay]);
-			//  「差額」に加算
-			sAryDaysDiff[iDay] = "";
-			if(biAryDaysMyDpG[iDay] != null) {
-				biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysMyDpG[iDay]);
-			}
-				sAryDaysDiff[iDay] = biAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", biAryDaysDiff[iDay]);
-		}
-		wDaMyDp.setsAryDays(sAryDaysMyDpG);
-		
-		lWDA.add(wDaMyDp);
-   		
-		
-		//My貯金ごとのループ
-		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
-		for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
-			IdealDepositMst idealDepositMst = itrIdealDeposit.next();
-			
-			WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
-
-			BigInteger biSumMonthMyDp = (BigInteger)JPA.em().createNativeQuery(
-					sSqlBase +
-					sSqlBaseG +
-					"   AND b.balance_type_name = 'My貯金預入' " +
-					"   AND r.ideal_deposit_mst_id IS NOT NULL "
-					).getSingleResult();
-			
-			wDaIdealDepo.setsActualType("");
-			wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
-			wDaIdealDepo.setsSumMonth(biSumMonthMyDp==null ? "" : String.format("%1$,3d", biSumMonthMyDp));
-
-			// 日毎
-			BigInteger[] biAryDaysMyDp = new BigInteger[iDaysCnt];
-			String[] sAryDaysMyDp = new String[iDaysCnt];
-			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-				calendar.set(year, month - 1, iDay + 1);
-		   		String sSqlBaseD = "" +
-						"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-				biAryDaysMyDp[iDay] = (BigInteger)JPA.em().createNativeQuery(
-						sSqlBase +
-						sSqlBaseD +
-						"   AND b.balance_type_name = 'My貯金預入' " +
-						"   AND r.ideal_deposit_mst_id IS NOT NULL "
-						).getSingleResult();
-				sAryDaysMyDp[iDay] = biAryDaysMyDp[iDay]==null ? "" : String.format("%1$,3d", biAryDaysMyDp[iDay]);
-			}
-			wDaIdealDepo.setsAryDays(sAryDaysMyDp);
-
-			lWDA.add(wDaIdealDepo);
-			
-		}
-
-		
    		//「差額」
-   		
 		wDaDiff.setsActualType("差額");
 		wDaDiff.setsItem("");
+		biSumMonthDiff = wDaDiff.getBiSumMonth();
 		wDaDiff.setsSumMonth(biSumMonthDiff==null ? "" : String.format("%1$,3d", biSumMonthDiff));
-		wDaDiff.setsAryDays(sAryDaysDiff);
 		
 		lWDA.add(wDaDiff);
 		
@@ -395,6 +357,7 @@ public class DailyAccount extends Controller {
 		lWDA.add(wDaMyDpOut);
 		
 		//My貯金ごとのループ
+		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
 		for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
 			IdealDepositMst idealDepositMst = itrIdealDeposit.next();
 			
