@@ -28,18 +28,31 @@
 						</tr>
 						#{list items:lWDA, as:'lwda'}
 							<tr height="22">
-								#{if lwda.sActualType != ''}
-									<td class="allLine" colspan="2">${lwda.sActualType}</td>
-									<td class="allLineNum">
-										<input type="text" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;word-break:break-all;" />
-									</td>
+								<!-- 予算あり -->
+								#{if lwda.bBudgetFlg}
+									#{if lwda.sItem != ''}
+										<td></td>
+										<td class="allLine">${lwda.sItem}</td>
+										<td class="allLineNum">
+											<input type="text"  style="width:90px;text-align:right;background-color:#ffffff;word-break:break-all;" />
+										</td>
+									#{/if}
+									#{else}
+										<td class="allLine" colspan="2">${lwda.sLargeCategory}</td>
+										<td class="allLineNum">
+											<input type="text" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;word-break:break-all;" />
+										</td>
+									#{/else}
 								#{/if}
+								<!-- 予算なし -->
 								#{else}
-									<td></td>
-									<td class="allLine">${lwda.sItem}</td>
-									<td class="allLineNum">
-										<input type="text"  style="width:90px;text-align:right;background-color:#ffffff;word-break:break-all;" />
-									</td>
+									#{if lwda.sItem != ''}
+										<td></td>
+										<td class="allLine" colspan="2">${lwda.sItem}</td>
+									#{/if}
+									#{else}
+										<td class="allLine" colspan="3">${lwda.sLargeCategory}</td>
+									#{/else}
 								#{/else}
 								<!-- 
 								<td class="allLineNum">${lwda.sSumMonth}</td>

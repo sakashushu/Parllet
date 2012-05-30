@@ -3,23 +3,30 @@ package models;
 import java.math.BigInteger;
 
 public class WorkDailyAccount {
-	private String sActualType;
-	private String sItem;
-	private BigInteger biSumMonth;
-	private String sSumMonth;
-	private BigInteger[] biAryDays;
-	private String[] sAryDays;
-	public String getsActualType() {
-		return sActualType;
+	private String sLargeCategory;	//大分類
+	private String sItem;			//項目
+	private boolean bBudgetFlg;		//予算有無フラグ
+	private BigInteger biSumMonth;	//月計(数値)
+	private String sSumMonth;		//月計(表示用)
+	private BigInteger[] biAryDays;	//日付毎(数値)
+	private String[] sAryDays;		//日付毎(表示用)
+	public String getsLargeCategory() {
+		return sLargeCategory;
 	}
-	public void setsActualType(String sActualType) {
-		this.sActualType = sActualType;
+	public void setsLargeCategory(String sLargeCategory) {
+		this.sLargeCategory = sLargeCategory;
 	}
 	public String getsItem() {
 		return sItem;
 	}
 	public void setsItem(String sItem) {
 		this.sItem = sItem;
+	}
+	public boolean isbBudgetFlg() {
+		return bBudgetFlg;
+	}
+	public void setbBudgetFlg(boolean bBudgetFlg) {
+		this.bBudgetFlg = bBudgetFlg;
 	}
 	public BigInteger getBiSumMonth() {
 		return biSumMonth;
