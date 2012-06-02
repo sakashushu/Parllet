@@ -72,6 +72,229 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
+	 * 対象年月の移動
+	 * @param year
+	 * @param month
+	 * @param prevYear
+	 * @param prevMonth
+	 * @param nextMonth
+	 * @param nextYear
+	 * @param thisMonth
+	 */
+	public static void jump(
+			Integer year,
+			Integer month,
+    		String prevYear,	/* 「<<」ボタン */
+    		String prevMonth,	/* 「<」ボタン */
+    		String nextMonth,	/* 「>」ボタン */
+    		String nextYear,	/* 「>>」ボタン */
+    		String thisMonth	/* 「今月」ボタン */
+			) {
+
+		Calendar calendar = Calendar.getInstance();
+    	// 「今月」ボタンが押された場合
+    	if(thisMonth != null) {
+    		form(null, null);
+    	} else {
+			calendar.set(year, month - 1, 1);
+	    	// 「<<」ボタンが押された場合
+	    	if(prevYear != null) {
+	    		calendar.add(Calendar.YEAR, -1);
+				
+	    	// 「<」ボタンが押された場合
+	    	} else if(prevMonth != null) {
+	    		calendar.add(Calendar.MONTH, -1);
+
+	    	// 「>」ボタンが押された場合
+	    	} else if(nextMonth != null) {
+	    		calendar.add(Calendar.MONTH, 1);
+
+	    	// 「>>」ボタンが押された場合
+	    	} else if(nextYear != null) {
+	    		calendar.add(Calendar.YEAR, 1);
+
+	    	}
+			year = calendar.get(Calendar.YEAR);
+			month = calendar.get(Calendar.MONTH) + 1;
+	    		
+	    	form(year, month);
+    	}
+	}
+
+	/**
+	 * 日計表の行に相当するリストの作成
+	 * @param year
+	 * @param month
+	 * @param iDaysCnt
+	 * @return
+	 */
+	private static List<WorkDailyAccount> makeWorkList(
+			Integer year,
+			Integer month,
+			int iDaysCnt
+			) {
+		//日計表の行に相当するリスト
+   		List<WorkDailyAccount> lWDA = new ArrayList<WorkDailyAccount>();
+   		
+   		Calendar calendar = Calendar.getInstance();
+   		
+		calendar.set(year, month - 1, 1);
+		String sFirstDay =  String.format("%1$tY%1$tm%1$td", calendar.getTime());
+   		calendar.add(Calendar.MONTH, 1);
+   		String sNextFirst = String.format("%1$tY%1$tm%1$td", calendar.getTime());
+   		
+		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+
+   		String sSqlBase = "" +
+   				" SELECT SUM(r.amount) FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN ActualTypeMst a " +
+				"   ON i.actual_type_mst_id = a.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" WHERE r.ha_user_id = " + hauser.id;
+   		String sSqlBaseG = "" +
+				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
+				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+
+   		
+		//「収入」
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"収入", lWDA);
+		
+		//「支出」
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"支出", lWDA);
+		
+		//「My貯金」
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"My貯金", lWDA);
+		
+		
+		//「差額」　　（　「収入」－「支出」－「My貯金」　）
+   		WorkDailyAccount wDaDiff = new WorkDailyAccount();
+		BigInteger biSumMonthDiff = new BigInteger("0");
+		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
+		String[] sAryDaysDiff = new String[iDaysCnt];
+		for (WorkDailyAccount wda : lWDA) {
+			//「収入」・「支出」・「My貯金」の合計行で算出する
+			if((wda.getsItem().equals("")) &&
+			   (wda.getsLargeCategory().equals("収入") ||
+				wda.getsLargeCategory().equals("支出") ||
+				wda.getsLargeCategory().equals("My貯金"))
+					) {
+				
+				if(wda.getsLargeCategory().equals("収入")) {
+					if(wda.getBiSumMonth() != null) {
+						biSumMonthDiff = biSumMonthDiff.add(wda.getBiSumMonth());
+					}
+				} else if(wda.getsLargeCategory().equals("支出") ||
+						wda.getsLargeCategory().equals("My貯金")) {
+					if(wda.getBiSumMonth() != null) {
+						biSumMonthDiff = biSumMonthDiff.subtract(wda.getBiSumMonth());
+					}
+				}
+
+				// 日毎
+				BigInteger[] biAryDaysTmp = wda.getBiAryDays();
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+					if(biAryDaysDiff[iDay] == null) {
+						biAryDaysDiff[iDay] = new BigInteger("0"); 
+					}
+					if(wda.getsLargeCategory().equals("収入")) {
+		   				if(biAryDaysTmp[iDay] != null) {
+		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].add(biAryDaysTmp[iDay]);
+		   				}
+					} else if(wda.getsLargeCategory().equals("支出") ||
+							wda.getsLargeCategory().equals("My貯金")) {
+		   				if(biAryDaysTmp[iDay] != null) {
+		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysTmp[iDay]); 
+		   				}
+					}
+				}
+				
+			}
+		}
+		wDaDiff.setsLargeCategory("差額");
+		wDaDiff.setsItem("");
+		wDaDiff.setBiSumMonth(biSumMonthDiff);
+		wDaDiff.setsSumMonth(biSumMonthDiff==null ? "" : String.format("%1$,3d", biSumMonthDiff));
+		wDaDiff.setBiAryDays(biAryDaysDiff);
+		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			sAryDaysDiff[iDay] = biAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", biAryDaysDiff[iDay]);
+		}
+		wDaDiff.setsAryDays(sAryDaysDiff);
+		
+		lWDA.add(wDaDiff);
+		
+		
+		//「My貯金から支払」
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"My貯金から支払", lWDA);
+		
+		//「実残高」
+   		sSqlBase = "" +
+   				" SELECT COALESCE(SUM(" +
+   				"   CASE " +
+   				"     WHEN a.actual_type_name = '収入' THEN r.amount" +
+   				"     WHEN a.actual_type_name = '支出' THEN -r.amount" +
+   				"   END" +
+   				"   ), 0) " +
+   				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN ActualTypeMst a " +
+				"   ON i.actual_type_mst_id = a.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				" WHERE r.ha_user_id = " + hauser.id;
+   		sSqlBaseG = "" +
+				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"実残高", lWDA);
+		
+		//「My貯金残高」
+   		sSqlBase = "" +
+   				" SELECT COALESCE(SUM(" +
+   				"   CASE " +
+   				"     WHEN (b.balance_type_name = '支出' AND " +
+   				"           ht.handling_type_name = 'My貯金') THEN -r.amount" +
+   				"     WHEN b.balance_type_name = 'My貯金' THEN r.amount" +
+   				"   END" +
+   				"   ), 0) " +
+   				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN ActualTypeMst a " +
+				"   ON i.actual_type_mst_id = a.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				" WHERE r.ha_user_id = " + hauser.id +
+				"   AND ((b.balance_type_name = '支出' AND " +
+   				"           ht.handling_type_name = 'My貯金') OR " +
+   				"        b.balance_type_name = 'My貯金'" +
+   				"        )";
+   		sSqlBaseG = "" +
+				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"My貯金残高", lWDA);
+
+		
+		return lWDA;
+	}
+	
+	/**
 	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金」・「差額」・「My貯金から支払」毎に作成する）
 	 * @param year
 	 * @param month
@@ -112,6 +335,9 @@ public class DailyAccount extends Controller {
 					"   AND a.actual_type_name = '支出' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		} else if(sLargeCategoryName.equals("実残高")) {
+   			sSql = sSqlBase + sSqlBaseG +
+					"   AND a.actual_type_name in('支出','収入') ";
+   		} else if(sLargeCategoryName.equals("My貯金残高")) {
    			sSql = sSqlBase + sSqlBaseG +
 					"   AND a.actual_type_name in('支出','収入') ";
    		}
@@ -312,196 +538,4 @@ public class DailyAccount extends Controller {
 
 	}
 	
-	/**
-	 * 日計表の行に相当するリストの作成
-	 * @param year
-	 * @param month
-	 * @param iDaysCnt
-	 * @return
-	 */
-	private static List<WorkDailyAccount> makeWorkList(
-			Integer year,
-			Integer month,
-			int iDaysCnt
-			) {
-		//日計表の行に相当するリスト
-   		List<WorkDailyAccount> lWDA = new ArrayList<WorkDailyAccount>();
-   		
-   		Calendar calendar = Calendar.getInstance();
-   		
-		calendar.set(year, month - 1, 1);
-		String sFirstDay =  String.format("%1$tY%1$tm%1$td", calendar.getTime());
-   		calendar.add(Calendar.MONTH, 1);
-   		String sNextFirst = String.format("%1$tY%1$tm%1$td", calendar.getTime());
-   		
-		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
-
-   		String sSqlBase = "" +
-   				" SELECT SUM(r.amount) FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN ActualTypeMst a " +
-				"   ON i.actual_type_mst_id = a.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN IdealDepositMst id " +
-				"   ON r.ideal_deposit_mst_id = id.id " +
-				" WHERE r.ha_user_id = " + hauser.id;
-   		String sSqlBaseG = "" +
-				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-
-   		
-		//「収入」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
-				"収入", lWDA);
-		
-		//「支出」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
-				"支出", lWDA);
-		
-		//「My貯金」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
-				"My貯金", lWDA);
-		
-		
-		//「差額」　　（　「収入」－「支出」－「My貯金」　）
-   		WorkDailyAccount wDaDiff = new WorkDailyAccount();
-		BigInteger biSumMonthDiff = new BigInteger("0");
-		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
-		String[] sAryDaysDiff = new String[iDaysCnt];
-		for (WorkDailyAccount wda : lWDA) {
-			//「収入」・「支出」・「My貯金」の合計行で算出する
-			if((wda.getsItem().equals("")) &&
-			   (wda.getsLargeCategory().equals("収入") ||
-				wda.getsLargeCategory().equals("支出") ||
-				wda.getsLargeCategory().equals("My貯金"))
-					) {
-				
-				if(wda.getsLargeCategory().equals("収入")) {
-					if(wda.getBiSumMonth() != null) {
-						biSumMonthDiff = biSumMonthDiff.add(wda.getBiSumMonth());
-					}
-				} else if(wda.getsLargeCategory().equals("支出") ||
-						wda.getsLargeCategory().equals("My貯金")) {
-					if(wda.getBiSumMonth() != null) {
-						biSumMonthDiff = biSumMonthDiff.subtract(wda.getBiSumMonth());
-					}
-				}
-
-				// 日毎
-				BigInteger[] biAryDaysTmp = wda.getBiAryDays();
-				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-					if(biAryDaysDiff[iDay] == null) {
-						biAryDaysDiff[iDay] = new BigInteger("0"); 
-					}
-					if(wda.getsLargeCategory().equals("収入")) {
-		   				if(biAryDaysTmp[iDay] != null) {
-		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].add(biAryDaysTmp[iDay]);
-		   				}
-					} else if(wda.getsLargeCategory().equals("支出") ||
-							wda.getsLargeCategory().equals("My貯金")) {
-		   				if(biAryDaysTmp[iDay] != null) {
-		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysTmp[iDay]); 
-		   				}
-					}
-				}
-				
-			}
-		}
-		wDaDiff.setsLargeCategory("差額");
-		wDaDiff.setsItem("");
-		wDaDiff.setBiSumMonth(biSumMonthDiff);
-		wDaDiff.setsSumMonth(biSumMonthDiff==null ? "" : String.format("%1$,3d", biSumMonthDiff));
-		wDaDiff.setBiAryDays(biAryDaysDiff);
-		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-			sAryDaysDiff[iDay] = biAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", biAryDaysDiff[iDay]);
-		}
-		wDaDiff.setsAryDays(sAryDaysDiff);
-		
-		lWDA.add(wDaDiff);
-		
-		
-		//「My貯金から支払」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
-				"My貯金から支払", lWDA);
-		
-		//「実残高」
-   		sSqlBase = "" +
-   				" SELECT COALESCE(SUM(" +
-   				"   case " +
-   				"     when a.actual_type_name = '収入' then r.amount" +
-   				"     when a.actual_type_name = '支出' then -r.amount" +
-   				"   end" +
-   				"   ), 0) " +
-   				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN ActualTypeMst a " +
-				"   ON i.actual_type_mst_id = a.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id" +
-				" WHERE r.ha_user_id = " + hauser.id;
-   		sSqlBaseG = "" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
-				"実残高", lWDA);
-		
-		
-		return lWDA;
-	}
-	
-	/**
-	 * 対象年月の移動
-	 * @param year
-	 * @param month
-	 * @param prevYear
-	 * @param prevMonth
-	 * @param nextMonth
-	 * @param nextYear
-	 * @param thisMonth
-	 */
-	public static void jump(
-			Integer year,
-			Integer month,
-    		String prevYear,	/* 「<<」ボタン */
-    		String prevMonth,	/* 「<」ボタン */
-    		String nextMonth,	/* 「>」ボタン */
-    		String nextYear,	/* 「>>」ボタン */
-    		String thisMonth	/* 「今月」ボタン */
-			) {
-
-		Calendar calendar = Calendar.getInstance();
-    	// 「今月」ボタンが押された場合
-    	if(thisMonth != null) {
-    		form(null, null);
-    	} else {
-			calendar.set(year, month - 1, 1);
-	    	// 「<<」ボタンが押された場合
-	    	if(prevYear != null) {
-	    		calendar.add(Calendar.YEAR, -1);
-				
-	    	// 「<」ボタンが押された場合
-	    	} else if(prevMonth != null) {
-	    		calendar.add(Calendar.MONTH, -1);
-
-	    	// 「>」ボタンが押された場合
-	    	} else if(nextMonth != null) {
-	    		calendar.add(Calendar.MONTH, 1);
-
-	    	// 「>>」ボタンが押された場合
-	    	} else if(nextYear != null) {
-	    		calendar.add(Calendar.YEAR, 1);
-
-	    	}
-			year = calendar.get(Calendar.YEAR);
-			month = calendar.get(Calendar.MONTH) + 1;
-	    		
-	    	form(year, month);
-    	}
-	}
 }
