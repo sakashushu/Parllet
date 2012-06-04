@@ -265,7 +265,7 @@ public class DailyAccount extends Controller {
    				" SELECT COALESCE(SUM(" +
    				"   CASE " +
    				"     WHEN (b.balance_type_name = '支出' AND " +
-   				"           ht.handling_type_name = 'My貯金') THEN -r.amount" +
+   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
    				"     WHEN b.balance_type_name = 'My貯金' THEN r.amount" +
    				"   END" +
    				"   ), 0) " +
@@ -276,19 +276,47 @@ public class DailyAccount extends Controller {
 				"   ON i.actual_type_mst_id = a.id " +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
 				" LEFT JOIN HandlingMst h " +
 				"   ON r.handling_mst_id = h.id " +
 				" LEFT JOIN HandlingTypeMst ht " +
 				"   ON h.handling_type_mst_id = ht.id" +
-				" WHERE r.ha_user_id = " + hauser.id +
-				"   AND ((b.balance_type_name = '支出' AND " +
-   				"           ht.handling_type_name = 'My貯金') OR " +
-   				"        b.balance_type_name = 'My貯金'" +
-   				"        )";
+				" WHERE r.ha_user_id = " + hauser.id;
    		sSqlBaseG = "" +
 				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
 				"My貯金残高", lWDA);
+
+
+		//「Myしてないお金」
+   		sSqlBase = "" +
+   				" SELECT COALESCE(SUM(" +
+   				"   CASE " +
+   				"     WHEN a.actual_type_name = '収入' THEN r.amount " +
+   				"     WHEN (a.actual_type_name = '支出' AND " +
+   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
+   				"     WHEN b.balance_type_name = 'My貯金' THEN -r.amount" +
+   				"   END" +
+   				"   ), 0) " +
+   				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN ActualTypeMst a " +
+				"   ON i.actual_type_mst_id = a.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				" WHERE r.ha_user_id = " + hauser.id;
+   		sSqlBaseG = "" +
+				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+				"My貯金してないお金", lWDA);
 
 		
 		return lWDA;
@@ -339,7 +367,17 @@ public class DailyAccount extends Controller {
 					"   AND a.actual_type_name in('支出','収入') ";
    		} else if(sLargeCategoryName.equals("My貯金残高")) {
    			sSql = sSqlBase + sSqlBaseG +
-					"   AND a.actual_type_name in('支出','収入') ";
+					"   AND ((b.balance_type_name = '支出' AND " +
+	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
+	   				"        b.balance_type_name = 'My貯金'" +
+	   				"        )";
+   		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
+   			sSql = sSqlBase + sSqlBaseG +
+					"   AND (a.actual_type_name = '収入' OR " +
+	   				"        (a.actual_type_name = '支出' AND " +
+   				    "         r.ideal_deposit_mst_id IS NULL) OR " +
+   				    "        b.balance_type_name = 'My貯金' " +
+	   				"        )";
    		}
 		BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
 				sSql).getSingleResult();
@@ -382,6 +420,23 @@ public class DailyAccount extends Controller {
 	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND a.actual_type_name in('支出','収入') ";
+	   		} else if(sLargeCategoryName.equals("My貯金残高")) {
+	   			sSqlBaseD = "" +
+	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   			sSql = sSqlBase + sSqlBaseD +
+						"   AND ((b.balance_type_name = '支出' AND " +
+		   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
+		   				"        b.balance_type_name = 'My貯金'" +
+		   				"        )";
+	   		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
+	   			sSqlBaseD = "" +
+	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   			sSql = sSqlBase + sSqlBaseD +
+						"   AND (a.actual_type_name = '収入' OR " +
+		   				"        (a.actual_type_name = '支出' AND " +
+	   				    "         r.ideal_deposit_mst_id IS NULL) OR " +
+   				        "        b.balance_type_name = 'My貯金' " +
+		   				"        )";
 	   		}
 			biAryDaysG[iDay] = (BigInteger)JPA.em().createNativeQuery(
 					sSql).getSingleResult();
@@ -435,7 +490,9 @@ public class DailyAccount extends Controller {
 				lWDA.add(wDaItem);
 				
 			}
-		} else if(sLargeCategoryName.equals("My貯金") || sLargeCategoryName.equals("My貯金から支払")) {
+		} else if(sLargeCategoryName.equals("My貯金") ||
+				sLargeCategoryName.equals("My貯金から支払") ||
+				sLargeCategoryName.equals("My貯金残高")) {
 			//My貯金ごとのループ
 			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
 			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
@@ -452,6 +509,13 @@ public class DailyAccount extends Controller {
 		   			sSql = sSqlBase + sSqlBaseG +
 							"   AND a.actual_type_name = '支出' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+		   		} else if(sLargeCategoryName.equals("My貯金残高")) {
+		   			sSql = sSqlBase + sSqlBaseG +
+							"   AND ((b.balance_type_name = '支出' AND " +
+			   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
+			   				"        b.balance_type_name = 'My貯金'" +
+			   				"        )" +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   		}
 	
@@ -483,6 +547,15 @@ public class DailyAccount extends Controller {
 			   			sSql = sSqlBase + sSqlBaseD +
 								"   AND a.actual_type_name = '支出' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+			   		} else if(sLargeCategoryName.equals("My貯金残高")) {
+			   			sSqlBaseD = "" +
+			   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+			   			sSql = sSqlBase + sSqlBaseD +
+								"   AND ((b.balance_type_name = '支出' AND " +
+				   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
+				   				"        b.balance_type_name = 'My貯金'" +
+				   				"        )" +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		}
 					biAryDaysMyDp[iDay] = (BigInteger)JPA.em().createNativeQuery(
