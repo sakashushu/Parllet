@@ -66,7 +66,7 @@ public class DailyAccount extends Controller {
    		List<WorkDailyAccount> lWDA = makeWorkList(year, month, iDaysCnt);
    		
    		//日計表の日付ごとの部分のスクロール内の幅の設定
-		int iWidth = iDaysCnt * 93;
+		int iWidth = iDaysCnt * 100;
    		
 		render(year, month, thisMonthFlg, iAryDays, lWDA, iWidth);
 	}
