@@ -48,7 +48,7 @@ public class DailyAccount extends Controller {
 		
 		//今月判定フラグ
 		Integer thisMonthFlg = 0;
-		if((year==calendar.get(Calendar.YEAR))&&
+		if((year==calendar.get(Calendar.YEAR)) &&
     	   (month==calendar.get(Calendar.MONTH)+1)) {
 			thisMonthFlg = 1;
 		}
@@ -162,15 +162,15 @@ public class DailyAccount extends Controller {
 
    		
 		//「収入」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"収入", lWDA);
 		
 		//「支出」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"支出", lWDA);
 		
 		//「My貯金」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"My貯金", lWDA);
 		
 		
@@ -232,90 +232,20 @@ public class DailyAccount extends Controller {
 		
 		
 		//「My貯金から支払」
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"My貯金から支払", lWDA);
 		
 		//「実残高」
-   		sSqlBase = "" +
-   				" SELECT COALESCE(SUM(" +
-   				"   CASE " +
-   				"     WHEN a.actual_type_name = '収入' THEN r.amount" +
-   				"     WHEN a.actual_type_name = '支出' THEN -r.amount" +
-   				"   END" +
-   				"   ), 0) " +
-   				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN ActualTypeMst a " +
-				"   ON i.actual_type_mst_id = a.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id" +
-				" WHERE r.ha_user_id = " + hauser.id;
-   		sSqlBaseG = "" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"実残高", lWDA);
 		
 		//「My貯金残高」
-   		sSqlBase = "" +
-   				" SELECT COALESCE(SUM(" +
-   				"   CASE " +
-   				"     WHEN (b.balance_type_name = '支出' AND " +
-   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-   				"     WHEN b.balance_type_name = 'My貯金' THEN r.amount" +
-   				"   END" +
-   				"   ), 0) " +
-   				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN ActualTypeMst a " +
-				"   ON i.actual_type_mst_id = a.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN IdealDepositMst id " +
-				"   ON r.ideal_deposit_mst_id = id.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id" +
-				" WHERE r.ha_user_id = " + hauser.id;
-   		sSqlBaseG = "" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"My貯金残高", lWDA);
 
 
-		//「Myしてないお金」
-   		sSqlBase = "" +
-   				" SELECT COALESCE(SUM(" +
-   				"   CASE " +
-   				"     WHEN a.actual_type_name = '収入' THEN r.amount " +
-   				"     WHEN (a.actual_type_name = '支出' AND " +
-   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
-   				"     WHEN b.balance_type_name = 'My貯金' THEN -r.amount" +
-   				"   END" +
-   				"   ), 0) " +
-   				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN ActualTypeMst a " +
-				"   ON i.actual_type_mst_id = a.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN IdealDepositMst id " +
-				"   ON r.ideal_deposit_mst_id = id.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id" +
-				" WHERE r.ha_user_id = " + hauser.id;
-   		sSqlBaseG = "" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-		makeWorkListEach(year, month, iDaysCnt, sSqlBase, sSqlBaseG, hauser,
+		//「My貯金してないお金」
+		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"My貯金してないお金", lWDA);
 
 		
@@ -338,9 +268,9 @@ public class DailyAccount extends Controller {
 			Integer year,
 			Integer month,
 			int iDaysCnt,
-			String sSqlBase,
-			String sSqlBaseG,
 			HaUser hauser,
+			String sFirstDay,
+			String sNextFirst,
 			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金」・「My貯金から支払」
 			List<WorkDailyAccount> lWDA
 			) {
@@ -349,6 +279,104 @@ public class DailyAccount extends Controller {
 		
    		//合計行
    		WorkDailyAccount wDA = new WorkDailyAccount();
+
+   		String sSqlBase = "";
+   		String sSqlBaseG = "";
+
+   		if(sLargeCategoryName.equals("収入") ||
+   				sLargeCategoryName.equals("支出") ||
+   				sLargeCategoryName.equals("My貯金") ||
+   				sLargeCategoryName.equals("My貯金から支払")) {
+   			sSqlBase = "" +
+   					"" +
+	   				" SELECT SUM(r.amount) FROM Record r " +
+					" LEFT JOIN ItemMst i " +
+					"   ON r.item_mst_id = i.id " +
+					" LEFT JOIN ActualTypeMst a " +
+					"   ON i.actual_type_mst_id = a.id " +
+					" LEFT JOIN BalanceTypeMst b " +
+					"   ON r.balance_type_mst_id = b.id " +
+					" LEFT JOIN IdealDepositMst id " +
+					"   ON r.ideal_deposit_mst_id = id.id " +
+					" WHERE r.ha_user_id = " + hauser.id;
+	   		sSqlBaseG = "" +
+					"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
+					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+   		} else if(sLargeCategoryName.equals("実残高")) {
+	   		sSqlBase = "" +
+	   				" SELECT COALESCE(SUM(" +
+	   				"   CASE " +
+	   				"     WHEN a.actual_type_name = '収入' THEN r.amount" +
+	   				"     WHEN a.actual_type_name = '支出' THEN -r.amount" +
+	   				"   END" +
+	   				"   ), 0) " +
+	   				" FROM Record r " +
+					" LEFT JOIN ItemMst i " +
+					"   ON r.item_mst_id = i.id " +
+					" LEFT JOIN ActualTypeMst a " +
+					"   ON i.actual_type_mst_id = a.id " +
+					" LEFT JOIN BalanceTypeMst b " +
+					"   ON r.balance_type_mst_id = b.id " +
+					" LEFT JOIN HandlingMst h " +
+					"   ON r.handling_mst_id = h.id " +
+					" LEFT JOIN HandlingTypeMst ht " +
+					"   ON h.handling_type_mst_id = ht.id" +
+					" WHERE r.ha_user_id = " + hauser.id;
+	   		sSqlBaseG = "" +
+					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+   		} else if(sLargeCategoryName.equals("My貯金残高")) {
+	   		sSqlBase = "" +
+	   				" SELECT COALESCE(SUM(" +
+	   				"   CASE " +
+	   				"     WHEN (b.balance_type_name = '支出' AND " +
+	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
+	   				"     WHEN b.balance_type_name = 'My貯金' THEN r.amount" +
+	   				"   END" +
+	   				"   ), 0) " +
+	   				" FROM Record r " +
+					" LEFT JOIN ItemMst i " +
+					"   ON r.item_mst_id = i.id " +
+					" LEFT JOIN ActualTypeMst a " +
+					"   ON i.actual_type_mst_id = a.id " +
+					" LEFT JOIN BalanceTypeMst b " +
+					"   ON r.balance_type_mst_id = b.id " +
+					" LEFT JOIN IdealDepositMst id " +
+					"   ON r.ideal_deposit_mst_id = id.id " +
+					" LEFT JOIN HandlingMst h " +
+					"   ON r.handling_mst_id = h.id " +
+					" LEFT JOIN HandlingTypeMst ht " +
+					"   ON h.handling_type_mst_id = ht.id" +
+					" WHERE r.ha_user_id = " + hauser.id;
+	   		sSqlBaseG = "" +
+					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+   		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
+	   		sSqlBase = "" +
+	   				" SELECT COALESCE(SUM(" +
+	   				"   CASE " +
+	   				"     WHEN a.actual_type_name = '収入' THEN r.amount " +
+	   				"     WHEN (a.actual_type_name = '支出' AND " +
+	   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
+	   				"     WHEN b.balance_type_name = 'My貯金' THEN -r.amount" +
+	   				"   END" +
+	   				"   ), 0) " +
+	   				" FROM Record r " +
+					" LEFT JOIN ItemMst i " +
+					"   ON r.item_mst_id = i.id " +
+					" LEFT JOIN ActualTypeMst a " +
+					"   ON i.actual_type_mst_id = a.id " +
+					" LEFT JOIN BalanceTypeMst b " +
+					"   ON r.balance_type_mst_id = b.id " +
+					" LEFT JOIN IdealDepositMst id " +
+					"   ON r.ideal_deposit_mst_id = id.id " +
+					" LEFT JOIN HandlingMst h " +
+					"   ON r.handling_mst_id = h.id " +
+					" LEFT JOIN HandlingTypeMst ht " +
+					"   ON h.handling_type_mst_id = ht.id" +
+					" WHERE r.ha_user_id = " + hauser.id;
+	   		sSqlBaseG = "" +
+					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+   		}
+   		
    		
    		if(sLargeCategoryName.equals("収入") || sLargeCategoryName.equals("支出")) {
    			sSql = sSqlBase + sSqlBaseG +
