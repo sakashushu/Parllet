@@ -10,6 +10,18 @@ jQuery(document).ready(function() {
     	jQuery('#tcol').scrollTop(jQuery(this).scrollTop());
     });
 });
+jQuery(document).ready(function() {
+    jQuery('#tbody2').scroll(function() {
+    	jQuery('#tbody').scrollLeft(jQuery(this).scrollLeft());
+    	jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
+    });
+});
+jQuery(document).ready(function() {
+	jQuery(window).resize(function() {
+		jQuery('#tcol').height(jQuery(this).height()/2);
+		jQuery('#tbody').height(jQuery(this).height()/2);
+	});
+});
 // -->
 </script>
 
@@ -123,9 +135,9 @@ jQuery(document).ready(function() {
 			</td>
 			<td>
 				<!-- 
-				<div onScroll="scrollRC()" id="tbody" style="width:816px;height:466px;overflow:auto;">
-				 -->
 				<div id="tbody" style="width:816px;height:486px;overflow:auto;">
+				 -->
+				<div id="tbody" style="width:816px;height:470px;overflow-x:hidden;overflow-y:auto;">
 				<div style="width:${iWidth}px">
 				<table>
 					<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
@@ -153,6 +165,22 @@ jQuery(document).ready(function() {
 			</td>
 		</tr>
 
+		<tr>
+			<td>
+				<div>
+				<div style="width:320px;">
+				</div>
+				</div>
+			</td>
+			<td>
+				<div id="tbody2" style="width:816px;height:16px;overflow:auto;">
+				<div style="width:${iWidth}px">
+				dummy
+				</div>
+				</div>
+			</td>
+		</tr>
+		
 	</table>
 	
 #{/form}
