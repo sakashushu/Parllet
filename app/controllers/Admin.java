@@ -36,7 +36,8 @@ public class Admin extends Controller {
 	public static void form(Long id) {
 		if(id != null) {
 			Record record = Record.findById(id);
-			render(record);
+			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+			render(record, hauser);
 		}
 		render();
 	}

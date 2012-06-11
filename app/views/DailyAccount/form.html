@@ -4,22 +4,39 @@
 
 <script type="text/javascript">
 <!--
+//枠固定の上下の動き
 jQuery(document).ready(function() {
     jQuery('#tbody').scroll(function() {
-    	jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
+    	//jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
     	jQuery('#tcol').scrollTop(jQuery(this).scrollTop());
     });
 });
+
+//枠固定の左右の動き
 jQuery(document).ready(function() {
     jQuery('#tbody2').scroll(function() {
     	jQuery('#tbody').scrollLeft(jQuery(this).scrollLeft());
     	jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
     });
 });
+
+//起動時の日毎の部分の幅と高さを調整
+jQuery(document).ready(function() {
+	jQuery('#tcol').height(jQuery(window).innerHeight()-220);
+	jQuery('#tbody').height(jQuery(window).innerHeight()-220);
+	jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
+	jQuery('#tbody').width(jQuery(window).innerWidth()-350);
+	jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
+});
+
+//ウィンドウリサイズ時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#tcol').height(jQuery(this).height()/2);
-		jQuery('#tbody').height(jQuery(this).height()/2);
+		jQuery('#tcol').height(jQuery(this).innerHeight()-220);
+		jQuery('#tbody').height(jQuery(this).innerHeight()-220);
+		jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
+		jQuery('#tbody').width(jQuery(window).innerWidth()-350);
+		jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
 	});
 });
 // -->

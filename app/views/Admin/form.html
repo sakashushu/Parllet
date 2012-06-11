@@ -42,11 +42,16 @@
     <p>
         #{field 'item_mst'}
         <label>&{'item_mst'}:</label>
-		<select name="${field.name}">
-			<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-			#{list items:models.ItemMst.find("order by id").fetch(), as:'item'}
-			<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
-			#{/list}
+		<select name="${field.name}" style="width:150px;" 
+				${(record?.balance_type_mst?.balance_type_name=='収入' ||
+				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
+			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
+					record?.balance_type_mst?.balance_type_name=='支出'}
+				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst = " + record.balance_type_mst.actual_type_mst.id + " order by id").fetch(), as:'item'}
+				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+				#{/list}
+			#{/if}
 		</select>
         <span class="error">#{error 'record.item_mst' /}</span>
         #{/field}
