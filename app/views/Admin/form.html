@@ -1,6 +1,22 @@
 #{extends 'admin.html' /}
  
- <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+
+<script type="text/javascript">
+<!--
+//項目の表示・非表示
+jQuery(document).ready(function() {
+	jQuery('#test').click(function() {
+//		if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
+			jQuery('#item_mst_1').css("visibility","hidden");
+			jQuery('#item_mst_2').css("visibility","hidden");
+//		}
+	});
+});
+// -->
+</script>
+
+
 
 #{ifnot record?.id}
 	<h3>Write, <span>a new record</span></h3>
@@ -16,7 +32,9 @@
             Please correct these errors.
         </p>
     #{/ifErrors}
-     
+    
+    <label id="test">test</label>
+    
     <p>
         #{field 'payment_date'}
         <label>&{'payment_date'}:</label>
@@ -42,7 +60,20 @@
     <p>
         #{field 'item_mst'}
         <label>&{'item_mst'}:</label>
-		<select name="${field.name}" style="width:150px;" 
+        #{if record?.balance_type_mst?.balance_type_name=='収入'}
+        #{/if}
+		<select name="${field.name}_1" style="width:150px;" 
+				${(record?.balance_type_mst?.balance_type_name=='収入' ||
+				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
+			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
+					record?.balance_type_mst?.balance_type_name=='支出'}
+				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst = " + record.balance_type_mst.actual_type_mst.id + " order by id").fetch(), as:'item'}
+				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+				#{/list}
+			#{/if}
+		</select>
+		<select name="${field.name}_2" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
