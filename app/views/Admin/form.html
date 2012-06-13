@@ -6,16 +6,12 @@
 <!--
 //項目の表示・非表示
 jQuery(document).ready(function() {
-	jQuery('#test').click(function() {
-//		if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
-			jQuery('#item_mst_1').css("visibility","hidden");
-			jQuery('#item_mst_2').css("visibility","hidden");
-//		}
-	});
+	if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
+		jQuery('#item_mst_1').css("visibility","hidden");
+	}
 });
 // -->
 </script>
-
 
 
 #{ifnot record?.id}
@@ -33,8 +29,6 @@ jQuery(document).ready(function() {
         </p>
     #{/ifErrors}
     
-    <label id="test">test</label>
-    
     <p>
         #{field 'payment_date'}
         <label>&{'payment_date'}:</label>
@@ -47,7 +41,7 @@ jQuery(document).ready(function() {
     <p>
         #{field 'balance_type_mst'}
         <label>&{'balance_type_mst'}:</label>
-		<select name="${field.name}">
+		<select id="${field.name}" name="${field.name}">
 			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>(値を選択して下さい)</option>
 			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 			<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
@@ -60,9 +54,7 @@ jQuery(document).ready(function() {
     <p>
         #{field 'item_mst'}
         <label>&{'item_mst'}:</label>
-        #{if record?.balance_type_mst?.balance_type_name=='収入'}
-        #{/if}
-		<select name="${field.name}_1" style="width:150px;" 
+		<select id="${field.name}_1" name="${field.name}_1" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
@@ -73,7 +65,7 @@ jQuery(document).ready(function() {
 				#{/list}
 			#{/if}
 		</select>
-		<select name="${field.name}_2" style="width:150px;" 
+		<select id="${field.name}_2" name="${field.name}_2" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
