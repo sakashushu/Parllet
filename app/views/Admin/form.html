@@ -5,10 +5,36 @@
 <script type="text/javascript">
 <!--
 //項目の表示・非表示
-jQuery(document).ready(function() {
-	if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
-		jQuery('#item_mst_1').css("visibility","hidden");
-	}
+//jQuery(document).ready(function() {
+//	if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
+//		jQuery('#item_mst_1').css("display","inline");
+//		jQuery('#item_mst_2').css("display","none");
+//	}
+//});
+var subCategory = {
+  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+  "${bType.id}":[
+    #{if bType.balance_type_name=='収入' ||
+         bType.balance_type_name=='支出'}
+      #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
+        #{list items:models.ItemMst.find("ha_user = '${user.id}' and actual_type_mst = " + bType.actual_type_mst.id + " order by id").fetch(), as:'item'}
+        {
+          "key":"${item.id}",
+          "value":"${item.item_name}"
+        },
+        #{/list}
+      #{/list}
+    #{/if}
+  ],
+  #{/list}
+}
+jQuery(function(){
+	jQuery('#balance_type_mst').change(function(){
+		jQuery('#item_mst_1').empty();
+		jQuery.each(subCategory[jQuery(this).val()],function(key,value){
+			jQuery('#item_mst_1').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
+		});
+	});
 });
 // -->
 </script>
@@ -56,7 +82,7 @@ jQuery(document).ready(function() {
         <label>&{'item_mst'}:</label>
 		<select id="${field.name}_1" name="${field.name}_1" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
-				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
+				record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
 					record?.balance_type_mst?.balance_type_name=='支出'}
 				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
@@ -65,7 +91,7 @@ jQuery(document).ready(function() {
 				#{/list}
 			#{/if}
 		</select>
-		<select id="${field.name}_2" name="${field.name}_2" style="width:150px;" 
+		<select id="${field.name}_2" name="${field.name}_2" style="width:200px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
