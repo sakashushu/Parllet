@@ -1,6 +1,4 @@
 # テーブル
-ActualTypeMst=実収支種類
-ActualTypeMsts=実収支種類
 BalanceTypeMst=収支種類
 BalanceTypeMsts=収支種類
 HandlingTypeMst=取扱種類
@@ -15,9 +13,6 @@ IdealDepositMst=マイ貯金
 IdealDepositMsts=マイ貯金
 Record=収支データ
 Records=収支データ
-
-# ActualTypeMst(実収支種類)の項目名
-actual_type_name=実収支種類名称
 
 # BalanceTypeMst(収支種類)の項目名
 balance_type_name=収支種類名称

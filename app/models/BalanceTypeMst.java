@@ -12,15 +12,10 @@ public class BalanceTypeMst extends Model {
 
 	public String balance_type_name;
 
-	@ManyToOne
-	public ActualTypeMst actual_type_mst;
-	
 	public BalanceTypeMst(
-			String balance_type_name,
-			ActualTypeMst actual_type_mst
+			String balance_type_name
 			) {
 		this.balance_type_name = balance_type_name;
-		this.actual_type_mst = actual_type_mst;
 	}
 	
 	public String toString() {

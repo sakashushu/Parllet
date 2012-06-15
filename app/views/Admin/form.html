@@ -17,7 +17,7 @@ var subCategory = {
     #{if bType.balance_type_name=='収入' ||
          bType.balance_type_name=='支出'}
       #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-        #{list items:models.ItemMst.find("ha_user = '${user.id}' and actual_type_mst = " + bType.actual_type_mst.id + " order by id").fetch(), as:'item'}
+        #{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
         {
           "key":"${item.id}",
           "value":"${item.item_name}"
@@ -30,10 +30,14 @@ var subCategory = {
 }
 jQuery(function(){
 	jQuery('#balance_type_mst').change(function(){
-		jQuery('#item_mst_1').empty();
-		jQuery.each(subCategory[jQuery(this).val()],function(key,value){
-			jQuery('#item_mst_1').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
-		});
+		jQuery('#item_mst').empty();
+		if(jQuery('#balance_type_mst').children(':selected').text()=='収入') {
+			jQuery.each(subCategory[jQuery(this).val()],function(key,value){
+				jQuery('#item_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
+			});
+		} else {
+			jQuery('#item_mst').css("display","inline");
+		}
 	});
 });
 // -->
@@ -80,24 +84,13 @@ jQuery(function(){
     <p>
         #{field 'item_mst'}
         <label>&{'item_mst'}:</label>
-		<select id="${field.name}_1" name="${field.name}_1" style="width:150px;" 
+		<select id="${field.name}" name="${field.name}_1" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
 					record?.balance_type_mst?.balance_type_name=='支出'}
 				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst = " + record.balance_type_mst.actual_type_mst.id + " order by id").fetch(), as:'item'}
-				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
-				#{/list}
-			#{/if}
-		</select>
-		<select id="${field.name}_2" name="${field.name}_2" style="width:200px;" 
-				${(record?.balance_type_mst?.balance_type_name=='収入' ||
-				record?.balance_type_mst?.balance_type_name=='支出') ? '' : 'disabled'}>
-			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
-					record?.balance_type_mst?.balance_type_name=='支出'}
-				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and actual_type_mst = " + record.balance_type_mst.actual_type_mst.id + " order by id").fetch(), as:'item'}
+				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and balance_type_mst = " + record.balance_type_mst.id + " order by id").fetch(), as:'item'}
 				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
 				#{/list}
 			#{/if}
@@ -105,7 +98,9 @@ jQuery(function(){
         <span class="error">#{error 'record.item_mst' /}</span>
         #{/field}
     </p>
- 
+
+	<!-- 「項目詳細」の作成は一旦保留 -->
+	<!-- 
     <p>
         #{field 'detail_mst'}
         <label>&{'detail_mst'}:</label>
@@ -114,6 +109,7 @@ jQuery(function(){
         <span class="error">#{error 'record.detail_mst' /}</span>
         #{/field}
     </p>
+	 -->
  
     <p>
         #{field 'amount'}

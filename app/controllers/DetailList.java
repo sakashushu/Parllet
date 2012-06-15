@@ -50,8 +50,8 @@ public class DetailList extends Controller {
 
     	List<Record> records = null;
     	List<BalanceTypeMst> bTypes = null;
-    	ActualTypeMst aTypeIn = null;
-    	ActualTypeMst aTypeOut = null;
+    	BalanceTypeMst bTypeIn = null;
+    	BalanceTypeMst bTypeOut = null;
     	List<ItemMst> itemsIn = null;
     	List<ItemMst> itemsOut = null;
     	
@@ -163,12 +163,12 @@ public class DetailList extends Controller {
     		bTypes = BalanceTypeMst.find("order by id").fetch();
     		
     		// 検索処理(ItemMst(収入))
-    		aTypeIn = ActualTypeMst.find("actual_type_name = '収入'").first();
-    		itemsIn = ItemMst.find("byActual_type_mst", aTypeIn).fetch();
+    		bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
+    		itemsIn = ItemMst.find("byBalance_type_mst", bTypeIn).fetch();
     		
 	    	// 検索処理(ItemMst(支出))
-    		aTypeOut = ActualTypeMst.find("actual_type_name = '支出'").first();
-    		itemsOut = ItemMst.find("byActual_type_mst", aTypeOut).fetch();
+    		bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
+    		itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
 
     		// 検索処理(Record)
 	    	//  日付範囲

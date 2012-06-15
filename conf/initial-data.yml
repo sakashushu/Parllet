@@ -21,19 +21,11 @@ HaUser(member1):
     fullname:         会員一番
     isAdmin:          false
 
-ActualTypeMst(in):
-    actual_type_name: 収入
-
-ActualTypeMst(out):
-    actual_type_name: 支出
-
-BalanceTypeMst(simple_in):
+BalanceTypeMst(in):
     balance_type_name: 収入
-    actual_type_mst:   in
 
-BalanceTypeMst(simple_out):
+BalanceTypeMst(out):
     balance_type_name: 支出
-    actual_type_mst:   out
 
 BalanceTypeMst(bank_in):
     balance_type_name: 口座預入
@@ -46,68 +38,66 @@ BalanceTypeMst(my_savings_in):
 
 # BalanceTypeMst(from_my_savings_out):
 #     balance_type_name: My貯金から支払
-#     actual_type_mst:   out
 
 # BalanceTypeMst(my_savings_out):
 #     balance_type_name: My貯金引出
 
 # BalanceTypeMst(to_my_savings_in):
 #     balance_type_name: My貯金に直接預入
-#     actual_type_mst:   in
 
 ItemMst(in1):
     ha_user:          sakashushu
-    actual_type_mst:  in
+    balance_type_mst: in
     item_name:        給与
 
 ItemMst(in2):
     ha_user:          sakashushu
-    actual_type_mst:  in
+    balance_type_mst: in
     item_name:        その他収入
 
 ItemMst(out1):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        食費
 
 ItemMst(out2):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        衣類
 
 ItemMst(out3):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        居住日用
 
 ItemMst(out4):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        水道光熱
 
 ItemMst(out5):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        健康
 
 ItemMst(out6):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        教育
 
 ItemMst(out7):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        娯楽
 
 ItemMst(out8):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        交通通信
 
 ItemMst(out9):
     ha_user:          sakashushu
-    actual_type_mst:  out
+    balance_type_mst: out
     item_name:        その他
 
 HandlingTypeMst(cash):
@@ -148,16 +138,16 @@ IdealDepositMst(child-raising):
 
 Record(test1):
     ha_user:          sakashushu
-    payment_date:     '2012-05-13T00:00:00'
-    balance_type_mst: simple_in
+    payment_date:     '2012-06-13T00:00:00'
+    balance_type_mst: in
     item_mst:         in1
     amount:           200000
     handling_mst:     bank1
 
 Record(test2):
     ha_user:          sakashushu
-    payment_date:     '2012-05-14T00:00:00'
-    balance_type_mst: simple_out
+    payment_date:     '2012-06-14T00:00:00'
+    balance_type_mst: out
     item_mst:         out1
     amount:           800
     handling_mst:     cash1
@@ -165,8 +155,8 @@ Record(test2):
 
 Record(test3):
     ha_user:          sakashushu
-    payment_date:     '2012-05-15T00:00:00'
-    balance_type_mst: simple_out
+    payment_date:     '2012-06-15T00:00:00'
+    balance_type_mst: out
     item_mst:         out3
     amount:           1200
     handling_mst:     card1
@@ -174,7 +164,7 @@ Record(test3):
 
 Record(test4):
     ha_user:              sakashushu
-    payment_date:         '2012-05-01T00:00:00'
+    payment_date:         '2012-06-16T00:00:00'
     balance_type_mst:     my_savings_in
     amount:               10000
     ideal_deposit_mst:    child-raising
