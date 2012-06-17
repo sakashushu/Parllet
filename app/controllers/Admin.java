@@ -11,6 +11,7 @@ import models.HandlingMst;
 import models.IdealDepositMst;
 import models.ItemMst;
 import models.Record;
+import play.data.validation.Required;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -44,11 +45,11 @@ public class Admin extends Controller {
 	
 	public static void save(
 			Long id,
-			String payment_date,
-			Long balance_type_mst,
+			@Required(message="支払日 is required") String payment_date,
+			@Required(message="収支種類 is required") Long balance_type_mst,
 			Long item_mst,
 			String detail_mst,
-			Integer amount,
+			@Required(message="金額 is required") Integer amount,
 			Long handling_mst,
 			String debit_date,
 			String content,
@@ -59,9 +60,16 @@ public class Admin extends Controller {
 			) {
 		Record record = null;
 		try {
+			Date paymentDate = null;
+			if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+				paymentDate = DateFormat.getDateInstance().parse(payment_date);
+			}
 			HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
 			BalanceTypeMst balanceTypeMst = BalanceTypeMst.findById(balance_type_mst);
-			ItemMst itemMst = ItemMst.findById(item_mst);
+			ItemMst itemMst = null;
+			if(item_mst!=null) {
+				itemMst = ItemMst.findById(item_mst); 
+			}
 			HandlingMst handlingMst = HandlingMst.findById(handling_mst);
 			Date debitDate = null;
 			if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
@@ -72,7 +80,7 @@ public class Admin extends Controller {
 				// 収支データの作成
 				record = new Record(
 						haUser,
-						DateFormat.getDateInstance().parse(payment_date),
+						paymentDate,
 						balanceTypeMst,
 						itemMst,
 						detail_mst, 

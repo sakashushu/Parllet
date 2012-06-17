@@ -13,30 +13,34 @@
 //});
 var subCategory = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-  "${bType.id}":[
     #{if bType.balance_type_name=='収入' ||
          bType.balance_type_name=='支出'}
-      #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-        #{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
-        {
-          "key":"${item.id}",
-          "value":"${item.item_name}"
-        },
+      "${bType.id}":[
+        #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
+          #{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+          {
+            "key":"${item.id}",
+            "value":"${item.item_name}"
+          },
+          #{/list}
         #{/list}
-      #{/list}
+      ],
     #{/if}
-  ],
   #{/list}
 }
 jQuery(function(){
 	jQuery('#balance_type_mst').change(function(){
 		jQuery('#item_mst').empty();
-		if(jQuery('#balance_type_mst').children(':selected').text()=='収入') {
+		if(jQuery('#balance_type_mst').children(':selected').text()=='収入' ||
+				jQuery('#balance_type_mst').children(':selected').text()=='支出') {
+			jQuery('#item_mst_lbl').css("display","inline");
+			jQuery('#item_mst').css("display","inline");
 			jQuery.each(subCategory[jQuery(this).val()],function(key,value){
 				jQuery('#item_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
 			});
 		} else {
-			jQuery('#item_mst').css("display","inline");
+			jQuery('#item_mst_lbl').css("display","none");
+			jQuery('#item_mst').css("display","none");
 		}
 	});
 });
@@ -83,7 +87,7 @@ jQuery(function(){
  
     <p>
         #{field 'item_mst'}
-        <label>&{'item_mst'}:</label>
+        <label id="item_mst_lbl">&{'item_mst'}:</label>
 		<select id="${field.name}" name="${field.name}_1" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
