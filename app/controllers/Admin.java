@@ -35,12 +35,12 @@ public class Admin extends Controller {
 	}
 	
 	public static void form(Long id) {
+		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
 		if(id != null) {
 			Record record = Record.findById(id);
-			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
 			render(record, hauser);
 		}
-		render();
+		render(hauser);
 	}
 	
 	public static void save(

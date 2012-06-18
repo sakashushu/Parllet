@@ -94,8 +94,12 @@ jQuery(function(){
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
 					record?.balance_type_mst?.balance_type_name=='支出'}
 				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-				#{list items:models.ItemMst.find("ha_user = " + hauser.id + " and balance_type_mst = " + record.balance_type_mst.id + " order by id").fetch(), as:'item'}
+				#{list items:models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first(), as:'bType'}
+				#{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
+				#{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
 				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+				#{/list}
+				#{/list}
 				#{/list}
 			#{/if}
 		</select>
