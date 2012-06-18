@@ -27,9 +27,9 @@ public class Record extends Model {
 	@MaxSize(40)
 	public String detail_mst;					//項目詳細
 	@Required
-	public int amount;							//金額
-	public int price;							//単価
-	public int quantity;						//数量
+	public Integer amount;							//金額
+	public Integer price;							//単価
+	public Integer quantity;						//数量
 	@ManyToOne
 	public HandlingMst handling_mst;			//取扱
 	public Date debit_date;						//引落日
@@ -50,9 +50,9 @@ public class Record extends Model {
 			BalanceTypeMst balance_type,
 			ItemMst item,
 			String detail_mst,
-			int amount,
-			int price,
-			int quantity,
+			Integer amount,
+			Integer price,
+			Integer quantity,
 			HandlingMst handling_mst,
 			Date debit_date,
 			String content,

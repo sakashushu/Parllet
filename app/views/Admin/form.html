@@ -88,7 +88,7 @@ jQuery(function(){
     <p>
         #{field 'item_mst'}
         <label id="item_mst_lbl">&{'item_mst'}:</label>
-		<select id="${field.name}" name="${field.name}_1" style="width:150px;" 
+		<select id="${field.name}" name="${field.name}" style="width:150px;" 
 				${(record?.balance_type_mst?.balance_type_name=='収入' ||
 				record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
 			#{if record?.balance_type_mst?.balance_type_name=='収入' ||

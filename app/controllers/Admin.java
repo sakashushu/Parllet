@@ -48,7 +48,7 @@ public class Admin extends Controller {
 			@Required(message="支払日 is required") String payment_date,
 			@Required(message="収支種類 is required") Long balance_type_mst,
 			Long item_mst,
-			String detail_mst,
+//			String detail_mst,
 			@Required(message="金額 is required") Integer amount,
 			Long handling_mst,
 			String debit_date,
@@ -83,8 +83,8 @@ public class Admin extends Controller {
 						paymentDate,
 						balanceTypeMst,
 						itemMst,
-						detail_mst, 
-						amount, 
+						null,
+						amount,
 						0,
 						0,
 						handlingMst,
@@ -102,7 +102,7 @@ public class Admin extends Controller {
 				record.payment_date = DateFormat.getDateInstance().parse(payment_date);
 				record.balance_type_mst = balanceTypeMst;
 				record.item_mst = itemMst;
-				record.detail_mst = detail_mst;
+//				record.detail_mst = detail_mst;
 				record.amount = amount;
 				record.handling_mst = handlingMst;
 				record.debit_date = debitDate;
