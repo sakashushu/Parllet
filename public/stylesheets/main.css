@@ -1,5 +1,5 @@
 html, body {
-    background: #FFFACD !important;
+    background: , !important;
     font-family: Helvetica, Arial, Sans !important;
 }
 
@@ -186,3 +186,8 @@ padding: 2px;
 	border: 1px;
 }
 
+/** Form **/
+
+form .error {
+    color: red;
+}

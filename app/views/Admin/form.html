@@ -5,12 +5,20 @@
 <script type="text/javascript">
 <!--
 //項目の表示・非表示
-//jQuery(document).ready(function() {
+jQuery(document).ready(function() {
+	if(jQuery('#balance_type_mst').children(':selected').text()=='収入' ||
+			jQuery('#balance_type_mst').children(':selected').text()=='支出') {
+		jQuery('#item_mst_lbl').css("display","inline");
+		jQuery('#item_mst').css("display","inline");
+	} else {
+		jQuery('#item_mst_lbl').css("display","none");
+		jQuery('#item_mst').css("display","none");
+	}
 //	if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
 //		jQuery('#item_mst_1').css("display","inline");
 //		jQuery('#item_mst_2').css("display","none");
 //	}
-//});
+});
 var subCategory = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
     #{if bType.balance_type_name=='収入' ||

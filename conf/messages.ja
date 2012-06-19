@@ -46,8 +46,9 @@ views.main.tools.logo.pre2=貯金できる家計簿
 views.main.tools.logo=安心My貯金
 
 views.application.tools.home=ホーム
-views.application.tools.detaillist=明細表
-views.application.tools.dailyaccount=日計表
+views.detaillist.detaillist=明細表
+views.dailyaccount.form=日計表
+views.config.config=設定
 
 views.admin.logo=安心My貯金
 views.admin.logo.span=管理
@@ -57,3 +58,5 @@ views.admin.adminMenu.member=家計簿入力
 views.admin.index.welcome.before=ようこそ！
 views.admin.index.welcome.after=さん
 
+#validation
+validation.required=必須

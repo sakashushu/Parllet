@@ -130,4 +130,5 @@ public class Admin extends Controller {
 		//index();
 		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null);
 	}
+
 }
