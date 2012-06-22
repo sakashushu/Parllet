@@ -1,7 +1,12 @@
 #{extends 'admin.html' /}
 
-外部データの取込
+データの出力（エクスポート）
+#{form @download()}
+    <input type="submit" value="出力" />
+#{/form}
+<br>
+外部データの取込（インポート）
 #{form @upload(), enctype:'multipart/form-data'}
     <input type="file" id="csv" name="csv" />
     <input type="submit" value="取込" />
-#{/}
+#{/form}
