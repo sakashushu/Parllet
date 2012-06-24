@@ -3,6 +3,7 @@ package controllers;
 import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.List;
 
 import models.HaUser;
@@ -48,6 +49,7 @@ public class Config extends Controller {
 		
 		response.setContentTypeIfNotSet("application/binary");
 		java.io.InputStream binaryData = new ByteArrayInputStream(sOutCsv.getBytes("utf-8"));
-		renderBinary(binaryData, "testName.csv");	
+		Calendar calendar = Calendar.getInstance();
+		renderBinary(binaryData, String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", calendar.getTime()) + ".csv");	
 	}
 }
