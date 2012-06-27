@@ -9,8 +9,8 @@ ItemMst=項目
 ItemMsts=項目
 HandlingMst=取扱
 HandlingMsts=取扱
-IdealDepositMst=マイ貯金
-IdealDepositMsts=マイ貯金
+IdealDepositMst=My貯金
+IdealDepositMsts=My貯金
 Record=収支データ
 Records=収支データ
 
@@ -33,7 +33,7 @@ handling_mst=取扱
 debit_date=引落日
 remarks=備考
 secret_remarks=備考（非公開）
-ideal_deposit_mst=マイ貯金
+ideal_deposit_mst=My貯金
 
 secure.username=Eメール:
 secure.password=パスワード:
