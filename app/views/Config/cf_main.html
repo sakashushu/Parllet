@@ -1,0 +1,11 @@
+#{extends 'admin.html' /}
+
+   	<div>
+	    <ul id="adminMenu">
+	        <li class="${request.controller == 'Config' ? 'selected' : ''}">
+	            <a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
+	        </li>
+	    </ul>
+       	
+        #{doLayout /}
+   	</div>

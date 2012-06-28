@@ -34,7 +34,7 @@ import play.mvc.With;
 @With(Secure.class)
 public class Config extends Controller {
 
-	public static void config() {
+	public static void cf_io() {
 		render();
 	}
 	

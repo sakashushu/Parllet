@@ -67,7 +67,7 @@
 		            <a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
 		        </li>
 		        <li class="${request.controller == 'Config' ? 'selected' : ''}">
-		            <a href="@{Config.config()}">&{'views.config.config'}</a>
+		            <a href="@{Config.cf_io()}">&{'views.config.config'}</a>
 		        </li>
 		        #{secure.check 'admin'}
 		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">
