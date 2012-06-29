@@ -104,7 +104,7 @@ HandlingTypeMst(cash):
     handling_type_name:   現金
 
 HandlingTypeMst(bank):
-    handling_type_name:   銀行
+    handling_type_name:   口座
 
 HandlingTypeMst(card):
     handling_type_name:   クレジットカード

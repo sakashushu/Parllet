@@ -125,12 +125,12 @@ padding: 2px;
     color: #444;
 }
 
-#newRecord {
+#newData {
     border-top: 1px dotted #C0CBE5;
     padding-top: 15px;
 }
 
-#newRecord a {
+#newData a {
     background: #C88116;
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
@@ -142,7 +142,7 @@ padding: 2px;
     -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,.3);
 }
 
-#newRecord a span {
+#newData a span {
     background: #7D510E;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;

@@ -50,6 +50,10 @@ views.detaillist.detaillist=明細表
 views.dailyaccount.form=日計表
 views.config.config=設定
 views.config.cf_io=データ入出力
+views.config.cf_bank=口座
+views.config.cf_creca=クレジットカード
+views.config.cf_emoney=電子マネー
+views.config.cf_item=項目
 
 
 views.admin.logo=安心My貯金

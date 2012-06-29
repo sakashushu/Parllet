@@ -1,0 +1,8 @@
+#{extends 'Config/cf_main.html' /}
+
+#{ifnot handlingMst?.id}
+	<h3>Make, <span>a new bank</span></h3>
+#{/ifnot}
+#{else}
+	<h3>Edit, <span>this bank</span></h3>
+#{/else}

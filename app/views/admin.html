@@ -58,7 +58,7 @@
     	<div id="main">
 		    <ul id="adminMenu">
 		        <li class="${request.controller == 'DailyAccount' ? 'selected' : ''}">
-		            <a href="@{DailyAccount.form()}">&{'views.dailyaccount.form'}</a>
+		            <a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.form'}</a>
 		        </li>
 		        <li class="${request.controller == 'Admin' ? 'selected' : ''}">
 		            <a href="@{Admin.form()}">&{'views.admin.adminMenu.member'}</a>
@@ -67,7 +67,7 @@
 		            <a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
 		        </li>
 		        <li class="${request.controller == 'Config' ? 'selected' : ''}">
-		            <a href="@{Config.cf_io()}">&{'views.config.config'}</a>
+		            <a href="@{Config.cf_list_bank()}">&{'views.config.config'}</a>
 		        </li>
 		        #{secure.check 'admin'}
 		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">

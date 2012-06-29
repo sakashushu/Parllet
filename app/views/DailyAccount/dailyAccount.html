@@ -44,7 +44,6 @@ jQuery(document).ready(function() {
 
 
 #{form @jump(year, month)}
-
 	<!-- 対象年月 -->
 	<input type="submit" value="<<" name="prevYear" />
 	<input type="submit" value="<" name="prevMonth" />
@@ -52,6 +51,7 @@ jQuery(document).ready(function() {
 	<input type="submit" value=">" name="nextMonth" />
 	<input type="submit" value=">>" name="nextYear" />
 	<input type="submit" value="今月" name="thisMonth" ${thisMonthFlg==1 ? ' disabled' : ''} />
+#{/form}
 
 	<table>
 		<tr>
@@ -200,4 +200,3 @@ jQuery(document).ready(function() {
 		
 	</table>
 	
-#{/form}

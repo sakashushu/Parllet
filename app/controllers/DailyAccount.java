@@ -29,11 +29,11 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * form.htmlの表示
+	 * dailyAccount.htmlの表示
 	 * @param year	表示対象の年
 	 * @param month	表示対象の月
 	 */
-	public static void form(
+	public static void dailyAccount(
 			Integer year,
 			Integer month
 			) {
@@ -94,7 +94,7 @@ public class DailyAccount extends Controller {
 		Calendar calendar = Calendar.getInstance();
     	// 「今月」ボタンが押された場合
     	if(thisMonth != null) {
-    		form(null, null);
+    		dailyAccount(null, null);
     	} else {
 			calendar.set(year, month - 1, 1);
 	    	// 「<<」ボタンが押された場合
@@ -117,7 +117,7 @@ public class DailyAccount extends Controller {
 			year = calendar.get(Calendar.YEAR);
 			month = calendar.get(Calendar.MONTH) + 1;
 	    		
-	    	form(year, month);
+	    	dailyAccount(year, month);
     	}
 	}
 

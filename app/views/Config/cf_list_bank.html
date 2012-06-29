@@ -1,0 +1,15 @@
+#{extends 'Config/cf_main.html' /}
+
+<h3>口座　編集</h3>
+
+#{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
+  #{list items:models.HandlingMst.find("ha_user = '${user.id}' and handling_type_mst.handling_type_name = '口座' order by id").fetch(), as:'bank'}
+	<p class="record ${bank_parity}">
+		<a href="#">${bank.handling_name}</a>
+	</p>
+  #{/list}
+#{/list}
+ 
+<p id="newData" >
+    <a href="#"><span>+</span> make a new bank</a>
+</p>

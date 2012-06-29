@@ -276,4 +276,35 @@ public class Config extends Controller {
 		Calendar calendar = Calendar.getInstance();
 		renderBinary(binaryData, String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", calendar.getTime()) + ".csv");	
 	}
+	
+	//口座編集（リスト）
+	public static void cf_list_bank() {
+		render();
+	}
+	
+	//クレジットカード編集（リスト）
+	public static void cf_list_creca() {
+		render();
+	}
+	
+	//電子マネー編集（リスト）
+	public static void cf_list_emoney() {
+		render();
+	}
+	
+	
+	//項目編集（リスト）
+	public static void cf_list_item() {
+		render();
+	}
+	
+	//口座編集
+	public static void cf_edit_bank(Long id) {
+		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+		if(id != null) {
+			HandlingMst handlingMst = HandlingMst.findById(id);
+			render(handlingMst, hauser);
+		}
+		render(hauser);
+	}
 }
