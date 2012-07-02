@@ -23,10 +23,12 @@ import java.util.Map;
 import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
+import models.HandlingTypeMst;
 import models.IdealDepositMst;
 import models.ItemMst;
 import models.Record;
 
+import play.data.validation.Required;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -279,7 +281,9 @@ public class Config extends Controller {
 	
 	//口座編集（リスト）
 	public static void cf_list_bank() {
-		render();
+		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+		List<HandlingMst> handlingMsts = HandlingMst.find("handling_type_mst.handling_type_name = '口座'").fetch();
+		render(haUser, handlingMsts);
 	}
 	
 	//クレジットカード編集（リスト）
@@ -300,11 +304,74 @@ public class Config extends Controller {
 	
 	//口座編集
 	public static void cf_edit_bank(Long id) {
-		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+		String handlingType = "口座";
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
-			render(handlingMst, hauser);
+			render(handlingMst, handlingType);
 		}
-		render(hauser);
+		render(handlingType);
+	}
+	
+	//口座保存
+	public static void cf_save_bank(Long id,
+			@Required(message="名称 is required") String handling_name
+			) {
+		String handlingType = "口座";
+
+		EditHandlingMst editHandlingMst = new EditHandlingMst();
+
+		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, "口座");
+		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		if(iRtn == 1) {
+	        render("@cf_edit_bank", handlingMst, handlingType);
+		}
+		
+		cf_list_bank();
+	}
+	
+	//口座削除
+	public static void cf_del_bank(Long id) {
+		// 取扱データの読み出し
+		HandlingMst handlingMst = HandlingMst.findById(id);
+		// 保存
+		handlingMst.delete();
+		cf_list_bank();
+		
+	}
+	
+	private static Integer cf_save_handling_mst(Long id,
+			String handling_name,
+			EditHandlingMst editHandlingMst,
+			String sHandlingType) {
+		Integer iRtn = 0;
+		
+		HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", "口座").first();
+		if(id == null) {
+			// 取扱データの作成
+			editHandlingMst.handlingMst = new HandlingMst(
+					haUser,
+					handlingTypeMst,
+					handling_name
+			);
+		} else {
+			// 取扱データの読み出し
+			editHandlingMst.handlingMst = HandlingMst.findById(id);
+			// 編集
+			editHandlingMst.handlingMst.handling_name = handling_name;
+		}
+		// Validate
+		validation.valid(editHandlingMst.handlingMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		editHandlingMst.handlingMst.save();
+		
+		return 0;
+	}
+	
+	static class EditHandlingMst {
+		HandlingMst handlingMst;
 	}
 }

@@ -138,7 +138,7 @@ IdealDepositMst(child-raising):
 
 Record(test1):
     ha_user:          sakashushu
-    payment_date:     '2012-06-13T00:00:00'
+    payment_date:     '2012-07-01T00:00:00'
     balance_type_mst: in
     item_mst:         in1
     amount:           200000
@@ -146,7 +146,7 @@ Record(test1):
 
 Record(test2):
     ha_user:          sakashushu
-    payment_date:     '2012-06-14T00:00:00'
+    payment_date:     '2012-07-02T00:00:00'
     balance_type_mst: out
     item_mst:         out1
     amount:           800
@@ -155,7 +155,7 @@ Record(test2):
 
 Record(test3):
     ha_user:          sakashushu
-    payment_date:     '2012-06-15T00:00:00'
+    payment_date:     '2012-07-03T00:00:00'
     balance_type_mst: out
     item_mst:         out3
     amount:           1200
@@ -164,7 +164,7 @@ Record(test3):
 
 Record(test4):
     ha_user:              sakashushu
-    payment_date:         '2012-06-16T00:00:00'
+    payment_date:         '2012-07-04T00:00:00'
     balance_type_mst:     my_savings_in
     amount:               10000
     ideal_deposit_mst:    child-raising

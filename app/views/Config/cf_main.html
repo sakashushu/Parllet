@@ -2,7 +2,9 @@
 
    	<div>
 	    <ul id="adminMenu">
-	        <li class="${request.actionMethod == 'cf_list_bank' ? 'selected' : ''}">
+	        <li class="${(request.actionMethod == 'cf_list_bank' ||
+	        			request.actionMethod == 'cf_edit_bank' ||
+	        			request.actionMethod == 'cf_save_bank') ? 'selected' : ''}">
 	            <a href="@{Config.cf_list_bank()}">&{'views.config.cf_bank'}</a>
 	        </li>
 	        <li class="${request.actionMethod == 'cf_list_creca' ? 'selected' : ''}">

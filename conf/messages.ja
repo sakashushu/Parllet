@@ -29,11 +29,14 @@ content=内容
 store=お店
 price=単価
 quantity=数量
-handling_mst=取扱
+handling_mst=取扱（実際）
 debit_date=引落日
 remarks=備考
 secret_remarks=備考（非公開）
-ideal_deposit_mst=My貯金
+ideal_deposit_mst=取扱（My貯金）
+
+# HandlingMstの項目名
+handling_name.bank=口座名
 
 secure.username=Eメール:
 secure.password=パスワード:
@@ -66,3 +69,6 @@ views.admin.index.welcome.after=さん
 
 #validation
 validation.required=必須
+
+#crudを真似
+crud.delete=削除  [ &{%s} ]

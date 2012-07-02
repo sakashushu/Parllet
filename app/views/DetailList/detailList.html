@@ -87,12 +87,12 @@ jQuery(document).ready(function() {
 				<th>
 					<input type="submit" name="srch" value="絞込" />
 				</th>
-				<th>日付<br>
+				<th>&{'payment_date'}<br>
 					<input type="text" id="from" name="h_payment_date_fr" size="13" value="${h_payment_date_fr}" />
 					<label for="to">～</label><br>
 					<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
 				</th>
-				<th>収支種類<br>
+				<th>&{'balance_type_mst'}<br>
 					<select name="h_balance_type_id">
 						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>すべて</option>
 						#{list items:bTypes, as:'bType'}
@@ -100,7 +100,7 @@ jQuery(document).ready(function() {
 						#{/list}
 					</select>
 				</th>
-				<th>項目<br>
+				<th>&{'item_mst'}<br>
 					<select id="h_combo" name="h_item_id" style="width:100px;">
 						<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
 						#{list items:itemsIn, as:'itemIn'}
@@ -111,18 +111,22 @@ jQuery(document).ready(function() {
 						#{/list}
 					</select>
 				</th>
+				<!-- 20120702 Saka Del Start -->
+				<!-- 
 				<th>項目詳細<br></th>
-				<th>金額<br></th>
-				<th>取扱<br>
+				 -->
+				<!-- 20120702 Saka Del End   -->
+				<th>&{'amount'}<br></th>
+				<th>&{'handling_mst'}<br>
 					<select style="width:100px;">
 						<option value="0" selected>すべて</option>
 					</select>
 				</th>
-				<th>引落日<br></th>
-				<th>内容<br></th>
-				<th>お店<br></th>
-				<th>備考<br></th>
-				<th>マイ貯金<br></th>
+				<th>&{'debit_date'}<br></th>
+				<th>&{'content'}<br></th>
+				<th>&{'store'}<br></th>
+				<th>&{'remarks'}<br></th>
+				<th>&{'ideal_deposit_mst'}<br></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -186,11 +190,19 @@ jQuery(document).ready(function() {
 						</select>
 					#{/if}
 				</td>
+				<!-- 20120702 Saka Del Start -->
+				<!-- 
 				<td>
+				 -->
+				<!-- 20120702 Saka Del End   -->
 					<!-- 項目詳細 -->
+				<!-- 20120702 Saka Del Start -->
+				<!-- 
 					<input type="text" id="e_detail_mst_${record.id}" name="e_detail_mst"
 						value="${record.detail_mst}" size="13" />
 				</td>
+				 -->
+				<!-- 20120702 Saka Del End   -->
 				<td>
 					<!-- 金額 -->
 					<input type="text" id="e_amount_${record.id}" name="e_amount"
@@ -224,7 +236,7 @@ jQuery(document).ready(function() {
 				<td>
 					<!-- マイ貯金 -->
 					<input type="text" id="e_ideal_deposit_mst_${record.id}" name="e_ideal_deposit_mst"
-						value="${record.ideal_deposit_mst}" size="8" />
+						value="${record.ideal_deposit_mst}" size="13" />
 				</td>
 			
 			</tr>

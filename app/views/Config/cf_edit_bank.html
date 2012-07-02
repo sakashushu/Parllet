@@ -1,8 +1,45 @@
 #{extends 'Config/cf_main.html' /}
 
-#{ifnot handlingMst?.id}
-	<h3>Make, <span>a new bank</span></h3>
-#{/ifnot}
-#{else}
-	<h3>Edit, <span>this bank</span></h3>
-#{/else}
+<div id="crudShow">
+
+	#{ifnot handlingMst?.id}
+		<h3>Make, <span>a new bank</span></h3>
+	#{/ifnot}
+	#{else}
+		<h3>Edit, <span>this bank</span></h3>
+	#{/else}
+
+    <div class="objectForm">
+	#{form @cf_save_bank(handlingMst?.id)}
+	 
+	    #{ifErrors}
+	        <p class="error">
+	            Please correct these errors.
+	        </p>
+	    #{/ifErrors}
+	    
+	    <p>
+	        #{field 'handling_name'}
+	        <label>&{'handling_name.bank'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${handlingMst?.handling_name}" />
+	        <span class="error">#{error 'handlingMst.handling_name' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        <input type="submit" value="save" />
+	    </p>
+	    
+	#{/form}
+	</div>
+
+	#{if handlingMst?.id}
+		#{form @cf_del_bank(handlingMst.id)}
+		    <p class="crudDelete">
+		        <input type="submit" value="&{'crud.delete', handlingType}"/>
+		    </p>
+		#{/form}
+	#{/if}
+
+</div>
