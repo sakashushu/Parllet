@@ -34,7 +34,7 @@ BalanceTypeMst(bank_out):
     balance_type_name: 口座引出
 
 BalanceTypeMst(my_savings_in):
-    balance_type_name: My貯金に貯金
+    balance_type_name: My貯金預入
 
 # BalanceTypeMst(from_my_savings_out):
 #     balance_type_name: My貯金から支払

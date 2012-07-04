@@ -317,16 +317,22 @@ public class Config extends Controller {
 			@Required(message="名称 is required") String handling_name
 			) {
 		String handlingType = "口座";
-
+		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
-
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, "口座");
+		
+		//口座保存
+		
+		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, handlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		
 		if(iRtn == 1) {
-	        render("@cf_edit_bank", handlingMst, handlingType);
+			validation.clear();
+			validation.valid(handlingMst);
+			render("@cf_edit_bank", handlingMst, handlingType);
 		}
 		
 		cf_list_bank();
+		
 	}
 	
 	//口座削除
@@ -339,14 +345,21 @@ public class Config extends Controller {
 		
 	}
 	
+	/**
+	 * HandlingMstの保存メソッド
+	 * @param id
+	 * @param handling_name
+	 * @param editHandlingMst
+	 * @param sHandlingType
+	 * @return
+	 */
 	private static Integer cf_save_handling_mst(Long id,
 			String handling_name,
 			EditHandlingMst editHandlingMst,
-			String sHandlingType) {
-		Integer iRtn = 0;
-		
+			String sHandlingType
+			) {
 		HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
-		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", "口座").first();
+		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		if(id == null) {
 			// 取扱データの作成
 			editHandlingMst.handlingMst = new HandlingMst(
@@ -371,6 +384,11 @@ public class Config extends Controller {
 		return 0;
 	}
 	
+	/**
+	 * HandlingMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
 	static class EditHandlingMst {
 		HandlingMst handlingMst;
 	}

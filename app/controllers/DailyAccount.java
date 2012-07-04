@@ -154,22 +154,22 @@ public class DailyAccount extends Controller {
 		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
 				"支出", lWDA);
 		
-		//「My貯金に貯金」
+		//「My貯金預入」
 		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
-				"My貯金に貯金", lWDA);
+				"My貯金預入", lWDA);
 		
 		
-		//「差額」　　（　「収入」－「支出」－「My貯金に貯金」　）
+		//「差額」　　（　「収入」－「支出」－「My貯金預入」　）
    		WorkDailyAccount wDaDiff = new WorkDailyAccount();
 		BigInteger biSumMonthDiff = new BigInteger("0");
 		BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
 		String[] sAryDaysDiff = new String[iDaysCnt];
 		for (WorkDailyAccount wda : lWDA) {
-			//「収入」・「支出」・「My貯金に貯金」の合計行で算出する
+			//「収入」・「支出」・「My貯金預入」の合計行で算出する
 			if((wda.getsItem().equals("")) &&
 			   (wda.getsLargeCategory().equals("収入") ||
 				wda.getsLargeCategory().equals("支出") ||
-				wda.getsLargeCategory().equals("My貯金に貯金"))
+				wda.getsLargeCategory().equals("My貯金預入"))
 					) {
 				
 				if(wda.getsLargeCategory().equals("収入")) {
@@ -177,7 +177,7 @@ public class DailyAccount extends Controller {
 						biSumMonthDiff = biSumMonthDiff.add(wda.getBiSumMonth());
 					}
 				} else if(wda.getsLargeCategory().equals("支出") ||
-						wda.getsLargeCategory().equals("My貯金に貯金")) {
+						wda.getsLargeCategory().equals("My貯金預入")) {
 					if(wda.getBiSumMonth() != null) {
 						biSumMonthDiff = biSumMonthDiff.subtract(wda.getBiSumMonth());
 					}
@@ -194,7 +194,7 @@ public class DailyAccount extends Controller {
 		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].add(biAryDaysTmp[iDay]);
 		   				}
 					} else if(wda.getsLargeCategory().equals("支出") ||
-							wda.getsLargeCategory().equals("My貯金に貯金")) {
+							wda.getsLargeCategory().equals("My貯金預入")) {
 		   				if(biAryDaysTmp[iDay] != null) {
 		   					biAryDaysDiff[iDay] = biAryDaysDiff[iDay].subtract(biAryDaysTmp[iDay]); 
 		   				}
@@ -238,7 +238,7 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金に貯金」・「差額」・「My貯金から支払」毎に作成する）
+	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金預入」・「差額」・「My貯金から支払」毎に作成する）
 	 * @param year
 	 * @param month
 	 * @param iDaysCnt
@@ -256,7 +256,7 @@ public class DailyAccount extends Controller {
 			HaUser hauser,
 			String sFirstDay,
 			String sNextFirst,
-			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金に貯金」・「My貯金から支払」
+			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金預入」・「My貯金から支払」
 			List<WorkDailyAccount> lWDA
 			) {
    		Calendar calendar = Calendar.getInstance();
@@ -270,7 +270,7 @@ public class DailyAccount extends Controller {
 
    		if(sLargeCategoryName.equals("収入") ||
    				sLargeCategoryName.equals("支出") ||
-   				sLargeCategoryName.equals("My貯金に貯金") ||
+   				sLargeCategoryName.equals("My貯金預入") ||
    				sLargeCategoryName.equals("My貯金から支払")) {
    			sSqlBase = "" +
    					"" +
@@ -311,7 +311,7 @@ public class DailyAccount extends Controller {
 	   				"   CASE " +
 	   				"     WHEN (b.balance_type_name = '支出' AND " +
 	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-	   				"     WHEN b.balance_type_name = 'My貯金に貯金' THEN r.amount" +
+	   				"     WHEN b.balance_type_name = 'My貯金預入' THEN r.amount" +
 	   				"   END" +
 	   				"   ), 0) " +
 	   				" FROM Record r " +
@@ -335,7 +335,7 @@ public class DailyAccount extends Controller {
 	   				"     WHEN b.balance_type_name = '収入' THEN r.amount " +
 	   				"     WHEN (b.balance_type_name = '支出' AND " +
 	   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
-	   				"     WHEN b.balance_type_name = 'My貯金に貯金' THEN -r.amount" +
+	   				"     WHEN b.balance_type_name = 'My貯金預入' THEN -r.amount" +
 	   				"   END" +
 	   				"   ), 0) " +
 	   				" FROM Record r " +
@@ -359,9 +359,9 @@ public class DailyAccount extends Controller {
    			sSql = sSqlBase + sSqlBaseG +
 					"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
 					"   AND r.ideal_deposit_mst_id IS NULL ";
-   		} else if(sLargeCategoryName.equals("My貯金に貯金")) {
+   		} else if(sLargeCategoryName.equals("My貯金預入")) {
    			sSql = sSqlBase + sSqlBaseG +
-					"   AND b.balance_type_name = 'My貯金に貯金' " +
+					"   AND b.balance_type_name = 'My貯金預入' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		} else if(sLargeCategoryName.equals("My貯金から支払")) {
    			sSql = sSqlBase + sSqlBaseG +
@@ -374,14 +374,14 @@ public class DailyAccount extends Controller {
    			sSql = sSqlBase + sSqlBaseG +
 					"   AND ((b.balance_type_name = '支出' AND " +
 	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-	   				"        b.balance_type_name = 'My貯金に貯金'" +
+	   				"        b.balance_type_name = 'My貯金預入'" +
 	   				"        )";
    		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
    			sSql = sSqlBase + sSqlBaseG +
 					"   AND (b.balance_type_name = '収入' OR " +
 	   				"        (b.balance_type_name = '支出' AND " +
    				    "         r.ideal_deposit_mst_id IS NULL) OR " +
-   				    "        b.balance_type_name = 'My貯金に貯金' " +
+   				    "        b.balance_type_name = 'My貯金預入' " +
 	   				"        )";
    		}
 		BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
@@ -393,10 +393,10 @@ public class DailyAccount extends Controller {
 		wDA.setBiSumMonth(biSumMonthG);
 		wDA.setsSumMonth(biSumMonthG==null ? "" : String.format("%1$,3d", biSumMonthG));
 		
-		//  「収入」・「支出」・「My貯金に貯金」の場合、予算有無フラグを立てる
+		//  「収入」・「支出」・「My貯金預入」の場合、予算有無フラグを立てる
 		if(sLargeCategoryName.equals("収入") ||
 				sLargeCategoryName.equals("支出") ||
-				sLargeCategoryName.equals("My貯金に貯金")) {
+				sLargeCategoryName.equals("My貯金預入")) {
 			wDA.setbBudgetFlg(true);
 		}
 		
@@ -412,9 +412,9 @@ public class DailyAccount extends Controller {
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL ";
-	   		} else if(sLargeCategoryName.equals("My貯金に貯金")) {
+	   		} else if(sLargeCategoryName.equals("My貯金預入")) {
 	   			sSql = sSqlBase + sSqlBaseD +
-						"   AND b.balance_type_name = 'My貯金に貯金' " +
+						"   AND b.balance_type_name = 'My貯金預入' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
 	   		} else if(sLargeCategoryName.equals("My貯金から支払")) {
 	   			sSql = sSqlBase + sSqlBaseD +
@@ -431,7 +431,7 @@ public class DailyAccount extends Controller {
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND ((b.balance_type_name = '支出' AND " +
 		   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-		   				"        b.balance_type_name = 'My貯金に貯金'" +
+		   				"        b.balance_type_name = 'My貯金預入'" +
 		   				"        )";
 	   		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
 	   			sSqlBaseD = "" +
@@ -440,7 +440,7 @@ public class DailyAccount extends Controller {
 						"   AND (b.balance_type_name = '収入' OR " +
 		   				"        (b.balance_type_name = '支出' AND " +
 	   				    "         r.ideal_deposit_mst_id IS NULL) OR " +
-   				        "        b.balance_type_name = 'My貯金に貯金' " +
+   				        "        b.balance_type_name = 'My貯金預入' " +
 		   				"        )";
 	   		}
 			biAryDaysG[iDay] = (BigInteger)JPA.em().createNativeQuery(
@@ -495,7 +495,7 @@ public class DailyAccount extends Controller {
 				lWDA.add(wDaItem);
 				
 			}
-		} else if(sLargeCategoryName.equals("My貯金に貯金") ||
+		} else if(sLargeCategoryName.equals("My貯金預入") ||
 				sLargeCategoryName.equals("My貯金から支払") ||
 				sLargeCategoryName.equals("My貯金残高")) {
 			//My貯金ごとのループ
@@ -505,9 +505,9 @@ public class DailyAccount extends Controller {
 				
 				WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
 				
-				if(sLargeCategoryName.equals("My貯金に貯金")) {
+				if(sLargeCategoryName.equals("My貯金預入")) {
 		   			sSql = sSqlBase + sSqlBaseG +
-							"   AND b.balance_type_name = 'My貯金に貯金' " +
+							"   AND b.balance_type_name = 'My貯金預入' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   		} else if(sLargeCategoryName.equals("My貯金から支払")) {
@@ -519,7 +519,7 @@ public class DailyAccount extends Controller {
 		   			sSql = sSqlBase + sSqlBaseG +
 							"   AND ((b.balance_type_name = '支出' AND " +
 			   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-			   				"        b.balance_type_name = 'My貯金に貯金'" +
+			   				"        b.balance_type_name = 'My貯金預入'" +
 			   				"        )" +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   		}
@@ -529,7 +529,7 @@ public class DailyAccount extends Controller {
 				
 				wDaIdealDepo.setsLargeCategory(sLargeCategoryName);
 				wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
-				if(sLargeCategoryName.equals("My貯金に貯金")) {
+				if(sLargeCategoryName.equals("My貯金預入")) {
 					wDaIdealDepo.setbBudgetFlg(true);
 				} else {
 					wDaIdealDepo.setbBudgetFlg(false);
@@ -543,9 +543,9 @@ public class DailyAccount extends Controller {
 					calendar.set(year, month - 1, iDay + 1);
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-					if(sLargeCategoryName.equals("My貯金に貯金")) {
+					if(sLargeCategoryName.equals("My貯金預入")) {
 			   			sSql = sSqlBase + sSqlBaseD +
-								"   AND b.balance_type_name = 'My貯金に貯金' " +
+								"   AND b.balance_type_name = 'My貯金預入' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		} else if(sLargeCategoryName.equals("My貯金から支払")) {
@@ -559,7 +559,7 @@ public class DailyAccount extends Controller {
 			   			sSql = sSqlBase + sSqlBaseD +
 								"   AND ((b.balance_type_name = '支出' AND " +
 				   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-				   				"        b.balance_type_name = 'My貯金に貯金'" +
+				   				"        b.balance_type_name = 'My貯金預入'" +
 				   				"        )" +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		}
