@@ -4,15 +4,27 @@
 
 <script type="text/javascript">
 <!--
-//項目の表示・非表示
+//起動時の「項目」・「取扱(My貯金)」の入力可・不可
 jQuery(document).ready(function() {
 	if(jQuery('#balance_type_mst').children(':selected').text()=='収入' ||
 			jQuery('#balance_type_mst').children(':selected').text()=='支出') {
-		jQuery('#item_mst_lbl').css("display","inline");
-		jQuery('#item_mst').css("display","inline");
+//		jQuery('#item_mst_lbl').css("display","inline");
+//		jQuery('#item_mst').css("display","inline");
+		jQuery('#item_mst_lbl').removeAttr("disabled");
+		jQuery('#item_mst').removeAttr("disabled");
 	} else {
-		jQuery('#item_mst_lbl').css("display","none");
-		jQuery('#item_mst').css("display","none");
+//		jQuery('#item_mst_lbl').css("display","none");
+//		jQuery('#item_mst').css("display","none");
+		jQuery('#item_mst_lbl').attr("disabled", "disabled");
+		jQuery('#item_mst').attr("disabled", "disabled");
+		if(jQuery('#balance_type_mst').children(':selected').text()=='口座預入' ||
+				jQuery('#balance_type_mst').children(':selected').text()=='口座引出') {
+			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
+			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
+		} else {
+			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
+			jQuery('#ideal_deposit_mst').removeAttr("disabled");
+		}
 	}
 //	if(jQuery('#balance_type_mst').children(':selected').text()=='(値を選択して下さい)') {
 //		jQuery('#item_mst_1').css("display","inline");
@@ -36,19 +48,35 @@ var subCategory = {
     #{/if}
   #{/list}
 }
-jQuery(function(){
-	jQuery('#balance_type_mst').change(function(){
+//「収支種類」・「取扱(My貯金)」の選択変更時の「項目」の入力可・不可
+jQuery(document).ready(function(){
+	jQuery('#balance_type_mst, #ideal_deposit_mst').change(function(){
 		jQuery('#item_mst').empty();
-		if(jQuery('#balance_type_mst').children(':selected').text()=='収入' ||
-				jQuery('#balance_type_mst').children(':selected').text()=='支出') {
-			jQuery('#item_mst_lbl').css("display","inline");
-			jQuery('#item_mst').css("display","inline");
-			jQuery.each(subCategory[jQuery(this).val()],function(key,value){
+		if((jQuery('#balance_type_mst').children(':selected').text()=='収入' ||
+				jQuery('#balance_type_mst').children(':selected').text()=='支出') &&
+				jQuery('#ideal_deposit_mst').children(':selected').text()=='(なし)'
+				) {
+			jQuery('#item_mst_lbl').removeAttr("disabled");
+			jQuery('#item_mst').removeAttr("disabled");
+			jQuery.each(subCategory[jQuery('#balance_type_mst').val()],function(key,value){
 				jQuery('#item_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
 			});
 		} else {
-			jQuery('#item_mst_lbl').css("display","none");
-			jQuery('#item_mst').css("display","none");
+			jQuery('#item_mst_lbl').attr("disabled", "disabled");
+			jQuery('#item_mst').attr("disabled", "disabled");
+		}
+	});
+});
+//「口座預入」・「口座引出」の時は「取扱(My貯金)」は入力不可
+jQuery(document).ready(function(){
+	jQuery('#balance_type_mst').change(function(){
+		if(jQuery('#balance_type_mst').children(':selected').text()=='口座預入' ||
+				jQuery('#balance_type_mst').children(':selected').text()=='口座引出') {
+			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
+			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
+		} else {
+			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
+			jQuery('#ideal_deposit_mst').removeAttr("disabled");
 		}
 	});
 });
@@ -108,8 +136,8 @@ jQuery(function(){
  
     <p>
         #{field 'ideal_deposit_mst'}
-        <label>&{'ideal_deposit_mst'}:</label>
-		<select name="${field.name}">
+        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
+		<select id="${field.name}" name="${field.name}">
 			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>(なし)</option>
 			#{list items:models.IdealDepositMst.find("order by id").fetch(), as:'idealDeposit'}
 			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>

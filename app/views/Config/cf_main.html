@@ -7,10 +7,12 @@
 	        			request.actionMethod == 'cf_save_bank') ? 'selected' : ''}">
 	            <a href="@{Config.cf_list_bank()}">&{'views.config.cf_bank'}</a>
 	        </li>
-	        <li class="${request.actionMethod == 'cf_list_creca' ? 'selected' : ''}">
+	        <li class="${(request.actionMethod == 'cf_list_creca' ||
+	        			request.actionMethod == 'cf_edit_creca') ? 'selected' : ''}">
 	            <a href="@{Config.cf_list_creca()}">&{'views.config.cf_creca'}</a>
 	        </li>
-	        <li class="${request.actionMethod == 'cf_list_emoney' ? 'selected' : ''}">
+	        <li class="${(request.actionMethod == 'cf_list_emoney' ||
+	        			request.actionMethod == 'cf_edit_emoney') ? 'selected' : ''}">
 	            <a href="@{Config.cf_list_emoney()}">&{'views.config.cf_emoney'}</a>
 	        </li>
 	        <li class="${request.actionMethod == 'cf_list_item' ? 'selected' : ''}">

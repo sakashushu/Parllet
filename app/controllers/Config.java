@@ -281,9 +281,10 @@ public class Config extends Controller {
 	
 	//口座編集（リスト）
 	public static void cf_list_bank() {
-		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
-		List<HandlingMst> handlingMsts = HandlingMst.find("handling_type_mst.handling_type_name = '口座'").fetch();
-		render(haUser, handlingMsts);
+		String sHandlingType = Messages.get("views.config.cf_bank");
+		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
+//		render(handlingMsts);
+		render("@cf_list_any", sHandlingType, handlingMsts);
 	}
 	
 	//クレジットカード編集（リスト）
@@ -293,7 +294,9 @@ public class Config extends Controller {
 	
 	//電子マネー編集（リスト）
 	public static void cf_list_emoney() {
-		render();
+		String sHandlingType = Messages.get("views.config.cf_emoney");
+		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
+		render("@cf_list_any", sHandlingType, handlingMsts);
 	}
 	
 	
@@ -304,12 +307,12 @@ public class Config extends Controller {
 	
 	//口座編集
 	public static void cf_edit_bank(Long id) {
-		String handlingType = "口座";
+		String sHandlingType = Messages.get("views.config.cf_bank");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
-			render(handlingMst, handlingType);
+			render("@cf_edit_any", handlingMst, sHandlingType);
 		}
-		render(handlingType);
+		render("@cf_edit_any", sHandlingType);
 	}
 	
 	//口座保存
@@ -341,10 +344,21 @@ public class Config extends Controller {
 		HandlingMst handlingMst = HandlingMst.findById(id);
 		// 保存
 		handlingMst.delete();
+
 		cf_list_bank();
-		
 	}
 	
+	//電子マネー編集
+	public static void cf_edit_emoney(Long id) {
+		String sHandlingType = Messages.get("views.config.cf_emoney");
+		if(id != null) {
+			HandlingMst handlingMst = HandlingMst.findById(id);
+			render("@cf_edit_any", handlingMst, sHandlingType);
+		}
+		render("@cf_edit_any", sHandlingType);
+	}
+	
+
 	/**
 	 * HandlingMstの保存メソッド
 	 * @param id
@@ -382,6 +396,16 @@ public class Config extends Controller {
 		editHandlingMst.handlingMst.save();
 		
 		return 0;
+	}
+	
+	/**
+	 * 取扱種類を元にHandlingMstのリストの取得
+	 * @param sHandlingType
+	 * @return
+	 */
+	private static List<HandlingMst> get_handling_msts(String sHandlingType) {
+		List<HandlingMst> handlingMsts = HandlingMst.find("handling_type_mst.handling_type_name = '" + sHandlingType + "'").fetch();
+		return handlingMsts;
 	}
 	
 	/**

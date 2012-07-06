@@ -3,10 +3,10 @@
 <div id="crudShow">
 
 	#{ifnot handlingMst?.id}
-		<h3>Make, <span>a new bank</span></h3>
+		<h3>Make, <span>a new ${sHandlingType}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3>Edit, <span>this bank</span></h3>
+		<h3>Edit, <span>this ${sHandlingType}</span></h3>
 	#{/else}
 
     <div class="objectForm">
@@ -37,7 +37,7 @@
 	#{if handlingMst?.id}
 		#{form @cf_del_bank(handlingMst.id)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'crud.delete', handlingType}"/>
+		        <input type="submit" value="&{'crud.delete', sHandlingType}"/>
 		    </p>
 		#{/form}
 	#{/if}

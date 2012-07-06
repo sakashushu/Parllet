@@ -1,0 +1,25 @@
+#{extends 'Config/cf_main.html' /}
+
+<h3>${sHandlingType}　編集</h3>
+
+#{list items:handlingMsts, as:'handlingMst'}
+	<p class="record ${handlingMst_parity}">
+	  #{if sHandlingType == "口座"}
+		<a href="@{cf_edit_bank(handlingMst.id)}">
+	  #{/if}
+	  #{elseif sHandlingType == "電子マネー"}
+		<a href="@{cf_edit_emoney(handlingMst.id)}">
+	  #{/elseif}
+		${handlingMst.handling_name}</a>
+	</p>
+#{/list}
+ 
+<p id="newData" >
+  #{if sHandlingType == "口座"}
+    <a href="@{cf_edit_bank()}">
+  #{/if}
+  #{elseif sHandlingType == "電子マネー"}
+    <a href="@{cf_edit_emoney()}">
+  #{/elseif}
+    <span>+</span> make a new ${sHandlingType}</a>
+</p>
