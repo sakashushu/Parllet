@@ -4,10 +4,10 @@
 
 #{list items:handlingMsts, as:'handlingMst'}
 	<p class="record ${handlingMst_parity}">
-	  #{if sHandlingType == "口座"}
+	  #{if sHandlingType == messages.get('views.config.cf_bank')}
 		<a href="@{cf_edit_bank(handlingMst.id)}">
 	  #{/if}
-	  #{elseif sHandlingType == "電子マネー"}
+	  #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
 		<a href="@{cf_edit_emoney(handlingMst.id)}">
 	  #{/elseif}
 		${handlingMst.handling_name}</a>
@@ -15,11 +15,11 @@
 #{/list}
  
 <p id="newData" >
-  #{if sHandlingType == "口座"}
+  #{if sHandlingType == messages.get('views.config.cf_bank')}
     <a href="@{cf_edit_bank()}">
   #{/if}
-  #{elseif sHandlingType == "電子マネー"}
+  #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
     <a href="@{cf_edit_emoney()}">
   #{/elseif}
-    <span>+</span> make a new ${sHandlingType}</a>
+    <span>+</span> &{'config.add', sHandlingType}</a>
 </p>

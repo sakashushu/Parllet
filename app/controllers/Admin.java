@@ -43,7 +43,7 @@ public class Admin extends Controller {
 		render(hauser);
 	}
 	
-	public static void save(
+	public static void save_rec(
 			Long id,
 			@Required(message="支払日 is required") String payment_date,
 			@Required(message="収支種類 is required") Long balance_type_mst,
@@ -131,4 +131,13 @@ public class Admin extends Controller {
 		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null);
 	}
 
+	//レコード削除
+	public static void del_rec(Long id) {
+		// 取扱データの読み出し
+		Record record = Record.findById(id);
+		// 保存
+		record.delete();
+
+		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null);
+	}
 }

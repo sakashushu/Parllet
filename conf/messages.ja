@@ -35,9 +35,6 @@ remarks=備考
 secret_remarks=備考（非公開）
 ideal_deposit_mst=取扱（My貯金）
 
-# HandlingMstの項目名
-handling_name.bank=口座名
-
 secure.username=Eメール:
 secure.password=パスワード:
 secure.signin=ログイン
@@ -71,4 +68,7 @@ views.admin.index.welcome.after=さん
 validation.required=必須
 
 #crudを真似
-crud.delete=削除  [ &{%s} ]
+config.add=追加  [ &{%s} ]
+config.edit=編集  [ &{%s} ]
+config.delete=削除  [ &{%s} ]
+config.save=保存

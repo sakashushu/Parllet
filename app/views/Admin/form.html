@@ -83,158 +83,171 @@ jQuery(document).ready(function(){
 // -->
 </script>
 
+<div id="crudShow">
 
-#{ifnot record?.id}
-	<h3>Write, <span>a new record</span></h3>
-#{/ifnot}
-#{else}
-	<h3>Edit, <span>this record</span></h3>
-#{/else}
-
-#{form @save(record?.id)}
- 
-    #{ifErrors}
-        <p class="error">
-            Please correct these errors.
-        </p>
-    #{/ifErrors}
-    
-    <p>
-        #{field 'payment_date'}
-        <label>&{'payment_date'}:</label>
-        <input type="text" class="datepicker" name="${field.name}" 
-            value="${record?.payment_date?.format('yyyy/MM/dd')}" />
-        <span class="error">#{error 'record.payment_date' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'balance_type_mst'}
-        <label>&{'balance_type_mst'}:</label>
-		<select id="${field.name}" name="${field.name}">
-			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-			<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
-			#{/list}
-		</select>
-        <span class="error">#{error 'record.balance_type_mst' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'handling_mst'}
-        <label>&{'handling_mst'}:</label>
-		<select name="${field.name}">
-			<option value="0"${record?.handling_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-			#{list items:models.HandlingMst.find("order by id").fetch(), as:'handling'}
-			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
-			#{/list}
-		</select>
-        <span class="error">#{error 'record.handling_mst' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'ideal_deposit_mst'}
-        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
-		<select id="${field.name}" name="${field.name}">
-			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>(なし)</option>
-			#{list items:models.IdealDepositMst.find("order by id").fetch(), as:'idealDeposit'}
-			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
-			#{/list}
-		</select>
-        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'item_mst'}
-        <label id="item_mst_lbl">&{'item_mst'}:</label>
-		<select id="${field.name}" name="${field.name}" style="width:150px;" 
-				${(record?.balance_type_mst?.balance_type_name=='収入' ||
-				record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
-			#{if record?.balance_type_mst?.balance_type_name=='収入' ||
-					record?.balance_type_mst?.balance_type_name=='支出'}
-				<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-				#{list items:models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first(), as:'bType'}
-				#{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-				#{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
-				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+	#{ifnot record?.id}
+		<h3><span>&{'config.add', "データ"}</span></h3>
+	#{/ifnot}
+	#{else}
+		<h3><span>&{'config.edit', "データ"}</span></h3>
+	#{/else}
+	
+    <div class="objectForm">
+	#{form @save_rec(record?.id)}
+	 
+	    #{ifErrors}
+	        <p class="error">
+	            Please correct these errors.
+	        </p>
+	    #{/ifErrors}
+	    
+	    <p>
+	        #{field 'payment_date'}
+	        <label>&{'payment_date'}:</label>
+	        <input type="text" class="datepicker" name="${field.name}" 
+	            value="${record?.payment_date?.format('yyyy/MM/dd')}" />
+	        <span class="error">#{error 'record.payment_date' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'balance_type_mst'}
+	        <label>&{'balance_type_mst'}:</label>
+			<select id="${field.name}" name="${field.name}">
+				<option value="0"${record?.balance_type_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+				#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+				<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 				#{/list}
+			</select>
+	        <span class="error">#{error 'record.balance_type_mst' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'handling_mst'}
+	        <label>&{'handling_mst'}:</label>
+			<select name="${field.name}">
+				<option value="0"${record?.handling_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+				#{list items:models.HandlingMst.find("order by id").fetch(), as:'handling'}
+				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
+			</select>
+	        <span class="error">#{error 'record.handling_mst' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'ideal_deposit_mst'}
+	        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
+			<select id="${field.name}" name="${field.name}">
+				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>(なし)</option>
+				#{list items:models.IdealDepositMst.find("order by id").fetch(), as:'idealDeposit'}
+				<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
 				#{/list}
-			#{/if}
-		</select>
-        <span class="error">#{error 'record.item_mst' /}</span>
-        #{/field}
-    </p>
+			</select>
+	        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'item_mst'}
+	        <label id="item_mst_lbl">&{'item_mst'}:</label>
+			<select id="${field.name}" name="${field.name}" style="width:150px;" 
+					${(record?.balance_type_mst?.balance_type_name=='収入' ||
+					record?.balance_type_mst?.balance_type_name=='支出') ? '' : ''}>
+				#{if record?.balance_type_mst?.balance_type_name=='収入' ||
+						record?.balance_type_mst?.balance_type_name=='支出'}
+					<option value="0"${record?.item_mst ? '' : ' selected'}>(値を選択して下さい)</option>
+					#{list items:models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first(), as:'bType'}
+					#{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
+					#{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+					<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+					#{/list}
+					#{/list}
+					#{/list}
+				#{/if}
+			</select>
+	        <span class="error">#{error 'record.item_mst' /}</span>
+	        #{/field}
+	    </p>
+	
+		<!-- 「項目詳細」の作成は一旦保留 -->
+		<!-- 
+	    <p>
+	        #{field 'detail_mst'}
+	        <label>&{'detail_mst'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${record?.detail_mst}" />
+	        <span class="error">#{error 'record.detail_mst' /}</span>
+	        #{/field}
+	    </p>
+		 -->
+	 
+	    <p>
+	        #{field 'amount'}
+	        <label>&{'amount'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${record?.amount}" />
+	        <span class="error">#{error 'record.amount' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'debit_date'}
+	        <label>&{'debit_date'}:</label>
+	        <input type="text" class="datepicker" name="${field.name}" 
+	            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
+	        <span class="error">#{error 'record.debit_date' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'content'}
+	        <label>&{'content'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${record?.content}" />
+	        <span class="error">#{error 'record.content' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'store'}
+	        <label>&{'store'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${record?.store}" />
+	        <span class="error">#{error 'record.store' /}</span>
+	        #{/field}
+	    </p>
+	
+	    <p>
+	        #{field 'remarks'}
+	        <label>&{'remarks'}:</label>
+	        <textarea name="${field.name}">${record?.remarks}</textarea>
+	        <span class="error">#{error 'record.remarks' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        #{field 'secret_remarks'}
+	        <label>&{'secret_remarks'}:</label>
+	        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
+	        <span class="error">#{error 'record.secret_remarks' /}</span>
+	        #{/field}
+	    </p>
+	 
+	    <p>
+	        <input type="submit" value="&{'config.save'}" />
+	    </p>
+	    
+	#{/form}
+	</div>
+	
+	#{if record?.id}
+		#{form @del_rec(record?.id)}
+		    <p class="crudDelete">
+		        <input type="submit" value="&{'config.delete', データ"/>
+		    </p>
+		#{/form}
+	#{/if}
 
-	<!-- 「項目詳細」の作成は一旦保留 -->
-	<!-- 
-    <p>
-        #{field 'detail_mst'}
-        <label>&{'detail_mst'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.detail_mst}" />
-        <span class="error">#{error 'record.detail_mst' /}</span>
-        #{/field}
-    </p>
-	 -->
- 
-    <p>
-        #{field 'amount'}
-        <label>&{'amount'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.amount}" />
-        <span class="error">#{error 'record.amount' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'debit_date'}
-        <label>&{'debit_date'}:</label>
-        <input type="text" class="datepicker" name="${field.name}" 
-            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
-        <span class="error">#{error 'record.debit_date' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'content'}
-        <label>&{'content'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.content}" />
-        <span class="error">#{error 'record.content' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'store'}
-        <label>&{'store'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.store}" />
-        <span class="error">#{error 'record.store' /}</span>
-        #{/field}
-    </p>
-
-    <p>
-        #{field 'remarks'}
-        <label>&{'remarks'}:</label>
-        <textarea name="${field.name}">${record?.remarks}</textarea>
-        <span class="error">#{error 'record.remarks' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        #{field 'secret_remarks'}
-        <label>&{'secret_remarks'}:</label>
-        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
-        <span class="error">#{error 'record.secret_remarks' /}</span>
-        #{/field}
-    </p>
- 
-    <p>
-        <input type="submit" value="save" />
-    </p>
-    
-#{/form}
+</div>

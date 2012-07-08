@@ -12,7 +12,8 @@
 	            <a href="@{Config.cf_list_creca()}">&{'views.config.cf_creca'}</a>
 	        </li>
 	        <li class="${(request.actionMethod == 'cf_list_emoney' ||
-	        			request.actionMethod == 'cf_edit_emoney') ? 'selected' : ''}">
+	        			request.actionMethod == 'cf_edit_emoney' ||
+	        			request.actionMethod == 'cf_save_emoney') ? 'selected' : ''}">
 	            <a href="@{Config.cf_list_emoney()}">&{'views.config.cf_emoney'}</a>
 	        </li>
 	        <li class="${request.actionMethod == 'cf_list_item' ? 'selected' : ''}">

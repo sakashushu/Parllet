@@ -319,19 +319,18 @@ public class Config extends Controller {
 	public static void cf_save_bank(Long id,
 			@Required(message="名称 is required") String handling_name
 			) {
-		String handlingType = "口座";
+		String sHandlingType = Messages.get("views.config.cf_bank");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//口座保存
-		
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, handlingType);
+		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(handlingMst);
-			render("@cf_edit_bank", handlingMst, handlingType);
+			render("@cf_edit_any", handlingMst, sHandlingType);
 		}
 		
 		cf_list_bank();
@@ -359,6 +358,38 @@ public class Config extends Controller {
 	}
 	
 
+	//電子マネー保存
+	public static void cf_save_emoney(Long id,
+			@Required(message="名称 is required") String handling_name
+			) {
+		String sHandlingType = Messages.get("views.config.cf_emoney");
+		
+		EditHandlingMst editHandlingMst = new EditHandlingMst();
+		
+		//口座保存
+		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
+		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(handlingMst);
+			render("@cf_edit_any", handlingMst, sHandlingType);
+		}
+		
+		cf_list_emoney();
+		
+	}
+	
+	//電子マネー削除
+	public static void cf_del_emoney(Long id) {
+		// 取扱データの読み出し
+		HandlingMst handlingMst = HandlingMst.findById(id);
+		// 保存
+		handlingMst.delete();
+
+		cf_list_emoney();
+	}
+	
 	/**
 	 * HandlingMstの保存メソッド
 	 * @param id
