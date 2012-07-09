@@ -117,7 +117,7 @@ public class Record extends Model {
 	}
 	
 	/**
-	 * 「収支種類が」My貯金預入・My貯金引出の時は「取扱(My貯金)」は必須
+	 * 「収支種類」がMy貯金預入・My貯金引出の時は「取扱(My貯金)」は必須
 	 * @author sakashushu
 	 *
 	 */

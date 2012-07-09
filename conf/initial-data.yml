@@ -102,15 +102,19 @@ ItemMst(out9):
 
 HandlingTypeMst(cash):
     handling_type_name:   現金
+    handling_type_order:  1
 
 HandlingTypeMst(bank):
     handling_type_name:   口座
+    handling_type_order:  2
 
 HandlingTypeMst(card):
     handling_type_name:   クレジットカード
+    handling_type_order:  3
 
 HandlingTypeMst(e-money):
     handling_type_name:   電子マネー
+    handling_type_order:  4
 
 HandlingMst(cash1):
     ha_user:          sakashushu
@@ -126,7 +130,10 @@ HandlingMst(card1):
     ha_user:          sakashushu
     handling_type_mst:    card
     handling_name:        セゾン
-    handling_bank:        bank1
+    handling_mst:         bank1
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            4
 
 HandlingMst(e-money1):
     ha_user:          sakashushu

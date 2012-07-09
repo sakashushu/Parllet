@@ -14,8 +14,10 @@
     <div class="objectForm">
 	#{form (sHandlingType==messages.get('views.config.cf_bank')) ?
 			@cf_save_bank(handlingMst?.id) :
-			((sHandlingType==messages.get('views.config.cf_emoney')) ?
-			 @cf_save_emoney(handlingMst?.id) : ''
+			((sHandlingType==messages.get('views.config.cf_creca')) ?
+			 @cf_save_creca(handlingMst?.id) :
+			 ((sHandlingType==messages.get('views.config.cf_emoney')) ?
+			  @cf_save_emoney(handlingMst?.id) : '')
 			)}
 	 
 	    #{ifErrors}
@@ -41,11 +43,7 @@
 	</div>
 
 	#{if handlingMst?.id}
-		#{form (sHandlingType==messages.get('views.config.cf_bank')) ?
-				@cf_del_bank(handlingMst?.id) :
-				((sHandlingType==messages.get('views.config.cf_emoney')) ?
-				 @cf_del_emoney(handlingMst?.id) : ''
-				)}
+		#{form @cf_del_handling(handlingMst?.id, sHandlingType)}
 		    <p class="crudDelete">
 		        <input type="submit" value="&{'insupd.delete', sHandlingType}" id="cnf_del" />
 		    </p>

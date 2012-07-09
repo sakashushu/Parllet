@@ -34,7 +34,7 @@ var subcategoryHandling = {
             "value":"(値を選択して下さい)"
           },
         #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-          #{list items:models.HandlingMst.find("ha_user = '${user.id}' order by id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${user.id}' order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
@@ -51,7 +51,7 @@ var subcategoryHandling = {
             "value":"(値を選択して下さい)"
           },
         #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-          #{list items:models.HandlingMst.find("ha_user = '${user.id}' and handling_type_mst.handling_type_name IN('" + messages.get('views.config.cf_bank') + "','" + messages.get('views.config.cf_emoney') + "') order by id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${user.id}' and handling_type_mst.handling_type_name IN('" + messages.get('views.config.cf_bank') + "','" + messages.get('views.config.cf_emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
@@ -205,7 +205,7 @@ jQuery(document).ready(function(){
 	        <label id="handling_mst_lbl">&{'handling_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
 				<option value="0"${record?.handling_mst ? '' : ' selected'}>(値を選択して下さい)</option>
-				#{list items:models.HandlingMst.find("order by id").fetch(), as:'handling'}
+				#{list items:models.HandlingMst.find("order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
 				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
 			</select>

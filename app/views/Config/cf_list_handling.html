@@ -7,6 +7,9 @@
 	  #{if sHandlingType == messages.get('views.config.cf_bank')}
 		<a href="@{cf_edit_bank(handlingMst.id)}">
 	  #{/if}
+	  #{elseif sHandlingType == messages.get('views.config.cf_creca')}
+		<a href="@{cf_edit_creca(handlingMst.id)}">
+	  #{/elseif}
 	  #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
 		<a href="@{cf_edit_emoney(handlingMst.id)}">
 	  #{/elseif}
@@ -18,6 +21,9 @@
   #{if sHandlingType == messages.get('views.config.cf_bank')}
     <a href="@{cf_edit_bank()}">
   #{/if}
+  #{elseif sHandlingType == messages.get('views.config.cf_creca')}
+    <a href="@{cf_edit_creca()}">
+  #{/elseif}
   #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
     <a href="@{cf_edit_emoney()}">
   #{/elseif}
