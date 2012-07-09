@@ -126,6 +126,7 @@ HandlingMst(card1):
     ha_user:          sakashushu
     handling_type_mst:    card
     handling_name:        セゾン
+    handling_bank:        bank1
 
 HandlingMst(e-money1):
     ha_user:          sakashushu

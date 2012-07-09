@@ -5,31 +5,6 @@
 
 <script type="text/javascript">
 <!--
-//起動時の「項目」・「取扱(My貯金)」の入力可・不可
-jQuery(document).ready(function() {
-	//「収支種類」が収入・支出の時は「項目」は選択可能
-	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
-			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") {
-//		jQuery('#item_mst_lbl').css("display","inline");
-//		jQuery('#item_mst').css("display","inline");
-		jQuery('#item_mst_lbl').removeAttr("disabled");
-		jQuery('#item_mst').removeAttr("disabled");
-	} else {
-//		jQuery('#item_mst_lbl').css("display","none");
-//		jQuery('#item_mst').css("display","none");
-		jQuery('#item_mst_lbl').attr("disabled", "disabled");
-		jQuery('#item_mst').attr("disabled", "disabled");
-		//「収支種類」が口座預入・口座引出の時は「取扱(My貯金)」は選択不可
-		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") {
-			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
-			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
-		} else {
-			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
-			jQuery('#ideal_deposit_mst').removeAttr("disabled");
-		}
-	}
-});
 //「収支種類」ごとの「項目」のサブカテゴリー
 var subcategoryItem = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
@@ -87,11 +62,51 @@ var subcategoryHandling = {
     #{/if}
   #{/list}
 }
+//起動時の「項目」・「取扱(My貯金)」の入力可・不可
+jQuery(document).ready(function() {
+	//「収支種類」が収入・支出の時は「項目」は選択可能
+	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") {
+//		jQuery('#item_mst_lbl').css("display","inline");
+//		jQuery('#item_mst').css("display","inline");
+		jQuery('#item_mst_lbl').removeAttr("disabled");
+		jQuery('#item_mst').removeAttr("disabled");
+	} else {
+//		jQuery('#item_mst_lbl').css("display","none");
+//		jQuery('#item_mst').css("display","none");
+		jQuery('#item_mst_lbl').attr("disabled", "disabled");
+		jQuery('#item_mst').attr("disabled", "disabled");
+		//「収支種類」が口座預入・口座引出の時は「取扱(My貯金)」は選択不可
+		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") {
+			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
+			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
+		} else {
+			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
+			jQuery('#ideal_deposit_mst').removeAttr("disabled");
+		}
+	}
+});
+//起動時の「項目」・「取扱(My貯金)」の入力可・不可
+jQuery(document).ready(function() {
+	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
+	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
+			) {
+		jQuery('#handling_mst_lbl').removeAttr("disabled");
+		jQuery('#handling_mst').removeAttr("disabled");
+	} else {
+		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
+		jQuery('#handling_mst').attr("disabled", "disabled");
+	}
+});
 //「収支種類」・「取扱(My貯金)」の選択変更時の「項目」の入力可・不可と選択リストの調整
 jQuery(document).ready(function(){
 	jQuery('#balance_type_mst, #ideal_deposit_mst').change(function(){
 		jQuery('#item_mst').empty();
-		//「収支種類」が収入・支出の時は「項目」は選択可能
+		//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」は選択可能
 		if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
 				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") &&
 				jQuery('#ideal_deposit_mst').children(':selected').text()=='(なし)'
@@ -111,12 +126,11 @@ jQuery(document).ready(function(){
 jQuery(document).ready(function(){
 	jQuery('#balance_type_mst').change(function(){
 		jQuery('#handling_mst').empty();
-		//「収支種類」が収入・支出・口座預入・口座引出の時は「項目」は選択可能
-		if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+		//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
+		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
 				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
 				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") &&
-				jQuery('#ideal_deposit_mst').children(':selected').text()=='(なし)'
+				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
 				) {
 			jQuery('#handling_mst_lbl').removeAttr("disabled");
 			jQuery('#handling_mst').removeAttr("disabled");
@@ -134,6 +148,7 @@ jQuery(document).ready(function(){
 	jQuery('#balance_type_mst').change(function(){
 		if(jQuery('#balance_type_mst').children(':selected').text()=='口座預入' ||
 				jQuery('#balance_type_mst').children(':selected').text()=='口座引出') {
+			jQuery('#ideal_deposit_mst').val('0');  // (なし) を選択
 			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
 			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
 		} else {
@@ -148,10 +163,10 @@ jQuery(document).ready(function(){
 <div id="crudShow">
 
 	#{ifnot record?.id}
-		<h3><span>&{'config.add', "データ"}</span></h3>
+		<h3><span>&{'insupd.add', "データ"}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'config.edit', "データ"}</span></h3>
+		<h3><span>&{'insupd.edit', "データ"}</span></h3>
 	#{/else}
 	
     <div class="objectForm">
@@ -159,7 +174,7 @@ jQuery(document).ready(function(){
 	 
 	    #{ifErrors}
 	        <p class="error">
-	            Please correct these errors.
+	            &{'validation.title'}
 	        </p>
 	    #{/ifErrors}
 	    
@@ -296,7 +311,7 @@ jQuery(document).ready(function(){
 	    </p>
 	 
 	    <p>
-	        <input type="submit" value="&{'config.save'}" />
+	        <input type="submit" value="&{'insupd.save'}" />
 	    </p>
 	    
 	#{/form}
@@ -305,7 +320,7 @@ jQuery(document).ready(function(){
 	#{if record?.id}
 		#{form @del_rec(record?.id)}
 		    <p class="crudDelete">
-	        	<input type="submit" value="&{'config.delete', 'データ'}" id="cnf_del" />
+	        	<input type="submit" value="&{'insupd.delete', 'データ'}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

@@ -2,7 +2,7 @@ package controllers;
 
 import play.mvc.Controller;
 
-public class JqAj extends Controller {
+public class SmplJqAj extends Controller {
 
     public static void one() {
         render();

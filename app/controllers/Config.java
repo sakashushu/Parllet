@@ -410,7 +410,11 @@ public class Config extends Controller {
 			editHandlingMst.handlingMst = new HandlingMst(
 					haUser,
 					handlingTypeMst,
-					handling_name
+					handling_name,
+					null,
+					null,
+					null,
+					null
 			);
 		} else {
 			// 取扱データの読み出し

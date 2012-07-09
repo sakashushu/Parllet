@@ -24,7 +24,7 @@
 	WEB_SOCKET_DEBUG = false;
 	
 	var ws;
-    ws = new WebSocket("@@{Echo.WebSocketEcho.listen()}");
+    ws = new WebSocket("@@{SmplEcho.WebSocketEcho.listen()}");
 
     ws.onmessage = function(event) {
         $('#messages').append('<div>' + event.data + '</div>');

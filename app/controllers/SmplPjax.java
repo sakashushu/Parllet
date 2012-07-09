@@ -5,7 +5,7 @@ import java.util.List;
 
 import play.mvc.Controller;
 
-public class Pjax extends Controller {
+public class SmplPjax extends Controller {
 	public static void index() {
 		String data1 = params.get("data1");
 		

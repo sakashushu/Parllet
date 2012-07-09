@@ -24,8 +24,8 @@ GET		/detailList								Application.detailList
 WS      /detailList                             Application.WebSocketApp.listen
 
 # WebSocket Demo
-GET     /echo                                   Echo.demo
-WS      /echo                                   Echo.WebSocketEcho.listen
+GET     /smplecho                               SmplEcho.demo
+WS      /smplecho                               SmplEcho.WebSocketEcho.listen
 
 
 # Ignore favicon requests

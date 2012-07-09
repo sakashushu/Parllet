@@ -7,7 +7,7 @@ import play.mvc.WebSocketController;
 
 import static play.mvc.Http.WebSocketEvent.TextFrame;
 
-public class Echo extends Controller {
+public class SmplEcho extends Controller {
 	public static void demo() {
 		render();
 	}

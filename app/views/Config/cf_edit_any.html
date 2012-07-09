@@ -5,10 +5,10 @@
 <div id="crudShow">
 
 	#{ifnot handlingMst?.id}
-		<h3><span>&{'config.add', sHandlingType}</span></h3>
+		<h3><span>&{'insupd.add', sHandlingType}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'config.edit', sHandlingType}</span></h3>
+		<h3><span>&{'insupd.edit', sHandlingType}</span></h3>
 	#{/else}
 
     <div class="objectForm">
@@ -20,7 +20,7 @@
 	 
 	    #{ifErrors}
 	        <p class="error">
-	            Please correct these errors.
+	            &{'validation.title'}
 	        </p>
 	    #{/ifErrors}
 	    
@@ -34,7 +34,7 @@
 	    </p>
 	 
 	    <p>
-	        <input type="submit" value="&{'config.save'}" />
+	        <input type="submit" value="&{'insupd.save'}" />
 	    </p>
 	    
 	#{/form}
@@ -47,7 +47,7 @@
 				 @cf_del_emoney(handlingMst?.id) : ''
 				)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'config.delete', sHandlingType}" id="cnf_del" />
+		        <input type="submit" value="&{'insupd.delete', sHandlingType}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}
