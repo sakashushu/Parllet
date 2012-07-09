@@ -33,16 +33,16 @@ BalanceTypeMst(bank_in):
 BalanceTypeMst(bank_out):
     balance_type_name: 口座引出
 
-BalanceTypeMst(my_savings_in):
+BalanceTypeMst(ideal_deposit_in):
     balance_type_name: My貯金預入
 
-# BalanceTypeMst(from_my_savings_out):
+# BalanceTypeMst(from_ideal_deposit_out):
 #     balance_type_name: My貯金から支払
 
-# BalanceTypeMst(my_savings_out):
-#     balance_type_name: My貯金引出
+BalanceTypeMst(ideal_deposit_out):
+    balance_type_name: My貯金引出
 
-# BalanceTypeMst(to_my_savings_in):
+# BalanceTypeMst(to_ideal_deposit_in):
 #     balance_type_name: My貯金に直接預入
 
 ItemMst(in1):
@@ -165,6 +165,6 @@ Record(test3):
 Record(test4):
     ha_user:              sakashushu
     payment_date:         '2012-07-04T00:00:00'
-    balance_type_mst:     my_savings_in
+    balance_type_mst:     ideal_deposit_in
     amount:               10000
     ideal_deposit_mst:    child-raising

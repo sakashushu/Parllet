@@ -1,5 +1,7 @@
 #{extends 'Config/cf_main.html' /}
 
+<script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+
 <div id="crudShow">
 
 	#{ifnot handlingMst?.id}
@@ -45,7 +47,7 @@
 				 @cf_del_emoney(handlingMst?.id) : ''
 				)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'config.delete', sHandlingType}"/>
+		        <input type="submit" value="&{'config.delete', sHandlingType}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

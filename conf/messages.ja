@@ -35,6 +35,14 @@ remarks=備考
 secret_remarks=備考（非公開）
 ideal_deposit_mst=取扱（My貯金）
 
+# 収支種類(BalanceType)
+BalanceType.in=収入
+BalanceType.out=支出
+BalanceType.bank_in=口座預入
+BalanceType.bank_out=口座引出
+BalanceType.ideal_deposit_in=My貯金預入
+BalanceType.ideal_deposit_out=My貯金引出
+
 secure.username=Eメール:
 secure.password=パスワード:
 secure.signin=ログイン

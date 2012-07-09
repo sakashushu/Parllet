@@ -75,7 +75,10 @@ public class Admin extends Controller {
 			if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 				debitDate = DateFormat.getDateInstance().parse(debit_date);
 			}
-			IdealDepositMst idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst); 
+			IdealDepositMst idealDepositMst = null;
+			if(ideal_deposit_mst!=null) {
+				idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst);
+			}
 			if(id == null) {
 				// 収支データの作成
 				record = new Record(
