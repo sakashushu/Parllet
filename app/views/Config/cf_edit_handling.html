@@ -34,7 +34,23 @@
 	        <span class="error">#{error 'handlingMst.handling_name' /}</span>
 	        #{/field}
 	    </p>
-	 
+		
+		#{if sHandlingType==messages.get('views.config.cf_creca')}
+		    <p>
+		        #{field 'debit_bank'}
+		        <label id="${field.name}_lbl">&{'debit_bank'}:</label>
+				<select id="${field.name}" name="${field.name}" style="width:150px;">
+					<option value="0"${handlingMst?.debit_bank ? '' : ' selected'}>(値を選択して下さい)</option>
+					#{list items:models.HandlingMst.find("handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
+					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
+					#{/list}
+				</select>
+		        <span class="error">#{error 'handlingMst.debit_bank' /}</span>
+		        #{/field}
+		    </p>
+			
+		#{/if}
+		
 	    <p>
 	        <input type="submit" value="&{'insupd.save'}" />
 	    </p>

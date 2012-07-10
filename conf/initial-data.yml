@@ -130,7 +130,7 @@ HandlingMst(card1):
     ha_user:          sakashushu
     handling_type_mst:    card
     handling_name:        セゾン
-    handling_mst:         bank1
+    debit_bank:           bank1
     cutoff_day:           99
     debit_month:          next
     debit_day:            4

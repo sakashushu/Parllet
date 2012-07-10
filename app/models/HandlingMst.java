@@ -27,7 +27,7 @@ public class HandlingMst extends Model {
 	
 	@ManyToOne
 	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
-	public HandlingMst handling_bank;			//取扱(口座)
+	public HandlingMst debit_bank;				//引落口座
 
 	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
 	public Integer cutoff_day;					//締日
@@ -40,7 +40,7 @@ public class HandlingMst extends Model {
 			HaUser ha_user,
 			HandlingTypeMst handling_type_mst,
 			String handling_name,
-			HandlingMst handling_bank,
+			HandlingMst debit_bank,
 			Integer cutoff_day,
 			String debit_month,
 			Integer debit_day
@@ -48,7 +48,7 @@ public class HandlingMst extends Model {
 		this.ha_user = ha_user;
 		this.handling_type_mst = handling_type_mst;
 		this.handling_name = handling_name;
-		this.handling_bank = handling_bank;
+		this.debit_bank = debit_bank;
 		this.cutoff_day = cutoff_day;
 		this.debit_month = debit_month;
 		this.debit_day = debit_day;
@@ -67,7 +67,7 @@ public class HandlingMst extends Model {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
 			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
-					(handlingMst.handling_bank==null ||
+					(handlingMst.debit_bank==null ||
 					handlingMst.cutoff_day==null ||
 					handlingMst.debit_month==null ||
 					handlingMst.debit_day==null)) {

@@ -35,6 +35,12 @@ remarks=備考
 secret_remarks=備考（非公開）
 ideal_deposit_mst=取扱（My貯金）
 
+# HandlingMstの項目名
+debit_bank=引落口座
+cutoff_day=締日
+debit_month=引落月
+debit_day=引落日
+
 # 収支種類(BalanceType)
 BalanceType.in=収入
 BalanceType.out=支出
