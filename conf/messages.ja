@@ -69,6 +69,7 @@ views.config.cf_creca=クレジットカード
 views.config.cf_emoney=電子マネー
 views.config.cf_item=項目
 
+views.config.cf_creca.day.label_to=日
 
 views.admin.logo=安心My貯金
 views.admin.logo.span=管理

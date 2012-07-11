@@ -2,6 +2,34 @@
 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
 
+<script type="text/javascript">
+<!--
+//起動時に日選択コンボの選択肢を作成
+jQuery(document).ready(function() {
+	for(i = 1; i < 28; i++) {
+		#{ifnot handlingMst?.id}
+			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"</option>");
+			jQuery('#debit_day').append("<option value='"+i+"'>"+i+"</option>");
+		#{/ifnot}
+		#{else}
+			if(${handlingMst?.cutoff_day} == i) {
+				jQuery('#cutoff_day').append("<option value='"+i+"' selected>"+i+"</option>");
+			} else {
+				jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"</option>");
+			}
+			if(${handlingMst?.debit_day} == i) {
+				jQuery('#debit_day').append("<option value='"+i+"' selected>"+i+"</option>");
+			} else {
+				jQuery('#debit_day').append("<option value='"+i+"'>"+i+"</option>");
+			}
+		#{/else}
+	};
+	jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"99"+"</option>");
+	jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"99"+"</option>");
+});
+// -->
+</script>
+
 <div id="crudShow">
 
 	#{ifnot handlingMst?.id}
@@ -38,7 +66,7 @@
 		#{if sHandlingType==messages.get('views.config.cf_creca')}
 		    <p>
 		        #{field 'debit_bank'}
-		        <label id="${field.name}_lbl">&{'debit_bank'}:</label>
+		        <label>&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
 					<option value="0"${handlingMst?.debit_bank ? '' : ' selected'}>(値を選択して下さい)</option>
 					#{list items:models.HandlingMst.find("handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
@@ -46,6 +74,30 @@
 					#{/list}
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_bank' /}</span>
+		        #{/field}
+		    </p>
+			
+		    <p>
+		        #{field 'cutoff_day'}
+		        <label>&{'cutoff_day'}:</label>
+				<select id="${field.name}" name="${field.name}" style="width:40px;">
+					<option value="0"${handlingMst?.cutoff_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
+				</select>
+		        <label>&{'views.config.cf_creca.day.label_to'}</label>
+		        <span class="error">#{error 'handlingMst.cutoff_day' /}</span>
+		        #{/field}
+		    </p>
+			
+
+
+		    <p>
+		        #{field 'debit_day'}
+		        <label>&{'debit_day'}:</label>
+				<select id="${field.name}" name="${field.name}" style="width:40px;">
+					<option value="0"${handlingMst?.debit_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
+				</select>
+		        <label>&{'views.config.cf_creca.day.label_to'}</label>
+		        <span class="error">#{error 'handlingMst.debit_day' /}</span>
 		        #{/field}
 		    </p>
 			
