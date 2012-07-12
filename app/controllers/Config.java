@@ -346,7 +346,7 @@ public class Config extends Controller {
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
-		//口座保存
+		//HandlingMst保存
 		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
@@ -368,7 +368,7 @@ public class Config extends Controller {
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
-		//口座保存
+		//HandlingMst保存
 		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
@@ -384,14 +384,18 @@ public class Config extends Controller {
 	
 	//クレジットカード保存
 	public static void cf_save_creca(Long id,
-			@Required(message="名称 is required") String handling_name
+			String handling_name,
+			Long debit_bank,
+			Integer cutoff_day,
+			String debit_month,
+			Integer debit_day
 			) {
 		String sHandlingType = Messages.get("views.config.cf_creca");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
-		//口座保存
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
+		//HandlingMst保存
+		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -454,6 +458,61 @@ public class Config extends Controller {
 			editHandlingMst.handlingMst = HandlingMst.findById(id);
 			// 編集
 			editHandlingMst.handlingMst.handling_name = handling_name;
+		}
+		// Validate
+		validation.valid(editHandlingMst.handlingMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		editHandlingMst.handlingMst.save();
+		
+		return 0;
+	}
+	
+	/**
+	 * HandlingMstの保存メソッド（クレジットカード用）
+	 * @param id
+	 * @param handling_name
+	 * @param editHandlingMst
+	 * @param sHandlingType
+	 * @return
+	 */
+	private static Integer cf_save_handling_mst(Long id,
+			String handling_name,
+			EditHandlingMst editHandlingMst,
+			String sHandlingType,
+			Long debit_bank,
+			Integer cutoff_day,
+			String debit_month,
+			Integer debit_day
+			) {
+		HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
+		HandlingMst debitBank = null;
+		if(debit_bank!=null) {
+			HandlingMst.findById(debit_bank);
+		}
+		if(id == null) {
+			// 取扱データの作成
+			editHandlingMst.handlingMst = new HandlingMst(
+					haUser,
+					handlingTypeMst,
+					handling_name,
+					debitBank,
+					cutoff_day,
+					debit_month,
+					debit_day
+			);
+		} else {
+			// 取扱データの読み出し
+			editHandlingMst.handlingMst = HandlingMst.findById(id);
+			// 編集
+			editHandlingMst.handlingMst.handling_name = handling_name;
+			editHandlingMst.handlingMst.debit_bank = debitBank;
+			editHandlingMst.handlingMst.cutoff_day = cutoff_day;
+			editHandlingMst.handlingMst.debit_month = debit_month;
+			editHandlingMst.handlingMst.debit_day = debit_day;
 		}
 		// Validate
 		validation.valid(editHandlingMst.handlingMst);

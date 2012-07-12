@@ -1,7 +1,5 @@
 package models;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -26,14 +24,14 @@ public class HandlingMst extends Model {
 	public String handling_name;				//取扱名
 	
 	@ManyToOne
-	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
+	@CheckWith(DebitBankConditionallyCheck.class)
 	public HandlingMst debit_bank;				//引落口座
 
-	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
+	@CheckWith(CutoffConditionallyCheck.class)
 	public Integer cutoff_day;					//締日
-	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
+	@CheckWith(DebitMonthConditionallyCheck.class)
 	public String debit_month;					//引落月
-	@CheckWith(CutoffDebitConditionallyRequiredCheck.class)
+	@CheckWith(CutoffDebitConditionallyCheck.class)
 	public Integer debit_day;					//引落日
 
 	public HandlingMst(
@@ -59,22 +57,86 @@ public class HandlingMst extends Model {
 	}
 
 	/**
-	 * 「取扱種類」がクレジットカードの時は「取扱口座」・「締日」・「引落月」・「引落日」は必須
+	 * 「取扱種類」がクレジットカードの時は「取扱口座」は必須
 	 * @author sakashushu
 	 *
 	 */
-	static class CutoffDebitConditionallyRequiredCheck extends Check {
+	static class DebitBankConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
 			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
-					(handlingMst.debit_bank==null ||
-					handlingMst.cutoff_day==null ||
-					handlingMst.debit_month==null ||
-					handlingMst.debit_day==null)) {
+					handlingMst.debit_bank==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
+			}
+
+			return true;
+		}
+	}
+
+	/**
+	 * 「取扱種類」がクレジットカードの時は「締日」は必須
+	 * @author sakashushu
+	 *
+	 */
+	static class CutoffConditionallyCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			HandlingMst handlingMst = (HandlingMst)validatedObject;
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
+					handlingMst.cutoff_day==null) {
+				setMessage(Messages.get("validation.required"));
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	/**
+	 * 「取扱種類」がクレジットカードの時は「引落月」は必須
+	 * @author sakashushu
+	 *
+	 */
+	static class DebitMonthConditionallyCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			HandlingMst handlingMst = (HandlingMst)validatedObject;
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
+					handlingMst.debit_month==null) {
+				setMessage(Messages.get("validation.required"));
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	/**
+	 * 「取扱種類」がクレジットカードの時は「引落日」は必須
+	 * 「取扱種類」がクレジットカードで締日より引落日が過去はエラー
+	 * @author sakashushu
+	 *
+	 */
+	static class CutoffDebitConditionallyCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			HandlingMst handlingMst = (HandlingMst)validatedObject;
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca"))) {
+				if(handlingMst.debit_day==null) {
+					setMessage(Messages.get("validation.required"));
+					return false;
+				} else {
+					if(handlingMst.cutoff_day!=null &&
+							handlingMst.debit_month!=null &&
+							handlingMst.debit_day!=null) {
+						if(handlingMst.debit_month.equals(Messages.get("DebitMonth.this")) &&
+								handlingMst.cutoff_day > handlingMst.debit_day) {
+							setMessage(Messages.get("validation.cutoff_debit"));
+							return false;
+						}
+					}
+				}
 			}
 			return true;
 		}
 	}
+
 }

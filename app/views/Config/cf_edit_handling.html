@@ -8,24 +8,24 @@
 jQuery(document).ready(function() {
 	for(i = 1; i < 28; i++) {
 		#{ifnot handlingMst?.id}
-			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"</option>");
-			jQuery('#debit_day').append("<option value='"+i+"'>"+i+"</option>");
+			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+			jQuery('#debit_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 		#{/ifnot}
 		#{else}
 			if(${handlingMst?.cutoff_day} == i) {
-				jQuery('#cutoff_day').append("<option value='"+i+"' selected>"+i+"</option>");
+				jQuery('#cutoff_day').append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
 			} else {
-				jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"</option>");
+				jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 			}
 			if(${handlingMst?.debit_day} == i) {
-				jQuery('#debit_day').append("<option value='"+i+"' selected>"+i+"</option>");
+				jQuery('#debit_day').append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
 			} else {
-				jQuery('#debit_day').append("<option value='"+i+"'>"+i+"</option>");
+				jQuery('#debit_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 			}
 		#{/else}
 	};
-	jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"99"+"</option>");
-	jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"99"+"</option>");
+	jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 });
 // -->
 </script>
@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 		        #{field 'debit_bank'}
 		        <label>&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
-					<option value="0"${handlingMst?.debit_bank ? '' : ' selected'}>(値を選択して下さい)</option>
+					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 					#{list items:models.HandlingMst.find("handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
 					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
 					#{/list}
@@ -80,23 +80,31 @@ jQuery(document).ready(function() {
 		    <p>
 		        #{field 'cutoff_day'}
 		        <label>&{'cutoff_day'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:40px;">
-					<option value="0"${handlingMst?.cutoff_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
+				<select id="${field.name}" name="${field.name}" style="width:60px;">
+					<option value=""${handlingMst?.cutoff_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
 				</select>
-		        <label>&{'views.config.cf_creca.day.label_to'}</label>
 		        <span class="error">#{error 'handlingMst.cutoff_day' /}</span>
 		        #{/field}
 		    </p>
 			
-
+		    <p>
+		        #{field 'debit_month'}
+		        <label>&{'debit_month'}:</label>
+				<select id="${field.name}" name="${field.name}" style="width:80px;">
+					<option value="&{'DebitMonth.this'}"${handlingMst?.debit_month==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
+					<option value="&{'DebitMonth.next'}"${handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : ''}>&{'DebitMonth.next'}</option>
+					<option value="&{'DebitMonth.nextTwo'}"${handlingMst?.debit_month==messages.get('DebitMonth.nextTwo') ? ' selected' : ''}>&{'DebitMonth.nextTwo'}</option>
+				</select>
+		        <span class="error">#{error 'handlingMst.debit_month' /}</span>
+		        #{/field}
+		    </p>
 
 		    <p>
 		        #{field 'debit_day'}
 		        <label>&{'debit_day'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:40px;">
-					<option value="0"${handlingMst?.debit_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
+				<select id="${field.name}" name="${field.name}" style="width:60px;">
+					<option value=""${handlingMst?.debit_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
 				</select>
-		        <label>&{'views.config.cf_creca.day.label_to'}</label>
 		        <span class="error">#{error 'handlingMst.debit_day' /}</span>
 		        #{/field}
 		    </p>
