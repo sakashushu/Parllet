@@ -22,25 +22,24 @@ public class Admin extends Controller {
 	@Before
 	static void setConnectedUser() {
 		if(Security.isConnected()) {
-			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
-			renderArgs.put("user", hauser.fullname);
+			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			renderArgs.put("haUser", haUser);
 		}
 	}
 	
 	public static void index() {
-		String haUser = Security.connected();
-//		List<Record> records = Record.find("ha_user.email", haUser).fetch();
-		List<Record> records = Record.find("ha_user.email = '" + haUser + "' order by payment_date").fetch();
+//		List<Record> records = Record.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by payment_date").fetch();
+		HaUser haUser  = (HaUser)renderArgs.get("haUser");
+		List<Record> records = Record.find("ha_user = '" + haUser.id + "' order by payment_date").fetch();
 		render(records);
 	}
 	
 	public static void form(Long id) {
-		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
 		if(id != null) {
 			Record record = Record.findById(id);
-			render(record, hauser);
+			render(record);
 		}
-		render(hauser);
+		render();
 	}
 	
 	public static void save_rec(
@@ -64,7 +63,8 @@ public class Admin extends Controller {
 			if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 				paymentDate = DateFormat.getDateInstance().parse(payment_date);
 			}
-			HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+			//HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+			HaUser haUser  = (HaUser)renderArgs.get("haUser");
 			BalanceTypeMst balanceTypeMst = BalanceTypeMst.findById(balance_type_mst);
 			ItemMst itemMst = null;
 			if(item_mst!=null) {

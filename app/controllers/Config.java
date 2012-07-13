@@ -30,12 +30,21 @@ import models.Record;
 
 import play.data.validation.Required;
 import play.i18n.Messages;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
 @With(Secure.class)
 public class Config extends Controller {
 
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			renderArgs.put("haUser", haUser);
+		}
+	}
+	
 	public static void cf_io() {
 		render();
 	}
@@ -90,7 +99,7 @@ public class Config extends Controller {
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 							paymentDate = DateFormat.getDateInstance().parse(payment_date);
 						}
-						HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
 						ItemMst itemMst = null;
 						if(item_name!=null) {
@@ -280,66 +289,66 @@ public class Config extends Controller {
 	}
 	
 	//口座編集（リスト）
-	public static void cf_list_bank() {
+	public static void cf_bank_list() {
 		String sHandlingType = Messages.get("views.config.cf_bank");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 //		render(handlingMsts);
-		render("@cf_list_handling", sHandlingType, handlingMsts);
+		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
 	//クレジットカード編集（リスト）
-	public static void cf_list_creca() {
+	public static void cf_creca_list() {
 //		render();
 		String sHandlingType = Messages.get("views.config.cf_creca");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
-		render("@cf_list_handling", sHandlingType, handlingMsts);
+		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
 	//電子マネー編集（リスト）
-	public static void cf_list_emoney() {
+	public static void cf_emoney_list() {
 		String sHandlingType = Messages.get("views.config.cf_emoney");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
-		render("@cf_list_handling", sHandlingType, handlingMsts);
+		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
 	
 	//項目編集（リスト）
-	public static void cf_list_item() {
+	public static void cf_item_list() {
 		render();
 	}
 	
 	//口座編集
-	public static void cf_edit_bank(Long id) {
+	public static void cf_bank_edit(Long id) {
 		String sHandlingType = Messages.get("views.config.cf_bank");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
-		render("@cf_edit_handling", sHandlingType);
+		render("@cf_handling_edit", sHandlingType);
 	}
 	
 	//クレジットカード編集
-	public static void cf_edit_creca(Long id) {
+	public static void cf_creca_edit(Long id) {
 		String sHandlingType = Messages.get("views.config.cf_creca");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
-		render("@cf_edit_handling", sHandlingType);
+		render("@cf_handling_edit", sHandlingType);
 	}
 	
 	//電子マネー編集
-	public static void cf_edit_emoney(Long id) {
+	public static void cf_emoney_edit(Long id) {
 		String sHandlingType = Messages.get("views.config.cf_emoney");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
 		render("@cf_edit_handling", sHandlingType);
 	}
 	
 	//口座保存
-	public static void cf_save_bank(Long id,
+	public static void cf_bank_save(Long id,
 			@Required(message="名称 is required") String handling_name
 			) {
 		String sHandlingType = Messages.get("views.config.cf_bank");
@@ -347,21 +356,21 @@ public class Config extends Controller {
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(handlingMst);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
 		
-		cf_list_bank();
+		cf_bank_list();
 		
 	}
 	
 	//電子マネー保存
-	public static void cf_save_emoney(Long id,
+	public static void cf_emoney_save(Long id,
 			@Required(message="名称 is required") String handling_name
 			) {
 		String sHandlingType = Messages.get("views.config.cf_emoney");
@@ -369,21 +378,21 @@ public class Config extends Controller {
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(handlingMst);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
 		
-		cf_list_emoney();
+		cf_emoney_list();
 		
 	}
 	
 	//クレジットカード保存
-	public static void cf_save_creca(Long id,
+	public static void cf_creca_save(Long id,
 			String handling_name,
 			Long debit_bank,
 			Integer cutoff_day,
@@ -395,32 +404,32 @@ public class Config extends Controller {
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_save_handling_mst(id, handling_name, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(handlingMst);
-			render("@cf_edit_handling", handlingMst, sHandlingType);
+			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
 		
-		cf_list_creca();
+		cf_creca_list();
 		
 	}
 	
 	//「取扱(実際)」削除
-	public static void cf_del_handling(Long id, String sHandlingType) {
+	public static void cf_handling_del(Long id, String sHandlingType) {
 		// 取扱データの読み出し
 		HandlingMst handlingMst = HandlingMst.findById(id);
 		// 保存
 		handlingMst.delete();
 
 		if(sHandlingType.equals(Messages.get("views.config.cf_bank"))) {
-			cf_list_bank();
+			cf_bank_list();
 		} else if(sHandlingType.equals(Messages.get("views.config.cf_creca"))) {
-			cf_list_creca();
+			cf_creca_list();
 		} else if(sHandlingType.equals(Messages.get("views.config.cf_emoney"))) {
-			cf_list_emoney();
+			cf_emoney_list();
 		}
 	}
 	
@@ -433,12 +442,12 @@ public class Config extends Controller {
 	 * @param sHandlingType
 	 * @return
 	 */
-	private static Integer cf_save_handling_mst(Long id,
+	private static Integer cf_handling_mst_save(Long id,
 			String handling_name,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType
 			) {
-		HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		Integer iCutoffDay = null;
 		Integer iDebitDay = null;
@@ -478,7 +487,7 @@ public class Config extends Controller {
 	 * @param sHandlingType
 	 * @return
 	 */
-	private static Integer cf_save_handling_mst(Long id,
+	private static Integer cf_handling_mst_save(Long id,
 			String handling_name,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType,
@@ -487,11 +496,11 @@ public class Config extends Controller {
 			String debit_month,
 			Integer debit_day
 			) {
-		HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		HandlingMst debitBank = null;
 		if(debit_bank!=null) {
-			HandlingMst.findById(debit_bank);
+			debitBank = HandlingMst.findById(debit_bank);
 		}
 		if(id == null) {
 			// 取扱データの作成
@@ -531,7 +540,7 @@ public class Config extends Controller {
 	 * @return
 	 */
 	private static List<HandlingMst> get_handling_msts(String sHandlingType) {
-		List<HandlingMst> handlingMsts = HandlingMst.find("handling_type_mst.handling_type_name = '" + sHandlingType + "' order by id").fetch();
+		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).email + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by id").fetch();
 		return handlingMsts;
 	}
 	

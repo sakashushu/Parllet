@@ -1,5 +1,5 @@
 #{extends 'admin.html' /}
- 
+
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
 
@@ -11,14 +11,12 @@ var subcategoryItem = {
     #{if bType.balance_type_name==messages.get('BalanceType.in') ||
          bType.balance_type_name==messages.get('BalanceType.out')}
       "${bType.id}":[
-        #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-          #{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+          #{list items:models.ItemMst.find("ha_user = '${haUser.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
           {
             "key":"${item.id}",
             "value":"${item.item_name}"
           },
           #{/list}
-        #{/list}
       ],
     #{/if}
   #{/list}
@@ -33,14 +31,12 @@ var subcategoryHandling = {
             "key":"0",
             "value":"&{'views.common.combo.required.long'}"
           },
-        #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-          #{list items:models.HandlingMst.find("ha_user = '${user.id}' order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
           },
           #{/list}
-        #{/list}
       ],
     #{/if}
     #{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
@@ -50,14 +46,12 @@ var subcategoryHandling = {
             "key":"0",
             "value":"&{'views.common.combo.required.long'}"
           },
-        #{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-          #{list items:models.HandlingMst.find("ha_user = '${user.id}' and handling_type_mst.handling_type_name IN('" + messages.get('views.config.cf_bank') + "','" + messages.get('views.config.cf_emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and handling_type_mst.handling_type_name IN('" + messages.get('views.config.cf_bank') + "','" + messages.get('views.config.cf_emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
           },
           #{/list}
-        #{/list}
       ],
     #{/if}
   #{/list}
@@ -205,7 +199,7 @@ jQuery(document).ready(function(){
 	        <label id="handling_mst_lbl">&{'handling_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
 				<option value="0"${record?.handling_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-				#{list items:models.HandlingMst.find("order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
 				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
 			</select>
@@ -218,7 +212,7 @@ jQuery(document).ready(function(){
 	        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
 			<select id="${field.name}" name="${field.name}">
 				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
-				#{list items:models.IdealDepositMst.find("order by id").fetch(), as:'idealDeposit'}
+				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
 				<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
 				#{/list}
 			</select>
@@ -234,10 +228,8 @@ jQuery(document).ready(function(){
 						record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
 					<option value="0"${record?.item_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 					#{list items:models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first(), as:'bType'}
-					#{list items:models.HaUser.find("email = '" + session.username + "'").first(), as:'user'}
-					#{list items:models.ItemMst.find("ha_user = '${user.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+					#{list items:models.ItemMst.find("ha_user = ${haUser.id} and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
 					<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
-					#{/list}
 					#{/list}
 					#{/list}
 				#{/if}

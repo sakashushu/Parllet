@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
 	for(i = 1; i < 28; i++) {
 		#{ifnot handlingMst?.id}
 			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
-			jQuery('#debit_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+			jQuery('#debit_day').append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
 		#{/ifnot}
 		#{else}
 			if(${handlingMst?.cutoff_day} == i) {
@@ -24,8 +24,14 @@ jQuery(document).ready(function() {
 			}
 		#{/else}
 	};
-	jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
-	jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{ifnot handlingMst?.id}
+		jQuery('#cutoff_day').append("<option value='99' selected>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+		jQuery('#debit_day').append("<option value='99'>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{/ifnot}
+	#{else}
+		jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+		jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{/else}
 });
 // -->
 </script>
@@ -41,11 +47,11 @@ jQuery(document).ready(function() {
 
     <div class="objectForm">
 	#{form (sHandlingType==messages.get('views.config.cf_bank')) ?
-			@cf_save_bank(handlingMst?.id) :
+			@cf_bank_save(handlingMst?.id) :
 			((sHandlingType==messages.get('views.config.cf_creca')) ?
-			 @cf_save_creca(handlingMst?.id) :
+			 @cf_creca_save(handlingMst?.id) :
 			 ((sHandlingType==messages.get('views.config.cf_emoney')) ?
-			  @cf_save_emoney(handlingMst?.id) : '')
+			  @cf_emoney_save(handlingMst?.id) : '')
 			)}
 	 
 	    #{ifErrors}
@@ -69,7 +75,7 @@ jQuery(document).ready(function() {
 		        <label>&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
 					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-					#{list items:models.HandlingMst.find("handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
+					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
 					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
 					#{/list}
 				</select>
@@ -81,7 +87,6 @@ jQuery(document).ready(function() {
 		        #{field 'cutoff_day'}
 		        <label>&{'cutoff_day'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:60px;">
-					<option value=""${handlingMst?.cutoff_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
 				</select>
 		        <span class="error">#{error 'handlingMst.cutoff_day' /}</span>
 		        #{/field}
@@ -90,9 +95,9 @@ jQuery(document).ready(function() {
 		    <p>
 		        #{field 'debit_month'}
 		        <label>&{'debit_month'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:80px;">
+				<select id="${field.name}" name="${field.name}" style="width:70px;">
 					<option value="&{'DebitMonth.this'}"${handlingMst?.debit_month==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
-					<option value="&{'DebitMonth.next'}"${handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : ''}>&{'DebitMonth.next'}</option>
+					<option value="&{'DebitMonth.next'}"${handlingMst?.id==null ? ' selected' : (handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
 					<option value="&{'DebitMonth.nextTwo'}"${handlingMst?.debit_month==messages.get('DebitMonth.nextTwo') ? ' selected' : ''}>&{'DebitMonth.nextTwo'}</option>
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_month' /}</span>
@@ -103,7 +108,6 @@ jQuery(document).ready(function() {
 		        #{field 'debit_day'}
 		        <label>&{'debit_day'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:60px;">
-					<option value=""${handlingMst?.debit_day ? '' : ' selected'}>&nbsp;&nbsp;</option>
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_day' /}</span>
 		        #{/field}
@@ -119,7 +123,7 @@ jQuery(document).ready(function() {
 	</div>
 
 	#{if handlingMst?.id}
-		#{form @cf_del_handling(handlingMst?.id, sHandlingType)}
+		#{form @cf_handling_del(handlingMst?.id, sHandlingType)}
 		    <p class="crudDelete">
 		        <input type="submit" value="&{'insupd.delete', sHandlingType}" id="cnf_del" />
 		    </p>

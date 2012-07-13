@@ -20,13 +20,13 @@ import play.mvc.With;
 @With(Secure.class)
 public class DailyAccount extends Controller {
 
-	@Before
-	static void setConnectedUser() {
-		if(Security.isConnected()) {
-			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
-			renderArgs.put("userId", hauser.id);
-		}
-	}
+//	@Before
+//	static void setConnectedUser() {
+//		if(Security.isConnected()) {
+//			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+//			renderArgs.put("userId", hauser.id);
+//		}
+//	}
 	
 	/**
 	 * dailyAccount.htmlの表示
@@ -143,19 +143,19 @@ public class DailyAccount extends Controller {
    		calendar.add(Calendar.MONTH, 1);
    		String sNextFirst = String.format("%1$tY%1$tm%1$td", calendar.getTime());
    		
-		HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
+		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 
    		
 		//「収入」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"収入", lWDA);
 		
 		//「支出」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"支出", lWDA);
 		
 		//「My貯金預入」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"My貯金預入", lWDA);
 		
 		
@@ -217,20 +217,20 @@ public class DailyAccount extends Controller {
 		
 		
 		//「My貯金から支払」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"My貯金から支払", lWDA);
 		
 		//「実残高」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"実残高", lWDA);
 		
 		//「My貯金残高」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"My貯金残高", lWDA);
 
 
 		//「My貯金してないお金」
-		makeWorkListEach(year, month, iDaysCnt, hauser, sFirstDay, sNextFirst,
+		makeWorkListEach(year, month, iDaysCnt, haUser, sFirstDay, sNextFirst,
 				"My貯金してないお金", lWDA);
 
 		
@@ -244,7 +244,7 @@ public class DailyAccount extends Controller {
 	 * @param iDaysCnt
 	 * @param sSqlBase
 	 * @param sSqlBaseG
-	 * @param hauser
+	 * @param haUser
 	 * @param wDaDiff
 	 * @param sLargeCategoryName
 	 * @param lWDA
@@ -253,7 +253,7 @@ public class DailyAccount extends Controller {
 			Integer year,
 			Integer month,
 			int iDaysCnt,
-			HaUser hauser,
+			HaUser haUser,
 			String sFirstDay,
 			String sNextFirst,
 			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金預入」・「My貯金から支払」
@@ -281,7 +281,7 @@ public class DailyAccount extends Controller {
 					"   ON r.balance_type_mst_id = b.id " +
 					" LEFT JOIN IdealDepositMst id " +
 					"   ON r.ideal_deposit_mst_id = id.id " +
-					" WHERE r.ha_user_id = " + hauser.id;
+					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
 					"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
@@ -302,7 +302,7 @@ public class DailyAccount extends Controller {
 					"   ON r.handling_mst_id = h.id " +
 					" LEFT JOIN HandlingTypeMst ht " +
 					"   ON h.handling_type_mst_id = ht.id" +
-					" WHERE r.ha_user_id = " + hauser.id;
+					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
 					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		} else if(sLargeCategoryName.equals("My貯金残高")) {
@@ -325,7 +325,7 @@ public class DailyAccount extends Controller {
 					"   ON r.handling_mst_id = h.id " +
 					" LEFT JOIN HandlingTypeMst ht " +
 					"   ON h.handling_type_mst_id = ht.id" +
-					" WHERE r.ha_user_id = " + hauser.id;
+					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
 					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
@@ -349,7 +349,7 @@ public class DailyAccount extends Controller {
 					"   ON r.handling_mst_id = h.id " +
 					" LEFT JOIN HandlingTypeMst ht " +
 					"   ON h.handling_type_mst_id = ht.id" +
-					" WHERE r.ha_user_id = " + hauser.id;
+					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
 					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		}
@@ -457,7 +457,7 @@ public class DailyAccount extends Controller {
 		
 		if(sLargeCategoryName.equals("収入") || sLargeCategoryName.equals("支出")) {
 			//項目ごとのループ
-			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + hauser.id + " and balance_type_mst.balance_type_name = '" + sLargeCategoryName + "' order by id").fetch();
+			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + haUser.id + " and balance_type_mst.balance_type_name = '" + sLargeCategoryName + "' order by id").fetch();
 			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
 				ItemMst itemMst = itrItem.next();
 				
@@ -499,7 +499,7 @@ public class DailyAccount extends Controller {
 				sLargeCategoryName.equals("My貯金から支払") ||
 				sLargeCategoryName.equals("My貯金残高")) {
 			//My貯金ごとのループ
-			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + hauser.id).fetch();
+			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + haUser.id).fetch();
 			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
 				IdealDepositMst idealDepositMst = itrIdealDeposit.next();
 				
@@ -575,7 +575,7 @@ public class DailyAccount extends Controller {
 			}
 		} else if(sLargeCategoryName.equals("実残高")) {
 			//取扱ごとのループ
-			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + hauser.id).fetch();
+			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id).fetch();
 			//for (WorkDailyAccount wda : lWDA) {
 			for(HandlingMst handlingMst : handlingMsts) {
 				WorkDailyAccount wDaHandling = new WorkDailyAccount();

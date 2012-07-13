@@ -1,7 +1,7 @@
 #{extends 'admin.html' /}
 #{set title:'Home' /}
 
-<h3>&{'views.admin.index.welcome.before'} ${user}&{'views.admin.index.welcome.after'}
+<h3>&{'views.admin.index.welcome.before'} ${haUser.fullname}&{'views.admin.index.welcome.after'}
 </h3>
 
 #{list items:records, as:'record'}

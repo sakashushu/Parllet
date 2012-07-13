@@ -2,23 +2,23 @@
 
    	<div>
 	    <ul id="adminMenu">
-	        <li class="${(request.actionMethod == 'cf_list_bank' ||
-	        			request.actionMethod == 'cf_edit_bank' ||
-	        			request.actionMethod == 'cf_save_bank') ? 'selected' : ''}">
-	            <a href="@{Config.cf_list_bank()}">&{'views.config.cf_bank'}</a>
+	        <li class="${(request.actionMethod == 'cf_bank_list' ||
+	        			request.actionMethod == 'cf_bank_edit' ||
+	        			request.actionMethod == 'cf_bank_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_bank_list()}">&{'views.config.cf_bank'}</a>
 	        </li>
-	        <li class="${(request.actionMethod == 'cf_list_creca' ||
-	        			request.actionMethod == 'cf_edit_creca' ||
-	        			request.actionMethod == 'cf_save_creca') ? 'selected' : ''}">
-	            <a href="@{Config.cf_list_creca()}">&{'views.config.cf_creca'}</a>
+	        <li class="${(request.actionMethod == 'cf_creca_list' ||
+	        			request.actionMethod == 'cf_creca_edit' ||
+	        			request.actionMethod == 'cf_creca_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_creca_list()}">&{'views.config.cf_creca'}</a>
 	        </li>
-	        <li class="${(request.actionMethod == 'cf_list_emoney' ||
-	        			request.actionMethod == 'cf_edit_emoney' ||
-	        			request.actionMethod == 'cf_save_emoney') ? 'selected' : ''}">
-	            <a href="@{Config.cf_list_emoney()}">&{'views.config.cf_emoney'}</a>
+	        <li class="${(request.actionMethod == 'cf_emoney_list' ||
+	        			request.actionMethod == 'cf_emoney_edit' ||
+	        			request.actionMethod == 'cf_emoney_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_emoney_list()}">&{'views.config.cf_emoney'}</a>
 	        </li>
-	        <li class="${request.actionMethod == 'cf_list_item' ? 'selected' : ''}">
-	            <a href="@{Config.cf_list_item()}">&{'views.config.cf_item'}</a>
+	        <li class="${request.actionMethod == 'cf_item_list' ? 'selected' : ''}">
+	            <a href="@{Config.cf_item_list()}">&{'views.config.cf_item'}</a>
 	        </li>
 	        <li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
 	            <a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
