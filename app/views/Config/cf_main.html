@@ -1,7 +1,7 @@
-#{extends 'admin.html' /}
+#{extends 'login.html' /}
 
    	<div>
-	    <ul id="adminMenu">
+	    <ul id="loginMenu">
 	        <li class="${(request.actionMethod == 'cf_bank_list' ||
 	        			request.actionMethod == 'cf_bank_edit' ||
 	        			request.actionMethod == 'cf_bank_save') ? 'selected' : ''}">
@@ -17,8 +17,15 @@
 	        			request.actionMethod == 'cf_emoney_save') ? 'selected' : ''}">
 	            <a href="@{Config.cf_emoney_list()}">&{'views.config.cf_emoney'}</a>
 	        </li>
-	        <li class="${request.actionMethod == 'cf_item_list' ? 'selected' : ''}">
-	            <a href="@{Config.cf_item_list()}">&{'views.config.cf_item'}</a>
+	        <li class="${(request.actionMethod == 'cf_item_in_list' ||
+	        			request.actionMethod == 'cf_item_in_edit' ||
+	        			request.actionMethod == 'cf_item_in_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_item_in_list()}">&{'views.config.cf_item'}(&{'BalanceType.in'})</a>
+	        </li>
+	        <li class="${(request.actionMethod == 'cf_item_out_list' ||
+	        			request.actionMethod == 'cf_item_out_edit' ||
+	        			request.actionMethod == 'cf_item_out_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_item_out_list()}">&{'views.config.cf_item'}(&{'BalanceType.out'})</a>
 	        </li>
 	        <li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
 	            <a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>

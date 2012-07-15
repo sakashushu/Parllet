@@ -1,4 +1,4 @@
-#{extends 'admin.html' /}
+#{extends 'login.html' /}
 #{set title:'明細表' /}
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
 				<!-- id -->
 				<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
 				<td>
-					<input type="button" value="編集" onClick="location.href='@{Admin.form(record.id)}'">
+					<input type="button" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
 				</td>
 				<td>
 					<!-- 支払日 -->

@@ -8,16 +8,17 @@ views.main.tools.logo.pre1=イメージで
 views.main.tools.logo.pre2=貯金できる家計簿
 views.main.tools.logo=安心My貯金
 
-views.admin.logo=安心My貯金
-views.admin.logo.span=管理
-views.admin.tools.logout=ログアウト
-views.admin.adminMenu.member=家計簿入力
+views.login.logo=安心My貯金
+views.login.logo.span=管理
+views.login.tools.logout=ログアウト
+views.login.recordEdit=家計簿入力
 
-views.admin.index.welcome.before=ようこそ！
-views.admin.index.welcome.after=さん
+views.admin.adminMenu=管理者メニュー
+views.admin.memberMenu=会員メニュー
 
 views.common.combo.required.long=(値を選択して下さい)
 views.common.combo.notrequired=(なし)
+views.common.update.edit=編集
 
 views.application.tools.home=ホーム
 views.detaillist.detaillist=明細表
@@ -73,6 +74,9 @@ debit_bank=引落口座
 cutoff_day=締日
 debit_month=引落月
 debit_day=引落日
+
+# ItemnMstの項目名
+item_name=項目名
 
 # 収支種類(BalanceType)
 BalanceType.in=収入

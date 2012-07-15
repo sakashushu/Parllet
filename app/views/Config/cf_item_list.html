@@ -1,3 +1,28 @@
 #{extends 'Config/cf_main.html' /}
 
-項目　編集
+<h3>&{'views.config.cf_item'}(${sBalanceType})　&{'views.common.update.edit'}</h3>
+
+#{list items:itemMsts, as:'itemMst'}
+	<p class="data ${itemMst_parity}">
+	  #{if sBalanceType == messages.get('BalanceType.in')}
+		<a href="@{cf_item_in_edit(itemMst.id)}">
+	  #{/if}
+	  #{elseif sBalanceType == messages.get('BalanceType.out')}
+		<a href="@{cf_item_out_edit(itemMst.id)}">
+	  #{/elseif}
+		${itemMst.item_name}</a>
+	</p>
+#{/list}
+ 
+<p id="newData" >
+	<!-- 
+    <a href="@{cf_bank_edit()}">
+	 -->
+  #{if sBalanceType == messages.get('BalanceType.in')}
+    <a href="@{cf_item_in_edit()}">
+  #{/if}
+  #{elseif sBalanceType == messages.get('BalanceType.out')}
+    <a href="@{cf_item_out_edit()}">
+  #{/elseif}
+    <span>+</span> &{'insupd.add', messages.get('views.config.cf_item')+"("+sBalanceType+")"}</a>
+</p>

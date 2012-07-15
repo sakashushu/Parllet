@@ -312,9 +312,18 @@ public class Config extends Controller {
 	}
 	
 	
-	//項目編集（リスト）
-	public static void cf_item_list() {
-		render();
+	//項目(収入)編集（リスト）
+	public static void cf_item_in_list() {
+		String sBalanceType = Messages.get("BalanceType.in");
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by id").fetch();
+		render("@cf_item_list", sBalanceType, itemMsts);
+	}
+	
+	//項目(支出)編集（リスト）
+	public static void cf_item_out_list() {
+		String sBalanceType = Messages.get("BalanceType.out");
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by id").fetch();
+		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
 	//口座編集
@@ -344,12 +353,33 @@ public class Config extends Controller {
 			HandlingMst handlingMst = HandlingMst.findById(id);
 			render("@cf_handling_edit", handlingMst, sHandlingType);
 		}
-		render("@cf_edit_handling", sHandlingType);
+		render("@cf_handling_edit", sHandlingType);
+	}
+	
+	//項目(収入)編集
+	public static void cf_item_in_edit(Long id) {
+		String sBalanceType = Messages.get("BalanceType.in");
+		if(id != null) {
+			ItemMst itemMst = ItemMst.findById(id);
+			render("@cf_item_edit", itemMst, sBalanceType);
+		}
+		render("@cf_item_edit", sBalanceType);
+	}
+	
+	//項目(支出)編集
+	public static void cf_item_out_edit(Long id) {
+		String sBalanceType = Messages.get("BalanceType.out");
+		if(id != null) {
+			ItemMst itemMst = ItemMst.findById(id);
+			render("@cf_item_edit", itemMst, sBalanceType);
+		}
+		render("@cf_item_edit", sBalanceType);
 	}
 	
 	//口座保存
-	public static void cf_bank_save(Long id,
-			@Required(message="名称 is required") String handling_name
+	public static void cf_bank_save(
+			Long id,
+			String handling_name
 			) {
 		String sHandlingType = Messages.get("views.config.cf_bank");
 		
@@ -370,8 +400,9 @@ public class Config extends Controller {
 	}
 	
 	//電子マネー保存
-	public static void cf_emoney_save(Long id,
-			@Required(message="名称 is required") String handling_name
+	public static void cf_emoney_save(
+			Long id,
+			String handling_name
 			) {
 		String sHandlingType = Messages.get("views.config.cf_emoney");
 		
@@ -392,7 +423,8 @@ public class Config extends Controller {
 	}
 	
 	//クレジットカード保存
-	public static void cf_creca_save(Long id,
+	public static void cf_creca_save(
+			Long id,
 			String handling_name,
 			Long debit_bank,
 			Integer cutoff_day,
@@ -417,11 +449,57 @@ public class Config extends Controller {
 		
 	}
 	
+	//項目(収入)保存
+	public static void cf_item_in_save(
+			Long id,
+			String item_name
+			) {
+		String sBalanceType = Messages.get("BalanceType.in");
+		
+		EditItemMst editItemMst = new EditItemMst();
+		
+		//ItemMst保存
+		Integer iRtn = cf_item_mst_save(id, item_name, editItemMst, sBalanceType);
+		ItemMst itemMst = editItemMst.itemMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(itemMst);
+			render("@cf_handling_edit", itemMst, sBalanceType);
+		}
+		
+		cf_item_in_list();
+		
+	}
+	
+	//項目(支出)保存
+	public static void cf_item_out_save(
+			Long id,
+			String item_name
+			) {
+		String sBalanceType = Messages.get("BalanceType.out");
+		
+		EditItemMst editItemMst = new EditItemMst();
+		
+		//ItemMst保存
+		Integer iRtn = cf_item_mst_save(id, item_name, editItemMst, sBalanceType);
+		ItemMst itemMst = editItemMst.itemMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(itemMst);
+			render("@cf_handling_edit", itemMst, sBalanceType);
+		}
+		
+		cf_item_out_list();
+		
+	}
+	
 	//「取扱(実際)」削除
 	public static void cf_handling_del(Long id, String sHandlingType) {
 		// 取扱データの読み出し
 		HandlingMst handlingMst = HandlingMst.findById(id);
-		// 保存
+		// 削除
 		handlingMst.delete();
 
 		if(sHandlingType.equals(Messages.get("views.config.cf_bank"))) {
@@ -430,6 +508,20 @@ public class Config extends Controller {
 			cf_creca_list();
 		} else if(sHandlingType.equals(Messages.get("views.config.cf_emoney"))) {
 			cf_emoney_list();
+		}
+	}
+	
+	//「項目」削除
+	public static void cf_item_del(Long id, String sBalanceType) {
+		// 項目データの読み出し
+		ItemMst itemMst = ItemMst.findById(id);
+		// 削除
+		itemMst.delete();
+
+		if(sBalanceType.equals(Messages.get("BalanceType.in"))) {
+			cf_item_in_list();
+		} else if(sBalanceType.equals(Messages.get("BalanceType.out"))) {
+			cf_item_out_list();
 		}
 	}
 	
@@ -442,7 +534,8 @@ public class Config extends Controller {
 	 * @param sHandlingType
 	 * @return
 	 */
-	private static Integer cf_handling_mst_save(Long id,
+	private static Integer cf_handling_mst_save(
+			Long id,
 			String handling_name,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType
@@ -487,7 +580,8 @@ public class Config extends Controller {
 	 * @param sHandlingType
 	 * @return
 	 */
-	private static Integer cf_handling_mst_save(Long id,
+	private static Integer cf_handling_mst_save(
+			Long id,
 			String handling_name,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType,
@@ -535,12 +629,52 @@ public class Config extends Controller {
 	}
 	
 	/**
+	 * ItemMstの保存メソッド
+	 * @param id
+	 * @param item_name
+	 * @param editItemMst
+	 * @param sBalanceType
+	 * @return
+	 */
+	private static Integer cf_item_mst_save(
+			Long id,
+			String item_name,
+			EditItemMst editItemMst,
+			String sBalanceType
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("byBalance_type_name", sBalanceType).first();
+		if(id == null) {
+			// 取扱データの作成
+			editItemMst.itemMst = new ItemMst(
+					haUser,
+					balanceTypeMst,
+					item_name
+			);
+		} else {
+			// 取扱データの読み出し
+			editItemMst.itemMst = ItemMst.findById(id);
+			// 編集
+			editItemMst.itemMst.item_name = item_name;
+		}
+		// Validate
+		validation.valid(editItemMst.itemMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		editItemMst.itemMst.save();
+		
+		return 0;
+	}
+	
+	/**
 	 * 取扱種類を元にHandlingMstのリストの取得
 	 * @param sHandlingType
 	 * @return
 	 */
 	private static List<HandlingMst> get_handling_msts(String sHandlingType) {
-		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).email + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by id").fetch();
+		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by id").fetch();
 		return handlingMsts;
 	}
 	
@@ -551,5 +685,14 @@ public class Config extends Controller {
 	 */
 	static class EditHandlingMst {
 		HandlingMst handlingMst;
+	}
+
+	/**
+	 * ItemMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	static class EditItemMst {
+		ItemMst itemMst;
 	}
 }

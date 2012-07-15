@@ -56,34 +56,25 @@
     	</div>
     	
     	<div id="main">
-	        #{secure.check 'admin'}
-			    <ul id="adminMenu">
-		            <li class="${request.controller == 'HaUsers' ? 'selected' : ''}">
-		                <a href="@{HaUsers.list()}">&{'HaUsers'}</a>
+		    <ul id="loginMenu">
+		        <li class="${request.controller == 'DailyAccount' ? 'selected' : ''}">
+		            <a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.form'}</a>
+		        </li>
+		        <li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
+		            <a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
+		        </li>
+		        <li class="${request.controller == 'DetailList' ? 'selected' : ''}">
+		            <a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
+		        </li>
+		        <li class="${request.controller == 'Config' ? 'selected' : ''}">
+		            <a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
+		        </li>
+		        #{secure.check 'admin'}
+		            <li class="${request.controller == 'Admin' ? 'selected' : ''}">
+		                <a href="@{HaUsers.list()}">&{'views.admin.adminMenu'}</a>
 		            </li>
-		            <li class="${request.controller == 'BalanceTypeMsts' ? 'selected' : ''}">
-		                <a href="@{BalanceTypeMsts.list()}">&{'BalanceTypeMsts'}</a>
-		            </li>
-		            <li class="${request.controller == 'HandlingTypeMsts' ? 'selected' : ''}">
-		                <a href="@{HandlingTypeMsts.list()}">&{'HandlingTypeMsts'}</a>
-		            </li>
-		            <li class="${request.controller == 'ItemMsts' ? 'selected' : ''}">
-		                <a href="@{ItemMsts.list()}">&{'ItemMsts'}</a>
-		            </li>
-		            <li class="${request.controller == 'HandlingMsts' ? 'selected' : ''}">
-		                <a href="@{HandlingMsts.list()}">&{'HandlingMsts'}</a>
-		            </li>
-		            <li class="${request.controller == 'IdealDepositMsts' ? 'selected' : ''}">
-		                <a href="@{IdealDepositMsts.list()}">&{'IdealDepositMsts'}</a>
-		            </li>
-		            <li class="${request.controller == 'Records' ? 'selected' : ''}">
-		                <a href="@{Records.list()}">&{'Records'}</a>
-		            </li>
-			        <li class="${request.controller == 'DailyAccount' ? 'selected' : ''}">
-			            <a href="@{DailyAccount.dailyAccount()}">&{'views.admin.memberMenu'}</a>
-			        </li>
-			    </ul>
-	        #{/secure.check}
+		        #{/secure.check}
+		    </ul>
         	
 	        #{doLayout /}
     	</div>

@@ -5,7 +5,7 @@
 </h3>
 
 #{list items:records, as:'record'}
-    <p class="record ${record_parity}">
+    <p class="data ${record_parity}">
         <a href="@{form(record.id)}">${record.payment_date.format('yyyy/MM/dd')}</a>
     </p>
 #{/list}

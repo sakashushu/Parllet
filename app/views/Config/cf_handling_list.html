@@ -1,9 +1,9 @@
 #{extends 'Config/cf_main.html' /}
 
-<h3>${sHandlingType}　編集</h3>
+<h3>${sHandlingType}　&{'views.common.update.edit'}</h3>
 
 #{list items:handlingMsts, as:'handlingMst'}
-	<p class="record ${handlingMst_parity}">
+	<p class="data ${handlingMst_parity}">
 	  #{if sHandlingType == messages.get('views.config.cf_bank')}
 		<a href="@{cf_bank_edit(handlingMst.id)}">
 	  #{/if}
