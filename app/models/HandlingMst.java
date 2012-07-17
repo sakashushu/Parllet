@@ -64,7 +64,7 @@ public class HandlingMst extends Model {
 	static class DebitBankConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.debit_bank==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -82,7 +82,7 @@ public class HandlingMst extends Model {
 	static class CutoffConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.cutoff_day==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -100,7 +100,7 @@ public class HandlingMst extends Model {
 	static class DebitMonthConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca")) &&
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.debit_month==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -119,7 +119,7 @@ public class HandlingMst extends Model {
 	static class CutoffDebitConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("views.config.cf_creca"))) {
+			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca"))) {
 				if(handlingMst.debit_day==null) {
 					setMessage(Messages.get("validation.required"));
 					return false;

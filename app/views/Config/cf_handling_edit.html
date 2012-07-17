@@ -46,11 +46,11 @@ jQuery(document).ready(function() {
 	#{/else}
 
     <div class="objectForm">
-	#{form (sHandlingType==messages.get('views.config.cf_bank')) ?
+	#{form (sHandlingType==messages.get('HandlingType.bank')) ?
 			@cf_bank_save(handlingMst?.id) :
-			((sHandlingType==messages.get('views.config.cf_creca')) ?
+			((sHandlingType==messages.get('HandlingType.creca')) ?
 			 @cf_creca_save(handlingMst?.id) :
-			 ((sHandlingType==messages.get('views.config.cf_emoney')) ?
+			 ((sHandlingType==messages.get('HandlingType.emoney')) ?
 			  @cf_emoney_save(handlingMst?.id) : '')
 			)}
 	 
@@ -69,13 +69,13 @@ jQuery(document).ready(function() {
 	        #{/field}
 	    </p>
 		
-		#{if sHandlingType==messages.get('views.config.cf_creca')}
+		#{if sHandlingType==messages.get('HandlingType.creca')}
 		    <p>
 		        #{field 'debit_bank'}
 		        <label>&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
 					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('views.config.cf_bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
+					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('HandlingType.bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
 					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
 					#{/list}
 				</select>

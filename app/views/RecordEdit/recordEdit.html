@@ -46,7 +46,7 @@ var subcategoryHandling = {
             "key":"0",
             "value":"&{'views.common.combo.required.long'}"
           },
-          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and handling_type_mst.handling_type_name IN('" + messages.get('views.config.cf_bank') + "','" + messages.get('views.config.cf_emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"

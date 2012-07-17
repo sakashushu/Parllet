@@ -13,6 +13,7 @@ import models.ItemMst;
 import models.WorkDailyAccount;
 
 import play.db.jpa.JPA;
+import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -302,6 +303,8 @@ public class DailyAccount extends Controller {
 					"   ON r.handling_mst_id = h.id " +
 					" LEFT JOIN HandlingTypeMst ht " +
 					"   ON h.handling_type_mst_id = ht.id" +
+					" LEFT JOIN HandlingMst hb " +
+					"   ON h.debit_bank_id = hb.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
 //					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
@@ -581,15 +584,16 @@ public class DailyAccount extends Controller {
 				
 			}
 		} else if(sLargeCategoryName.equals("実残高")) {
-			//取扱ごとのループ
-			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id).fetch();
+			//取扱(実際)ごとのループ（クレジットカードは除いて、引落口座に集約）
+			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id + " and handling_type_mst.handling_type_name <> '" + Messages.get("HandlingType.creca") + "'").fetch();
 			//for (WorkDailyAccount wda : lWDA) {
 			for(HandlingMst handlingMst : handlingMsts) {
 				WorkDailyAccount wDaHandling = new WorkDailyAccount();
 				
 	   			sSql = sSqlBase + sSqlBaseG +
 						"   AND b.balance_type_name in('支出','収入') " +
-						"   AND h.handling_name = '" + handlingMst.handling_name + "'";
+//						"   AND h.handling_name = '" + handlingMst.handling_name + "'";
+						"   AND '" + handlingMst.handling_name + "' in(h.handling_name, hb.handling_name)";
 	
 				BigInteger biSumMonthRlBal = (BigInteger)JPA.em().createNativeQuery(
 						sSql).getSingleResult();
@@ -609,7 +613,8 @@ public class DailyAccount extends Controller {
 							"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 		   			sSql = sSqlBase + sSqlBaseD +
 							"   AND b.balance_type_name in('支出','収入') " +
-							"   AND h.handling_name = '" + handlingMst.handling_name + "'";
+//							"   AND h.handling_name = '" + handlingMst.handling_name + "'";
+							"   AND '" + handlingMst.handling_name + "' in(h.handling_name, hb.handling_name)";
 					biAryDaysRlBal[iDay] = (BigInteger)JPA.em().createNativeQuery(
 							sSql).getSingleResult();
 					sAryDaysRlBal[iDay] = biAryDaysRlBal[iDay]==null ? "" : String.format("%1$,3d", biAryDaysRlBal[iDay]);

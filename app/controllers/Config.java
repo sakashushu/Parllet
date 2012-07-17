@@ -290,7 +290,7 @@ public class Config extends Controller {
 	
 	//口座編集（リスト）
 	public static void cf_bank_list() {
-		String sHandlingType = Messages.get("views.config.cf_bank");
+		String sHandlingType = Messages.get("HandlingType.bank");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 //		render(handlingMsts);
 		render("@cf_handling_list", sHandlingType, handlingMsts);
@@ -299,14 +299,14 @@ public class Config extends Controller {
 	//クレジットカード編集（リスト）
 	public static void cf_creca_list() {
 //		render();
-		String sHandlingType = Messages.get("views.config.cf_creca");
+		String sHandlingType = Messages.get("HandlingType.creca");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
 	//電子マネー編集（リスト）
 	public static void cf_emoney_list() {
-		String sHandlingType = Messages.get("views.config.cf_emoney");
+		String sHandlingType = Messages.get("HandlingType.emoney");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
@@ -328,7 +328,7 @@ public class Config extends Controller {
 	
 	//口座編集
 	public static void cf_bank_edit(Long id) {
-		String sHandlingType = Messages.get("views.config.cf_bank");
+		String sHandlingType = Messages.get("HandlingType.bank");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
 			render("@cf_handling_edit", handlingMst, sHandlingType);
@@ -338,7 +338,7 @@ public class Config extends Controller {
 	
 	//クレジットカード編集
 	public static void cf_creca_edit(Long id) {
-		String sHandlingType = Messages.get("views.config.cf_creca");
+		String sHandlingType = Messages.get("HandlingType.creca");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
 			render("@cf_handling_edit", handlingMst, sHandlingType);
@@ -348,7 +348,7 @@ public class Config extends Controller {
 	
 	//電子マネー編集
 	public static void cf_emoney_edit(Long id) {
-		String sHandlingType = Messages.get("views.config.cf_emoney");
+		String sHandlingType = Messages.get("HandlingType.emoney");
 		if(id != null) {
 			HandlingMst handlingMst = HandlingMst.findById(id);
 			render("@cf_handling_edit", handlingMst, sHandlingType);
@@ -381,7 +381,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name
 			) {
-		String sHandlingType = Messages.get("views.config.cf_bank");
+		String sHandlingType = Messages.get("HandlingType.bank");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
@@ -404,7 +404,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name
 			) {
-		String sHandlingType = Messages.get("views.config.cf_emoney");
+		String sHandlingType = Messages.get("HandlingType.emoney");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
@@ -431,7 +431,7 @@ public class Config extends Controller {
 			String debit_month,
 			Integer debit_day
 			) {
-		String sHandlingType = Messages.get("views.config.cf_creca");
+		String sHandlingType = Messages.get("HandlingType.creca");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
@@ -502,11 +502,11 @@ public class Config extends Controller {
 		// 削除
 		handlingMst.delete();
 
-		if(sHandlingType.equals(Messages.get("views.config.cf_bank"))) {
+		if(sHandlingType.equals(Messages.get("HandlingType.bank"))) {
 			cf_bank_list();
-		} else if(sHandlingType.equals(Messages.get("views.config.cf_creca"))) {
+		} else if(sHandlingType.equals(Messages.get("HandlingType.creca"))) {
 			cf_creca_list();
-		} else if(sHandlingType.equals(Messages.get("views.config.cf_emoney"))) {
+		} else if(sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
 			cf_emoney_list();
 		}
 	}

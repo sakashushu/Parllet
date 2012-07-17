@@ -4,13 +4,13 @@
 
 #{list items:handlingMsts, as:'handlingMst'}
 	<p class="data ${handlingMst_parity}">
-	  #{if sHandlingType == messages.get('views.config.cf_bank')}
+	  #{if sHandlingType == messages.get('HandlingType.bank')}
 		<a href="@{cf_bank_edit(handlingMst.id)}">
 	  #{/if}
-	  #{elseif sHandlingType == messages.get('views.config.cf_creca')}
+	  #{elseif sHandlingType == messages.get('HandlingType.creca')}
 		<a href="@{cf_creca_edit(handlingMst.id)}">
 	  #{/elseif}
-	  #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
+	  #{elseif sHandlingType == messages.get('HandlingType.emoney')}
 		<a href="@{cf_emoney_edit(handlingMst.id)}">
 	  #{/elseif}
 		${handlingMst.handling_name}</a>
@@ -18,13 +18,13 @@
 #{/list}
  
 <p id="newData" >
-  #{if sHandlingType == messages.get('views.config.cf_bank')}
+  #{if sHandlingType == messages.get('HandlingType.bank')}
     <a href="@{cf_bank_edit()}">
   #{/if}
-  #{elseif sHandlingType == messages.get('views.config.cf_creca')}
+  #{elseif sHandlingType == messages.get('HandlingType.creca')}
     <a href="@{cf_creca_edit()}">
   #{/elseif}
-  #{elseif sHandlingType == messages.get('views.config.cf_emoney')}
+  #{elseif sHandlingType == messages.get('HandlingType.emoney')}
     <a href="@{cf_emoney_edit()}">
   #{/elseif}
     <span>+</span> &{'insupd.add', sHandlingType}</a>

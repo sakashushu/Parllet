@@ -5,17 +5,17 @@
 	        <li class="${(request.actionMethod == 'cf_bank_list' ||
 	        			request.actionMethod == 'cf_bank_edit' ||
 	        			request.actionMethod == 'cf_bank_save') ? 'selected' : ''}">
-	            <a href="@{Config.cf_bank_list()}">&{'views.config.cf_bank'}</a>
+	            <a href="@{Config.cf_bank_list()}">&{'HandlingType.bank'}</a>
 	        </li>
 	        <li class="${(request.actionMethod == 'cf_creca_list' ||
 	        			request.actionMethod == 'cf_creca_edit' ||
 	        			request.actionMethod == 'cf_creca_save') ? 'selected' : ''}">
-	            <a href="@{Config.cf_creca_list()}">&{'views.config.cf_creca'}</a>
+	            <a href="@{Config.cf_creca_list()}">&{'HandlingType.creca'}</a>
 	        </li>
 	        <li class="${(request.actionMethod == 'cf_emoney_list' ||
 	        			request.actionMethod == 'cf_emoney_edit' ||
 	        			request.actionMethod == 'cf_emoney_save') ? 'selected' : ''}">
-	            <a href="@{Config.cf_emoney_list()}">&{'views.config.cf_emoney'}</a>
+	            <a href="@{Config.cf_emoney_list()}">&{'HandlingType.emoney'}</a>
 	        </li>
 	        <li class="${(request.actionMethod == 'cf_item_in_list' ||
 	        			request.actionMethod == 'cf_item_in_edit' ||

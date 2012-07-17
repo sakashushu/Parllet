@@ -86,6 +86,18 @@ BalanceType.bank_in=口座預入
 BalanceType.bank_out=口座引出
 BalanceType.ideal_deposit_in=My貯金預入
 BalanceType.ideal_deposit_out=My貯金引出
+BalanceType.out_ideal_deposit=My貯金から支払
+
+# 取扱(実際)種類(HandlingType)
+HandlingType.bank=口座
+HandlingType.creca=クレジットカード
+HandlingType.emoney=電子マネー
+
+# 残高種類(RemainderType)
+RemainderType.real=実残高
+RemainderType.ideal_deposit=My貯金残高
+RemainderType.not_ideal_deposit=My貯金してないお金
+
 
 # 引落月(DebitMonth)
 DebitMonth.this=当月
