@@ -49,7 +49,18 @@
     		</table>
     		<ul id="tools">
 			    <li>	
-					${models.HaUser.find("byEmail", session.username).first()?.fullname}　
+					${models.HaUser.find("byEmail", session.username).first()?.fullname}
+			    </li>
+	            <li>
+	                ｜
+	            </li>
+		        <li class="${request.controller == 'DailyAccount' ? 'selected' : ''}">
+		            <a href="@{DailyAccount.dailyAccount()}">&nbsp;&{'views.admin.memberMenu'}&nbsp;</a>
+		        </li>
+	            <li>
+	                ｜
+	            </li>
+			    <li>	
 					<a href="@{Secure.logout()}">&{'views.login.tools.logout'}</a>
 			    </li>
 			</ul>
@@ -79,9 +90,6 @@
 		            <li class="${request.controller == 'Records' ? 'selected' : ''}">
 		                <a href="@{Records.list()}">&{'Records'}</a>
 		            </li>
-			        <li class="${request.controller == 'DailyAccount' ? 'selected' : ''}">
-			            <a href="@{DailyAccount.dailyAccount()}">&{'views.admin.memberMenu'}</a>
-			        </li>
 			    </ul>
 	        #{/secure.check}
         	

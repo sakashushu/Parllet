@@ -15,73 +15,44 @@
 <script type="text/javascript">
 <!--
 // 「行追加」　をしようとしたコード
-jQuery(document).ready(function() {
-    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
-		jQuery( '#jquery-ui-dialog-table tbody' ) . append(
-		    '<tr>' +
-		    '<script type="text/javascript">' +
-		    '<!-- ' +
-		    'jQuery.getScript("/public/javascripts/jquery.datepicker.js");' +
-		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
-		    'WEB_SOCKET_DEBUG = false;' +
-		    'var ws;' +
-		    'ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");' +
-		    'jQuery("#ins").click(function() {' +
-		    '    var $datepicker = jQuery(".datepicker");' +
-		    '    ws.send($datepicker.val());' +
-		    '});' +
-		    '// -->' +
-		    '</scri' + 'pt>' +
-		    '<td><a id="ins" href="#">更新</a></td>' +
-		    '<td><input type="text" class="datepicker" name="n_payment_date "size="13" />' +
-		    '</td>' +
-		    '<td><select name="n_item_id">' + 
-		    '        <option value="1" selected="selected">食費</option>' +
-		    '        <option value="2">家財住居</option>' +
-		    '        <option value="3">水道光熱</option>' +
-		    '        <option value="999">新規作成</option>' + 
-		    '    </select>' + 
-			'</td>' +
-		    '</tr>'
-		);
-    } );
-} );
-
+//jQuery(document).ready(function() {
+//    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
+//		jQuery( '#tblDetailList tbody' ) . append(
+//		    '<tr>' +
+//		    '<script type="text/javascript">' +
+//		    '<!-- ' +
+//		    'jQuery.getScript("/public/javascripts/jquery.datepicker.js");' +
+//		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
+//		    'WEB_SOCKET_DEBUG = false;' +
+//		    'var ws;' +
+//		    'ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");' +
+//		    'jQuery("#ins").click(function() {' +
+//		    '    var $datepicker = jQuery(".datepicker");' +
+//		    '    ws.send($datepicker.val());' +
+//		    '});' +
+//		    '// -->' +
+//		    '</scri' + 'pt>' +
+//		    '<td><a id="ins" href="#">更新</a></td>' +
+//		    '<td><input type="text" class="datepicker" name="n_payment_date "size="13" />' +
+//		    '</td>' +
+//		    '<td><select name="n_item_id">' + 
+//		    '        <option value="1" selected="selected">食費</option>' +
+//		    '        <option value="2">家財住居</option>' +
+//		    '        <option value="3">水道光熱</option>' +
+//		    '        <option value="999">新規作成</option>' + 
+//		    '    </select>' + 
+//			'</td>' +
+//		    '</tr>'
+//		);
+//    } );
+//} );
 // -->
 </script>
 
 #{form @detailList()}
 
-	<script type="text/javascript">
-	<!--
-//	jQuery(document).ready(function() {
-//		var dates = jQuery("#from, #to").datepicker({
-//			defaultDate: "+1w",
-//			changeMonth: true,
-//			numberOfMonths: 1,
-//			showOtherMonths: true,
-//			selectOtherMonths: true,
-//			showAnim: "drop",
-//			changeMonth: true,
-//			changeYear: true,
-//			yearRange: '1900:2999',
-//			dateFormat: 'yy/mm/dd',
-//			onSelect: function( selectedDate ) {
-//				var option = this.id == "from" ? "minDate" : "maxDate",
-//					instance = jQuery( this ).data( "datepicker" ),
-//					date = jQuery.datepicker.parseDate(
-//						instance.settings.dateFormat ||
-//						jQuery.datepicker._defaults.dateFormat,
-//						selectedDate, instance.settings );
-//				dates.not( this ).datepicker( "option", option, date );
-//			}
-//		});
-//	});
-	// -->
-	</script>
-
+	<table id="tblDetailList" class="ui-widget ui-widget-content" border="1">
 	
-	<table id="jquery-ui-dialog-table" class="ui-widget ui-widget-content" border="1">
 		<thead>
 			<tr>
 				<th>
@@ -94,7 +65,7 @@ jQuery(document).ready(function() {
 				</th>
 				<th>&{'balance_type_mst'}<br>
 					<select name="h_balance_type_id">
-						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>すべて</option>
+						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 						#{list items:bTypes, as:'bType'}
 						<option value="${bType.id}"${h_balance_type_id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 						#{/list}
@@ -102,7 +73,7 @@ jQuery(document).ready(function() {
 				</th>
 				<th>&{'item_mst'}<br>
 					<select id="h_combo" name="h_item_id" style="width:100px;">
-						<option value="0"${h_item_id==0 ? ' selected' : ''}>すべて</option>
+						<option value="0"${h_item_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 						#{list items:itemsIn, as:'itemIn'}
 						<option value="${itemIn.id}"${h_item_id==itemIn.id ? ' selected' : ''}>${itemIn.item_name}</option>
 						#{/list}
@@ -119,7 +90,7 @@ jQuery(document).ready(function() {
 				<th>&{'amount'}<br></th>
 				<th>&{'handling_mst'}<br>
 					<select style="width:100px;">
-						<option value="0" selected>すべて</option>
+						<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 					</select>
 				</th>
 				<th>&{'debit_date'}<br></th>
@@ -177,7 +148,7 @@ jQuery(document).ready(function() {
 					<!-- 項目 -->
 					#{if record?.item_mst?.balance_type_mst}
 						<select id="e_combo_${record.id}" name="e_item_id" style="width:100px;">
-						#{if record?.item_mst?.balance_type_mst?.balance_type_name == "収入"}
+						#{if record?.item_mst?.balance_type_mst?.balance_type_name == messages.get('BalanceType.in')}
 							#{list items:itemsIn, as:'itemIn'}
 							<option value="${itemIn.id}"${record.item_mst==itemIn ? ' selected' : ''}>${itemIn.item_name}</option>
 							#{/list}
@@ -209,9 +180,12 @@ jQuery(document).ready(function() {
 						value="${record.amount}" size="13" />
 				</td>
 				<td>
-					<!-- 取扱 -->
+					<!-- 取扱(実際) -->
+					<!-- 
 					<input type="text" id="e_handling_mst_${record.id}" name="e_handling_mst"
 						value="" size="13" />
+					 -->
+					${record?.handling_mst?.handling_name}
 				</td>
 				<td>
 					<!-- 引落日 -->
@@ -234,7 +208,7 @@ jQuery(document).ready(function() {
 						value="${record.remarks}" size="13" />
 				</td>
 				<td>
-					<!-- マイ貯金 -->
+					<!-- 取扱(My貯金) -->
 					<input type="text" id="e_ideal_deposit_mst_${record.id}" name="e_ideal_deposit_mst"
 						value="${record.ideal_deposit_mst}" size="13" />
 				</td>
@@ -270,7 +244,6 @@ jQuery(document).ready(function() {
 	    };
 					
 		#{list items:records, as:'record'}
-		    //jQuery("#e_upd_${record.id}").click(function() {
 			jQuery(document).ready(function() {
 				// 支払日の変更イベント
 				jQuery("#e_payment_date_${record.id}").change(function() {

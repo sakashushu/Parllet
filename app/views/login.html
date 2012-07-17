@@ -49,7 +49,20 @@
     		</table>
     		<ul id="tools">
 			    <li>	
-					${models.HaUser.find("byEmail", session.username).first()?.fullname}　
+					${models.HaUser.find("byEmail", session.username).first()?.fullname}
+			    </li>
+	            <li>
+	                ｜
+	            </li>
+		        #{secure.check 'admin'}
+		            <li>
+		                <a href="@{HaUsers.list()}">&{'views.admin.adminMenu'}</a>
+		            </li>
+		            <li>
+		                ｜
+		            </li>
+		        #{/secure.check}
+			    <li>	
 					<a href="@{Secure.logout()}">&{'views.login.tools.logout'}</a>
 			    </li>
 			</ul>
@@ -69,11 +82,6 @@
 		        <li class="${request.controller == 'Config' ? 'selected' : ''}">
 		            <a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
 		        </li>
-		        #{secure.check 'admin'}
-		            <li class="${request.controller == 'Admin' ? 'selected' : ''}">
-		                <a href="@{HaUsers.list()}">&{'views.admin.adminMenu'}</a>
-		            </li>
-		        #{/secure.check}
 		    </ul>
         	
 	        #{doLayout /}

@@ -304,7 +304,8 @@ public class DailyAccount extends Controller {
 					"   ON h.handling_type_mst_id = ht.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
-					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		} else if(sLargeCategoryName.equals("My貯金残高")) {
 	   		sSqlBase = "" +
 	   				" SELECT COALESCE(SUM(" +
@@ -327,7 +328,8 @@ public class DailyAccount extends Controller {
 					"   ON h.handling_type_mst_id = ht.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
-					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
 	   		sSqlBase = "" +
 	   				" SELECT COALESCE(SUM(" +
@@ -351,7 +353,8 @@ public class DailyAccount extends Controller {
 					"   ON h.handling_type_mst_id = ht.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
-					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
+					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		}
    		
    		
@@ -422,12 +425,14 @@ public class DailyAccount extends Controller {
 						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
 	   		} else if(sLargeCategoryName.equals("実残高")) {
 	   			sSqlBaseD = "" +
-	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+//	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND b.balance_type_name in('支出','収入') ";
 	   		} else if(sLargeCategoryName.equals("My貯金残高")) {
 	   			sSqlBaseD = "" +
-	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+//	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND ((b.balance_type_name = '支出' AND " +
 		   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
@@ -435,7 +440,8 @@ public class DailyAccount extends Controller {
 		   				"        )";
 	   		} else if(sLargeCategoryName.equals("My貯金してないお金")) {
 	   			sSqlBaseD = "" +
-	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+//	   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+	   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND (b.balance_type_name = '収入' OR " +
 		   				"        (b.balance_type_name = '支出' AND " +
@@ -555,7 +561,8 @@ public class DailyAccount extends Controller {
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		} else if(sLargeCategoryName.equals("My貯金残高")) {
 			   			sSqlBaseD = "" +
-			   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+//			   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+			   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD +
 								"   AND ((b.balance_type_name = '支出' AND " +
 				   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
@@ -598,7 +605,8 @@ public class DailyAccount extends Controller {
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 					calendar.set(year, month - 1, iDay + 1);
 			   		String sSqlBaseD = "" +
-							"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+//							"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+							"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 		   			sSql = sSqlBase + sSqlBaseD +
 							"   AND b.balance_type_name in('支出','収入') " +
 							"   AND h.handling_name = '" + handlingMst.handling_name + "'";

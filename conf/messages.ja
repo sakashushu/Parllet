@@ -18,6 +18,7 @@ views.admin.memberMenu=会員メニュー
 
 views.common.combo.required.long=(値を選択して下さい)
 views.common.combo.notrequired=(なし)
+views.common.combo.all=すべて
 views.common.update.edit=編集
 
 views.application.tools.home=ホーム

@@ -168,6 +168,7 @@ Record(test3):
     item_mst:         out3
     amount:           1200
     handling_mst:     card1
+    debit_date:       '2012-08-04T00:00:00'
     store:            ハンズマン
 
 Record(test4):

@@ -24,9 +24,9 @@ jQuery(document).ready(function() {
 jQuery(document).ready(function() {
 	jQuery('#tcol').height(jQuery(window).innerHeight()-220);
 	jQuery('#tbody').height(jQuery(window).innerHeight()-220);
-	jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
-	jQuery('#tbody').width(jQuery(window).innerWidth()-350);
-	jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
+//	jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
+//	jQuery('#tbody').width(jQuery(window).innerWidth()-350);
+//	jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
 });
 
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
@@ -34,9 +34,9 @@ jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
 		jQuery('#tcol').height(jQuery(this).innerHeight()-220);
 		jQuery('#tbody').height(jQuery(this).innerHeight()-220);
-		jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
-		jQuery('#tbody').width(jQuery(window).innerWidth()-350);
-		jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
+//		jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
+//		jQuery('#tbody').width(jQuery(window).innerWidth()-350);
+//		jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
 	});
 });
 // -->
@@ -53,7 +53,7 @@ jQuery(document).ready(function() {
 	<input type="submit" value="今月" name="thisMonth" ${thisMonthFlg==1 ? ' disabled' : ''} />
 #{/form}
 
-	<table>
+	<table id="tblDailyAccount">
 		<tr>
 			<td valign="top">
 				<div style="width:320px;">
@@ -73,7 +73,7 @@ jQuery(document).ready(function() {
 				</div>
 			</td>
 			<td>
-				<div id="trow" style="width:800px;overflow:hidden;">
+				<div id="trow" style="width:630px;overflow:hidden;">
 				<div style="width:${iWidth}px">
 				<table>
 					<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
@@ -154,7 +154,7 @@ jQuery(document).ready(function() {
 				<!-- 
 				<div id="tbody" style="width:816px;height:486px;overflow:auto;">
 				 -->
-				<div id="tbody" style="width:816px;height:470px;overflow-x:hidden;overflow-y:auto;">
+				<div id="tbody" style="width:646px;height:470px;overflow-x:hidden;overflow-y:auto;">
 				<div style="width:${iWidth}px">
 				<table>
 					<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
@@ -190,7 +190,7 @@ jQuery(document).ready(function() {
 				</div>
 			</td>
 			<td>
-				<div id="tbody2" style="width:816px;height:16px;overflow:auto;">
+				<div id="tbody2" style="width:646px;height:16px;overflow:auto;">
 				<div style="width:${iWidth}px">
 				dummy
 				</div>
