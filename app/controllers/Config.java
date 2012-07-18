@@ -49,7 +49,11 @@ public class Config extends Controller {
 		render();
 	}
 	
-	public static void upload(File csv) {
+	/**
+	 * データの取込(インポート)
+	 * @param csv
+	 */
+	public static void cf_upload(File csv) {
 		if(csv != null) {
 			try {
 				//Shift-JISファイルを読み込む想定。（良く分かっていないが、色々試して文字化けしたが、下記のやり方なら文字化けしないようだ。）
@@ -81,18 +85,18 @@ public class Config extends Controller {
 					Record record = null;
 					String payment_date = tokens[0].substring(1, tokens[0].length()-1);			//支払日
 					String balance_type_name = tokens[1].substring(1, tokens[1].length()-1);	//収支種類
-					String item_name = tokens[2].substring(1, tokens[2].length()-1);			//項目
-					Integer amount = Integer.parseInt(tokens[3]);								//金額
-					String handling_name = tokens[4].substring(1, tokens[4].length()-1);		//取扱
-					String debit_date = tokens[5].substring(1, tokens[5].length()-1);			//引落日
-					String content = tokens[6].substring(1, tokens[6].length()-1);				//内容
-					String store = tokens[7].substring(1, tokens[7].length()-1);				//お店
-					String remarks = tokens[8].substring(1, tokens[8].length()-1);				//備考
+					String handling_name = tokens[2].substring(1, tokens[2].length()-1);		//取扱
+					String ideal_deposit_name = tokens[3].substring(1, tokens[3].length()-1);	//My貯金
+					String item_name = tokens[4].substring(1, tokens[4].length()-1);			//項目
+					Integer amount = Integer.parseInt(tokens[5]);								//金額
+					String debit_date = tokens[6].substring(1, tokens[6].length()-1);			//引落日
+					String content = tokens[7].substring(1, tokens[7].length()-1);				//内容
+					String store = tokens[8].substring(1, tokens[8].length()-1);				//お店
+					String remarks = tokens[9].substring(1, tokens[9].length()-1);				//備考
 					
 					remarks = "インポートテスト";
 					
-					String secret_remarks = tokens[9].substring(1, tokens[9].length()-1);		//備考（非公開）
-					String ideal_deposit_name = tokens[10].substring(1, tokens[10].length()-1);	//My貯金
+					String secret_remarks = tokens[10].substring(1, tokens[10].length()-1);		//備考（非公開）
 					
 					try {
 						Date paymentDate = null;
@@ -186,7 +190,13 @@ public class Config extends Controller {
 
 	}
 	
-	public static void download(
+	/**
+	 * データの出力(エクスポート)
+	 * @param down_date_fr
+	 * @param down_date_to
+	 * @throws UnsupportedEncodingException
+	 */
+	public static void cf_download(
     		String down_date_fr,	/* 絞込日時範囲（開始） */
     		String down_date_to		/* 絞込日時範囲（終了） */
 			) throws UnsupportedEncodingException {

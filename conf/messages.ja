@@ -23,6 +23,7 @@ views.common.update.edit=編集
 
 views.application.tools.home=ホーム
 views.detaillist.detaillist=明細表
+views.detaillist.diff=差額
 views.dailyaccount.form=日計表
 views.config.config=設定
 views.config.cf_io=データ入出力

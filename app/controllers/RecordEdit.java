@@ -122,7 +122,7 @@ public class RecordEdit extends Controller {
 		// Validate
 		validation.valid(record);
 		if(validation.hasErrors()) {
-	        render("@form", record);
+	        render("@recordEdit", record);
 	    }
 		// 保存
 		record.save();

@@ -3,15 +3,15 @@
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
 データの出力（エクスポート）
-#{form @download()}
+#{form @cf_download()}
 	<input type="text" id="from" name="down_date_fr" size="13" />
 	<label for="to">～</label>
 	<input type="text" id="to" name="down_date_to" size="13" />
     <input type="submit" value="出力" />
 #{/form}
 <br>
-外部データの取込（インポート）
-#{form @upload(), enctype:'multipart/form-data'}
+データの取込（インポート）
+#{form @cf_upload(), enctype:'multipart/form-data'}
     <input type="file" id="csv" name="csv" />
     <input type="submit" value="取込" />
 #{/form}
