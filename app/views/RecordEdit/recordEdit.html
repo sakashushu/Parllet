@@ -175,8 +175,8 @@ jQuery(document).ready(function(){
 	    <p>
 	        #{field 'payment_date'}
 	        <label>&{'payment_date'}:</label>
-	        <input type="text" class="datepicker" name="${field.name}" 
-	            value="${record?.payment_date?.format('yyyy/MM/dd')}" />
+	        <input type="text" class="datetimepicker" name="${field.name}" 
+	            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
 	        <span class="error">#{error 'record.payment_date' /}</span>
 	        #{/field}
 	    </p>

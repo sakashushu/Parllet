@@ -37,11 +37,11 @@ public class RecordEdit extends Controller {
 	
 	public static void save_rec(
 			Long id,
-			@Required(message="支払日 is required") String payment_date,
-			@Required(message="収支種類 is required") Long balance_type_mst,
+			String payment_date,
+			Long balance_type_mst,
 			Long item_mst,
 //			String detail_mst,
-			@Required(message="金額 is required") Integer amount,
+			Integer amount,
 			Long handling_mst,
 			String debit_date,
 			String content,
@@ -54,7 +54,8 @@ public class RecordEdit extends Controller {
 		try {
 			Date paymentDate = null;
 			if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-				paymentDate = DateFormat.getDateInstance().parse(payment_date);
+//				paymentDate = DateFormat.getDateInstance().parse(payment_date);
+				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 			}
 			//HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
 			HaUser haUser  = (HaUser)renderArgs.get("haUser");
@@ -98,7 +99,8 @@ public class RecordEdit extends Controller {
 				// 収支データの読み出し
 				record = Record.findById(id);
 				// 編集
-				record.payment_date = DateFormat.getDateInstance().parse(payment_date);
+//				record.payment_date = DateFormat.getDateInstance().parse(payment_date);
+				record.payment_date = DateFormat.getDateTimeInstance().parse(payment_date+":00");
 				record.balance_type_mst = balanceTypeMst;
 				record.item_mst = itemMst;
 //				record.detail_mst = detail_mst;

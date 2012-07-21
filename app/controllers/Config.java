@@ -101,7 +101,8 @@ public class Config extends Controller {
 					try {
 						Date paymentDate = null;
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-							paymentDate = DateFormat.getDateInstance().parse(payment_date);
+//							paymentDate = DateFormat.getDateInstance().parse(payment_date);
+							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
@@ -265,7 +266,7 @@ public class Config extends Controller {
 				try {
 					if(fld.get(rec) != null) {
 						if(fld.getType() == Date.class) {
-							sOutCsv += String.format("%1$tY/%1$tm/%1$td", fld.get(rec));							
+							sOutCsv += String.format("%1$tY/%1$tm/%1$td %1$tH:%1$tM", fld.get(rec));							
 						} else {
 							sOutCsv += fld.get(rec);
 						}
