@@ -60,8 +60,10 @@ public class Config extends Controller {
 	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
 	
 	            String str = null;
-	            String sOut = "";
+//	            String sOut = "";
 	            boolean bFst = true;	//初回フラグ
+	            
+	            int iCnt = 0;
 	            
 	            // ファイルを1行ずつ読み込む
 				while ( ( str = br.readLine() ) != null ) {
@@ -82,19 +84,27 @@ public class Config extends Controller {
 //					}					
 //					System.out.println();
 					
+					boolean bTransferFlg = false;
+					
 					Record record = null;
 					String payment_date = tokens[0].substring(1, tokens[0].length()-1);			//支払日
 					String balance_type_name = tokens[1].substring(1, tokens[1].length()-1);	//収支種類
+					if(balance_type_name.equals("口座振替")) {
+						bTransferFlg = true;
+						balance_type_name = "口座引出";
+					}
 					String handling_name = tokens[2].substring(1, tokens[2].length()-1);		//取扱
 					String ideal_deposit_name = tokens[3].substring(1, tokens[3].length()-1);	//My貯金
 					String item_name = tokens[4].substring(1, tokens[4].length()-1);			//項目
 					Integer amount = Integer.parseInt(tokens[5]);								//金額
 					String debit_date = tokens[6].substring(1, tokens[6].length()-1);			//引落日
+//					System.out.println(tokens[7]);
+//					System.out.println(tokens[7].length());
 					String content = tokens[7].substring(1, tokens[7].length()-1);				//内容
 					String store = tokens[8].substring(1, tokens[8].length()-1);				//お店
 					String remarks = tokens[9].substring(1, tokens[9].length()-1);				//備考
 					
-					remarks = "インポートテスト";
+					//remarks = "インポートテスト";
 					
 					String secret_remarks = tokens[10].substring(1, tokens[10].length()-1);		//備考（非公開）
 					
@@ -102,7 +112,8 @@ public class Config extends Controller {
 						Date paymentDate = null;
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 //							paymentDate = DateFormat.getDateInstance().parse(payment_date);
-							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
+//							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
+							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
@@ -152,28 +163,88 @@ public class Config extends Controller {
 					// 保存
 					record.save();
 					
+					if(bTransferFlg) {
+						balance_type_name = "口座預入";
+						handling_name = secret_remarks;
+						try {
+							Date paymentDate = null;
+							if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+								paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
+							}
+							HaUser haUser = (HaUser)renderArgs.get("haUser");
+							BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
+							ItemMst itemMst = null;
+							if(item_name!=null) {
+								itemMst = ItemMst.find("item_name = '" + item_name + "'").first(); 
+							}
+							HandlingMst handlingMst = HandlingMst.find("handling_name = '" + handling_name + "'").first();
+							Date debitDate = null;
+							if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+								debitDate = DateFormat.getDateInstance().parse(debit_date);
+							}
+							IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = '" + ideal_deposit_name + "'").first(); 
+							
+							// 収支データの作成
+							record = new Record(
+									haUser,
+									paymentDate,
+									balanceTypeMst,
+									itemMst,
+									null,
+									amount,
+									0,
+									0,
+									handlingMst,
+									debitDate,
+									content,
+									store,
+									remarks,
+									secret_remarks,
+									idealDepositMst
+							);
+							
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						// Validate
+						validation.valid(record);
+						if(validation.hasErrors()) {
+							//エラー処理が必要
+	
+						}
+						// 保存
+						record.save();
+					}
 					
 					
 					
+					iCnt++;
+					System.out.println(iCnt);
 					
-					sOut += str + System.getProperty("line.separator");
+					
+					
+//					sOut += str + System.getProperty("line.separator");
 					
 //					byte[]bytes = str.getBytes(); // Shift-JISのコードを表示
 //					for (byte b: bytes) {
 //						System.out.print(String.format("%02X ", (int)b & 0xff));
 //					}
 				}
-				// 書き込みストリームを生成します。
-				BufferedWriter out
-				  = new BufferedWriter(new FileWriter("C:\\Saya\\test.csv"));
-				// ファイルに書き込みします
-				out.write(sOut);
-				
-				// ストリームを閉じます
-				out.close();				    
-	
-	            // ファイルを閉じる
-	            br.close();
+//				// 書き込みストリームを生成します。
+//				BufferedWriter out
+//				  = new BufferedWriter(new FileWriter("C:\\Saya\\test.csv"));
+//				// ファイルに書き込みします
+//				out.write(sOut);
+//				
+//				// ストリームを閉じます
+//				out.close();				    
+//	
+//	            // ファイルを閉じる
+//	            br.close();
 	            
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block

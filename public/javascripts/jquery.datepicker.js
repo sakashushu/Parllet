@@ -23,7 +23,7 @@ jQuery(function() {
 		changeYear: true,
 		yearRange: '1900:2999',
 		dateFormat: 'yy/mm/dd',
-		currentText: '現在時刻',
+		currentText: '現在日時',
 		closeText: '閉じる',
 		timeText: '時刻',
 		hourText: '時',
