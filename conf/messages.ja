@@ -90,6 +90,7 @@ BalanceType.ideal_deposit_out=My貯金引出
 BalanceType.out_ideal_deposit=My貯金から支払
 
 # 取扱(実際)種類(HandlingType)
+HandlingType.cash=現金
 HandlingType.bank=口座
 HandlingType.creca=クレジットカード
 HandlingType.emoney=電子マネー

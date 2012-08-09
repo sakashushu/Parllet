@@ -91,7 +91,7 @@ public class Config extends Controller {
 					String balance_type_name = tokens[1].substring(1, tokens[1].length()-1);	//収支種類
 					if(balance_type_name.equals("口座振替")) {
 						bTransferFlg = true;
-						balance_type_name = "口座引出";
+						balance_type_name = "口座預入";
 					}
 					String handling_name = tokens[2].substring(1, tokens[2].length()-1);		//取扱
 					String ideal_deposit_name = tokens[3].substring(1, tokens[3].length()-1);	//My貯金
@@ -164,7 +164,7 @@ public class Config extends Controller {
 					record.save();
 					
 					if(bTransferFlg) {
-						balance_type_name = "口座預入";
+						balance_type_name = "口座引出";
 						handling_name = secret_remarks;
 						try {
 							Date paymentDate = null;
