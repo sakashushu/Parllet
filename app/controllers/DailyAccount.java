@@ -38,6 +38,7 @@ public class DailyAccount extends Controller {
 	static final String BALANCE_TYPE_BANK_IN = Messages.get("BalanceType.bank_in");
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
 	static final String BALANCE_TYPE_IDEAL_DEPOSIT_IN = Messages.get("BalanceType.ideal_deposit_in");
+	static final String BALANCE_TYPE_IDEAL_DEPOSIT_OUT = Messages.get("BalanceType.ideal_deposit_out");
 	static final String BALANCE_TYPE_OUT_IDEAL_DEPOSIT = Messages.get("BalanceType.out_ideal_deposit");
 	static final String REMAINDER_TYPE_REAL = Messages.get("RemainderType.real");
 	static final String REMAINDER_TYPE_IDEAL_DEPOSIT = Messages.get("RemainderType.ideal_deposit");
@@ -431,8 +432,11 @@ public class DailyAccount extends Controller {
 //	   				"     WHEN (b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
 	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
+	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
+	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
 //	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' THEN r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
+	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
 	   				"   END" +
 	   				"   ), 0) " +
 	   				" FROM Record r " +
@@ -518,10 +522,10 @@ public class DailyAccount extends Controller {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
    			sSql = sSqlBase + sSqlBaseG +
 //					"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
-					"   AND ((b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
+					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
 //	   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
-	   				"        b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "'" +
+	   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 	   				"        )";
    		//「My貯金してないお金」
 //   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.not_ideal_deposit"))) {
@@ -607,10 +611,10 @@ public class DailyAccount extends Controller {
 	   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   			sSql = sSqlBase + sSqlBaseD +
 //						"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
-						"   AND ((b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
+						"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 		   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
 //		   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
-		   				"        b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "'" +
+		   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 		   				"        )";
 	   		//「My貯金してないお金」
 //	   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.not_ideal_deposit"))) {
@@ -717,6 +721,7 @@ public class DailyAccount extends Controller {
 				
 				WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
 				
+				//「My貯金預入」
 //				if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 		   			sSql = sSqlBase + sSqlBaseG +
@@ -724,6 +729,8 @@ public class DailyAccount extends Controller {
 							"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+		   			
+		   		//「My貯金から支払」
 //		   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
 		   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 		   			sSql = sSqlBase + sSqlBaseG +
@@ -731,14 +738,16 @@ public class DailyAccount extends Controller {
 							"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+		   			
+		   		//「My貯金残高」
 //		   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 		   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 		   			sSql = sSqlBase + sSqlBaseG +
 //							"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
-							"   AND ((b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
+							"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 			   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
 //			   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
-			   				"        b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "'" +
+			   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 			   				"        )" +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   		}
@@ -766,6 +775,8 @@ public class DailyAccount extends Controller {
 					calendar.set(year, month - 1, iStartDay + iDay);
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
+			   		
+			   		//「My貯金預入」
 //					if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 			   			sSql = sSqlBase + sSqlBaseD +
@@ -773,6 +784,8 @@ public class DailyAccount extends Controller {
 								"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+			   			
+			   		//「My貯金から支払」
 //			   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
 			   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 			   			sSql = sSqlBase + sSqlBaseD +
@@ -780,6 +793,8 @@ public class DailyAccount extends Controller {
 								"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
+			   			
+			   		//「My貯金残高」
 //			   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 			   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 			   			sSqlBaseD = "" +
@@ -787,10 +802,10 @@ public class DailyAccount extends Controller {
 			   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD +
 //								"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
-								"   AND ((b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
+								"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 				   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
 //				   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
-				   				"        b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "'" +
+				   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 				   				"        )" +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		}
