@@ -27,6 +27,11 @@
 	        			request.actionMethod == 'cf_item_out_save') ? 'selected' : ''}">
 	            <a href="@{Config.cf_item_out_list()}">&{'views.config.cf_item'}(&{'BalanceType.out'})</a>
 	        </li>
+	        <li class="${(request.actionMethod == 'cf_idealdepo_list' ||
+	        			request.actionMethod == 'cf_idealdepo_edit' ||
+	        			request.actionMethod == 'cf_idealdepo_save') ? 'selected' : ''}">
+	            <a href="@{Config.cf_idealdepo_list()}">&{'views.config.cf_idealdepo'}</a>
+	        </li>
 	        <li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
 	            <a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
 	        </li>

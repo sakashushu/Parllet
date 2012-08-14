@@ -1,0 +1,15 @@
+#{extends 'Config/cf_main.html' /}
+
+<h3>&{'views.config.cf_idealdepo'}　&{'views.common.update.edit'}</h3>
+
+#{list items:idealDepositMsts, as:'idealDepositMst'}
+	<p class="data ${idealDepositMst_parity}">
+		<a href="@{cf_idealdepo_edit(idealDepositMst.id)}">
+		${idealDepositMst.ideal_deposit_name}</a>
+	</p>
+#{/list}
+ 
+<p id="newData" >
+    <a href="@{cf_idealdepo_edit()}">
+    <span>+</span> &{'insupd.add', messages.get('views.config.cf_idealdepo')}</a>
+</p>

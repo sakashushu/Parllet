@@ -32,6 +32,7 @@ views.config.cf_bank=口座
 views.config.cf_creca=クレジットカード
 views.config.cf_emoney=電子マネー
 views.config.cf_item=項目
+views.config.cf_idealdepo=My貯金
 
 views.config.cf_creca.day=日
 views.config.cf_creca.lastday=末日
@@ -77,9 +78,13 @@ debit_bank=引落口座
 cutoff_day=締日
 debit_month=引落月
 debit_day=引落日
+zero_hidden=残高ゼロの時には残高表の対象外とする
 
-# ItemnMstの項目名
+# ItemMstの項目名
 item_name=項目名
+
+# IdealDepositMstの項目名
+ideal_deposit_name=My貯金名
 
 # 収支種類(BalanceType)
 BalanceType.in=収入

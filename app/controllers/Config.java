@@ -408,6 +408,12 @@ public class Config extends Controller {
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
+	//My貯金編集（リスト）
+	public static void cf_idealdepo_list() {
+		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by id").fetch();
+		render("@cf_idealdepo_list", idealDepositMsts);
+	}
+	
 	//口座編集
 	public static void cf_bank_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.bank");
@@ -458,17 +464,27 @@ public class Config extends Controller {
 		render("@cf_item_edit", sBalanceType);
 	}
 	
+	//My貯金編集
+	public static void cf_idealdepo_edit(Long id) {
+		if(id != null) {
+			IdealDepositMst idealDepositMst = IdealDepositMst.findById(id);
+			render(idealDepositMst);
+		}
+		render();
+	}
+	
 	//口座保存
 	public static void cf_bank_save(
 			Long id,
-			String handling_name
+			String handling_name,
+			Boolean zero_hidden
 			) {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -491,7 +507,7 @@ public class Config extends Controller {
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, editHandlingMst, sHandlingType);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -518,7 +534,7 @@ public class Config extends Controller {
 		EditHandlingMst editHandlingMst = new EditHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
 		HandlingMst handlingMst = editHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -547,7 +563,7 @@ public class Config extends Controller {
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(itemMst);
-			render("@cf_handling_edit", itemMst, sBalanceType);
+			render("@cf_item_edit", itemMst, sBalanceType);
 		}
 		
 		cf_item_in_list();
@@ -570,13 +586,35 @@ public class Config extends Controller {
 		if(iRtn == 1) {
 			validation.clear();
 			validation.valid(itemMst);
-			render("@cf_handling_edit", itemMst, sBalanceType);
+			render("@cf_item_edit", itemMst, sBalanceType);
 		}
 		
 		cf_item_out_list();
 		
 	}
 	
+	//My貯金保存
+	public static void cf_idealdepo_save(
+			Long id,
+			String ideal_deposit_name,
+			Boolean zero_hidden
+			) {
+		EditIdealDepositMst editItemMst = new EditIdealDepositMst();
+		
+		//IdealDepositMst保存
+		Integer iRtn = cf_ideal_deposit_mst_save(id, ideal_deposit_name, zero_hidden, editItemMst);
+		IdealDepositMst idealDepositMst = editItemMst.idealDepositMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(idealDepositMst);
+			render("@cf_idealdepo_edit", idealDepositMst);
+		}
+		
+		cf_idealdepo_list();
+		
+	}
+
 	//「取扱(実際)」削除
 	public static void cf_handling_del(Long id, String sHandlingType) {
 		// 取扱データの読み出し
@@ -607,11 +645,22 @@ public class Config extends Controller {
 		}
 	}
 	
+	//「My貯金」削除
+	public static void cf_idealdepo_del(Long id) {
+		// 項目データの読み出し
+		IdealDepositMst idealDepositMst = IdealDepositMst.findById(id);
+		// 削除
+		idealDepositMst.delete();
+
+		cf_idealdepo_list();
+	}
+	
 
 	/**
 	 * HandlingMstの保存メソッド
 	 * @param id
 	 * @param handling_name
+	 * @param zero_hidden
 	 * @param editHandlingMst
 	 * @param sHandlingType
 	 * @return
@@ -619,6 +668,7 @@ public class Config extends Controller {
 	private static Integer cf_handling_mst_save(
 			Long id,
 			String handling_name,
+			Boolean zero_hidden,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType
 			) {
@@ -635,13 +685,15 @@ public class Config extends Controller {
 					null,
 					iCutoffDay,
 					null,
-					iDebitDay
+					iDebitDay,
+					zero_hidden
 			);
 		} else {
 			// 取扱データの読み出し
 			editHandlingMst.handlingMst = HandlingMst.findById(id);
 			// 編集
 			editHandlingMst.handlingMst.handling_name = handling_name;
+			editHandlingMst.handlingMst.zero_hidden = zero_hidden;
 		}
 		// Validate
 		validation.valid(editHandlingMst.handlingMst);
@@ -658,6 +710,7 @@ public class Config extends Controller {
 	 * HandlingMstの保存メソッド（クレジットカード用）
 	 * @param id
 	 * @param handling_name
+	 * @param zero_hidden
 	 * @param editHandlingMst
 	 * @param sHandlingType
 	 * @return
@@ -665,6 +718,7 @@ public class Config extends Controller {
 	private static Integer cf_handling_mst_save(
 			Long id,
 			String handling_name,
+			Boolean zero_hidden,
 			EditHandlingMst editHandlingMst,
 			String sHandlingType,
 			Long debit_bank,
@@ -687,7 +741,8 @@ public class Config extends Controller {
 					debitBank,
 					cutoff_day,
 					debit_month,
-					debit_day
+					debit_day,
+					zero_hidden
 			);
 		} else {
 			// 取扱データの読み出し
@@ -698,6 +753,7 @@ public class Config extends Controller {
 			editHandlingMst.handlingMst.cutoff_day = cutoff_day;
 			editHandlingMst.handlingMst.debit_month = debit_month;
 			editHandlingMst.handlingMst.debit_day = debit_day;
+			editHandlingMst.handlingMst.zero_hidden = zero_hidden;
 		}
 		// Validate
 		validation.valid(editHandlingMst.handlingMst);
@@ -751,6 +807,46 @@ public class Config extends Controller {
 	}
 	
 	/**
+	 * IdealDepositMstの保存メソッド
+	 * @param id
+	 * @param ideal_deposit_name
+	 * @param zero_hidden
+	 * @param editIdealDepositMst
+	 * @return
+	 */
+	private static Integer cf_ideal_deposit_mst_save(
+			Long id,
+			String ideal_deposit_name,
+			Boolean zero_hidden,
+			EditIdealDepositMst editIdealDepositMst
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		if(id == null) {
+			// My貯金データの作成
+			editIdealDepositMst.idealDepositMst = new IdealDepositMst(
+					haUser,
+					ideal_deposit_name,
+					zero_hidden
+			);
+		} else {
+			// My貯金データの読み出し
+			editIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
+			// 編集
+			editIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
+			editIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden;
+		}
+		// Validate
+		validation.valid(editIdealDepositMst.idealDepositMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		editIdealDepositMst.idealDepositMst.save();
+		
+		return 0;
+	}
+	
+	/**
 	 * 取扱種類を元にHandlingMstのリストの取得
 	 * @param sHandlingType
 	 * @return
@@ -776,5 +872,14 @@ public class Config extends Controller {
 	 */
 	static class EditItemMst {
 		ItemMst itemMst;
+	}
+	
+	/**
+	 * IdealDepositMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	static class EditIdealDepositMst {
+		IdealDepositMst idealDepositMst;
 	}
 }

@@ -114,6 +114,16 @@ jQuery(document).ready(function() {
 		    </p>
 			
 		#{/if}
+		#{else}
+		    <p>
+		        #{field 'zero_hidden'}
+		        <label>&{'zero_hidden'}:</label>
+		        <input type="checkbox" name="${field.name}"
+		            ${handlingMst?.zero_hidden ? 'checked' : ''} />
+		        <span class="error">#{error 'handlingMst.zero_hidden' /}</span>
+		        #{/field}
+		    </p>
+		#{/else}
 		
 	    <p>
 	        <input type="submit" value="&{'insupd.save'}" />

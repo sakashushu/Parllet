@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
 							<th style="width:22px;"></th>
 							<th style="width:92px;"></th>
 							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月予算" : ""}</th>
-							<th style="width:92px;">${month}月計</th>
+							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</th>
 						</tr>
 					</table>
 				</td>
@@ -107,23 +107,42 @@ jQuery(document).ready(function() {
 					<table class="dailyAccountTbl">
 						#{list items:lWDA, as:'lwda'}
 							<tr style="height:20px">
-								<!-- 予算あり -->
-								#{if lwda.bBudgetFlg}
-									#{if lwda.sItem != ''}
-										<td style="width:20px;"></td>
-										<td class="allLine" style="width:90px;">${lwda.sItem}</td>
-										<td class="allLineNum" style="width:90px;">
-											<input type="text"  style="width:90px;text-align:right;background-color:#ffffff;margin:0 auto 0 auto;" />
-										</td>
+								<!-- 日計表 -->
+								#{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
+									<!-- 予算あり -->
+									#{if lwda.bBudgetFlg}
+										#{if lwda.sItem != ''}
+											<td style="width:20px;"></td>
+											<td class="allLine" style="width:90px;">${lwda.sItem}</td>
+											<td class="allLineNum" style="width:90px;">
+												<input type="text"  style="width:90px;text-align:right;background-color:#ffffff;margin:0 auto 0 auto;" />
+											</td>
+										#{/if}
+										#{else}
+											<td class="allLine" colspan="2" style="width:110px;">${lwda.sLargeCategory}</td>
+											<td class="allLineNum" style="width:90px;">
+												<input type="text" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+											</td>
+										#{/else}
 									#{/if}
+									<!-- 予算なし -->
 									#{else}
-										<td class="allLine" colspan="2" style="width:110px;">${lwda.sLargeCategory}</td>
-										<td class="allLineNum" style="width:90px;">
-											<input type="text" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-										</td>
+										#{if lwda.sItem != ''}
+											<td style="width:20px;"></td>
+											<td class="allLine" colspan="2" style="width:180px;">${lwda.sItem}</td>
+										#{/if}
+										#{else}
+											<td class="allLine" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
+										#{/else}
 									#{/else}
+									<!-- 
+									<td class="allLineNum">${lwda.sSumMonth}</td>
+									 -->
+									<td class="allLineNum" style="width:97px;text-align:center;">
+										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+									</td>
 								#{/if}
-								<!-- 予算なし -->
+								<!-- 残高表 -->
 								#{else}
 									#{if lwda.sItem != ''}
 										<td style="width:20px;"></td>
@@ -132,13 +151,13 @@ jQuery(document).ready(function() {
 									#{else}
 										<td class="allLine" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
 									#{/else}
+									<!-- 
+									<td class="allLineNum">${lwda.sSumMonth}</td>
+									 -->
+									<td class="allLineNum" style="width:1px;text-align:center;">
+										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+									</td>
 								#{/else}
-								<!-- 
-								<td class="allLineNum">${lwda.sSumMonth}</td>
-								 -->
-								<td class="allLineNum" style="width:97px;text-align:center;">
-									<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-								</td>
 							</tr>
 							
 						#{/list}

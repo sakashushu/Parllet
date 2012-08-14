@@ -1,0 +1,56 @@
+#{extends 'Config/cf_main.html' /}
+
+<script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+
+<div id="crudShow">
+
+	#{ifnot idealDepositMst?.id}
+		<h3><span>&{'insupd.add', messages.get('views.config.cf_idealdepo')}</span></h3>
+	#{/ifnot}
+	#{else}
+		<h3><span>&{'insupd.edit', messages.get('views.config.cf_idealdepo')}</span></h3>
+	#{/else}
+
+    <div class="objectForm">
+	#{form @cf_idealdepo_save(idealDepositMst?.id)}
+	 
+	    #{ifErrors}
+	        <p class="error">
+	            &{'validation.title'}
+	        </p>
+	    #{/ifErrors}
+	    
+	    <p>
+	        #{field 'ideal_deposit_name'}
+	        <label>&{'ideal_deposit_name'}:</label>
+	        <input type="text" name="${field.name}" 
+	            value="${idealDepositMst?.ideal_deposit_name}" />
+	        <span class="error">#{error 'idealDepositMst.ideal_deposit_name' /}</span>
+	        #{/field}
+	    </p>
+		
+	    <p>
+	        #{field 'zero_hidden'}
+	        <label>&{'zero_hidden'}:</label>
+	        <input type="checkbox" name="${field.name}"
+	            ${idealDepositMst?.zero_hidden ? 'checked' : ''} />
+	        <span class="error">#{error 'idealDepositMst.zero_hidden' /}</span>
+	        #{/field}
+	    </p>
+	    
+	    <p>
+	        <input type="submit" value="&{'insupd.save'}" />
+	    </p>
+	    
+	#{/form}
+	</div>
+
+	#{if idealDepositMst?.id}
+		#{form @cf_idealdepo_del(idealDepositMst?.id)}
+		    <p class="crudDelete">
+		        <input type="submit" value="&{'insupd.delete', messages.get('views.config.cf_idealdepo')}" id="cnf_del" />
+		    </p>
+		#{/form}
+	#{/if}
+
+</div>

@@ -17,12 +17,16 @@ public class IdealDepositMst extends Model {
 	
 	public String ideal_deposit_name;
 	
+	public Boolean zero_hidden;					//残高ゼロの時には残高表の対象外とする
+	
 	public IdealDepositMst(
 			HaUser ha_user,
-			String ideal_deposit_name
+			String ideal_deposit_name,
+			Boolean zero_hidden
 			) {
 		this.ha_user = ha_user;
 		this.ideal_deposit_name = ideal_deposit_name;
+		this.zero_hidden = zero_hidden;
 	}
 
 	public String toString() {
