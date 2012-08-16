@@ -14,6 +14,7 @@ import models.HaUser;
 import models.HandlingMst;
 import models.IdealDepositMst;
 import models.ItemMst;
+import models.Record;
 import models.WorkDailyAccount;
 
 import play.db.jpa.JPA;
@@ -25,13 +26,13 @@ import play.mvc.With;
 @With(Secure.class)
 public class DailyAccount extends Controller {
 
-//	@Before
-//	static void setConnectedUser() {
-//		if(Security.isConnected()) {
-//			HaUser hauser  = HaUser.find("byEmail", Security.connected()).first();
-//			renderArgs.put("userId", hauser.id);
-//		}
-//	}
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			renderArgs.put("haUser", haUser);
+		}
+	}
 	
 	static final String BALANCE_TYPE_IN = Messages.get("BalanceType.in");
 	static final String BALANCE_TYPE_OUT = Messages.get("BalanceType.out");
@@ -77,8 +78,6 @@ public class DailyAccount extends Controller {
 	 * @param sBasisDate
 	 */
 	public static void displayTable(
-//			Integer year,
-//			Integer month,
 			String sBasisDate,
 			String sTableType
 			) {
@@ -86,10 +85,7 @@ public class DailyAccount extends Controller {
    		Calendar calendar = Calendar.getInstance();
    		
    		//単純に呼ばれた時（初回等）は、今日を表示
-//		if((year==null)||(month==null)||(basisDate==null)) {
 		if(sBasisDate==null) {
-//			year = calendar.get(Calendar.YEAR);
-//			month = calendar.get(Calendar.MONTH) + 1;
 			sBasisDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 		}
 		
@@ -104,14 +100,6 @@ public class DailyAccount extends Controller {
 		int year = calendar.get(Calendar.YEAR);
 		int month = calendar.get(Calendar.MONTH) + 1;
 
-//		//今月判定フラグ
-//		Integer thisMonthFlg = 0;
-//		if((year==calendar.get(Calendar.YEAR)) &&
-//    	   (month==calendar.get(Calendar.MONTH)+1)) {
-//			thisMonthFlg = 1;
-//		}
-		
-//		calendar.set(year, month - 1, 1);
 		int iDaysCnt = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
 		
@@ -120,24 +108,22 @@ public class DailyAccount extends Controller {
 			calendar.add(Calendar.DATE, -2);
 		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
 			iDaysCnt = 1;
-			//calendar.add(Calendar.DATE, -1);
 		}
 		
    		
 		//日計表のヘッダーの日付の配列
 		String[] sAryDays = new String[iDaysCnt];
-		int iStartDay = calendar.get(Calendar.DATE);
+		Date dStartDay = calendar.getTime();
 		SimpleDateFormat sdf1 = new SimpleDateFormat("M/d");
 		
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-//			sAryDays[iDay] = String.format("%1$tm/%1$td", calendar.getTime());
 			sAryDays[iDay] = sdf1.format(calendar.getTime());
 			calendar.add(Calendar.DATE, 1);
 		}
 		
 
 		//日計表の行に相当するリストの作成
-   		List<WorkDailyAccount> lWDA = makeWorkList(year, month, iStartDay, iDaysCnt, sTableType);
+		List<WorkDailyAccount> lWDA = makeWorkList(year, month, dStartDay, iDaysCnt, sTableType);
    		
    		//日計表の日付ごとの部分のスクロール内の幅の設定
 		int iWidth = iDaysCnt * 100;
@@ -178,7 +164,6 @@ public class DailyAccount extends Controller {
 			}
 			calendar.setTime(dBasis);
     		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-//    			dailyAccount(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, e_basis_date);
     			dailyAccount(e_basis_date);
     		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
     			balanceTable(e_basis_date);
@@ -190,7 +175,7 @@ public class DailyAccount extends Controller {
 	 * 日計表・残高表の行に相当するリストの作成
 	 * @param year
 	 * @param month
-	 * @param iStartDay
+	 * @param dStartDay
 	 * @param iDaysCnt
 	 * @param sTableType
 	 * @return
@@ -198,7 +183,7 @@ public class DailyAccount extends Controller {
 	private static List<WorkDailyAccount> makeWorkList(
 			Integer year,
 			Integer month,
-			int iStartDay,
+			Date dStartDay,
 			int iDaysCnt,
 			String sTableType
 			) {
@@ -212,126 +197,39 @@ public class DailyAccount extends Controller {
    		calendar.add(Calendar.MONTH, 1);
    		String sNextFirst = String.format("%1$tY%1$tm%1$td", calendar.getTime());
    		
-		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
 
 		
 		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
 			//「収入」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("BalanceType.in"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_IN, lWDA);
 			
 			//「支出」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("BalanceType.out"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_OUT, lWDA);
 			
 			//「My貯金預入」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("BalanceType.ideal_deposit_in"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_IDEAL_DEPOSIT_IN, lWDA);
 			
 			
-//			//「差額」　　（　「収入」－「支出」－「My貯金預入」　）
-//          		WorkDailyAccount wDaDiff = new WorkDailyAccount();
-////			BigInteger biSumMonthDiff = new BigInteger("0");
-////			BigInteger[] biAryDaysDiff = new BigInteger[iDaysCnt];
-//			long lSumMonthDiff = 0L;
-//			long[] lAryDaysDiff = new long[iDaysCnt];
-//			
-//			String[] sAryDaysDiff = new String[iDaysCnt];
-//			for (WorkDailyAccount wda : lWDA) {
-//				//「収入」・「支出」・「My貯金預入」の合計行で算出する
-//				if((wda.getsItem().equals("")) &&
-//				   (wda.getsLargeCategory().equals(Messages.get("BalanceType.in")) ||
-//					wda.getsLargeCategory().equals(Messages.get("BalanceType.out")) ||
-//					wda.getsLargeCategory().equals(Messages.get("BalanceType.ideal_deposit_in")))
-//						) {
-//					
-//					//「収入」は「差額」に加算
-//					if(wda.getsLargeCategory().equals(Messages.get("BalanceType.in"))) {
-////						if(wda.getBiSumMonth() != null) {
-////							lSumMonthDiff = lSumMonthDiff.add(wda.getBiSumMonth());
-////						}
-//						lSumMonthDiff += wda.getLSumMonth();
-//					//「支出」・「My貯金預入」は「差額」から減算
-//					} else if(wda.getsLargeCategory().equals(Messages.get("BalanceType.out")) ||
-//							wda.getsLargeCategory().equals(Messages.get("BalanceType.ideal_deposit_in"))) {
-////						if(wda.getBiSumMonth() != null) {
-////							lSumMonthDiff = lSumMonthDiff.subtract(wda.getBiSumMonth());
-////						}
-//						lSumMonthDiff += wda.getLSumMonth();
-//					}
-//  	  	
-//					// 日毎
-////					BigInteger[] biAryDaysTmp = wda.getBiAryDays();
-//					long[] lAryDaysTmp = wda.getLAryDays();
-//					for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-////						if(lAryDaysDiff[iDay] == null) {
-////							lAryDaysDiff[iDay] = new BigInteger("0"); 
-////						}
-//						//「収入」は「差額」に加算
-//						if(wda.getsLargeCategory().equals(Messages.get("BalanceType.in"))) {
-////			   				if(lAryDaysTmp[iDay] != null) {
-////			   					lAryDaysDiff[iDay] = lAryDaysDiff[iDay].add(lAryDaysTmp[iDay]);
-////			   				}
-//	        					lAryDaysDiff[iDay] += lAryDaysTmp[iDay];
-//			   			//「支出」・「My貯金預入」は「差額」から減算
-//						} else if(wda.getsLargeCategory().equals(Messages.get("BalanceType.out")) ||
-//								wda.getsLargeCategory().equals(Messages.get("BalanceType.ideal_deposit_in"))) {
-////			   				if(lAryDaysTmp[iDay] != null) {
-////			   					lAryDaysDiff[iDay] = lAryDaysDiff[iDay].subtract(lAryDaysTmp[iDay]); 
-////			   				}
-//	        					lAryDaysDiff[iDay] += lAryDaysTmp[iDay]; 
-//						}
-//					}
-//					
-//				}
-//			}
-//			wDaDiff.setsLargeCategory(Messages.get("views.detaillist.diff"));
-//			wDaDiff.setsItem("");
-////			wDaDiff.setBiSumMonth(lSumMonthDiff);
-//			wDaDiff.setLSumMonth(lSumMonthDiff);
-////			wDaDiff.setsSumMonth(lSumMonthDiff==null ? "" : String.format("%1$,3d", lSumMonthDiff));
-//			wDaDiff.setsSumMonth(String.format("%1$,3d", lSumMonthDiff));
-////			wDaDiff.setBiAryDays(lAryDaysDiff);
-//			wDaDiff.setLAryDays(lAryDaysDiff);
-//			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-////				sAryDaysDiff[iDay] = lAryDaysDiff[iDay]==null ? "" : String.format("%1$,3d", lAryDaysDiff[iDay]);
-//				sAryDaysDiff[iDay] = String.format("%1$,3d", lAryDaysDiff[iDay]);
-//			}
-//			wDaDiff.setsAryDays(sAryDaysDiff);
-//			
-//			lWDA.add(wDaDiff);
-			
-			
 			//「My貯金から支払」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("BalanceType.out_ideal_deposit"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_OUT_IDEAL_DEPOSIT, lWDA);
 			
 		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
 			//「実残高」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("RemainderType.real"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					REMAINDER_TYPE_REAL, lWDA);
 			
 			//「My貯金残高」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("RemainderType.ideal_deposit"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					REMAINDER_TYPE_IDEAL_DEPOSIT, lWDA);
   	  	
   	  	
 			//「My貯金してないお金」
-//			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					Messages.get("RemainderType.not_ideal_deposit"), lWDA);
-			makeWorkListEach(year, month, iStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					REMAINDER_TYPE_NOT_IDEAL_DEPOSIT, lWDA);
 			
 		}
@@ -344,7 +242,7 @@ public class DailyAccount extends Controller {
 	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金預入」・「差額」・「My貯金から支払」毎に作成する）
 	 * @param year
 	 * @param month
-	 * @param iStartDay
+	 * @param dStartDay
 	 * @param iDaysCnt
 	 * @param sSqlBase
 	 * @param sSqlBaseG
@@ -356,7 +254,7 @@ public class DailyAccount extends Controller {
 	private static void makeWorkListEach(
 			Integer year,
 			Integer month,
-			int iStartDay,
+			Date dStartDay,
 			int iDaysCnt,
 			HaUser haUser,
 			String sFirstDay,
@@ -374,10 +272,6 @@ public class DailyAccount extends Controller {
    		String sSqlBaseG = "";
    		
    		//「収入」・「支出」・「My貯金預入」・「My貯金から支払」
-//   		if(sLargeCategoryName.equals(Messages.get("BalanceType.in")) ||
-//   				sLargeCategoryName.equals(Messages.get("BalanceType.out")) ||
-//   				sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in")) ||
-//   				sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
    		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
    				sLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
    				sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
@@ -391,22 +285,20 @@ public class DailyAccount extends Controller {
 					"   ON r.balance_type_mst_id = b.id " +
 					" LEFT JOIN IdealDepositMst id " +
 					"   ON r.ideal_deposit_mst_id = id.id " +
-					" WHERE r.ha_user_id = " + haUser.id;
+					" WHERE r.ha_user_id = " + haUser.id +
+					"";
 	   		sSqlBaseG = "" +
 					"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 	   		
 	   	//「実残高」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.real"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
 	   		sSqlBase = "" +
 	   				" SELECT COALESCE(SUM(" +
 	   				"   CASE " +
 	   				//「収入」は加算
-//	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.in") + "' THEN r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount" +
 	   				//「支出」は減算
-//	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.out") + "' THEN -r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount" +
 	   				"   END" +
 	   				"   ), 0) " +
@@ -423,21 +315,17 @@ public class DailyAccount extends Controller {
 					"   ON h.debit_bank_id = hb.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
-//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 	   		
 	   	//「My貯金残高」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 	   		sSqlBase = "" +
 	   				" SELECT COALESCE(SUM(" +
 	   				"   CASE " +
-//	   				"     WHEN (b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
 	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
 	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
 	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
-//	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' THEN r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
 	   				"   END" +
@@ -455,25 +343,20 @@ public class DailyAccount extends Controller {
 					"   ON h.handling_type_mst_id = ht.id" +
 					" WHERE r.ha_user_id = " + haUser.id;
 	   		sSqlBaseG = "" +
-//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 	   		
 	   	//「My貯金してないお金」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.not_ideal_deposit"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
 	   		sSqlBase = "" +
 	   				" SELECT COALESCE(SUM(" +
 	   				"   CASE " +
 	   				//「収入」で「取扱(My貯金)」未選択は加算
-//	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.in") + "' THEN r.amount " +
 	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND" +
 	   				"           r.ideal_deposit_mst_id IS NULL) THEN r.amount " +
 	   				//「支出」で「取扱(My貯金)」未選択は減算
-//	   				"     WHEN (b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
 	   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
 	   				//「My貯金預入」は減算
-//	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' THEN -r.amount" +
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
 	   				//「My貯金引出」は加算
 	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
@@ -490,58 +373,46 @@ public class DailyAccount extends Controller {
 					"   ON r.handling_mst_id = h.id " +
 					" LEFT JOIN HandlingTypeMst ht " +
 					"   ON h.handling_type_mst_id = ht.id" +
-					" WHERE r.ha_user_id = " + haUser.id;
+					" WHERE r.ha_user_id = " + haUser.id +
+					""
+					;
 	   		sSqlBaseG = "" +
-//					"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
    		}
    		
 
    		//「収入」・「支出」
-//   		if(sLargeCategoryName.equals(Messages.get("BalanceType.in")) || sLargeCategoryName.equals(Messages.get("BalanceType.out"))) {
    		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
    			sSql = sSqlBase + sSqlBaseG +
 					"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
 					"   AND r.ideal_deposit_mst_id IS NULL ";
    		//「My貯金預入」
-//   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
    		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
    			sSql = sSqlBase + sSqlBaseG +
 //					"   AND b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
 					"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		//「My貯金から支払」
-//   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
    		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
    			sSql = sSqlBase + sSqlBaseG +
-//					"   AND b.balance_type_name = '" + Messages.get("BalanceType.out") + "' " +
 					"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		//「実残高」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.real"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
    			sSql = sSqlBase + sSqlBaseG +
-//					"   AND b.balance_type_name in('" + Messages.get("BalanceType.out") + "','" + Messages.get("BalanceType.in") + "') ";
 					"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') ";
    		//「My貯金残高」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
    			sSql = sSqlBase + sSqlBaseG +
-//					"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//	   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
 	   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 	   				"        )";
    		//「My貯金してないお金」
-//   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.not_ideal_deposit"))) {
    		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
    			sSql = sSqlBase + sSqlBaseG +
-//					"   AND (b.balance_type_name = '" + Messages.get("BalanceType.in") + "' OR " +
-//	   				"        (b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_OUT + "') AND " +
 					"         r.ideal_deposit_mst_id IS NULL) OR " +
-//					"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
    				    "        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 	   				"        )";
    		}
@@ -554,9 +425,7 @@ public class DailyAccount extends Controller {
 			BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
 					sSql).getSingleResult();
 			long lSumMonthG = biSumMonthG == null ? 0L : biSumMonthG.longValue();
-//			wDA.setBiSumMonth(biSumMonthG);
 			wDA.setLSumMonth(lSumMonthG);
-//			wDA.setsSumMonth(lSumMonthG==null ? "" : String.format("%1$,3d", lSumMonthG));
 			wDA.setsSumMonth(String.format("%1$,3d", lSumMonthG));
    		}
 		wDA.setsLargeCategory(sLargeCategoryName);
@@ -564,9 +433,6 @@ public class DailyAccount extends Controller {
 		wDA.setbBudgetFlg(false);
 		
 		//  「収入」・「支出」・「My貯金預入」の場合、予算有無フラグを立てる
-//		if(sLargeCategoryName.equals(Messages.get("BalanceType.in")) ||
-//				sLargeCategoryName.equals(Messages.get("BalanceType.out")) ||
-//				sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 				sLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
 				sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
@@ -575,35 +441,29 @@ public class DailyAccount extends Controller {
 		
 		
 		// 日毎
-//		BigInteger[] biAryDaysG = new BigInteger[iDaysCnt];
 		long[] lAryDaysG = new long[iDaysCnt];
 		String[] sAryDaysG = new String[iDaysCnt];
+		calendar.setTime(dStartDay);
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-			calendar.set(year, month - 1, iStartDay + iDay);
 	   		String sSqlBaseD = "" +
 					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 	   		//「収入」・「支出」
-//	   		if(sLargeCategoryName.equals(Messages.get("BalanceType.in")) || sLargeCategoryName.equals(Messages.get("BalanceType.out"))) {
 	   		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 	   			sSql = sSqlBase + sSqlBaseD +
 						"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL ";
 	   		//「My貯金預入」
-//	   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 	   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 	   			sSql = sSqlBase + sSqlBaseD +
-//						"   AND b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
 						"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
 	   		//「My貯金から支払」
-//	   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
 	   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 	   			sSql = sSqlBase + sSqlBaseD +
 //						"   AND b.balance_type_name = '" + Messages.get("BalanceType.out") + "' " +
 						"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
 	   		//「実残高」
-//	   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.real"))) {
 	   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
 				//初日のみデータ集約。以降は加算
 				if(iDay == 0) {
@@ -612,10 +472,8 @@ public class DailyAccount extends Controller {
 					sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 				}
 	   			sSql = sSqlBase + sSqlBaseD +
-//						"   AND b.balance_type_name in('" + Messages.get("BalanceType.out") + "','" + Messages.get("BalanceType.in") + "') ";
 						"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') ";
 	   		//「My貯金残高」
-//	   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 	   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 				//初日のみデータ集約。以降は加算
 				if(iDay == 0) {
@@ -625,39 +483,28 @@ public class DailyAccount extends Controller {
 		   			sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 				}
 	   			sSql = sSqlBase + sSqlBaseD +
-//						"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 						"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 		   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//		   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
 		   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 		   				"        )";
 	   		//「My貯金してないお金」
-//	   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.not_ideal_deposit"))) {
 	   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
 				//初日のみデータ集約。以降は加算
 				if(iDay == 0) {
-//		   			sSqlBaseD = " AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 		   			sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 				} else {
 		   			sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 				}
 	   			sSql = sSqlBase + sSqlBaseD +
-//						"   AND (b.balance_type_name = '" + Messages.get("BalanceType.in") + "' OR " +
-//		   				"        (b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 						"   AND ((b.balance_type_name in('" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_OUT + "') AND " +
 						"         r.ideal_deposit_mst_id IS NULL) OR " +
-//						"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
    						"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 	   	  				"        )";
 	   		}
-//			biAryDaysG[iDay] = (BigInteger)JPA.em().createNativeQuery(
-//					sSql).getSingleResult();
-//			sAryDaysG[iDay] = lAryDaysG[iDay]==null ? "" : String.format("%1$,3d", lAryDaysG[iDay]);
 	   		BigInteger biAryDaysG = (BigInteger)JPA.em().createNativeQuery(
 					sSql).getSingleResult();
 			lAryDaysG[iDay] = biAryDaysG == null ? 0L : biAryDaysG.longValue();
 			//「実残高」・「My貯金残高」・「My貯金してないお金」は初日のみデータ集約。以降は加算
-//			if(sLargeCategoryName.equals(Messages.get("RemainderType.real")) && iDay != 0) {
 			if((sLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
 					sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT) ||
 					sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) &&
@@ -666,8 +513,8 @@ public class DailyAccount extends Controller {
 			}
 			sAryDaysG[iDay] = String.format("%1$,3d", lAryDaysG[iDay]);
 
+			calendar.add(Calendar.DATE, 1);
 		}
-//		wDA.setBiAryDays(biAryDaysG);
 		wDA.setLAryDays(lAryDaysG);
 		wDA.setsAryDays(sAryDaysG);
 		
@@ -675,7 +522,6 @@ public class DailyAccount extends Controller {
 
 		
 		//「収入」・「支出」
-//		if(sLargeCategoryName.equals(Messages.get("BalanceType.in")) || sLargeCategoryName.equals(Messages.get("BalanceType.out"))) {
 		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 			//項目ごとのループ
 			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + haUser.id + " and balance_type_mst.balance_type_name = '" + sLargeCategoryName + "' order by id").fetch();
@@ -694,8 +540,6 @@ public class DailyAccount extends Controller {
 				wDaItem.setsLargeCategory(sLargeCategoryName);
 				wDaItem.setsItem(itemMst.item_name);
 				wDaItem.setbBudgetFlg(true);
-//				wDaItem.setBiSumMonth(lSumMonth);
-//				wDaItem.setsSumMonth(lSumMonth==null ? "" : String.format("%1$,3d", lSumMonth));
 				wDaItem.setLSumMonth(lSumMonth);
 				wDaItem.setsSumMonth(String.format("%1$,3d", lSumMonth));
 	
@@ -703,16 +547,10 @@ public class DailyAccount extends Controller {
 //				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
 				long[] lAryDays = new long[iDaysCnt];
 				String[] sAryDays = new String[iDaysCnt];
+				calendar.setTime(dStartDay);
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-					calendar.set(year, month - 1, iStartDay + iDay);
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-//					biAryDays[iDay] = (BigInteger)JPA.em().createNativeQuery(
-//							sSqlBase + sSqlBaseD +
-//							"   AND i.item_name = '" + itemMst.item_name + "' " +
-//							"   AND r.ideal_deposit_mst_id IS NULL "
-//							).getSingleResult();
-//					sAryDays[iDay] = lAryDays[iDay]==null ? "" : String.format("%1$,3d", lAryDays[iDay]);
 					BigInteger biAryDays = (BigInteger)JPA.em().createNativeQuery(
 							sSqlBase + sSqlBaseD +
 							"   AND i.item_name = '" + itemMst.item_name + "' " +
@@ -720,8 +558,9 @@ public class DailyAccount extends Controller {
 							).getSingleResult();
 					lAryDays[iDay] = biAryDays == null ? 0L : biAryDays.longValue();
 					sAryDays[iDay] = String.format("%1$,3d", lAryDays[iDay]);
+					
+					calendar.add(Calendar.DATE, 1);
 				}
-//				wDaItem.setBiAryDays(lAryDays);
 				wDaItem.setLAryDays(lAryDays);
 				wDaItem.setsAryDays(sAryDays);
 	
@@ -729,9 +568,6 @@ public class DailyAccount extends Controller {
 				
 			}
 		//「My貯金預入」・「My貯金から支払」・「My貯金残高」
-//		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in")) ||
-//				sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit")) ||
-//				sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
 				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT) ||
 				sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
@@ -746,31 +582,24 @@ public class DailyAccount extends Controller {
 				boolean bRemainderDispFlg = true;
 				
 				//「My貯金預入」
-//				if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 		   			sSql = sSqlBase + sSqlBaseG +
-//							"   AND b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
 							"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   			
 		   		//「My貯金から支払」
-//		   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
 		   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 		   			sSql = sSqlBase + sSqlBaseG +
-//							"   AND b.balance_type_name = '" + Messages.get("BalanceType.out") + "' " +
 							"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 		   			
 		   		//「My貯金残高」
-//		   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 		   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 		   			sSql = sSqlBase + sSqlBaseG +
-//							"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 							"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 			   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//			   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
 			   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 			   				"        )" +
 							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
@@ -786,13 +615,11 @@ public class DailyAccount extends Controller {
 					BigInteger biSumMonthMyDp = (BigInteger)JPA.em().createNativeQuery(
 							sSql).getSingleResult();
 					long lSumMonthMyDp = biSumMonthMyDp == null ? 0L : biSumMonthMyDp.longValue();
-//					wDaIdealDepo.setsSumMonth(lSumMonthMyDp==null ? "" : String.format("%1$,3d", lSumMonthMyDp));
 					wDaIdealDepo.setsSumMonth(String.format("%1$,3d", lSumMonthMyDp));
 		   		}
 				
 				wDaIdealDepo.setsLargeCategory(sLargeCategoryName);
 				wDaIdealDepo.setsItem(idealDepositMst.ideal_deposit_name);
-//				if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 					wDaIdealDepo.setbBudgetFlg(true);
 				} else {
@@ -800,50 +627,38 @@ public class DailyAccount extends Controller {
 				}
 	
 				// 日毎
-//				BigInteger[] biAryDaysMyDp = new BigInteger[iDaysCnt];
 				long[] lAryDaysMyDp = new long[iDaysCnt];
 				String[] sAryDaysMyDp = new String[iDaysCnt];
+				calendar.setTime(dStartDay);
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-					calendar.set(year, month - 1, iStartDay + iDay);
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   		
 			   		//「My貯金預入」
-//					if(sLargeCategoryName.equals(Messages.get("BalanceType.ideal_deposit_in"))) {
 					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 			   			sSql = sSqlBase + sSqlBaseD +
-//								"   AND b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
 								"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   			
 			   		//「My貯金から支払」
-//			   		} else if(sLargeCategoryName.equals(Messages.get("BalanceType.out_ideal_deposit"))) {
 			   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 			   			sSql = sSqlBase + sSqlBaseD +
-//								"   AND b.balance_type_name = '" + Messages.get("BalanceType.out") + "' " +
 								"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 								"   AND r.ideal_deposit_mst_id IS NOT NULL " +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   			
 			   		//「My貯金残高」
-//			   		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.ideal_deposit"))) {
 			   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 			   			sSqlBaseD = "" +
-//			   					"   AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD +
-//								"   AND ((b.balance_type_name = '" + Messages.get("BalanceType.out") + "' AND " +
 								"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
 				   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//				   				"        b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "'" +
 				   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
 				   				"        )" +
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		}
-//					biAryDaysMyDp[iDay] = (BigInteger)JPA.em().createNativeQuery(
-//							sSql).getSingleResult();
-//					sAryDaysMyDp[iDay] = lAryDaysMyDp[iDay]==null ? "" : String.format("%1$,3d", lAryDaysMyDp[iDay]);
 					BigInteger biAryDaysMyDp = (BigInteger)JPA.em().createNativeQuery(
 							sSql).getSingleResult();
 					lAryDaysMyDp[iDay] = biAryDaysMyDp == null ? 0L : biAryDaysMyDp.longValue();
@@ -852,10 +667,11 @@ public class DailyAccount extends Controller {
 						bRemainderDispFlg = true;
 					}
 					sAryDaysMyDp[iDay] = String.format("%1$,3d", lAryDaysMyDp[iDay]);
+					
+					calendar.add(Calendar.DATE, 1);
 				}
 				//残高有りか、0でも表示設定の場合、列を作成する
 				if(bRemainderDispFlg) {
-//					wDaIdealDepo.setBiAryDays(lAryDaysMyDp);
 					wDaIdealDepo.setLAryDays(lAryDaysMyDp);
 					wDaIdealDepo.setsAryDays(sAryDaysMyDp);
 		
@@ -864,12 +680,9 @@ public class DailyAccount extends Controller {
 				
 			}
 		//「実残高」
-//		} else if(sLargeCategoryName.equals(Messages.get("RemainderType.real"))) {
 		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
 			//取扱(実際)ごとのループ（クレジットカードは除いて、引落口座に集約）
-//			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id + " and handling_type_mst.handling_type_name <> '" + Messages.get("HandlingType.creca") + "'").fetch();
 			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id + " and handling_type_mst.handling_type_name <> '" + HANDLING_TYPE_CRECA + "'").fetch();
-			//for (WorkDailyAccount wda : lWDA) {
 			for(HandlingMst handlingMst : handlingMsts) {
 				WorkDailyAccount wDaHandling = new WorkDailyAccount();
 				
@@ -882,32 +695,25 @@ public class DailyAccount extends Controller {
     	   				" SELECT COALESCE(SUM(" +
     	   				"   CASE " +
     	   				//    「収入」は加算
-//    	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.in") + "' THEN r.amount" +
     	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount" +
     	   				//    「支出」は減算
-//    	   				"     WHEN b.balance_type_name = '" + Messages.get("BalanceType.out") + "' THEN -r.amount" +
     	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount" +
     	   				"     ELSE" +
     	   				"       CASE " +
     	   				//        現金の場合
-//    	   				"         WHEN '" + handlingMst.handling_name + "' = '" + Messages.get("HandlingType.cash") + "' THEN " +
     	   				"         WHEN '" + handlingMst.handling_name + "' = '" + HANDLING_TYPE_CASH + "' THEN " +
     	   				"           CASE " +
     	   				//            「口座引出」は加算
-//    	   				"             WHEN b.balance_type_name = '" + Messages.get("BalanceType.bank_out") + "' THEN r.amount" +
     	   				"             WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN r.amount" +
     	   				//            「口座預入」は減算
-//    	   				"             WHEN b.balance_type_name = '" + Messages.get("BalanceType.bank_in") + "' THEN -r.amount" +
     	   				"             WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN -r.amount" +
     	   				"           END" +
     	   				//        現金以外（口座・電子マネー）の場合
     	   				"         ELSE" +
     	   				"           CASE " +
     	   				//            「口座引出」は減算
-//    	   				"             WHEN b.balance_type_name = '" + Messages.get("BalanceType.bank_out") + "' THEN -r.amount" +
     	   				"             WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN -r.amount" +
     	   				//            「口座預入」は加算
-//    	   				"             WHEN b.balance_type_name = '" + Messages.get("BalanceType.bank_in") + "' THEN r.amount" +
     	   				"             WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
     	   				"           END" +
     	   				"       END" +
@@ -925,19 +731,9 @@ public class DailyAccount extends Controller {
     					" LEFT JOIN HandlingMst hb " +
     					"   ON h.debit_bank_id = hb.id" +
     					" WHERE r.ha_user_id = " + haUser.id +
-//						"   AND b.balance_type_name in('" + Messages.get("BalanceType.out") + "','" + Messages.get("BalanceType.in") + "','" + Messages.get("BalanceType.bank_out") + "','" + Messages.get("BalanceType.bank_in") + "') " +
 						"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
 						"   AND (" +
 						//       現金の場合
-//						"        (    '" + handlingMst.handling_name + "' = '" + Messages.get("HandlingType.cash") + "'" +
-//						"         AND (   (    ht.handling_type_name = '" + Messages.get("HandlingType.cash") + "' " +
-//						"                  AND b.balance_type_name in('" + Messages.get("BalanceType.out") + "','" + Messages.get("BalanceType.in") + "')" +
-//						"                  )" +
-//						"              OR (    ht.handling_type_name in('" + Messages.get("HandlingType.bank") + "','" + Messages.get("HandlingType.emoney") + "')" +
-//						"                  AND b.balance_type_name in('" + Messages.get("BalanceType.bank_out") + "','" + Messages.get("BalanceType.bank_in") + "')" +
-//						"                  )" +
-//						"              )" +
-//						"         ) OR " +
 						"        (    '" + handlingMst.handling_name + "' = '" + HANDLING_TYPE_CASH + "'" +
 						"         AND (   (    ht.handling_type_name = '" + HANDLING_TYPE_CASH + "' " +
 						"                  AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "')" +
@@ -948,7 +744,6 @@ public class DailyAccount extends Controller {
 						"              )" +
 						"         ) OR " +
 						//       現金以外（口座・電子マネー）の場合
-//						"        (    '" + handlingMst.handling_name + "' <> '" + Messages.get("HandlingType.cash") + "'" +
 						"        (    '" + handlingMst.handling_name + "' <> '" + HANDLING_TYPE_CASH + "'" +
 						"         AND '" + handlingMst.handling_name + "' in(h.handling_name, hb.handling_name)" +
 						"         )" +
@@ -969,19 +764,15 @@ public class DailyAccount extends Controller {
 //				wDaHandling.setsSumMonth(String.format("%1$,3d", lSumMonthRlBal));
 	
 				// 日毎
-//				BigInteger[] biAryDaysRlBal = new BigInteger[iDaysCnt];
 				long[] lAryDaysRlBal = new long[iDaysCnt];
 				String[] sAryDaysRlBal = new String[iDaysCnt];
+				calendar.setTime(dStartDay);
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-					calendar.set(year, month - 1, iStartDay + iDay);
 			   		String sSqlBaseD = "";
 					//初日のみデータ集約。以降は加算
 					if(iDay == 0) {
 				   		sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD;
-//					    biAryDaysRlBal[iDay] = (BigInteger)JPA.em().createNativeQuery(
-//					    		sSql).getSingleResult();
-//					    sAryDaysRlBal[iDay] = biAryDaysRlBal[iDay]==null ? "" : String.format("%1$,3d", biAryDaysRlBal[iDay]);
 					    BigInteger biAryDaysRlBal = (BigInteger)JPA.em().createNativeQuery(
 					    		sSql).getSingleResult();
 					    lAryDaysRlBal[iDay] = biAryDaysRlBal == null ? 0L : biAryDaysRlBal.longValue();
@@ -996,10 +787,11 @@ public class DailyAccount extends Controller {
 						bRemainderDispFlg = true;
 					}
 					sAryDaysRlBal[iDay] = String.format("%1$,3d", lAryDaysRlBal[iDay]);
+					
+					calendar.add(Calendar.DATE, 1);
 				}
 				//残高有りか、0でも表示設定の場合、列を作成する
 				if(bRemainderDispFlg) {
-//					wDaHandling.setBiAryDays(biAryDaysRlBal);
 					wDaHandling.setLAryDays(lAryDaysRlBal);
 					wDaHandling.setsAryDays(sAryDaysRlBal);
 		

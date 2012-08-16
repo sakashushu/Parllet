@@ -1,7 +1,6 @@
 #{extends 'login.html' /}
 #{set title:'日計表' /}
 
-<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
 <script type="text/javascript">
 <!--
@@ -43,6 +42,7 @@ jQuery(document).ready(function() {
 // -->
 </script>
 
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
 #{form @jump(e_basis_date, sTableType)}
 	<!-- 対象年月日 -->

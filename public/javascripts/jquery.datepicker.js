@@ -8,7 +8,8 @@ jQuery(function() {
 		changeMonth: true,
 		changeYear: true,
 		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd'
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true
 	});
 });
 
