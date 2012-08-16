@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import models.Budget;
 import models.HaUser;
 import models.HandlingMst;
 import models.IdealDepositMst;
@@ -104,8 +105,8 @@ public class DailyAccount extends Controller {
 		
 		
 		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-			iDaysCnt = 5;
-			calendar.add(Calendar.DATE, -2);
+			iDaysCnt = 3;
+			calendar.add(Calendar.DATE, -1);
 		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
 			iDaysCnt = 1;
 		}
@@ -169,6 +170,13 @@ public class DailyAccount extends Controller {
     			balanceTable(e_basis_date);
     		}
     	}
+	}
+	
+	/**
+	 * 予算更新
+	 */
+	public static void updBudget() {
+		
 	}
 
 	/**
@@ -542,7 +550,16 @@ public class DailyAccount extends Controller {
 				wDaItem.setbBudgetFlg(true);
 				wDaItem.setLSumMonth(lSumMonth);
 				wDaItem.setsSumMonth(String.format("%1$,3d", lSumMonth));
-	
+
+
+				
+				Budget budget = Budget.find("year = " + year + " and month = " + month + " and item_mst = " + itemMst.id).first();
+				if(budget==null) {
+					System.out.println("null");
+				}
+
+				
+				
 				// 日毎
 //				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
 				long[] lAryDays = new long[iDaysCnt];

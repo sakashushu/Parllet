@@ -61,8 +61,15 @@ jQuery(document).ready(function() {
 					<table class="dailyAccountTbl">
 						<tr style="height:10px">
 							<th style="width:22px;"></th>
-							<th style="width:92px;"></th>
-							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月予算" : ""}</th>
+							<th style="width:184px;" colspan="2" align="right">
+								#{form @updBudget()}
+								  #{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
+									<!-- 予算 -->
+									${month}月予算
+									<input type="submit" value="更新" name="submitUpdBudget" style="font-size:70%" />
+								  #{/if}
+								#{/form}
+							</th>
 							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</th>
 						</tr>
 					</table>

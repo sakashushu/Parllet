@@ -12,43 +12,6 @@
  -->
 <br>
 
-<script type="text/javascript">
-<!--
-// 「行追加」　をしようとしたコード
-//jQuery(document).ready(function() {
-//    jQuery( '#jquery-ui-dialog-opener' ) . click( function() {
-//		jQuery( '#tblDetailList tbody' ) . append(
-//		    '<tr>' +
-//		    '<script type="text/javascript">' +
-//		    '<!-- ' +
-//		    'jQuery.getScript("/public/javascripts/jquery.datepicker.js");' +
-//		    'WEB_SOCKET_SWF_LOCATION = "/public/swfs/WebSocketMain.swf";' +
-//		    'WEB_SOCKET_DEBUG = false;' +
-//		    'var ws;' +
-//		    'ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");' +
-//		    'jQuery("#ins").click(function() {' +
-//		    '    var $datepicker = jQuery(".datepicker");' +
-//		    '    ws.send($datepicker.val());' +
-//		    '});' +
-//		    '// -->' +
-//		    '</scri' + 'pt>' +
-//		    '<td><a id="ins" href="#">更新</a></td>' +
-//		    '<td><input type="text" class="datepicker" name="n_payment_date "size="13" />' +
-//		    '</td>' +
-//		    '<td><select name="n_item_id">' + 
-//		    '        <option value="1" selected="selected">食費</option>' +
-//		    '        <option value="2">家財住居</option>' +
-//		    '        <option value="3">水道光熱</option>' +
-//		    '        <option value="999">新規作成</option>' + 
-//		    '    </select>' + 
-//			'</td>' +
-//		    '</tr>'
-//		);
-//    } );
-//} );
-// -->
-</script>
-
 #{form @detailList()}
 
 	<table id="tblDetailList" class="ui-widget ui-widget-content" border="1">
@@ -112,7 +75,7 @@
 				</td>
 				<td>
 					<!-- 支払日 -->
-					<input type="text" id="e_payment_date_${record.id}" class="datepicker" name="e_payment_date"
+					<input type="text" id="e_payment_date_${record.id}" name="e_payment_date"
 						value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
 				</td>
 				<td>
@@ -220,81 +183,74 @@
 		
 	</table>
 	
-    <br>
-    <a id="jquery-ui-dialog-opener" class="aBtn" href="#">行追加</a>
-    <br>
-    <br>
-
 	#{if records.size() > 0}
 		<input type="submit" name="save" value="保存" />
 
 		<script type="text/javascript">
 		<!--
+		//何故か、これがあるとIE9で「alert("test0");」が動かない Start
 		WEB_SOCKET_SWF_LOCATION = "@{'/public/swfs/WebSocketMain.swf'}";
 		WEB_SOCKET_DEBUG = false;
-		
 		var ws;
 	    ws = new WebSocket("@@{DetailList.WebSocketApp.listen()}");
-	
 	    ws.onmessage = function(event) {
 	        //$('#messages').append('<div>' + event.data + '</div>');
 	        //alert(event.data);
-	        //jQuery("#e_combo_${record.id}").append('<option>test</option>');
-	        //alert("test");
+	        alert("test");
 	    };
-					
+		//何故か、これがあるとIE9で「alert("test0");」が動かない End
 		#{list items:records, as:'record'}
-			jQuery(document).ready(function() {
-				// 支払日の変更イベント
-				jQuery("#e_payment_date_${record.id}").change(function() {
-					var data = "{"
-						+ "\"act_type\": "
-						+ "\"update\"" + ","
-						+ "\"edited_col\": "
-						+ "\"payment_date\"" + ","
-						+ "\"id\": "
-						+ jQuery("#e_id_${record.id}").val() + ","
-						+ "\"col_val\": \""
-						+ jQuery("#e_payment_date_${record.id}").val()
-						+ "\"" 
-						+"}";
-			        ws.send(data);
-			    });
+			
+			// 支払日の変更イベント
+			jQuery("#e_payment_date_${record.id}").click(function() {
+				var data = "{"
+					+ "\"act_type\": "
+					+ "\"update\"" + ","
+					+ "\"edited_col\": "
+					+ "\"payment_date\"" + ","
+					+ "\"id\": "
+					+ jQuery("#e_id_${record.id}").val() + ","
+					+ "\"col_val\": \""
+					+ jQuery("#e_payment_date_${record.id}").val()
+					+ "\"" 
+					+"}";
+//			    ws.send(data);
+			    alert("test0");
 			});
 				
-			jQuery(document).ready(function() {
-				// 収支種類の変更イベント
-				jQuery("#e_bType_combo_${record.id}").change(function() {
-					var data = "{"
-						+ "\"act_type\": "
-						+ "\"update\"" + ","
-						+ "\"edited_col\": "
-						+ "\"balance_type_id\"" + ","
-						+ "\"id\": "
-						+ jQuery("#e_id_${record.id}").val() + ","
-						+ "\"col_val\": \""
-						+ jQuery("#e_bType_combo_${record.id}").val()
-						+ "\"" 
-						+"}";
-			        ws.send(data);
-			    });
-			});
-				
-			jQuery(document).ready(function() {
-				// コンボボックスのクリックイベント
-				jQuery("#e_combo_${record.id}").click(function() {
-					var data = "{"
-						+ "\"act_type\": "
-						+ "\"dsp_eCmb\""
-						+"}";
-			        ws.send(data);
-				});
-			});
+//			jQuery(document).ready(function() {
+//				// 収支種類の変更イベント
+//				jQuery("#e_bType_combo_${record.id}").change(function() {
+//					var data = "{"
+//						+ "\"act_type\": "
+//						+ "\"update\"" + ","
+//						+ "\"edited_col\": "
+//						+ "\"balance_type_id\"" + ","
+//						+ "\"id\": "
+//						+ jQuery("#e_id_${record.id}").val() + ","
+//						+ "\"col_val\": \""
+//						+ jQuery("#e_bType_combo_${record.id}").val()
+//						+ "\"" 
+//						+"}";
+//			        ws.send(data);
+//			    });
+//			});
+//				
+//			jQuery(document).ready(function() {
+//				// コンボボックスのクリックイベント
+//				jQuery("#e_combo_${record.id}").click(function() {
+//					var data = "{"
+//						+ "\"act_type\": "
+//						+ "\"dsp_eCmb\""
+//						+"}";
+//			        ws.send(data);
+//				});
+//			});
 		    
 		#{/list}
+
 		// -->
 		</script>
 	#{/if}
-
 
 #{/form}

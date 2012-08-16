@@ -6,10 +6,10 @@ public class WorkDailyAccount {
 	private String sLargeCategory;	//大分類
 	private String sItem;			//項目
 	private boolean bBudgetFlg;	//予算有無フラグ
-//	private BigInteger biSumMonth;	//月計(数値)
+	private long lBudgetId;		//予算ID
+	private Integer iBudgetAmount;	//予算金額
 	private long lSumMonth;		//月計(数値)
 	private String sSumMonth;		//月計(表示用)
-//	private BigInteger[] biAryDays;	//日付毎(数値)
 	private long[] lAryDays;		//日付毎(数値)
 	private String[] sAryDays;		//日付毎(表示用)
 	public String getsLargeCategory() {
@@ -30,15 +30,33 @@ public class WorkDailyAccount {
 	public void setbBudgetFlg(boolean bBudgetFlg) {
 		this.bBudgetFlg = bBudgetFlg;
 	}
-//	public BigInteger getBiSumMonth() {
-//		return biSumMonth;
-//	}
+	public long getlBudgetId() {
+		return lBudgetId;
+	}
+	public void setlBudgetId(long lBudgetId) {
+		this.lBudgetId = lBudgetId;
+	}
+	public Integer getiBudgetAmount() {
+		return iBudgetAmount;
+	}
+	public void setiBudgetAmount(Integer iBudgetAmount) {
+		this.iBudgetAmount = iBudgetAmount;
+	}
+	public long getlSumMonth() {
+		return lSumMonth;
+	}
+	public void setlSumMonth(long lSumMonth) {
+		this.lSumMonth = lSumMonth;
+	}
+	public long[] getlAryDays() {
+		return lAryDays;
+	}
+	public void setlAryDays(long[] lAryDays) {
+		this.lAryDays = lAryDays;
+	}
 	public long getLSumMonth() {
 		return lSumMonth;
 	}
-//	public void setBiSumMonth(BigInteger biSumMonth) {
-//		this.biSumMonth = biSumMonth;
-//	}
 	public void setLSumMonth(long lSumMonth) {
 		this.lSumMonth = lSumMonth;
 	}
@@ -48,15 +66,9 @@ public class WorkDailyAccount {
 	public void setsSumMonth(String sSumMonth) {
 		this.sSumMonth = sSumMonth;
 	}
-//	public BigInteger[] getBiAryDays() {
-//		return biAryDays;
-//	}
 	public long[] getLAryDays() {
 		return lAryDays;
 	}
-//	public void setBiAryDays(BigInteger[] biAryDays) {
-//		this.biAryDays = biAryDays;
-//	}
 	public void setLAryDays(long[] lAryDays) {
 		this.lAryDays = lAryDays;
 	}

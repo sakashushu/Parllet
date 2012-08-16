@@ -50,6 +50,8 @@ HandlingMst=取扱
 HandlingMsts=取扱
 IdealDepositMst=My貯金
 IdealDepositMsts=My貯金
+Budget=予算データ
+Budgets=予算データ
 Record=収支データ
 Records=収支データ
 
@@ -85,6 +87,11 @@ item_name=項目名
 
 # IdealDepositMstの項目名
 ideal_deposit_name=My貯金名
+
+# Budgetの項目名
+year=年
+month=月
+
 
 # 収支種類(BalanceType)
 BalanceType.in=収入
