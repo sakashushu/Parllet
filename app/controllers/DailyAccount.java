@@ -2,6 +2,7 @@ package controllers;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -174,9 +175,63 @@ public class DailyAccount extends Controller {
 	
 	/**
 	 * 予算更新
+	 * @param bg_basis_date
+	 * @param e_budget_id
+	 * @param e_budget_amount
 	 */
-	public static void updBudget() {
+	public static void updBudget(
+			String bg_basis_date,
+    		List<Long> e_budget_id,			/* 変更行のID */
+    		List<String> e_budget_amount	/* 変更行の金額 */
+			) {
 		
+   		Iterator<String> sEBudgetAmount = e_budget_amount.iterator();
+		for (Long lId : e_budget_id) {
+			String sEBudgetAmountVal = sEBudgetAmount.next();
+			//既存レコードの更新
+			if(lId!=0L) {
+				Budget budget = Budget.findById(lId);
+				
+				//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+				NumberFormat nf = NumberFormat.getInstance();
+				try {
+					//数値文字列をNumber型のオブジェクトに変換する
+					Number num = nf.parse(sEBudgetAmountVal);
+					//Number型のオブジェクトからInteger値を取得する
+					Integer intValue = num.intValue();
+					// 変更有無チェック用のレコードにセット
+					Budget eBudget = new Budget(
+							budget.ha_user,
+							budget.year,
+							budget.month,
+							intValue,
+							budget.item_mst,
+							budget.ideal_deposit_mst
+							);
+					
+					// Validate
+				    validation.valid(eBudget);
+				    if(validation.hasErrors()) {
+				    	// 以下の描画では駄目かも？
+				    	dailyAccount(bg_basis_date);
+				    }
+					// 項目が変更されていた行だけ更新
+					if (budget.amount != eBudget.amount) {
+						budget.amount = eBudget.amount;
+					    
+					    // 保存
+					    budget.save();
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+    		
+		}
+		
+    	dailyAccount(bg_basis_date);
 	}
 
 	/**
@@ -552,12 +607,12 @@ public class DailyAccount extends Controller {
 				wDaItem.setsSumMonth(String.format("%1$,3d", lSumMonth));
 
 
-				
+				//ある時だけ予算をセット
 				Budget budget = Budget.find("year = " + year + " and month = " + month + " and item_mst = " + itemMst.id).first();
-				if(budget==null) {
-					System.out.println("null");
+				if(budget!=null) {
+					wDaItem.setlBudgetId(budget.id);
+					wDaItem.setsBudgetAmount(String.format("%1$,3d", budget.amount));
 				}
-
 				
 				
 				// 日毎

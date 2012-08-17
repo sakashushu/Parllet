@@ -7,7 +7,7 @@ public class WorkDailyAccount {
 	private String sItem;			//項目
 	private boolean bBudgetFlg;	//予算有無フラグ
 	private long lBudgetId;		//予算ID
-	private Integer iBudgetAmount;	//予算金額
+	private String sBudgetAmount;	//予算金額(表示用)
 	private long lSumMonth;		//月計(数値)
 	private String sSumMonth;		//月計(表示用)
 	private long[] lAryDays;		//日付毎(数値)
@@ -36,11 +36,11 @@ public class WorkDailyAccount {
 	public void setlBudgetId(long lBudgetId) {
 		this.lBudgetId = lBudgetId;
 	}
-	public Integer getiBudgetAmount() {
-		return iBudgetAmount;
+	public String getsBudgetAmount() {
+		return sBudgetAmount;
 	}
-	public void setiBudgetAmount(Integer iBudgetAmount) {
-		this.iBudgetAmount = iBudgetAmount;
+	public void setsBudgetAmount(String sBudgetAmount) {
+		this.sBudgetAmount = sBudgetAmount;
 	}
 	public long getlSumMonth() {
 		return lSumMonth;

@@ -39,10 +39,15 @@ jQuery(document).ready(function() {
 //		jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
 	});
 });
+
+jQuery(function() {
+	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
+});
 // -->
 </script>
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 
 #{form @jump(e_basis_date, sTableType)}
 	<!-- 対象年月日 -->
@@ -52,6 +57,8 @@ jQuery(document).ready(function() {
 #{/form}
 
 <table id="tblDailyAccount">
+	#{form @updBudget()}
+	<input type="hidden" name="bg_basis_date" value="${sBasisDate}"/>
 	<tr>
 		<td valign="top">
 			<div style="width:320px;">
@@ -62,13 +69,11 @@ jQuery(document).ready(function() {
 						<tr style="height:10px">
 							<th style="width:22px;"></th>
 							<th style="width:184px;" colspan="2" align="right">
-								#{form @updBudget()}
 								  #{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
 									<!-- 予算 -->
 									${month}月予算
 									<input type="submit" value="更新" name="submitUpdBudget" style="font-size:70%" />
 								  #{/if}
-								#{/form}
 							</th>
 							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</th>
 						</tr>
@@ -122,7 +127,8 @@ jQuery(document).ready(function() {
 											<td style="width:20px;"></td>
 											<td class="allLine" style="width:90px;">${lwda.sItem}</td>
 											<td class="allLineNum" style="width:90px;">
-												<input type="text"  style="width:90px;text-align:right;background-color:#ffffff;margin:0 auto 0 auto;" />
+												<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}"/>
+												<input type="text" class="numeric" name="e_budget_amount" value="${lwda.sBudgetAmount}" style="width:90px;text-align:right;background-color:#ffffff;margin:0 auto 0 auto;" />
 											</td>
 										#{/if}
 										#{else}
@@ -205,6 +211,7 @@ jQuery(document).ready(function() {
 			</div>
 		</td>
 	</tr>
+	#{/form}
 
 	<tr>
 		<td>
