@@ -182,58 +182,110 @@ public class DailyAccount extends Controller {
 	public static void updBudget(
 			String bg_basis_date,
     		List<Long> e_budget_id,			/* 変更行のID */
+    		List<String> e_large_category,	/* 変更行の大分類行の名称「収入」・「支出」・「My貯金預入」 */
+    		List<String> e_item,			/* 変更行の項目 */
     		List<String> e_budget_amount	/* 変更行の金額 */
 			) {
 		
+		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+		NumberFormat nf = NumberFormat.getInstance();
+
+		Iterator<String> sELargeCategory = e_large_category.iterator();
+		Iterator<String> sEItem = e_item.iterator();
    		Iterator<String> sEBudgetAmount = e_budget_amount.iterator();
 		for (Long lId : e_budget_id) {
+			
+			String sELargeCategoryVal = sELargeCategory.next();
+			String sEItemVal = sEItem.next();
 			String sEBudgetAmountVal = sEBudgetAmount.next();
-			//既存レコードの更新
-			if(lId!=0L) {
-				Budget budget = Budget.findById(lId);
+			
+			Budget budget;
 				
-				//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
-				NumberFormat nf = NumberFormat.getInstance();
+			//予算が空白にされた時
+			if(sEBudgetAmountVal.equals("")) {
+				//既存レコードがある場合レコード削除
+				if(lId!=0L) {
+					budget = Budget.findById(lId);
+					budget.delete();
+				}
+				
+			//予算が入力された時
+			} else {
 				try {
 					//数値文字列をNumber型のオブジェクトに変換する
-					Number num = nf.parse(sEBudgetAmountVal);
+					Number nEBudgetAmount = nf.parse(sEBudgetAmountVal);
 					//Number型のオブジェクトからInteger値を取得する
-					Integer intValue = num.intValue();
-					// 変更有無チェック用のレコードにセット
-					Budget eBudget = new Budget(
-							budget.ha_user,
-							budget.year,
-							budget.month,
-							intValue,
-							budget.item_mst,
-							budget.ideal_deposit_mst
-							);
+					Integer iEBudgetAmount = nEBudgetAmount.intValue();
 					
-					// Validate
-				    validation.valid(eBudget);
-				    if(validation.hasErrors()) {
-				    	// 以下の描画では駄目かも？
-				    	dailyAccount(bg_basis_date);
-				    }
-					// 項目が変更されていた行だけ更新
-					if (budget.amount != eBudget.amount) {
-						budget.amount = eBudget.amount;
-					    
+					//既存レコードがある場合は更新
+					if(lId!=0L) {
+						budget = Budget.findById(lId);
+						// 変更有無チェック用のレコードにセット
+						Budget eBudget = new Budget(
+								budget.ha_user,
+								budget.year,
+								budget.month,
+								iEBudgetAmount,
+								budget.item_mst,
+								budget.ideal_deposit_mst
+								);
+						
+						// Validate
+					    validation.valid(eBudget);
+					    if(validation.hasErrors()) {
+					    	dailyAccount(bg_basis_date);
+					    }
+						// 項目が変更されていた行だけ更新
+						if (budget.amount != eBudget.amount) {
+							budget.amount = eBudget.amount;
+						    
+						    // 保存
+						    budget.save();
+						}
+					
+					//既存レコードが無い場合は新規登録
+					} else {
+						HaUser haUser = (HaUser)renderArgs.get("haUser");
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(DateFormat.getDateInstance().parse(bg_basis_date));
+						ItemMst itemMst = null;
+						IdealDepositMst idealDepositMst = null;
+						//大分類が「My貯金預入」の場合は「取扱(My貯金)」ごとの登録
+						if(sELargeCategoryVal.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+							idealDepositMst = IdealDepositMst.find("ha_user = " + haUser.id + " and ideal_deposit_name = '" + sEItemVal + "'").first();
+						//大分類が「My貯金預入」でない場合は「項目」ごとの登録
+						} else {
+							itemMst = ItemMst.find("ha_user = " + haUser.id + " and item_name = '" + sEItemVal + "'").first();
+						}
+						budget = new Budget(
+								haUser,
+								calendar.get(Calendar.YEAR),
+								calendar.get(Calendar.MONTH) + 1,
+								iEBudgetAmount,
+								itemMst,
+								idealDepositMst
+								);
+						
+						// Validate
+					    validation.valid(budget);
+					    if(validation.hasErrors()) {
+					    	dailyAccount(bg_basis_date);
+					    }
 					    // 保存
 					    budget.save();
 					}
+					
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
-    		
 		}
 		
     	dailyAccount(bg_basis_date);
 	}
-
+	
+	
 	/**
 	 * 日計表・残高表の行に相当するリストの作成
 	 * @param year
@@ -297,9 +349,9 @@ public class DailyAccount extends Controller {
 			
 		}
 
-		
 		return lWDA;
 	}
+	
 	
 	/**
 	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金預入」・「差額」・「My貯金から支払」毎に作成する）
@@ -325,6 +377,9 @@ public class DailyAccount extends Controller {
 			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金預入」・「My貯金から支払」
 			List<WorkDailyAccount> lWDA
 			) {
+		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+		NumberFormat nf = NumberFormat.getInstance();
+		
    		Calendar calendar = Calendar.getInstance();
    		String sSql = "";
 		
@@ -452,7 +507,6 @@ public class DailyAccount extends Controller {
    		//「My貯金預入」
    		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
    			sSql = sSqlBase + sSqlBaseG +
-//					"   AND b.balance_type_name = '" + Messages.get("BalanceType.ideal_deposit_in") + "' " +
 					"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		//「My貯金から支払」
@@ -523,7 +577,6 @@ public class DailyAccount extends Controller {
 	   		//「My貯金から支払」
 	   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 	   			sSql = sSqlBase + sSqlBaseD +
-//						"   AND b.balance_type_name = '" + Messages.get("BalanceType.out") + "' " +
 						"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 						"   AND r.ideal_deposit_mst_id IS NOT NULL ";
 	   		//「実残高」
@@ -540,7 +593,6 @@ public class DailyAccount extends Controller {
 	   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 				//初日のみデータ集約。以降は加算
 				if(iDay == 0) {
-//		   			sSqlBaseD = " AND cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 		   			sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 				} else {
 		   			sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -608,15 +660,33 @@ public class DailyAccount extends Controller {
 
 
 				//ある時だけ予算をセット
-				Budget budget = Budget.find("year = " + year + " and month = " + month + " and item_mst = " + itemMst.id).first();
+				Budget budget = Budget.find("ha_user = " + haUser.id + "" +
+						" and year = " + year + "" +
+						" and month = " + month + "" +
+						" and item_mst = " + itemMst.id
+						).first();
 				if(budget!=null) {
+					String sBudgetAmount = String.format("%1$,3d", budget.amount);
+					
 					wDaItem.setlBudgetId(budget.id);
-					wDaItem.setsBudgetAmount(String.format("%1$,3d", budget.amount));
+					wDaItem.setsBudgetAmount(sBudgetAmount);
+					
+					//大分類行に加算
+					if(!(wDA.getsBudgetAmount()==null || wDA.getsBudgetAmount().equals(""))) {
+						Number nEBudgetAmount;
+						try {
+							nEBudgetAmount = nf.parse(wDA.getsBudgetAmount());
+							sBudgetAmount = String.format("%1$,3d", nEBudgetAmount.intValue() + budget.amount);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					wDA.setsBudgetAmount(sBudgetAmount);
 				}
 				
 				
 				// 日毎
-//				BigInteger[] biAryDays = new BigInteger[iDaysCnt];
 				long[] lAryDays = new long[iDaysCnt];
 				String[] sAryDays = new String[iDaysCnt];
 				calendar.setTime(dStartDay);
@@ -697,7 +767,37 @@ public class DailyAccount extends Controller {
 				} else {
 					wDaIdealDepo.setbBudgetFlg(false);
 				}
-	
+
+				
+				//「My貯金預入」なら予算がある時だけセット
+				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+					Budget budget = Budget.find("ha_user = " + haUser.id + "" +
+							" and year = " + year + "" +
+							" and month = " + month + "" +
+							" and ideal_deposit_mst = " + idealDepositMst.id
+							).first();
+					if(budget!=null) {
+						String sBudgetAmount = String.format("%1$,3d", budget.amount);
+
+						wDaIdealDepo.setlBudgetId(budget.id);
+						wDaIdealDepo.setsBudgetAmount(sBudgetAmount);
+						
+						//大分類行に加算
+						if(!(wDA.getsBudgetAmount()==null || wDA.getsBudgetAmount().equals(""))) {
+							Number nEBudgetAmount;
+							try {
+								nEBudgetAmount = nf.parse(wDA.getsBudgetAmount());
+								sBudgetAmount = String.format("%1$,3d", nEBudgetAmount.intValue() + budget.amount);
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						wDA.setsBudgetAmount(sBudgetAmount);
+					}
+				}
+				
+				
 				// 日毎
 				long[] lAryDaysMyDp = new long[iDaysCnt];
 				String[] sAryDaysMyDp = new String[iDaysCnt];
@@ -869,10 +969,7 @@ public class DailyAccount extends Controller {
 		
 					lWDA.add(wDaHandling);
 				}
-				
 			}
 		}
-
 	}
-	
 }
