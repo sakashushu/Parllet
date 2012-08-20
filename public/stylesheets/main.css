@@ -23,6 +23,23 @@ font-size: 10pt;
 padding: 2px;
 }
 
+input[type="text"] {
+   height: 15px;
+}
+
+.tdNum {
+	text-align: right;
+}
+
+.daTdHt {
+	height:24.6px;
+}
+
+.daTd {
+	width:97px;
+	background-color:#e8e8e8;
+}
+
 .aBtn {
     background-color: #dbb96b;
     width: auto;
@@ -178,11 +195,6 @@ padding: 2px;
  */
 .allLine {
 	border: 1px solid black;
-}
-
-.allLineNum {
-	border: 1px solid black;
-	text-align: right;
 }
 
 /*

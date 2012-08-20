@@ -21,11 +21,13 @@
 				<th>
 					<input type="submit" name="srch" value="絞込" />
 				</th>
+				<!-- 支払日 -->
 				<th>&{'payment_date'}<br>
 					<input type="text" id="from" name="h_payment_date_fr" size="13" value="${h_payment_date_fr}" />
 					<label for="to">～</label><br>
 					<input type="text" id="to" name="h_payment_date_to" size="13" value="${h_payment_date_to}" />
 				</th>
+				<!-- 収支種類 -->
 				<th>&{'balance_type_mst'}<br>
 					<select name="h_balance_type_id">
 						<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
@@ -34,6 +36,24 @@
 						#{/list}
 					</select>
 				</th>
+				<!-- 取扱(実際) -->
+				<th>&{'handling_mst'}<br>
+					<select style="width:100px;">
+						<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+					</select>
+				</th>
+				<!-- 取扱(My貯金) -->
+				<th>&{'ideal_deposit_mst'}<br>
+					<select name="h_ideal_deposit_id">
+						<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+						#{list items:iDepos, as:'iDepo'}
+						<option value="${iDepo.id}"${h_ideal_deposit_id==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
+						#{/list}
+						<option value="-1"${h_ideal_deposit_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
+						<option value="-2"${h_ideal_deposit_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
+					</select>
+				</th>
+				<!-- 項目 -->
 				<th>&{'item_mst'}<br>
 					<select id="h_combo" name="h_item_id" style="width:100px;">
 						<option value="0"${h_item_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
@@ -45,22 +65,16 @@
 						#{/list}
 					</select>
 				</th>
-				<!-- 20120702 Saka Del Start -->
-				<!-- 
-				<th>項目詳細<br></th>
-				 -->
-				<!-- 20120702 Saka Del End   -->
+				<!-- 金額 -->
 				<th>&{'amount'}<br></th>
-				<th>&{'handling_mst'}<br>
-					<select style="width:100px;">
-						<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					</select>
-				</th>
+				<!-- 引落日 -->
 				<th>&{'debit_date'}<br></th>
+				<!-- 内容 -->
 				<th>&{'content'}<br></th>
+				<!-- お店 -->
 				<th>&{'store'}<br></th>
+				<!-- 備考 -->
 				<th>&{'remarks'}<br></th>
-				<th>&{'ideal_deposit_mst'}<br></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -73,13 +87,13 @@
 				<td>
 					<input type="button" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
 				</td>
+				<!-- 支払日 -->
 				<td>
-					<!-- 支払日 -->
 					<input type="text" id="e_payment_date_${record.id}" name="e_payment_date"
 						value="${record.payment_date.format('yyyy/MM/dd')}" size="13" />
 				</td>
+				<!-- 収支種類 -->
 				<td>
-					<!-- 収支種類 -->
 					<!-- 
 					編集不可項目にしたため、下記はコメントアウト
 					<select id="e_bType_combo_${record.id}">
@@ -88,10 +102,22 @@
 						#{/list}
 					</select>
 					 -->
-					#{list items:bTypes, as:'bType'}
-					${record.balance_type_mst==bType ? bType.balance_type_name : ""}
-					#{/list}
+					${record.balance_type_mst.balance_type_name}
 				</td>
+				<!-- 取扱(実際) -->
+				<td>
+					<!-- 
+					<input type="text" id="e_handling_mst_${record.id}" name="e_handling_mst"
+						value="" size="13" />
+					 -->
+					${record?.handling_mst?.handling_name}
+				</td>
+				<!-- 取扱(My貯金) -->
+				<td>
+					<input type="text" name="e_ideal_deposit_mst"
+						value="${record.ideal_deposit_mst}" size="13" />
+				</td>
+				<!-- 項目 -->
 				<td>
 					<script type="text/javascript">
 					<!--
@@ -108,7 +134,6 @@
 					// -->
 					</script>
 
-					<!-- 項目 -->
 					#{if record?.item_mst?.balance_type_mst}
 						<select id="e_combo_${record.id}" name="e_item_id" style="width:100px;">
 						#{if record?.item_mst?.balance_type_mst?.balance_type_name == messages.get('BalanceType.in')}
@@ -124,56 +149,30 @@
 						</select>
 					#{/if}
 				</td>
-				<!-- 20120702 Saka Del Start -->
-				<!-- 
+				<!-- 金額 -->
 				<td>
-				 -->
-				<!-- 20120702 Saka Del End   -->
-					<!-- 項目詳細 -->
-				<!-- 20120702 Saka Del Start -->
-				<!-- 
-					<input type="text" id="e_detail_mst_${record.id}" name="e_detail_mst"
-						value="${record.detail_mst}" size="13" />
-				</td>
-				 -->
-				<!-- 20120702 Saka Del End   -->
-				<td>
-					<!-- 金額 -->
 					<input type="text" id="e_amount_${record.id}" name="e_amount"
 						value="${record.amount}" size="13" />
 				</td>
+				<!-- 引落日 -->
 				<td>
-					<!-- 取扱(実際) -->
-					<!-- 
-					<input type="text" id="e_handling_mst_${record.id}" name="e_handling_mst"
-						value="" size="13" />
-					 -->
-					${record?.handling_mst?.handling_name}
-				</td>
-				<td>
-					<!-- 引落日 -->
 					<input type="text" id="e_debit_date_${record.id}" name="e_debit_date"
 						value="" size="13" />
 				</td>
+				<!-- 内容 -->
 				<td>
-					<!-- 内容 -->
 					<input type="text" id="e_content_${record.id}" name="e_content"
 						value="${record.content}" size="13" />
 				</td>
+				<!-- お店 -->
 				<td>
-					<!-- お店 -->
 					<input type="text" id="e_store_${record.id}" name="e_store"
 						value="${record.store}" size="13" />
 				</td>
+				<!-- 備考 -->
 				<td>
-					<!-- 備考 -->
 					<input type="text" id="e_remarks_${record.id}" name="e_remarks"
 						value="${record.remarks}" size="13" />
-				</td>
-				<td>
-					<!-- 取扱(My貯金) -->
-					<input type="text" id="e_ideal_deposit_mst_${record.id}" name="e_ideal_deposit_mst"
-						value="${record.ideal_deposit_mst}" size="13" />
 				</td>
 			
 			</tr>

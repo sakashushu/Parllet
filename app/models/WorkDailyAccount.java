@@ -1,17 +1,19 @@
 package models;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public class WorkDailyAccount {
-	private String sLargeCategory;	//大分類
-	private String sItem;			//項目
-	private boolean bBudgetFlg;	//予算有無フラグ
-	private long lBudgetId;		//予算ID
-	private String sBudgetAmount;	//予算金額(表示用)
-	private long lSumMonth;		//月計(数値)
-	private String sSumMonth;		//月計(表示用)
-	private long[] lAryDays;		//日付毎(数値)
-	private String[] sAryDays;		//日付毎(表示用)
+	private String sLargeCategory;		/* 大分類 */
+	private String sItem;				/* 項目 */
+	private boolean bBudgetFlg;		/* 予算有無フラグ */
+	private long lBudgetId;			/* 予算ID */
+	private String sBudgetAmount;		/* 予算金額(表示用) */
+	private long lSumMonth;			/* 月計(数値) */
+	private String sSumMonth;			/* 月計(表示用) */
+	private long[] lAryDays;			/* 日付毎(数値) */
+	private String[] sAryDays;			/* 日付毎(表示用) */
+	private List<WorkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
 	public String getsLargeCategory() {
 		return sLargeCategory;
 	}
@@ -77,5 +79,11 @@ public class WorkDailyAccount {
 	}
 	public void setsAryDays(String[] sAryDays) {
 		this.sAryDays = sAryDays;
+	}
+	public List<WorkDaToDl> getLstWdtd() {
+		return lstWdtd;
+	}
+	public void setLstWdtd(List<WorkDaToDl> lstWdtd) {
+		this.lstWdtd = lstWdtd;
 	}
 }

@@ -2,6 +2,7 @@ package controllers;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,12 +12,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import models.BalanceTypeMst;
 import models.Budget;
 import models.HaUser;
 import models.HandlingMst;
 import models.IdealDepositMst;
 import models.ItemMst;
 import models.Record;
+import models.WorkDaToDl;
 import models.WorkDailyAccount;
 
 import play.db.jpa.JPA;
@@ -379,6 +382,9 @@ public class DailyAccount extends Controller {
 			) {
 		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
 		NumberFormat nf = NumberFormat.getInstance();
+
+		//数値をカンマ区切りの数値文字列に変換するフォーマットを定義する
+		DecimalFormat df = new DecimalFormat("###,###");
 		
    		Calendar calendar = Calendar.getInstance();
    		String sSql = "";
@@ -561,6 +567,7 @@ public class DailyAccount extends Controller {
 		long[] lAryDaysG = new long[iDaysCnt];
 		String[] sAryDaysG = new String[iDaysCnt];
 		calendar.setTime(dStartDay);
+		List<WorkDaToDl> lstWdtdG = new ArrayList<WorkDaToDl>();
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 	   		String sSqlBaseD = "" +
 					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -626,12 +633,34 @@ public class DailyAccount extends Controller {
 					iDay != 0) {
 				lAryDaysG[iDay] = lAryDaysG[iDay-1] + (biAryDaysG == null ? 0L : biAryDaysG.longValue());
 			}
-			sAryDaysG[iDay] = String.format("%1$,3d", lAryDaysG[iDay]);
+			sAryDaysG[iDay] = df.format(lAryDaysG[iDay]);
+			
+			WorkDaToDl workDaToDl = new WorkDaToDl();
+			long lAmount = biAryDaysG == null ? 0L : biAryDaysG.longValue();
+			workDaToDl.setlAmount(lAmount);
+			workDaToDl.setsAmount(df.format(lAmount));
+			String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			workDaToDl.setsPaymentDateFr(sDate);
+			workDaToDl.setsPaymentDateTo(sDate);
+			// 「収入」・「支出」・「My貯金預入」
+			if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+					sLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
+					sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+				workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+				
+			// 「My貯金から支払」
+			} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+				workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+				workDaToDl.setlIdealDepositId((long) -2);
+			}
+			lstWdtdG.add(workDaToDl);
 
 			calendar.add(Calendar.DATE, 1);
 		}
 		wDA.setLAryDays(lAryDaysG);
 		wDA.setsAryDays(sAryDaysG);
+		
+		wDA.setLstWdtd(lstWdtdG);
 		
 		lWDA.add(wDA);
 
@@ -690,6 +719,7 @@ public class DailyAccount extends Controller {
 				long[] lAryDays = new long[iDaysCnt];
 				String[] sAryDays = new String[iDaysCnt];
 				calendar.setTime(dStartDay);
+				List<WorkDaToDl> lstWdtd = new ArrayList<WorkDaToDl>();
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -699,13 +729,26 @@ public class DailyAccount extends Controller {
 							"   AND r.ideal_deposit_mst_id IS NULL "
 							).getSingleResult();
 					lAryDays[iDay] = biAryDays == null ? 0L : biAryDays.longValue();
-					sAryDays[iDay] = String.format("%1$,3d", lAryDays[iDay]);
+					sAryDays[iDay] = df.format(lAryDays[iDay]);
+
+					WorkDaToDl workDaToDl = new WorkDaToDl();
+					long lAmount = biAryDays == null ? 0L : biAryDays.longValue();
+					workDaToDl.setlAmount(lAmount);
+					workDaToDl.setsAmount(df.format(lAmount));
+					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+					workDaToDl.setsPaymentDateFr(sDate);
+					workDaToDl.setsPaymentDateTo(sDate);
+					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+					workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
+					lstWdtd.add(workDaToDl);
 					
 					calendar.add(Calendar.DATE, 1);
 				}
 				wDaItem.setLAryDays(lAryDays);
 				wDaItem.setsAryDays(sAryDays);
 	
+				wDaItem.setLstWdtd(lstWdtd);
+		
 				lWDA.add(wDaItem);
 				
 			}
@@ -802,6 +845,7 @@ public class DailyAccount extends Controller {
 				long[] lAryDaysMyDp = new long[iDaysCnt];
 				String[] sAryDaysMyDp = new String[iDaysCnt];
 				calendar.setTime(dStartDay);
+				List<WorkDaToDl> lstWdtd = new ArrayList<WorkDaToDl>();
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -838,8 +882,26 @@ public class DailyAccount extends Controller {
 							lAryDaysMyDp[iDay]!=0L) {
 						bRemainderDispFlg = true;
 					}
-					sAryDaysMyDp[iDay] = String.format("%1$,3d", lAryDaysMyDp[iDay]);
+					sAryDaysMyDp[iDay] = df.format(lAryDaysMyDp[iDay]);
 					
+					WorkDaToDl workDaToDl = new WorkDaToDl();
+					long lAmount = biAryDaysMyDp == null ? 0L : biAryDaysMyDp.longValue();
+					workDaToDl.setlAmount(lAmount);
+					workDaToDl.setsAmount(df.format(lAmount));
+					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+					workDaToDl.setsPaymentDateFr(sDate);
+					workDaToDl.setsPaymentDateTo(sDate);
+					// 「My貯金預入」
+					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+						
+					// 「My貯金から支払」
+					} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+						workDaToDl.setlIdealDepositId(((IdealDepositMst)(IdealDepositMst.find("byIdeal_deposit_name", idealDepositMst.ideal_deposit_name)).first()).id);
+					}
+					lstWdtd.add(workDaToDl);
+
 					calendar.add(Calendar.DATE, 1);
 				}
 				//残高有りか、0でも表示設定の場合、列を作成する
@@ -847,6 +909,8 @@ public class DailyAccount extends Controller {
 					wDaIdealDepo.setLAryDays(lAryDaysMyDp);
 					wDaIdealDepo.setsAryDays(sAryDaysMyDp);
 		
+					wDaIdealDepo.setLstWdtd(lstWdtd);
+					
 					lWDA.add(wDaIdealDepo);
 				}
 				
@@ -958,7 +1022,7 @@ public class DailyAccount extends Controller {
 					if(lAryDaysRlBal[iDay]!=0L) {
 						bRemainderDispFlg = true;
 					}
-					sAryDaysRlBal[iDay] = String.format("%1$,3d", lAryDaysRlBal[iDay]);
+					sAryDaysRlBal[iDay] = df.format(lAryDaysRlBal[iDay]);
 					
 					calendar.add(Calendar.DATE, 1);
 				}

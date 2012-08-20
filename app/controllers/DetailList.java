@@ -30,12 +30,13 @@ public class DetailList extends Controller {
     		String h_payment_date_fr,		/* 絞込日時範囲（開始） */
     		String h_payment_date_to,		/* 絞込日時範囲（終了） */
     		Long h_balance_type_id,  		/* 絞込収支種類ID */
-    		Integer h_item_id,				/* 絞込項目ＩＤ */
+    		Long h_ideal_deposit_id,		/* 絞込取扱(My貯金)ID */
+    		Long h_item_id,					/* 絞込項目ID */
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
-    		List<Long> e_item_id,			/* 変更行の項目ＩＤ */
+    		List<Long> e_item_id,			/* 変更行の項目ID */
     		List<String> n_payment_date,	/* 変更行の支払日 */
-    		List<Long> n_item_id,			/* 変更行の項目ＩＤ */
+    		List<Long> n_item_id,			/* 変更行の項目ID */
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
     		) {
@@ -50,6 +51,7 @@ public class DetailList extends Controller {
 
     	List<Record> records = null;
     	List<BalanceTypeMst> bTypes = null;
+    	List<IdealDepositMst> iDepos = null;
     	BalanceTypeMst bTypeIn = null;
     	BalanceTypeMst bTypeOut = null;
     	List<ItemMst> itemsIn = null;
@@ -89,7 +91,7 @@ public class DetailList extends Controller {
 					    validation.valid(eRec);
 					    if(validation.hasErrors()) {
 					    	// 以下の描画では駄目かも？
-					    	render(bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
+					    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
@@ -170,13 +172,26 @@ public class DetailList extends Controller {
     		bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
     		itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
 
+    		// 検索処理(IdealDepositMst)
+    		iDepos = IdealDepositMst.find("order by id").fetch();
+    		
     		// 検索処理(Record)
 	    	//  日付範囲
-	   		strSrchRecSql += "payment_date between '" + h_payment_date_fr + "' and '" + h_payment_date_to + "'";
+	   		strSrchRecSql += "payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
 	   		//  収支種類
 	   		if(h_balance_type_id != null) {
-	   			if(h_balance_type_id != 0) {
+	   			if(h_balance_type_id != 0L) {
 	   				strSrchRecSql += " and balance_type_mst.id = " + h_balance_type_id;
+	   			}
+	   		}
+	    	//  取扱(My貯金)
+	   		if(h_ideal_deposit_id != null) {
+	   			if(h_ideal_deposit_id == -1) {
+	   				strSrchRecSql += " and ideal_deposit_mst.id is null ";
+	   			} else if(h_ideal_deposit_id == -2) {
+	   				strSrchRecSql += " and ideal_deposit_mst.id is not null ";
+	   			} else if(h_ideal_deposit_id != 0) {
+	   				strSrchRecSql += " and ideal_deposit_mst.id = " + h_ideal_deposit_id;
 	   			}
 	   		}
 	    	//  項目
@@ -190,7 +205,7 @@ public class DetailList extends Controller {
 	    			strSrchRecSql).from(0).fetch(50);
     	}
 
-    	render(bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_item_id);
+    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
     }
 	
 	public static class WebSocketApp extends WebSocketController {

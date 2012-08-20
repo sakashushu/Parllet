@@ -50,31 +50,27 @@ jQuery(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
 });
 
-jQuery(function(){
-    jQuery.contextMenu({
-        selector: '.context-menu-one',
-//        trigger: 'hover',
-//        autoHide: true,
-        callback: function(key, options) {
-            var m = "clicked: " + options[0];
-//            window.console && console.log(m) || alert(m);
-            window.console && console.log(m) || alert(this);
-//            location.href='@{DetailList.DetailList(null, null, null, null, null, null, null, null, null, null, null)}'
-        },
-        items: {
-            "quit": {name: "明細へ", arg1: "2012/08/01"}
-        }
-    });
-});
+//jQuery(function(){
+//    jQuery.contextMenu({
+//        selector: '.context-menu-one',
+////        trigger: 'hover',
+////        autoHide: true,
+//        callback: function(key, options) {
+//            var m = "clicked: " + options[0];
+////            window.console && console.log(m) || alert(m);
+//            window.console && console.log(m) || alert(this);
+////            location.href='@{DetailList.DetailList(null, null, null, null, null, null, null, null, null, null, null)}'
+//        },
+//        items: {
+//            "quit": {name: "明細へ", icon: "quit"}
+//        }
+//    });
+//});
 // -->
 </script>
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/jquery.ui.position.js'}"></script>
-<script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
-
-<link type="text/css" rel="stylesheet" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
 
 #{form @jump(e_basis_date, sTableType)}
@@ -152,15 +148,15 @@ jQuery(function(){
 					<!-- 枠固定の左下 -->
 					<table class="dailyAccountTbl">
 						#{list items:lWDA, as:'lwda'}
-							<tr style="height:20px">
+							<tr>
 								<!-- 日計表 -->
 								#{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
 									<!-- 予算あり -->
 									#{if lwda.bBudgetFlg}
 										#{if lwda.sItem != ''}
 											<td style="width:20px;"></td>
-											<td class="allLine" style="width:90px;">${lwda.sItem}</td>
-											<td class="allLineNum" style="width:90px;">
+											<td class="allLine daTdHt" style="width:90px;">${lwda.sItem}</td>
+											<td class="allLine tdNum" style="width:90px;">
 												<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}"/>
 												<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}"/>
 												<input type="hidden" name="e_item" value="${lwda.sItem}"/>
@@ -168,8 +164,8 @@ jQuery(function(){
 											</td>
 										#{/if}
 										#{else}
-											<td class="allLine" colspan="2" style="width:110px;">${lwda.sLargeCategory}</td>
-											<td class="allLineNum" style="width:90px;">
+											<td class="allLine daTdHt" colspan="2" style="width:110px;">${lwda.sLargeCategory}</td>
+											<td class="allLine tdNum" style="width:90px;">
 												<input type="text" readonly="readonly" value="${lwda.sBudgetAmount}" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
 											</td>
 										#{/else}
@@ -178,16 +174,16 @@ jQuery(function(){
 									#{else}
 										#{if lwda.sItem != ''}
 											<td style="width:20px;"></td>
-											<td class="allLine" colspan="2" style="width:180px;">${lwda.sItem}</td>
+											<td class="allLine daTdHt" colspan="2" style="width:180px;">${lwda.sItem}</td>
 										#{/if}
 										#{else}
-											<td class="allLine" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
+											<td class="allLine daTdHt" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
 										#{/else}
 									#{/else}
 									<!-- 
-									<td class="allLineNum">${lwda.sSumMonth}</td>
+									<td class="allLine tdNum">${lwda.sSumMonth}</td>
 									 -->
-									<td class="allLineNum" style="width:97px;text-align:center;">
+									<td class="allLine tdNum" style="width:97px;text-align:center;">
 										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
 									</td>
 								#{/if}
@@ -195,15 +191,15 @@ jQuery(function(){
 								#{else}
 									#{if lwda.sItem != ''}
 										<td style="width:20px;"></td>
-										<td class="allLine" colspan="2" style="width:180px;">${lwda.sItem}</td>
+										<td class="allLine daTdHt" colspan="2" style="width:180px;">${lwda.sItem}</td>
 									#{/if}
 									#{else}
-										<td class="allLine" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
+										<td class="allLine daTdHt" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
 									#{/else}
 									<!-- 
-									<td class="allLineNum">${lwda.sSumMonth}</td>
+									<td class="allLine tdNum">${lwda.sSumMonth}</td>
 									 -->
-									<td class="allLineNum" style="width:1px;text-align:center;">
+									<td class="allLine tdNum" style="width:1px;text-align:center;">
 										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
 									</td>
 								#{/else}
@@ -228,16 +224,39 @@ jQuery(function(){
 					<!-- 枠固定の右下 -->
 					<table class="dailyAccountTbl">
 						#{list items:lWDA, as:'lwda'}
-							<tr style="height:10px">
+							<tr>
+							  <!-- 日計表 -->
+							  #{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
+								#{list items:lwda.lstWdtd, as:'sAryDay'}
+									<!-- 下のtdのstyleをmain.css内に書くと何故かレイアウトが崩れまくる -->
+									<!-- 
+									<td style="border: 1px solid black;text-align: right;">${sAryDay}</td>
+
+									<td style="border: 1px solid black;width:97px;text-align:center;">
+										<input type="text" id="sAryDay_${sAryDay}" class="context-menu-one box menu-1" value="${sAryDay}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+									 -->
+									<td class="daTdHt daTd allLine tdNum">
+										<div style="margin-right : 3px">
+										<a href="@{DetailList.detailList(sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lIdealDepositId,sAryDay.lItemId)}">${sAryDay.sAmount}</a>
+										</div>
+									</td>
+								#{/list}
+							  #{/if}
+							  <!-- 残高表 -->
+							  #{else}
 								#{list items:lwda.sAryDays, as:'sAryDay'}
 									<!-- 下のtdのstyleをmain.css内に書くと何故かレイアウトが崩れまくる -->
 									<!-- 
 									<td style="border: 1px solid black;text-align: right;">${sAryDay}</td>
-									 -->
+
 									<td style="border: 1px solid black;width:97px;text-align:center;">
-										<input type="text" class="context-menu-one box menu-1" value="${sAryDay}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+										<input type="text" id="sAryDay_${sAryDay}" class="context-menu-one box menu-1" value="${sAryDay}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
+									 -->
+									<td class="daTdHt daTd allLine tdNum">
+										<a href="@{DetailList.detailList()}">${sAryDay}</a>
 									</td>
 								#{/list}
+							  #{/else}
 							</tr>
 							
 						#{/list}
