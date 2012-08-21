@@ -39,22 +39,21 @@ public class RecordEdit extends Controller {
 			Long id,
 			String payment_date,
 			Long balance_type_mst,
-			Long item_mst,
-//			String detail_mst,
-			Integer amount,
 			Long handling_mst,
+			Long ideal_deposit_mst,
+			Long item_mst,
+			Integer amount,
 			String debit_date,
 			String content,
 			String store,
 			String remarks,
 			String secret_remarks,
-			Long ideal_deposit_mst
+			Boolean secret_rec_flg
 			) {
 		Record record = null;
 		try {
 			Date paymentDate = null;
 			if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-//				paymentDate = DateFormat.getDateInstance().parse(payment_date);
 				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 			}
 			//HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
@@ -82,36 +81,36 @@ public class RecordEdit extends Controller {
 						haUser,
 						paymentDate,
 						balanceTypeMst,
+						handlingMst,
+						idealDepositMst,
 						itemMst,
 						null,
 						amount,
 						0,
 						0,
-						handlingMst,
 						debitDate,
 						content,
 						store,
 						remarks,
 						secret_remarks,
-						idealDepositMst
+						secret_rec_flg
 				);
 			} else {
 				// 収支データの読み出し
 				record = Record.findById(id);
 				// 編集
-//				record.payment_date = DateFormat.getDateInstance().parse(payment_date);
 				record.payment_date = DateFormat.getDateTimeInstance().parse(payment_date+":00");
 				record.balance_type_mst = balanceTypeMst;
-				record.item_mst = itemMst;
-//				record.detail_mst = detail_mst;
-				record.amount = amount;
 				record.handling_mst = handlingMst;
+				record.ideal_deposit_mst = idealDepositMst;
+				record.item_mst = itemMst;
+				record.amount = amount;
 				record.debit_date = debitDate;
 				record.content = content;
 				record.store = store;
 				record.remarks = remarks;
 				record.secret_remarks = secret_remarks;
-				record.ideal_deposit_mst = idealDepositMst;
+				record.secret_rec_flg = secret_rec_flg;
 			}
 			
 		} catch (ParseException e) {
@@ -138,6 +137,9 @@ public class RecordEdit extends Controller {
 		Record record = Record.findById(id);
 		// 保存
 		record.delete();
+		
+//		session.put(key, value);
+//		session.get(key);
 
 		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null,null);
 	}

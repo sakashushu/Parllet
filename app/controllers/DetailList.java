@@ -4,6 +4,7 @@ import java.util.*;
 
 import models.*;
 
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.WebSocketController;
@@ -25,6 +26,14 @@ import static play.mvc.Http.WebSocketEvent.TextFrame;
 
 @With(Secure.class)
 public class DetailList extends Controller {
+	
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			renderArgs.put("haUser", haUser);
+		}
+	}
 	
 	public static void detailList(
     		String h_payment_date_fr,		/* 絞込日時範囲（開始） */
@@ -74,12 +83,13 @@ public class DetailList extends Controller {
 	    						rec.ha_user,
 	    						DateFormat.getDateInstance().parse(strEPayDt.next()),
 	    						rec.balance_type_mst,  //変更しない
+	    						rec.handling_mst,
+	    						null,
 	    						item,
 	    						"",
 	    						0,
 	    						0,
 	    						0,
-	    						rec.handling_mst,
 	    						null,
 	    						"",
 	    						"",
@@ -176,8 +186,10 @@ public class DetailList extends Controller {
     		iDepos = IdealDepositMst.find("order by id").fetch();
     		
     		// 検索処理(Record)
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
+    		strSrchRecSql += "ha_user = " + haUser.id;
 	    	//  日付範囲
-	   		strSrchRecSql += "payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
+	   		strSrchRecSql += " and payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
 	   		//  収支種類
 	   		if(h_balance_type_id != null) {
 	   			if(h_balance_type_id != 0L) {

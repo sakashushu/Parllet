@@ -48,39 +48,43 @@ public class Record extends Model {
 	public String remarks;						//備考
 	@MaxSize(10000)
 	public String secret_remarks;				//備考（非公開）
+	public Boolean secret_rec_flg;				//非公開レコードフラグ
+	
 	
 	public Record(
 			HaUser ha_user,
 			Date payment_date,
 			BalanceTypeMst balance_type,
+			HandlingMst handling_mst,
+			IdealDepositMst ideal_deposit_mst,
 			ItemMst item,
 			String detail_mst,
 			Integer amount,
 			Integer price,
 			Integer quantity,
-			HandlingMst handling_mst,
 			Date debit_date,
 			String content,
 			String store,
 			String remarks,
 			String secret_remarks,
-			IdealDepositMst ideal_deposit_mst
+			Boolean secret_rec_flg
 			) {
 		this.ha_user = ha_user;
 		this.payment_date = payment_date;
 		this.balance_type_mst = balance_type;
+		this.handling_mst = handling_mst;
+		this.ideal_deposit_mst = ideal_deposit_mst;
 		this.item_mst = item;
 		this.detail_mst = detail_mst;
 		this.amount = amount;
 		this.price = price;
 		this.quantity = quantity;
-		this.handling_mst = handling_mst;
 		this.debit_date = debit_date;
 		this.content = content;
 		this.store = store;
 		this.remarks = remarks;
 		this.secret_remarks = secret_remarks;
-		this.ideal_deposit_mst = ideal_deposit_mst;
+		this.secret_rec_flg = secret_rec_flg;
 	}
 	
 	public String toString() {

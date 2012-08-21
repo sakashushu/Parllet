@@ -133,18 +133,19 @@ public class Config extends Controller {
 								haUser,
 								paymentDate,
 								balanceTypeMst,
+								handlingMst,
+								idealDepositMst,
 								itemMst,
 								null,
 								amount,
 								0,
 								0,
-								handlingMst,
 								debitDate,
 								content,
 								store,
 								remarks,
 								secret_remarks,
-								idealDepositMst
+								null
 						);
 						
 					} catch (ParseException e) {
@@ -189,18 +190,19 @@ public class Config extends Controller {
 									haUser,
 									paymentDate,
 									balanceTypeMst,
+									handlingMst,
+									idealDepositMst,
 									itemMst,
 									null,
 									amount,
 									0,
 									0,
-									handlingMst,
 									debitDate,
 									content,
 									store,
 									remarks,
 									secret_remarks,
-									idealDepositMst
+									null
 							);
 							
 						} catch (ParseException e) {
@@ -882,4 +884,22 @@ public class Config extends Controller {
 	static class EditIdealDepositMst {
 		IdealDepositMst idealDepositMst;
 	}
+	
+	//実行モード
+	public static void cf_actionMode() {
+		render();
+	}
+	
+	//実行モードを編集モードに
+	public static void cf_actionMode_changeToEdit() {
+		session.put("adtionMode", "Edit");
+		cf_actionMode();
+	}
+	
+	//実行モードを閲覧モードに
+	public static void cf_actionMode_changeToView() {
+		session.put("adtionMode", "View");
+		cf_actionMode();
+	}
+	
 }

@@ -306,6 +306,15 @@ jQuery(document).ready(function(){
 	    </p>
 	 
 	    <p>
+	        #{field 'secret_rec_flg'}
+	        <label>&{'secret_rec_flg'}:</label>
+	        <input type="checkbox" name="${field.name}"
+	            ${record?.secret_rec_flg ? 'checked' : ''} />
+	        <span class="error">#{error 'record.secret_rec_flg' /}</span>
+	        #{/field}
+	    </p>
+		
+	    <p>
 	        <input type="submit" value="&{'insupd.save'}" />
 	    </p>
 	    

@@ -55,6 +55,7 @@ public class DailyAccount extends Controller {
 	static final String HANDLING_TYPE_CRECA = Messages.get("HandlingType.creca");
 	static final String VIEWS_DAILY_ACCOUNT = Messages.get("views.dailyaccount.dailyaccount");
 	static final String VIEWS_BALANCE_TABLE = Messages.get("views.dailyaccount.balancetable");
+	static final String SQL_SECRET_REC_FLG = (session.get("actionMode").equals("View") ? " and r.secret_rec_flg = false " : "");
 	
 	/**
 	 * 日計表の表示

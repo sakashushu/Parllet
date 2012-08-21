@@ -1,0 +1,17 @@
+#{extends 'Config/cf_main.html' /}
+
+
+<h3><span>&{'views.config.cf_actionMode_change'}</span></h3>
+
+<label>現在の実行モード：</label>
+<div>
+	<ul id="loginMenu">
+	    <li class="${session.get('adtionMode')=='View' ? '' : 'selected'}">
+	        <a href="@{Config.cf_actionMode_changeToEdit()}">&{'views.config.cf_actionModeEdit'}</a>
+	    </li>
+	    <li class="${session.get('adtionMode')=='View' ? 'selected' : ''}">
+	        <a href="@{Config.cf_actionMode_changeToView()}">&{'views.config.cf_actionModeView'}</a>
+	    </li>
+	</ul>
+</div>
+

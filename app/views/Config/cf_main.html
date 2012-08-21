@@ -35,6 +35,9 @@
 	        <li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
 	            <a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
 	        </li>
+	        <li class="${request.actionMethod == 'cf_actionMode' ? 'selected' : ''}">
+	            <a href="@{Config.cf_actionMode()}">&{'views.config.cf_actionMode'}</a>
+	        </li>
 	    </ul>
        	
         #{doLayout /}
