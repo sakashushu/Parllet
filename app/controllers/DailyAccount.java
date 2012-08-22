@@ -55,7 +55,6 @@ public class DailyAccount extends Controller {
 	static final String HANDLING_TYPE_CRECA = Messages.get("HandlingType.creca");
 	static final String VIEWS_DAILY_ACCOUNT = Messages.get("views.dailyaccount.dailyaccount");
 	static final String VIEWS_BALANCE_TABLE = Messages.get("views.dailyaccount.balancetable");
-	static final String SQL_SECRET_REC_FLG = (session.get("actionMode").equals("View") ? " and r.secret_rec_flg = false " : "");
 	
 	/**
 	 * 日計表の表示
@@ -93,6 +92,11 @@ public class DailyAccount extends Controller {
    		//単純に呼ばれた時（初回等）は、今日を表示
 		if(sBasisDate==null) {
 			sBasisDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+		}
+		
+		//セッションのactionModeが空の時は編集モードをセット
+		if(session.get("actionMode")==null) {
+			session.put("actionMode", "Edit");
 		}
 		
 		Date dBasis = null;
@@ -547,7 +551,7 @@ public class DailyAccount extends Controller {
    				sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
    				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 			BigInteger biSumMonthG = (BigInteger)JPA.em().createNativeQuery(
-					sSql).getSingleResult();
+					sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 			long lSumMonthG = biSumMonthG == null ? 0L : biSumMonthG.longValue();
 			wDA.setLSumMonth(lSumMonthG);
 			wDA.setsSumMonth(String.format("%1$,3d", lSumMonthG));
@@ -625,7 +629,7 @@ public class DailyAccount extends Controller {
 	   	  				"        )";
 	   		}
 	   		BigInteger biAryDaysG = (BigInteger)JPA.em().createNativeQuery(
-					sSql).getSingleResult();
+					sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 			lAryDaysG[iDay] = biAryDaysG == null ? 0L : biAryDaysG.longValue();
 			//「実残高」・「My貯金残高」・「My貯金してないお金」は初日のみデータ集約。以降は加算
 			if((sLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
@@ -679,7 +683,7 @@ public class DailyAccount extends Controller {
 						sSqlBase + sSqlBaseG +
 						"   AND i.item_name = '" + itemMst.item_name + "' " +
 						"   AND r.ideal_deposit_mst_id IS NULL "
-						).getSingleResult();
+						 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 				long lSumMonth = biSumMonth == null ? 0L : biSumMonth.longValue();
 				
 				wDaItem.setsLargeCategory(sLargeCategoryName);
@@ -728,7 +732,7 @@ public class DailyAccount extends Controller {
 							sSqlBase + sSqlBaseD +
 							"   AND i.item_name = '" + itemMst.item_name + "' " +
 							"   AND r.ideal_deposit_mst_id IS NULL "
-							).getSingleResult();
+							 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 					lAryDays[iDay] = biAryDays == null ? 0L : biAryDays.longValue();
 					sAryDays[iDay] = df.format(lAryDays[iDay]);
 
@@ -799,7 +803,7 @@ public class DailyAccount extends Controller {
 		   		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
 		   				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 					BigInteger biSumMonthMyDp = (BigInteger)JPA.em().createNativeQuery(
-							sSql).getSingleResult();
+							sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 					long lSumMonthMyDp = biSumMonthMyDp == null ? 0L : biSumMonthMyDp.longValue();
 					wDaIdealDepo.setsSumMonth(String.format("%1$,3d", lSumMonthMyDp));
 		   		}
@@ -877,7 +881,7 @@ public class DailyAccount extends Controller {
 								"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'";
 			   		}
 					BigInteger biAryDaysMyDp = (BigInteger)JPA.em().createNativeQuery(
-							sSql).getSingleResult();
+							sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 					lAryDaysMyDp[iDay] = biAryDaysMyDp == null ? 0L : biAryDaysMyDp.longValue();
 					if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT) &&
 							lAryDaysMyDp[iDay]!=0L) {
@@ -988,7 +992,7 @@ public class DailyAccount extends Controller {
 	   			sSql = sSqlBase + sSqlBaseG;
 	
 //				BigInteger biSumMonthRlBal = (BigInteger)JPA.em().createNativeQuery(
-//						sSql).getSingleResult();
+//						sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 //				long lSumMonthRlBal = biSumMonthRlBal == null ? 0L : biSumMonthRlBal.longValue();
 //				if(lSumMonthRlBal!=0L) {
 //					bRemainderDispFlg = true;
@@ -1011,13 +1015,13 @@ public class DailyAccount extends Controller {
 				   		sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD;
 					    BigInteger biAryDaysRlBal = (BigInteger)JPA.em().createNativeQuery(
-					    		sSql).getSingleResult();
+					    		sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 					    lAryDaysRlBal[iDay] = biAryDaysRlBal == null ? 0L : biAryDaysRlBal.longValue();
 					} else {
 				   		sSqlBaseD = " AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
 			   			sSql = sSqlBase + sSqlBaseD;
 					    BigInteger biAryDaysRlBal = (BigInteger)JPA.em().createNativeQuery(
-					    		sSql).getSingleResult();
+					    		sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
 					    lAryDaysRlBal[iDay] = lAryDaysRlBal[iDay-1] + (biAryDaysRlBal == null ? 0L : biAryDaysRlBal.longValue());
 					}
 					if(lAryDaysRlBal[iDay]!=0L) {

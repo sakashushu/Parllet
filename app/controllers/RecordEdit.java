@@ -93,7 +93,7 @@ public class RecordEdit extends Controller {
 						store,
 						remarks,
 						secret_remarks,
-						secret_rec_flg
+						secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false)
 				);
 			} else {
 				// 収支データの読み出し
@@ -110,7 +110,7 @@ public class RecordEdit extends Controller {
 				record.store = store;
 				record.remarks = remarks;
 				record.secret_remarks = secret_remarks;
-				record.secret_rec_flg = secret_rec_flg;
+				record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
 			}
 			
 		} catch (ParseException e) {

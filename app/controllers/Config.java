@@ -688,14 +688,14 @@ public class Config extends Controller {
 					iCutoffDay,
 					null,
 					iDebitDay,
-					zero_hidden
+					zero_hidden==null ? false : (zero_hidden==true ? true : false)
 			);
 		} else {
 			// 取扱データの読み出し
 			editHandlingMst.handlingMst = HandlingMst.findById(id);
 			// 編集
 			editHandlingMst.handlingMst.handling_name = handling_name;
-			editHandlingMst.handlingMst.zero_hidden = zero_hidden;
+			editHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
 		}
 		// Validate
 		validation.valid(editHandlingMst.handlingMst);
@@ -892,13 +892,13 @@ public class Config extends Controller {
 	
 	//実行モードを編集モードに
 	public static void cf_actionMode_changeToEdit() {
-		session.put("adtionMode", "Edit");
+		session.put("actionMode", "Edit");
 		cf_actionMode();
 	}
 	
 	//実行モードを閲覧モードに
 	public static void cf_actionMode_changeToView() {
-		session.put("adtionMode", "View");
+		session.put("actionMode", "View");
 		cf_actionMode();
 	}
 	
