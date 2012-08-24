@@ -252,3 +252,31 @@ form .error {
 .crudDelete input:hover {
 	opacity: .7;
 }
+
+/** crud.cssÇÃê^éó **/
+label {
+	display: block;
+	font-weight: bold;
+	width: 20%;
+	float: left;
+	color: #666;
+	cursor: pointer;
+}
+
+.crudField {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+	position: relative;
+}
+
+/** Flash message **/
+
+.crudFlash {
+	padding: 5px 20px;
+	border-bottom: 1px solid #ddd;
+	color: #fff;
+}
+
+.flashError {
+	background: #c00;
+}

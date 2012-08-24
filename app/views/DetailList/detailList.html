@@ -152,27 +152,27 @@
 				<!-- 金額 -->
 				<td>
 					<input type="text" id="e_amount_${record.id}" name="e_amount"
-						value="${record.amount}" size="13" />
+						value="${record?.amount}" size="13" />
 				</td>
 				<!-- 引落日 -->
 				<td>
 					<input type="text" id="e_debit_date_${record.id}" name="e_debit_date"
-						value="" size="13" />
+						value="${record?.debit_date?.format('yyyy/MM/dd')}" size="13" />
 				</td>
 				<!-- 内容 -->
 				<td>
 					<input type="text" id="e_content_${record.id}" name="e_content"
-						value="${record.content}" size="13" />
+						value="${record?.content}" size="13" />
 				</td>
 				<!-- お店 -->
 				<td>
 					<input type="text" id="e_store_${record.id}" name="e_store"
-						value="${record.store}" size="13" />
+						value="${record?.store}" size="13" />
 				</td>
 				<!-- 備考 -->
 				<td>
 					<input type="text" id="e_remarks_${record.id}" name="e_remarks"
-						value="${record.remarks}" size="13" />
+						value="${record?.remarks}" size="13" />
 				</td>
 			
 			</tr>

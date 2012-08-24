@@ -157,6 +157,12 @@ jQuery(document).ready(function(){
 // -->
 </script>
 
+#{ifErrors}
+    <p class="crudFlash flashError">
+        &{'validation.title'}
+    </p>
+#{/ifErrors}
+	    
 <div id="crudShow">
 
 	#{ifnot record?.id}
@@ -169,22 +175,16 @@ jQuery(document).ready(function(){
     <div class="objectForm">
 	#{form @save_rec(record?.id)}
 	 
-	    #{ifErrors}
-	        <p class="error">
-	            &{'validation.title'}
-	        </p>
-	    #{/ifErrors}
-	    
-	    <p>
+	    <div class="crudField">
 	        #{field 'payment_date'}
 	        <label>&{'payment_date'}:</label>
 	        <input type="text" class="datetimepicker" name="${field.name}" 
 	            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
 	        <span class="error">#{error 'record.payment_date' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'balance_type_mst'}
 	        <label>&{'balance_type_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
@@ -195,9 +195,9 @@ jQuery(document).ready(function(){
 			</select>
 	        <span class="error">#{error 'record.balance_type_mst' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'handling_mst'}
 	        <label id="handling_mst_lbl">&{'handling_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
@@ -208,9 +208,9 @@ jQuery(document).ready(function(){
 			</select>
 	        <span class="error">#{error 'record.handling_mst' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'ideal_deposit_mst'}
 	        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
 			<select id="${field.name}" name="${field.name}">
@@ -221,9 +221,9 @@ jQuery(document).ready(function(){
 			</select>
 	        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'item_mst'}
 	        <label id="item_mst_lbl">&{'item_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
@@ -239,84 +239,72 @@ jQuery(document).ready(function(){
 			</select>
 	        <span class="error">#{error 'record.item_mst' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	
-		<!-- 「項目詳細」の作成は一旦保留 -->
-		<!-- 
-	    <p>
-	        #{field 'detail_mst'}
-	        <label>&{'detail_mst'}:</label>
-	        <input type="text" name="${field.name}" 
-	            value="${record?.detail_mst}" />
-	        <span class="error">#{error 'record.detail_mst' /}</span>
-	        #{/field}
-	    </p>
-		 -->
-	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'amount'}
 	        <label>&{'amount'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.amount}" />
 	        <span class="error">#{error 'record.amount' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'debit_date'}
 	        <label>&{'debit_date'}:</label>
 	        <input type="text" class="datepicker" name="${field.name}" 
 	            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
 	        <span class="error">#{error 'record.debit_date' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'content'}
 	        <label>&{'content'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.content}" />
 	        <span class="error">#{error 'record.content' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'store'}
 	        <label>&{'store'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.store}" />
 	        <span class="error">#{error 'record.store' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	
-	    <p>
+	    <div class="crudField">
 	        #{field 'remarks'}
 	        <label>&{'remarks'}:</label>
 	        <textarea name="${field.name}">${record?.remarks}</textarea>
 	        <span class="error">#{error 'record.remarks' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'secret_remarks'}
 	        <label>&{'secret_remarks'}:</label>
 	        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
 	        <span class="error">#{error 'record.secret_remarks' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	 
-	    <p>
+	    <div class="crudField">
 	        #{field 'secret_rec_flg'}
 	        <label>&{'secret_rec_flg'}:</label>
 	        <input type="checkbox" name="${field.name}"
 	            ${record?.secret_rec_flg ? 'checked' : ''} />
 	        <span class="error">#{error 'record.secret_rec_flg' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 		
-	    <p>
+	    <div class="crudField">
 	        <input type="submit" value="&{'insupd.save'}" />
-	    </p>
+	    </div>
 	    
 	#{/form}
 	</div>

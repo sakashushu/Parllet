@@ -653,9 +653,17 @@ public class DailyAccount extends Controller {
 					sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 				workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
 				
+				//「収入」・「支出」の時は、My貯金＝NULL
+				if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+						sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
+					workDaToDl.setlIdealDepositId((long) -1);
+				}
+				
 			// 「My貯金から支払」
 			} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 				workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+				
+				//My貯金＝NULLでない
 				workDaToDl.setlIdealDepositId((long) -2);
 			}
 			lstWdtdG.add(workDaToDl);
@@ -744,6 +752,8 @@ public class DailyAccount extends Controller {
 					workDaToDl.setsPaymentDateFr(sDate);
 					workDaToDl.setsPaymentDateTo(sDate);
 					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+					//取扱(My貯金)＝NULL
+					workDaToDl.setlIdealDepositId((long) -1);
 					workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
 					lstWdtd.add(workDaToDl);
 					

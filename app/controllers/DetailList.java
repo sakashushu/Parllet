@@ -95,7 +95,7 @@ public class DetailList extends Controller {
 	    						"",
 	    						"",
 	    						"",
-	    						null);
+	    						false);
 	    				
 		    			// Validate
 					    validation.valid(eRec);
