@@ -84,7 +84,7 @@ jQuery(document).ready(function() {
 		}
 	}
 });
-//起動時の「項目」・「取扱(My貯金)」の入力可・不可
+//起動時の「取扱(実際)」の入力可・不可
 jQuery(document).ready(function() {
 	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
 	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
@@ -97,6 +97,17 @@ jQuery(document).ready(function() {
 	} else {
 		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
 		jQuery('#handling_mst').attr("disabled", "disabled");
+	}
+});
+//起動時の「引落日」の入力可・不可
+jQuery(document).ready(function() {
+	//「取扱(実際)」が現金以外の時は「引落日」は選択可能
+	if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
+		jQuery('#debit_date_lbl').attr("disabled", "disabled");
+		jQuery('#debit_date').attr("disabled", "disabled");
+	} else {
+		jQuery('#debit_date_lbl').removeAttr("disabled");
+		jQuery('#debit_date').removeAttr("disabled");
 	}
 });
 //「収支種類」・「取扱(My貯金)」の選択変更時の「項目」の入力可・不可と選択リストの調整
@@ -177,7 +188,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'payment_date'}
-	        <label>&{'payment_date'}:</label>
+	        <label class="fieldName">&{'payment_date'}:</label>
 	        <input type="text" class="datetimepicker" name="${field.name}" 
 	            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
 	        <span class="error">#{error 'record.payment_date' /}</span>
@@ -186,7 +197,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'balance_type_mst'}
-	        <label>&{'balance_type_mst'}:</label>
+	        <label class="fieldName">&{'balance_type_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
 				<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 				#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
@@ -199,7 +210,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'handling_mst'}
-	        <label id="handling_mst_lbl">&{'handling_mst'}:</label>
+	        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
 				<option value="0"${record?.handling_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
@@ -212,7 +223,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'ideal_deposit_mst'}
-	        <label id="ideal_deposit_mst_lbl">&{'ideal_deposit_mst'}:</label>
+	        <label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
 			<select id="${field.name}" name="${field.name}">
 				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
 				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
@@ -225,7 +236,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'item_mst'}
-	        <label id="item_mst_lbl">&{'item_mst'}:</label>
+	        <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
 				#{if record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.in') ||
 						record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
@@ -243,7 +254,7 @@ jQuery(document).ready(function(){
 	
 	    <div class="crudField">
 	        #{field 'amount'}
-	        <label>&{'amount'}:</label>
+	        <label class="fieldName">&{'amount'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.amount}" />
 	        <span class="error">#{error 'record.amount' /}</span>
@@ -252,8 +263,8 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'debit_date'}
-	        <label>&{'debit_date'}:</label>
-	        <input type="text" class="datepicker" name="${field.name}" 
+	        <label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
+	        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
 	            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
 	        <span class="error">#{error 'record.debit_date' /}</span>
 	        #{/field}
@@ -261,7 +272,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'content'}
-	        <label>&{'content'}:</label>
+	        <label class="fieldName">&{'content'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.content}" />
 	        <span class="error">#{error 'record.content' /}</span>
@@ -270,7 +281,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'store'}
-	        <label>&{'store'}:</label>
+	        <label class="fieldName">&{'store'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${record?.store}" />
 	        <span class="error">#{error 'record.store' /}</span>
@@ -279,7 +290,7 @@ jQuery(document).ready(function(){
 	
 	    <div class="crudField">
 	        #{field 'remarks'}
-	        <label>&{'remarks'}:</label>
+	        <label class="fieldName">&{'remarks'}:</label>
 	        <textarea name="${field.name}">${record?.remarks}</textarea>
 	        <span class="error">#{error 'record.remarks' /}</span>
 	        #{/field}
@@ -287,7 +298,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'secret_remarks'}
-	        <label>&{'secret_remarks'}:</label>
+	        <label class="fieldName">&{'secret_remarks'}:</label>
 	        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
 	        <span class="error">#{error 'record.secret_remarks' /}</span>
 	        #{/field}
@@ -295,7 +306,7 @@ jQuery(document).ready(function(){
 	 
 	    <div class="crudField">
 	        #{field 'secret_rec_flg'}
-	        <label>&{'secret_rec_flg'}:</label>
+	        <label class="fieldName">&{'secret_rec_flg'}:</label>
 	        <input type="checkbox" name="${field.name}"
 	            ${record?.secret_rec_flg ? 'checked' : ''} />
 	        <span class="error">#{error 'record.secret_rec_flg' /}</span>

@@ -24,18 +24,18 @@
 	        </p>
 	    #{/ifErrors}
 	    
-	    <p>
+	    <div class="crudField">
 	        #{field 'item_name'}
-	        <label>&{'item_name'}:</label>
+	        <label class="fieldName">&{'item_name'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${itemMst?.item_name}" />
 	        <span class="error">#{error 'itemMst.item_name' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 		
-	    <p>
+	    <div class="crudField">
 	        <input type="submit" value="&{'insupd.save'}" />
-	    </p>
+	    </div>
 	    
 	#{/form}
 	</div>

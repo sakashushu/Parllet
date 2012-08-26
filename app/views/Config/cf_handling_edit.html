@@ -60,19 +60,19 @@ jQuery(document).ready(function() {
 	        </p>
 	    #{/ifErrors}
 	    
-	    <p>
+	    <div class="crudField">
 	        #{field 'handling_name'}
-	        <label>${sHandlingType}名:</label>
+	        <label class="fieldName">${sHandlingType}名:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${handlingMst?.handling_name}" />
 	        <span class="error">#{error 'handlingMst.handling_name' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 		
 		#{if sHandlingType==messages.get('HandlingType.creca')}
-		    <p>
+		    <div class="crudField">
 		        #{field 'debit_bank'}
-		        <label>&{'debit_bank'}:</label>
+		        <label class="fieldName">&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
 					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('HandlingType.bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
@@ -81,20 +81,20 @@ jQuery(document).ready(function() {
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_bank' /}</span>
 		        #{/field}
-		    </p>
+		    </div>
 			
-		    <p>
+		    <div class="crudField">
 		        #{field 'cutoff_day'}
-		        <label>&{'cutoff_day'}:</label>
+		        <label class="fieldName">&{'cutoff_day'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:60px;">
 				</select>
 		        <span class="error">#{error 'handlingMst.cutoff_day' /}</span>
 		        #{/field}
-		    </p>
+		    </div>
 			
-		    <p>
+		    <div class="crudField">
 		        #{field 'debit_month'}
-		        <label>&{'debit_month'}:</label>
+		        <label class="fieldName">&{'debit_month'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:70px;">
 					<option value="&{'DebitMonth.this'}"${handlingMst?.debit_month==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
 					<option value="&{'DebitMonth.next'}"${handlingMst?.id==null ? ' selected' : (handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
@@ -102,32 +102,32 @@ jQuery(document).ready(function() {
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_month' /}</span>
 		        #{/field}
-		    </p>
+		    </div>
 
-		    <p>
+		    <div class="crudField">
 		        #{field 'debit_day'}
-		        <label>&{'debit_day'}:</label>
+		        <label class="fieldName">&{'debit_day'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:60px;">
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_day' /}</span>
 		        #{/field}
-		    </p>
+		    </div>
 			
 		#{/if}
 		#{else}
-		    <p>
+		    <div class="crudField">
 		        #{field 'zero_hidden'}
-		        <label>&{'zero_hidden'}:</label>
+		        <label class="fieldName">&{'zero_hidden'}:</label>
 		        <input type="checkbox" name="${field.name}"
 		            ${handlingMst?.zero_hidden ? 'checked' : ''} />
 		        <span class="error">#{error 'handlingMst.zero_hidden' /}</span>
 		        #{/field}
-		    </p>
+		    </div>
 		#{/else}
 		
-	    <p>
+	    <div class="crudField">
 	        <input type="submit" value="&{'insupd.save'}" />
-	    </p>
+	    </div>
 	    
 	#{/form}
 	</div>

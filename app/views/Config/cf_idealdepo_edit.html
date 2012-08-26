@@ -20,27 +20,27 @@
 	        </p>
 	    #{/ifErrors}
 	    
-	    <p>
+	    <div class="crudField">
 	        #{field 'ideal_deposit_name'}
-	        <label>&{'ideal_deposit_name'}:</label>
+	        <label class="fieldName">&{'ideal_deposit_name'}:</label>
 	        <input type="text" name="${field.name}" 
 	            value="${idealDepositMst?.ideal_deposit_name}" />
 	        <span class="error">#{error 'idealDepositMst.ideal_deposit_name' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 		
-	    <p>
+	    <div class="crudField">
 	        #{field 'zero_hidden'}
-	        <label>&{'zero_hidden'}:</label>
+	        <label class="fieldName">&{'zero_hidden'}:</label>
 	        <input type="checkbox" name="${field.name}"
 	            ${idealDepositMst?.zero_hidden ? 'checked' : ''} />
 	        <span class="error">#{error 'idealDepositMst.zero_hidden' /}</span>
 	        #{/field}
-	    </p>
+	    </div>
 	    
-	    <p>
+	    <div class="crudField">
 	        <input type="submit" value="&{'insupd.save'}" />
-	    </p>
+	    </div>
 	    
 	#{/form}
 	</div>

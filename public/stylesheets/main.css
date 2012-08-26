@@ -254,13 +254,13 @@ form .error {
 }
 
 /** crud.css‚Ì^— **/
-label {
+label.fieldName {
 	display: block;
 	font-weight: bold;
 	width: 20%;
 	float: left;
 	color: #666;
-	cursor: pointer;
+//	cursor: pointer;
 }
 
 .crudField {
