@@ -5,6 +5,7 @@
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 
 <script type="text/javascript">
 <!--
@@ -165,6 +166,49 @@ jQuery(document).ready(function(){
 		}
 	});
 });
+//「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
+jQuery(document).ready(function(){
+	jQuery('#handling_mst').change(function(){
+		//「取扱(実際)」が現金の時は「項目」は選択不可
+		if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
+			jQuery('#debit_date_lbl').attr("disabled", "disabled");
+			jQuery('#debit_date').attr("disabled", "disabled");
+			jQuery('#debit_date').val('');
+		//「取扱(実際)」が現金以外の時は「項目」は選択可能で、デフォルト日付を表示
+		} else {
+			jQuery('#debit_date_lbl').removeAttr("disabled");
+			jQuery('#debit_date').removeAttr("disabled");
+			#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
+			  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
+				jQuery('#testshu0').text("${handling?.handling_name}");
+				if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
+					if(jQuery('#payment_date').val()=="") {
+						jQuery('#debit_date').val("2012/9/"+"${handling?.debit_day?.format('00')}");
+					} else {
+						var dateFormat = new DateFormat("yyyy/MM/dd");
+						var basicDate = new Date;
+						var rDate = fDebitDate(basicDate,02,05,04);
+						jQuery('#testshu').text("「"+dateFormat.format(rDate)+"」");
+					}
+				} else {
+					jQuery('#testshu').text("クレカじゃない");
+				}
+			  }			
+			#{/list}
+		}
+	});
+});
+function fDebitDate(basicDate,cutoffDay,debitMonth,debitDay){
+	var objDate = new Date;
+	objDate.setDate(basicDate.getDate() + 1);
+	if(basicDate.getDate() <= cutoffDay) {
+		
+	} else {
+		
+	}
+	
+	return objDate;
+}
 // -->
 </script>
 
@@ -183,13 +227,16 @@ jQuery(document).ready(function(){
 		<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
 	#{/else}
 	
+	<div id="testshu0"></div>
+	<div id="testshu"></div>
+	
     <div class="objectForm">
 	#{form @save_rec(record?.id)}
 	 
 	    <div class="crudField">
 	        #{field 'payment_date'}
 	        <label class="fieldName">&{'payment_date'}:</label>
-	        <input type="text" class="datetimepicker" name="${field.name}" 
+	        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
 	            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
 	        <span class="error">#{error 'record.payment_date' /}</span>
 	        #{/field}

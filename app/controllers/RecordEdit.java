@@ -2,6 +2,7 @@ package controllers;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,10 @@ public class RecordEdit extends Controller {
 	}
 	
 	public static void recordEdit(Long id) {
+   		Calendar calendar = Calendar.getInstance();
+   		
+   		
+   		
 		if(id != null) {
 			Record record = Record.findById(id);
 			render(record);
