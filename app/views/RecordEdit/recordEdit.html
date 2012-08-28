@@ -31,10 +31,10 @@ var subcategoryHandling = {
     #{if bType.balance_type_name==messages.get('BalanceType.in') ||
          bType.balance_type_name==messages.get('BalanceType.out')}
       "${bType.id}":[
-          {
-            "key":"0",
-            "value":"&{'views.common.combo.required.long'}"
-          },
+//          {
+//            "key":"0",
+//            "value":"&{'views.common.combo.required.long'}"
+//          },
           #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
@@ -46,10 +46,10 @@ var subcategoryHandling = {
     #{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
          bType.balance_type_name==messages.get('BalanceType.bank_out')}
       "${bType.id}":[
-          {
-            "key":"0",
-            "value":"&{'views.common.combo.required.long'}"
-          },
+//          {
+//            "key":"0",
+//            "value":"&{'views.common.combo.required.long'}"
+//          },
           #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
@@ -166,9 +166,9 @@ jQuery(document).ready(function(){
 		}
 	});
 });
-//「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
+//「支払日」・「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
 jQuery(document).ready(function(){
-	jQuery('#handling_mst').change(function(){
+	jQuery('#handling_mst, #payment_date').change(function(){
 		//「取扱(実際)」が現金の時は「項目」は選択不可
 		if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
 			jQuery('#debit_date_lbl').attr("disabled", "disabled");
@@ -180,34 +180,84 @@ jQuery(document).ready(function(){
 			jQuery('#debit_date').removeAttr("disabled");
 			#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
 			  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
-				jQuery('#testshu0').text("${handling?.handling_name}");
-				if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
-					if(jQuery('#payment_date').val()=="") {
-						jQuery('#debit_date').val("2012/9/"+"${handling?.debit_day?.format('00')}");
-					} else {
+				//支払日が正しく入っている時
+				var sDate = jQuery('#payment_date').val().substr(0,10);
+				if(ckDate(sDate)==true) {
+					//「取扱(実際)」がクレジットカードの場合
+					if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
 						var dateFormat = new DateFormat("yyyy/MM/dd");
-						var basicDate = new Date;
-						var rDate = fDebitDate(basicDate,02,05,04);
-						jQuery('#testshu').text("「"+dateFormat.format(rDate)+"」");
+						var vYear = sDate.substr(0, 4) - 0;
+						var vMonth = sDate.substr(5, 2) - 1;
+						var vDay = sDate.substr(8, 2) - 0;
+						var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
+						var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
+						jQuery('#debit_date').val(dateFormat.format(rDate));
+						
+					//「取扱(実際)」がクレジットカード以外の場合
+					} else {
+//						//引落日の値が正しくない　または
+//						//引落日＜支払日の時は、
+//						//引落日に支払日をセット
+//						if(ckDate(jQuery('#debit_date').val())==false ||
+//								(ckDate(jQuery('#debit_date').val())==true &&
+//								jQuery('#payment_date').val().substr(0,10) > jQuery('#debit_date').val())) {
+//							jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
+//						}
+						//引落日に支払日をセット
+						jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
 					}
-				} else {
-					jQuery('#testshu').text("クレカじゃない");
 				}
 			  }			
 			#{/list}
 		}
 	});
 });
-function fDebitDate(basicDate,cutoffDay,debitMonth,debitDay){
-	var objDate = new Date;
-	objDate.setDate(basicDate.getDate() + 1);
-	if(basicDate.getDate() <= cutoffDay) {
-		
-	} else {
-		
+//クレジットカードの引落日算出関数
+function fDebitDate(dBasic,cutoffDay,debitMonth,debitDay){
+	var dCutoff = new Date;
+	var iCutoffMonth = 0;
+	//
+	if(debitMonth=="&{'DebitMonth.this'}") {
+		iCutoffMonth = 0;
+	} else if(debitMonth=="&{'DebitMonth.next'}") {
+		iCutoffMonth = 1;
+	} else if(debitMonth=="&{'DebitMonth.nextTwo'}") {
+		iCutoffMonth = 2;
 	}
-	
-	return objDate;
+	//引落日算出
+	if(dBasic.getDate() <= cutoffDay) {
+		dCutoff = new Date(dBasic.getFullYear(), dBasic.getMonth()+iCutoffMonth, debitDay);
+	} else {
+		dCutoff = new Date(dBasic.getFullYear(), dBasic.getMonth()+iCutoffMonth+1, debitDay);
+	}
+	return dCutoff;
+}
+/****************************************************************
+* 機　能： 入力された値が日付でYYYY/MM/DD形式になっているか調べる
+* 引　数： datestr　入力された値
+* 戻り値： 正：true　不正：false
+****************************************************************/
+function ckDate(datestr) {
+    // 正規表現による書式チェック
+    if(!datestr.match(/^\d{4}\/\d{2}\/\d{2}$/)){
+        return false;
+    }
+    var vYear = datestr.substr(0, 4) - 0;
+    var vMonth = datestr.substr(5, 2) - 1; // Javascriptは、0-11で表現
+    var vDay = datestr.substr(8, 2) - 0;
+    // 月,日の妥当性チェック
+    if(vMonth >= 0 && vMonth <= 11 && vDay >= 1 && vDay <= 31){
+        var vDt = new Date(vYear, vMonth, vDay);
+        if(isNaN(vDt)){
+            return false;
+        }else if(vDt.getFullYear() == vYear && vDt.getMonth() == vMonth && vDt.getDate() == vDay){
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
 }
 // -->
 </script>
@@ -226,9 +276,6 @@ function fDebitDate(basicDate,cutoffDay,debitMonth,debitDay){
 	#{else}
 		<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
 	#{/else}
-	
-	<div id="testshu0"></div>
-	<div id="testshu"></div>
 	
     <div class="objectForm">
 	#{form @save_rec(record?.id)}
@@ -259,7 +306,6 @@ function fDebitDate(basicDate,cutoffDay,debitMonth,debitDay){
 	        #{field 'handling_mst'}
 	        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
 			<select id="${field.name}" name="${field.name}" style="width:150px;">
-				<option value="0"${record?.handling_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
 				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}

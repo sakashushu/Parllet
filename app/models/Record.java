@@ -39,6 +39,7 @@ public class Record extends Model {
 	public Integer amount;						//金額
 	public Integer price;						//単価
 	public Integer quantity;					//数量
+	@CheckWith(DebitDateConditionallyRequiredCheck.class)
 	public Date debit_date;						//引落日
 	@MaxSize(100)
 	public String content;						//内容
@@ -132,6 +133,24 @@ public class Record extends Model {
 				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.ideal_deposit_in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.ideal_deposit_out"))) &&
 						(record.ideal_deposit_mst==null)) {
+					setMessage(Messages.get("validation.required"));
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * 「取扱(実際)」が現金以外の時は「引落日」は必須
+	 * @author sakashushu
+	 *
+	 */
+	static class DebitDateConditionallyRequiredCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			Record record = (Record)validatedObject;
+			if(record.handling_mst!=null) {
+				if(!record.handling_mst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.cash"))) {
 					setMessage(Messages.get("validation.required"));
 					return false;
 				}
