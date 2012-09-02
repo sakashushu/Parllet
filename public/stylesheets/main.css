@@ -269,6 +269,63 @@ label.fieldName {
 	position: relative;
 }
 
+#configListPagination {
+	padding: 4px 5px;
+	border: 1px solid #ddd;
+	background: #efefef;
+	border-top: 0;
+	font-size: 90%;
+	position: relative;
+}
+
+#configListPagination .configCount {
+	margin: 0;
+}
+
+#configListPagination .configPages {
+	margin: 0;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+
+/** Pagination **/
+
+#pagination {
+    list-style: none;
+    padding: 0;
+    position: relative;
+    color: #869AB1;
+    font-size: 90%;
+    top: -20px;
+    margin-bottom: 30px;
+}
+
+#pagination a {
+    color: #869AB1;
+    font-size: 90%;
+}
+
+#pagination #previous {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#pagination #previous:before {
+    content: '<< ';
+}
+
+#pagination #next {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#pagination #next:after {
+    content: ' >>';
+}
+
 /** Flash message **/
 
 .crudFlash {

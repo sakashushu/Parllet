@@ -150,7 +150,8 @@ public class Record extends Model {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
 			if(record.handling_mst!=null) {
-				if(!record.handling_mst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.cash"))) {
+				if(!record.handling_mst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.cash")) &&
+						(record.debit_date==null)) {
 					setMessage(Messages.get("validation.required"));
 					return false;
 				}

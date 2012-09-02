@@ -195,14 +195,6 @@ jQuery(document).ready(function(){
 						
 					//「取扱(実際)」がクレジットカード以外の場合
 					} else {
-//						//引落日の値が正しくない　または
-//						//引落日＜支払日の時は、
-//						//引落日に支払日をセット
-//						if(ckDate(jQuery('#debit_date').val())==false ||
-//								(ckDate(jQuery('#debit_date').val())==true &&
-//								jQuery('#payment_date').val().substr(0,10) > jQuery('#debit_date').val())) {
-//							jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
-//						}
 						//引落日に支払日をセット
 						jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
 					}

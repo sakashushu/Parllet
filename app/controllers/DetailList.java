@@ -4,6 +4,7 @@ import java.util.*;
 
 import models.*;
 
+import play.db.Model;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -48,15 +49,20 @@ public class DetailList extends Controller {
     		List<Long> n_item_id,			/* 変更行の項目ID */
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
+    		,int page
     		) {
     	String strSrchRecSql = "";
-    	if(h_payment_date_fr == null) {
+    	if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
     		Calendar calendar = Calendar.getInstance();
     		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
     		calendar.add(Calendar.MONTH, -1);
 //    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
     		h_payment_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
     	}
+    	
+    	//初回読み込み時のページは１ページとする
+    	if(page == 0)
+    		page = 1;
 
     	List<Record> records = null;
     	List<BalanceTypeMst> bTypes = null;
@@ -65,6 +71,10 @@ public class DetailList extends Controller {
     	BalanceTypeMst bTypeOut = null;
     	List<ItemMst> itemsIn = null;
     	List<ItemMst> itemsOut = null;
+    	
+    	long count = 0L;		//レコード数
+    	int iLinage = 30;		//１ページあたりの行数
+    	int nbPages = 0;		//ページ数
     	
     	// 「保存」ボタンが押された場合
     	if(save != null) {
@@ -212,12 +222,19 @@ public class DetailList extends Controller {
 	   				strSrchRecSql += " and item_mst.id = " + h_item_id;
 	   			}
 	   		}
-	    	strSrchRecSql += " order by payment_date";
+	    	count = Record.count(strSrchRecSql);
+	    	nbPages = (int) (Math.ceil((double)count/iLinage));
+	    	strSrchRecSql += " order by payment_date, id";
+//	    	records = Record.find(
+//	    			strSrchRecSql).from(0).fetch(30);
 	    	records = Record.find(
-	    			strSrchRecSql).from(0).fetch(50);
+	    			strSrchRecSql).from(0).fetch(page, 30);
     	}
 
-    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
+    	
+//    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
+//    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
+    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
     }
 	
 	public static class WebSocketApp extends WebSocketController {
