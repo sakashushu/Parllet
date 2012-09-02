@@ -131,7 +131,7 @@ public class RecordEdit extends Controller {
 		// 保存
 		record.save();
 		//index();
-		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null,null,1);
+		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null,null);
 	}
 
 	//レコード削除
@@ -144,6 +144,6 @@ public class RecordEdit extends Controller {
 //		session.put(key, value);
 //		session.get(key);
 
-		DetailList.detailList(null, null, null, null, null, null, null, null, null, null, null,null,1);
+		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null,null);
 	}
 }

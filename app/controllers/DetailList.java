@@ -37,6 +37,7 @@ public class DetailList extends Controller {
 	}
 	
 	public static void detailList(
+    		int page,						/* 現在ページ */
     		String h_payment_date_fr,		/* 絞込日時範囲（開始） */
     		String h_payment_date_to,		/* 絞込日時範囲（終了） */
     		Long h_balance_type_id,  		/* 絞込収支種類ID */
@@ -49,7 +50,6 @@ public class DetailList extends Controller {
     		List<Long> n_item_id,			/* 変更行の項目ID */
     		String srch,	/* 「絞込」ボタン */
     		String save		/* 「保存」ボタン */
-    		,int page
     		) {
     	String strSrchRecSql = "";
     	if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {

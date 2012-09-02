@@ -13,30 +13,58 @@
 
             if(start < 1){
                 extra = 1 - start
-                end = (end + extra < nbPages ? end + extra : nbPages)
+                end = (end + extra < _caller.nbPages ? end + extra : _caller.nbPages)
                 start = 1
-            }else if(end > nbPages){
-                extra = end - nbPages
+            }else if(end > _caller.nbPages){
+                extra = end - _caller.nbPages
                 start = (start - extra > 1 ? start - extra : 1)
-                end = nbPages
+                end = _caller.nbPages
             }
         }%
-        
+
         #{if _caller.page > 1}
             <span class="previous">
-            	<a href="@{detailList(_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save,
-           					_caller.page-1
-            			)}">&{'crud.pagination.previous'}</a>
-            </span>
-        #{/if}
-        #{if _caller.page < _caller.nbPages}
-            <span class="next">
-            	<a href="@{detailList(_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save,
-           					_caller.page+1
-            			)}">&{'crud.pagination.next'}</a>
+            	<a href="@{detailList(_caller.page-1,
+            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	&{'crud.pagination.previous'}</a>
             </span>
         #{/if}
 
+        #{if start > 1}
+            <span class="first">
+            	<a href="@{detailList(1,
+            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	&{'crud.pagination.first'}</a>
+            </span>
+        #{/if}
+
+        %{ for (i in start..end) { }%
+            <span class="page">
+                #{if _caller.page == i}
+                    <strong>${i}</strong>
+                #{/if}
+                #{else}
+	            	<a href="@{detailList(i,
+	            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}"
+	            	>${i}</a>
+                #{/else}
+            </span>
+        %{ } }%
+
+        #{if end < _caller.nbPages}
+            <span class="last">
+            	<a href="@{detailList(_caller.nbPages,
+            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	&{'crud.pagination.last'}</a>
+            </span>
+        #{/if}
+
+        #{if _caller.page < _caller.nbPages}
+            <span class="next">
+            	<a href="@{detailList(_caller.page+1,_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	&{'crud.pagination.next'}</a>
+            </span>
+        #{/if}
 
     </p>
 #{/if}
