@@ -131,7 +131,16 @@ public class RecordEdit extends Controller {
 		// 保存
 		record.save();
 		
-		callDetailList();
+		if(id==null) {
+			String h_payment_date = null; 			
+			if(payment_date!=null && !payment_date.equals("")) {
+				h_payment_date = payment_date.substring(0, 10);
+			}
+			
+			DetailList.detailList(1, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null);
+		} else {
+			callSessionDetailList();
+		}
 	}
 
 	//レコード削除
@@ -141,21 +150,10 @@ public class RecordEdit extends Controller {
 		// 削除
 		record.delete();
 		
- 		callDetailList();
+ 		callSessionDetailList();
 	}
 	
-	private static void callDetailList() {
-		
-//    		Long h_balance_type_id,  		/* 絞込収支種類ID */
-//    		Long h_ideal_deposit_id,		/* 絞込取扱(My貯金)ID */
-//    		Long h_item_id,					/* 絞込項目ID */
-		
-//    			session.put("hPaymentDateFr", h_payment_date_fr);
-//    			session.put("hPaymentDateTo", h_payment_date_to);
-//    			session.put("hBalanceTypeId", h_balance_type_id);
-//    			session.put("hIdealDepositId", h_ideal_deposit_id);
-//    			session.put("hItemId", h_item_id);
-    			
+	private static void callSessionDetailList() {
     	String h_payment_date_fr = session.get("hPaymentDateFr");
     	String h_payment_date_to = session.get("hPaymentDateTo");
     	Long h_balance_type_id = null;

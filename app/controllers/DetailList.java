@@ -55,12 +55,20 @@ public class DetailList extends Controller {
 		String strSrchRecSql = "";
 		//初回読み込み時の絞込日時範囲の設定
 		if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
-			if(session.get("filExistFlg").equals("true")) {
+			
+			if((session.get("filExistFlg") != null) &&
+					(session.get("filExistFlg").equals("true"))) {
 				h_payment_date_fr = session.get("hPaymentDateFr");
 				h_payment_date_to = session.get("hPaymentDateTo");
-		    	h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
-		    	h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
-		    	h_item_id = Long.parseLong(session.get("hItemId"));
+		    	h_balance_type_id = null;
+				if(!session.get("hBalanceTypeId").equals(""))
+					h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+				h_ideal_deposit_id = null;
+				if(!session.get("hIdealDepositId").equals(""))
+					h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
+		    	h_item_id = null;
+		    	if(!session.get("hItemId").equals(""))
+		    		h_item_id = Long.parseLong(session.get("hItemId"));
 			} else {
 	    		Calendar calendar = Calendar.getInstance();
 	    		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
@@ -193,11 +201,11 @@ public class DetailList extends Controller {
 		} else {
 			//検索条件をセッションに保存
 			session.put("filExistFlg", "true");
-    		session.put("hPaymentDateFr", h_payment_date_fr);
-    		session.put("hPaymentDateTo", h_payment_date_to);
-    		session.put("hBalanceTypeId", h_balance_type_id);
-    		session.put("hIdealDepositId", h_ideal_deposit_id);
-    		session.put("hItemId", h_item_id);
+    		session.put("hPaymentDateFr", h_payment_date_fr==null ? "" : h_payment_date_fr);
+    		session.put("hPaymentDateTo", h_payment_date_to==null ? "" : h_payment_date_to);
+    		session.put("hBalanceTypeId", h_balance_type_id==null ? "" : h_balance_type_id);
+    		session.put("hIdealDepositId", h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
+    		session.put("hItemId", h_item_id==null ? "" : h_item_id);
 				
 			
 			// 検索処理(BalanceTypeMst)
