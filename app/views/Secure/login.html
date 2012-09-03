@@ -1,32 +1,35 @@
 #{extends 'Secure/layout.html' /}
 
-<div id="login">
-	
-	<h1>&{'secure.title'}</h1>
+<img src="/public/images/background_test.jpg" alt="" id="bg-img" />
+<div id="container">
+	<div id="login">
 		
-	#{form @authenticate()}
+		<h1>&{'secure.title'}</h1>
+			
+		#{form @authenticate()}
+			
+			#{if flash.error}
+				<p class="error">
+					&{flash.error}
+				</p>
+			#{/if}
+			#{if flash.success}
+				<p class="success">
+					&{flash.success}
+				</p>
+			#{/if}
 		
-		#{if flash.error}
-			<p class="error">
-				&{flash.error}
+			<p id="username-field">
+				<label for="username">&{'secure.username'}</label>
+				<input type="text" name="username" id="username" value="${flash.username}" />
 			</p>
-		#{/if}
-		#{if flash.success}
-			<p class="success">
-				&{flash.success}
+			<p id="password-field">
+				<label for="password">&{'secure.password'}</label>
+				<input type="password" name="password" id="password" value="" />
 			</p>
-		#{/if}
-	
-		<p id="username-field">
-			<label for="username">&{'secure.username'}</label>
-			<input type="text" name="username" id="username" value="${flash.username}" />
-		</p>
-		<p id="password-field">
-			<label for="password">&{'secure.password'}</label>
-			<input type="password" name="password" id="password" value="" />
-		</p>
-		<p id="signin-field">
-			<input type="submit" id="signin" value="&{'secure.signin'}" />
-		</p>
-	#{/form}
+			<p id="signin-field">
+				<input type="submit" id="signin" value="&{'secure.signin'}" />
+			</p>
+		#{/form}
+	</div>
 </div>

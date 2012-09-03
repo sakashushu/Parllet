@@ -3,7 +3,7 @@ package models;
 import java.math.BigInteger;
 import java.util.List;
 
-public class WorkDailyAccount {
+public class WkDailyAccount {
 	private String sLargeCategory;		/* 大分類 */
 	private String sItem;				/* 項目 */
 	private boolean bBudgetFlg;		/* 予算有無フラグ */
@@ -13,7 +13,7 @@ public class WorkDailyAccount {
 	private String sSumMonth;			/* 月計(表示用) */
 	private long[] lAryDays;			/* 日付毎(数値) */
 	private String[] sAryDays;			/* 日付毎(表示用) */
-	private List<WorkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
+	private List<WkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
 	public String getsLargeCategory() {
 		return sLargeCategory;
 	}
@@ -80,10 +80,10 @@ public class WorkDailyAccount {
 	public void setsAryDays(String[] sAryDays) {
 		this.sAryDays = sAryDays;
 	}
-	public List<WorkDaToDl> getLstWdtd() {
+	public List<WkDaToDl> getLstWdtd() {
 		return lstWdtd;
 	}
-	public void setLstWdtd(List<WorkDaToDl> lstWdtd) {
+	public void setLstWdtd(List<WkDaToDl> lstWdtd) {
 		this.lstWdtd = lstWdtd;
 	}
 }

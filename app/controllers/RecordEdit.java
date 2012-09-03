@@ -130,20 +130,41 @@ public class RecordEdit extends Controller {
 	    }
 		// 保存
 		record.save();
-		//index();
-		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null,null);
+		
+		callDetailList();
 	}
 
 	//レコード削除
 	public static void del_rec(Long id) {
 		// 取扱データの読み出し
 		Record record = Record.findById(id);
-		// 保存
+		// 削除
 		record.delete();
 		
-//		session.put(key, value);
-//		session.get(key);
-
-		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null,null);
+ 		callDetailList();
+	}
+	
+	private static void callDetailList() {
+		
+//    		Long h_balance_type_id,  		/* 絞込収支種類ID */
+//    		Long h_ideal_deposit_id,		/* 絞込取扱(My貯金)ID */
+//    		Long h_item_id,					/* 絞込項目ID */
+		
+//    			session.put("hPaymentDateFr", h_payment_date_fr);
+//    			session.put("hPaymentDateTo", h_payment_date_to);
+//    			session.put("hBalanceTypeId", h_balance_type_id);
+//    			session.put("hIdealDepositId", h_ideal_deposit_id);
+//    			session.put("hItemId", h_item_id);
+    			
+    	String h_payment_date_fr = session.get("hPaymentDateFr");
+    	String h_payment_date_to = session.get("hPaymentDateTo");
+    	Long h_balance_type_id = null;
+    	Long h_ideal_deposit_id = null;
+    	Long h_item_id = null;
+    	h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+    	h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
+    	h_item_id = Long.parseLong(session.get("hItemId"));
+		
+		DetailList.detailList(1, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null);
 	}
 }

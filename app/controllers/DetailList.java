@@ -48,39 +48,49 @@ public class DetailList extends Controller {
     		List<Long> e_item_id,			/* 変更行の項目ID */
     		List<String> n_payment_date,	/* 変更行の支払日 */
     		List<Long> n_item_id,			/* 変更行の項目ID */
-    		String srch,	/* 「絞込」ボタン */
-    		String save		/* 「保存」ボタン */
+    		String srch,		/* 「絞込」ボタン */
+    		String save			/* 「保存」ボタン */
     		) {
-    	String strSrchRecSql = "";
-    	if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
-    		Calendar calendar = Calendar.getInstance();
-    		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-    		calendar.add(Calendar.MONTH, -1);
-//    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
-    		h_payment_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-    	}
-    	
-    	//初回読み込み時のページは１ページとする
-    	if(page == 0)
-    		page = 1;
-
-    	List<Record> records = null;
-    	List<BalanceTypeMst> bTypes = null;
-    	List<IdealDepositMst> iDepos = null;
-    	BalanceTypeMst bTypeIn = null;
-    	BalanceTypeMst bTypeOut = null;
-    	List<ItemMst> itemsIn = null;
-    	List<ItemMst> itemsOut = null;
-    	
-    	long count = 0L;		//レコード数
-    	int iLinage = 30;		//１ページあたりの行数
-    	int nbPages = 0;		//ページ数
-    	
-    	// 「保存」ボタンが押された場合
-    	if(save != null) {
+		
+		String strSrchRecSql = "";
+		//初回読み込み時の絞込日時範囲の設定
+		if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
+			if(session.get("filExistFlg").equals("true")) {
+				h_payment_date_fr = session.get("hPaymentDateFr");
+				h_payment_date_to = session.get("hPaymentDateTo");
+		    	h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+		    	h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
+		    	h_item_id = Long.parseLong(session.get("hItemId"));
+			} else {
+	    		Calendar calendar = Calendar.getInstance();
+	    		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+	    		calendar.add(Calendar.MONTH, -1);
+//	    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
+	    		h_payment_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			}
+		}
+		
+		//初回読み込み時のページは１ページとする
+		if(page == 0)
+			page = 1;
+	
+		List<Record> records = null;
+		List<BalanceTypeMst> bTypes = null;
+		List<IdealDepositMst> iDepos = null;
+		BalanceTypeMst bTypeIn = null;
+		BalanceTypeMst bTypeOut = null;
+		List<ItemMst> itemsIn = null;
+		List<ItemMst> itemsOut = null;
+		
+		long count = 0L;		//レコード数
+		int iLinage = 30;		//１ページあたりの行数
+		int nbPages = 0;		//ページ数
+		
+		// 「保存」ボタンが押された場合
+		if(save != null) {
 	    	if(save.equals("保存")) {
 			    records = new ArrayList<Record>();
-
+	
 			    // 更新
 	    		Iterator<String> strEPayDt = e_payment_date.iterator();
 	    		Iterator<Long> lngEItemId = e_item_id.iterator();
@@ -126,12 +136,12 @@ public class DetailList extends Controller {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
+	
 	    			// 編集後の行をそのまま戻す
 				    records.add(rec);
 	    		}
-
-
+	
+	
 //			    // 新規作成
 //	    		Iterator<Integer> intNItemId = n_item_id.iterator();
 //	    		for (String spDt : n_payment_date) {
@@ -171,7 +181,7 @@ public class DetailList extends Controller {
 //						// TODO Auto-generated catch block
 //						e.printStackTrace();
 //					}
-//
+//	
 //	    			// 作成後の行をそのまま戻す
 //				    records.add(nRec);
 //	    		}
@@ -180,24 +190,33 @@ public class DetailList extends Controller {
 	    	
 	    	
 	    	
-    	} else {
-    		// 検索処理(BalanceTypeMst)
-    		bTypes = BalanceTypeMst.find("order by id").fetch();
-    		
-    		// 検索処理(ItemMst(収入))
-    		bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
-    		itemsIn = ItemMst.find("byBalance_type_mst", bTypeIn).fetch();
-    		
+		} else {
+			//検索条件をセッションに保存
+			session.put("filExistFlg", "true");
+    		session.put("hPaymentDateFr", h_payment_date_fr);
+    		session.put("hPaymentDateTo", h_payment_date_to);
+    		session.put("hBalanceTypeId", h_balance_type_id);
+    		session.put("hIdealDepositId", h_ideal_deposit_id);
+    		session.put("hItemId", h_item_id);
+				
+			
+			// 検索処理(BalanceTypeMst)
+			bTypes = BalanceTypeMst.find("order by id").fetch();
+			
+			// 検索処理(ItemMst(収入))
+			bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
+			itemsIn = ItemMst.find("byBalance_type_mst", bTypeIn).fetch();
+			
 	    	// 検索処理(ItemMst(支出))
-    		bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
-    		itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
-
-    		// 検索処理(IdealDepositMst)
-    		iDepos = IdealDepositMst.find("order by id").fetch();
-    		
-    		// 検索処理(Record)
+			bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
+			itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
+	
+			// 検索処理(IdealDepositMst)
+			iDepos = IdealDepositMst.find("order by id").fetch();
+			
+			// 検索処理(Record)
 			HaUser haUser = (HaUser)renderArgs.get("haUser");
-    		strSrchRecSql += "ha_user = " + haUser.id;
+			strSrchRecSql += "ha_user = " + haUser.id;
 	    	//  日付範囲
 	   		strSrchRecSql += " and payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
 	   		//  収支種類
@@ -229,12 +248,15 @@ public class DetailList extends Controller {
 //	    			strSrchRecSql).from(0).fetch(30);
 	    	records = Record.find(
 	    			strSrchRecSql).from(0).fetch(page, 30);
-    	}
-
-    	
-//    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
-//    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
+		}
+	
+	    	
+//		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
+//		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
     	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
+			
+		
+		
     }
 	
 	public static class WebSocketApp extends WebSocketController {

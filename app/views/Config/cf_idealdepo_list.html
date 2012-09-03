@@ -2,12 +2,14 @@
 
 <h3>&{'views.config.cf_idealdepo'}　&{'views.common.update.edit'}</h3>
 
+<div class="objectForm">
 #{list items:idealDepositMsts, as:'idealDepositMst'}
-	<p class="data ${idealDepositMst_parity}">
+	<p class="data ${idealDepositMst_parity} crudField">
 		<a href="@{cf_idealdepo_edit(idealDepositMst.id)}">
 		${idealDepositMst.ideal_deposit_name}</a>
 	</p>
 #{/list}
+</div>
  
 <p id="newData" >
     <a href="@{cf_idealdepo_edit()}">

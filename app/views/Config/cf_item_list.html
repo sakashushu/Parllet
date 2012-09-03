@@ -2,8 +2,9 @@
 
 <h3>&{'views.config.cf_item'}(${sBalanceType})　&{'views.common.update.edit'}</h3>
 
+<div class="objectForm">
 #{list items:itemMsts, as:'itemMst'}
-	<p class="data ${itemMst_parity}">
+	<p class="data ${itemMst_parity} crudField">
 	  #{if sBalanceType == messages.get('BalanceType.in')}
 		<a href="@{cf_item_in_edit(itemMst.id)}">
 	  #{/if}
@@ -13,6 +14,7 @@
 		${itemMst.item_name}</a>
 	</p>
 #{/list}
+</div>
  
 <p id="newData" >
 	<!-- 

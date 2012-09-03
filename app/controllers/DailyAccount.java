@@ -19,8 +19,8 @@ import models.HandlingMst;
 import models.IdealDepositMst;
 import models.ItemMst;
 import models.Record;
-import models.WorkDaToDl;
-import models.WorkDailyAccount;
+import models.WkDaToDl;
+import models.WkDailyAccount;
 
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -133,7 +133,7 @@ public class DailyAccount extends Controller {
 		
 
 		//日計表の行に相当するリストの作成
-		List<WorkDailyAccount> lWDA = makeWorkList(year, month, dStartDay, iDaysCnt, sTableType);
+		List<WkDailyAccount> lWDA = makeWorkList(year, month, dStartDay, iDaysCnt, sTableType);
    		
    		//日計表の日付ごとの部分のスクロール内の幅の設定
 		int iWidth = iDaysCnt * 100;
@@ -303,7 +303,7 @@ public class DailyAccount extends Controller {
 	 * @param sTableType
 	 * @return
 	 */
-	private static List<WorkDailyAccount> makeWorkList(
+	private static List<WkDailyAccount> makeWorkList(
 			Integer year,
 			Integer month,
 			Date dStartDay,
@@ -311,7 +311,7 @@ public class DailyAccount extends Controller {
 			String sTableType
 			) {
 		//日計表・残高表の行に相当するリスト
-   		List<WorkDailyAccount> lWDA = new ArrayList<WorkDailyAccount>();
+   		List<WkDailyAccount> lWDA = new ArrayList<WkDailyAccount>();
    		
    		Calendar calendar = Calendar.getInstance();
    		
@@ -383,7 +383,7 @@ public class DailyAccount extends Controller {
 			String sFirstDay,
 			String sNextFirst,
 			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」・「My貯金預入」・「My貯金から支払」
-			List<WorkDailyAccount> lWDA
+			List<WkDailyAccount> lWDA
 			) {
 		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
 		NumberFormat nf = NumberFormat.getInstance();
@@ -395,7 +395,7 @@ public class DailyAccount extends Controller {
    		String sSql = "";
 		
    		//合計行
-   		WorkDailyAccount wDA = new WorkDailyAccount();
+   		WkDailyAccount wDA = new WkDailyAccount();
 
    		String sSqlBase = "";
    		String sSqlBaseG = "";
@@ -572,7 +572,7 @@ public class DailyAccount extends Controller {
 		long[] lAryDaysG = new long[iDaysCnt];
 		String[] sAryDaysG = new String[iDaysCnt];
 		calendar.setTime(dStartDay);
-		List<WorkDaToDl> lstWdtdG = new ArrayList<WorkDaToDl>();
+		List<WkDaToDl> lstWdtdG = new ArrayList<WkDaToDl>();
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 	   		String sSqlBaseD = "" +
 					"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -640,7 +640,7 @@ public class DailyAccount extends Controller {
 			}
 			sAryDaysG[iDay] = df.format(lAryDaysG[iDay]);
 			
-			WorkDaToDl workDaToDl = new WorkDaToDl();
+			WkDaToDl workDaToDl = new WkDaToDl();
 			long lAmount = biAryDaysG == null ? 0L : biAryDaysG.longValue();
 			workDaToDl.setlAmount(lAmount);
 			workDaToDl.setsAmount(df.format(lAmount));
@@ -685,7 +685,7 @@ public class DailyAccount extends Controller {
 			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
 				ItemMst itemMst = itrItem.next();
 				
-				WorkDailyAccount wDaItem = new WorkDailyAccount();
+				WkDailyAccount wDaItem = new WkDailyAccount();
 	
 				BigInteger biSumMonth = (BigInteger)JPA.em().createNativeQuery(
 						sSqlBase + sSqlBaseG +
@@ -732,7 +732,7 @@ public class DailyAccount extends Controller {
 				long[] lAryDays = new long[iDaysCnt];
 				String[] sAryDays = new String[iDaysCnt];
 				calendar.setTime(dStartDay);
-				List<WorkDaToDl> lstWdtd = new ArrayList<WorkDaToDl>();
+				List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -744,7 +744,7 @@ public class DailyAccount extends Controller {
 					lAryDays[iDay] = biAryDays == null ? 0L : biAryDays.longValue();
 					sAryDays[iDay] = df.format(lAryDays[iDay]);
 
-					WorkDaToDl workDaToDl = new WorkDaToDl();
+					WkDaToDl workDaToDl = new WkDaToDl();
 					long lAmount = biAryDays == null ? 0L : biAryDays.longValue();
 					workDaToDl.setlAmount(lAmount);
 					workDaToDl.setsAmount(df.format(lAmount));
@@ -776,7 +776,7 @@ public class DailyAccount extends Controller {
 			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
 				IdealDepositMst idealDepositMst = itrIdealDeposit.next();
 				
-				WorkDailyAccount wDaIdealDepo = new WorkDailyAccount();
+				WkDailyAccount wDaIdealDepo = new WkDailyAccount();
 				
 				//残高表示フラグ
 				boolean bRemainderDispFlg = true;
@@ -860,7 +860,7 @@ public class DailyAccount extends Controller {
 				long[] lAryDaysMyDp = new long[iDaysCnt];
 				String[] sAryDaysMyDp = new String[iDaysCnt];
 				calendar.setTime(dStartDay);
-				List<WorkDaToDl> lstWdtd = new ArrayList<WorkDaToDl>();
+				List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
 				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			   		String sSqlBaseD = "" +
 							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
@@ -899,7 +899,7 @@ public class DailyAccount extends Controller {
 					}
 					sAryDaysMyDp[iDay] = df.format(lAryDaysMyDp[iDay]);
 					
-					WorkDaToDl workDaToDl = new WorkDaToDl();
+					WkDaToDl workDaToDl = new WkDaToDl();
 					long lAmount = biAryDaysMyDp == null ? 0L : biAryDaysMyDp.longValue();
 					workDaToDl.setlAmount(lAmount);
 					workDaToDl.setsAmount(df.format(lAmount));
@@ -935,7 +935,7 @@ public class DailyAccount extends Controller {
 			//取扱(実際)ごとのループ（クレジットカードは除いて、引落口座に集約）
 			List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = " + haUser.id + " and handling_type_mst.handling_type_name <> '" + HANDLING_TYPE_CRECA + "'").fetch();
 			for(HandlingMst handlingMst : handlingMsts) {
-				WorkDailyAccount wDaHandling = new WorkDailyAccount();
+				WkDailyAccount wDaHandling = new WkDailyAccount();
 				
 				//残高表示フラグ
 				boolean bRemainderDispFlg = false;

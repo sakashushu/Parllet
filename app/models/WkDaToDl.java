@@ -2,7 +2,7 @@ package models;
 
 import java.math.BigInteger;
 
-public class WorkDaToDl {
+public class WkDaToDl {
 	private long lAmount;				/* 金額 */
 	private String sAmount;			/* 金額(表示用) */
 	private String sPaymentDateFr;		/* 絞込日時範囲（開始） */

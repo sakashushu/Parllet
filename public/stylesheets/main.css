@@ -8,9 +8,30 @@ body {
     padding: 0 15px;
     margin: auto;
 	font-size: 11pt;
-	background-color: #FFFACD;
+//	background-color: #FFFACD;
+//	background-image: url(/public/images/background_test.jpg);
+//	background-attachment: fixed;
 	color: #612d00;
 }
+
+#bg-img {
+  /* Set rules to fill background */
+	min-height: 100%;
+	min-width: 1024px;
+	/* Set up proportionate scaling */
+	width: 100%;
+	height: auto;
+	/* Set up positioning */
+	position: fixed;
+	/* ‚Ü‚½‚Íabsolute; */
+	top: 0;
+    left: 0;
+}
+
+div#container {
+	position: relative;
+}
+
 h1 {
 font-size: 13pt;
 /*
@@ -131,17 +152,20 @@ input[type="text"] {
 /** views.admin.adminMenu.member **/
 
 #admin .data {
-    background: #fff;
-    padding: 4px;
-    margin: 0;
-    font-size: 90%;
+	background: #fff;
+	filter:alpha(opacity=80);
+	padding: 4px;
+	margin: 0;
+	font-size: 90%;
 }
 
 #admin .data.odd {
 /**
 	background: #C0CBE5;
-**/
+
 	background: #dbb96b;
+**/
+	background: transparent;
 }
 
 #admin .data a {
@@ -225,7 +249,8 @@ form .error {
 }
 
 .objectForm {
-	border: 1px solid #ddd;
+//	border: 1px solid #ddd;
+	border: 1px solid #aaa;
 }
 
 /** Show **/
@@ -265,7 +290,8 @@ label.fieldName {
 
 .crudField {
 	padding: 10px;
-	border-bottom: 1px solid #eee;
+//	border-bottom: 1px solid #eee;
+	border-bottom: 1px solid #bbb;
 	position: relative;
 }
 

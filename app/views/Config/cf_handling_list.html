@@ -2,8 +2,9 @@
 
 <h3>${sHandlingType}　&{'views.common.update.edit'}</h3>
 
+<div class="objectForm">
 #{list items:handlingMsts, as:'handlingMst'}
-	<p class="data ${handlingMst_parity}">
+	<p class="data ${handlingMst_parity} crudField">
 	  #{if sHandlingType == messages.get('HandlingType.bank')}
 		<a href="@{cf_bank_edit(handlingMst.id)}">
 	  #{/if}
@@ -16,6 +17,7 @@
 		${handlingMst.handling_name}</a>
 	</p>
 #{/list}
+</div>
  
 <p id="newData" >
   #{if sHandlingType == messages.get('HandlingType.bank')}
