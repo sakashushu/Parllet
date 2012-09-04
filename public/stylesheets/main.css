@@ -9,6 +9,7 @@ body {
     margin: auto;
 	font-size: 11pt;
 //	background-color: #FFFACD;
+	background-color: #f7efc6;
 //	background-image: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
 	color: #612d00;
@@ -362,4 +363,20 @@ label.fieldName {
 
 .flashError {
 	background: #c00;
+}
+
+/** dailyAccount **/
+
+#tbody {
+	width: 646px;
+	height: 470px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/** detailList **/
+
+#dl_tblFrame {
+	width: 100%;
+	overflow-x: auto;
 }

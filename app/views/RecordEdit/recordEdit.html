@@ -85,9 +85,9 @@ jQuery(document).ready(function() {
 		}
 	}
 });
-//起動時の「取扱(実際)」の入力可・不可
+//起動時の「取扱(実際)」・「引落日」の入力可・不可
 jQuery(document).ready(function() {
-	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
+	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」・「引落日」は選択可能
 	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
@@ -95,9 +95,14 @@ jQuery(document).ready(function() {
 			) {
 		jQuery('#handling_mst_lbl').removeAttr("disabled");
 		jQuery('#handling_mst').removeAttr("disabled");
+		jQuery('#debit_date_lbl').removeAttr("disabled");
+		jQuery('#debit_date').removeAttr("disabled");
 	} else {
 		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
 		jQuery('#handling_mst').attr("disabled", "disabled");
+		jQuery('#debit_date_lbl').attr("disabled", "disabled");
+		jQuery('#debit_date').attr("disabled", "disabled");
+		jQuery('#debit_date').val('');
 	}
 });
 //起動時の「引落日」の入力可・不可
@@ -166,41 +171,52 @@ jQuery(document).ready(function(){
 		}
 	});
 });
-//「支払日」・「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
+//「収支種類」・「支払日」・「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
 jQuery(document).ready(function(){
-	jQuery('#handling_mst, #payment_date').change(function(){
-		//「取扱(実際)」が現金の時は「項目」は選択不可
+	jQuery('#balance_type_mst, #handling_mst, #payment_date').change(function(){
+		//「取扱(実際)」が現金の時は「引落日」は選択不可
 		if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
 			jQuery('#debit_date_lbl').attr("disabled", "disabled");
 			jQuery('#debit_date').attr("disabled", "disabled");
 			jQuery('#debit_date').val('');
-		//「取扱(実際)」が現金以外の時は「項目」は選択可能で、デフォルト日付を表示
+		//「取扱(実際)」が現金以外の時
 		} else {
-			jQuery('#debit_date_lbl').removeAttr("disabled");
-			jQuery('#debit_date').removeAttr("disabled");
-			#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
-			  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
-				//支払日が正しく入っている時
-				var sDate = jQuery('#payment_date').val().substr(0,10);
-				if(ckDate(sDate)==true) {
-					//「取扱(実際)」がクレジットカードの場合
-					if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
-						var dateFormat = new DateFormat("yyyy/MM/dd");
-						var vYear = sDate.substr(0, 4) - 0;
-						var vMonth = sDate.substr(5, 2) - 1;
-						var vDay = sDate.substr(8, 2) - 0;
-						var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
-						var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
-						jQuery('#debit_date').val(dateFormat.format(rDate));
-						
-					//「取扱(実際)」がクレジットカード以外の場合
-					} else {
-						//引落日に支払日をセット
-						jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
+			//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
+			if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_in'}" ||
+					jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_out'}"
+					) {
+				jQuery('#debit_date_lbl').attr("disabled", "disabled");
+				jQuery('#debit_date').attr("disabled", "disabled");
+				jQuery('#debit_date').val('');
+				
+			//「収支種類」が上記以外の時は「引落日」は選択可能で、デフォルト日付を表示
+			} else {
+				jQuery('#debit_date_lbl').removeAttr("disabled");
+				jQuery('#debit_date').removeAttr("disabled");
+				#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
+				  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
+					//支払日が正しく入っている時
+					var sDate = jQuery('#payment_date').val().substr(0,10);
+					if(ckDate(sDate)==true) {
+						//「取扱(実際)」がクレジットカードの場合
+						if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
+							var dateFormat = new DateFormat("yyyy/MM/dd");
+							var vYear = sDate.substr(0, 4) - 0;
+							var vMonth = sDate.substr(5, 2) - 1;
+							var vDay = sDate.substr(8, 2) - 0;
+							var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
+							var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
+							jQuery('#debit_date').val(dateFormat.format(rDate));
+							
+						//「取扱(実際)」がクレジットカード以外の場合
+						} else {
+							//引落日に支払日をセット
+							jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
+						}
 					}
-				}
-			  }			
-			#{/list}
+				  }			
+				#{/list}
+			}
 		}
 	});
 });

@@ -14,6 +14,7 @@
 
 #{form @detailList()}
 
+	<div id="dl_tblFrame">
 	<table id="tblDetailList" class="ui-widget ui-widget-content" border="1">
 	
 		<thead>
@@ -181,10 +182,11 @@
 		</tbody>
 		
 	</table>
+	</div>
 	
-<div id="configListPagination">
-	#{DetailList.pagination /}
-</div>
+	<div id="configListPagination">
+		#{DetailList.pagination /}
+	</div>
 
 	#{if records.size() > 0}
 		<input type="submit" name="save" value="保存" />

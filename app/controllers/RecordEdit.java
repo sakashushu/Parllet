@@ -157,11 +157,14 @@ public class RecordEdit extends Controller {
     	String h_payment_date_fr = session.get("hPaymentDateFr");
     	String h_payment_date_to = session.get("hPaymentDateTo");
     	Long h_balance_type_id = null;
+		if(!session.get("hBalanceTypeId").equals(""))
+			h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
     	Long h_ideal_deposit_id = null;
+		if(!session.get("hIdealDepositId").equals(""))
+			h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
     	Long h_item_id = null;
-    	h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
-    	h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
-    	h_item_id = Long.parseLong(session.get("hItemId"));
+		if(!session.get("hItemId").equals(""))
+			h_item_id = Long.parseLong(session.get("hItemId"));
 		
 		DetailList.detailList(1, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null);
 	}

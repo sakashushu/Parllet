@@ -207,6 +207,7 @@ public class DetailList extends Controller {
     		session.put("hIdealDepositId", h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
     		session.put("hItemId", h_item_id==null ? "" : h_item_id);
 				
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			
 			// 検索処理(BalanceTypeMst)
 			bTypes = BalanceTypeMst.find("order by id").fetch();
@@ -220,10 +221,9 @@ public class DetailList extends Controller {
 			itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
 	
 			// 検索処理(IdealDepositMst)
-			iDepos = IdealDepositMst.find("order by id").fetch();
+			iDepos = IdealDepositMst.find("ha_user = ? order by id", haUser).fetch();
 			
 			// 検索処理(Record)
-			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			strSrchRecSql += "ha_user = " + haUser.id;
 	    	//  日付範囲
 	   		strSrchRecSql += " and payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
