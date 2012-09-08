@@ -271,10 +271,6 @@ input[type="submit"],input[type="button"] {
     font-size: 80%;
 }
 
-.dl_tbl li {
-	clear:both;
-}
-
 .dl_tbl li div {
 	display: table-cell;
 	border-right: 1px solid #aaa;
@@ -297,9 +293,30 @@ input[type="submit"],input[type="button"] {
 }
 
 /* ‰º‹L‚ª–³‚¢‚Æ .dl_tbl ‚Ì font-size: 80%; ‚ªŒø‚©‚È‚¢ */
-.dl_tbl_content {
+.dl_tbl_content , .dl_edit_link {
 	font-size: 100%;
 }
+
+.dl_edit_link , .dl_edit_link:visited {
+	padding: 0px 8px;
+	background-color: transparent;
+	color: #aaa;
+	text-decoration: none;
+}
+
+.dl_edit_link:active {
+	border-style: inset;
+}
+
+.dl_edit_link:hover , .dl_edit_link:focus {
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+	cursor: pointer;
+}
+
 
 .dl_payment_date {
 	width:90px;

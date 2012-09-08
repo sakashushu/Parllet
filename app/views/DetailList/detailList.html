@@ -184,165 +184,162 @@
 	</div>
 -->
 	
-
-	
-	
 	<div id="dl_tblFrame">
-	<div id="dl_tblContent">
-	<ul class="dl_tbl">
-		<!-- ヘッダー行 -->
-		<li>
-			<div class="dl_srch_edit dl_head">
-				<input type="submit" class="dl_tbl_content" name="srch" value="絞込" />
-			</div>
-			<!-- 支払日 -->
-			<div class="dl_payment_date dl_head">
-				&{'payment_date'}<br>
-				<input type="text" class="dl_tbl_content dl_payment_date_text" id="from" name="h_payment_date_fr" value="${h_payment_date_fr}" />
-				<br><label for="to">～</label><br>
-				<input type="text" class="dl_tbl_content dl_payment_date_text" id="to" name="h_payment_date_to" value="${h_payment_date_to}" />
-			</div>
-			<!-- 収支種類 -->
-			<div class="dl_balance_type dl_head">
-				&{'balance_type_mst'}<br>
-				<select class="dl_tbl_content" name="h_balance_type_id">
-					<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					#{list items:bTypes, as:'bType'}
-					<option value="${bType.id}"${h_balance_type_id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
-					#{/list}
-				</select>
-			</div>
-			<!-- 取扱(実際) -->
-			<div class="dl_balance_type dl_head">
-				&{'handling_mst'}<br>
-				<select class="dl_tbl_content">
-					<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					#{list items:handlings, as:'handling'}
-					<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
-					#{/list}
-				</select>
-			</div>
-			<!-- 取扱(My貯金) -->
-			<div class="dl_balance_type dl_head">
-				&{'ideal_deposit_mst'}<br>
-				<select class="dl_tbl_content" name="h_ideal_deposit_id">
-					<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					#{list items:iDepos, as:'iDepo'}
-					<option value="${iDepo.id}"${h_ideal_deposit_id==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
-					#{/list}
-					<option value="-1"${h_ideal_deposit_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
-					<option value="-2"${h_ideal_deposit_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
-				</select>
-			</div>
-			<!-- 項目 -->
-			<div class="dl_balance_type dl_head">
-				&{'item_mst'}<br>
-				<select class="dl_tbl_content" id="h_combo" name="h_item_id">
-					<option value="0"${h_item_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					#{list items:itemsIn, as:'itemIn'}
-					<option value="${itemIn.id}"${h_item_id==itemIn.id ? ' selected' : ''}>${itemIn.item_name}</option>
-					#{/list}
-					#{list items:itemsOut, as:'itemOut'}
-					<option value="${itemOut.id}"${h_item_id==itemOut.id ? ' selected' : ''}>${itemOut.item_name}</option>
-					#{/list}
-				</select>
-			</div>
-			<!-- 金額 -->
-			<div class="dl_balance_type dl_head">
-				&{'amount'}<br>
-			</div>
-			<!-- 引落日 -->
-			<div class="dl_balance_type dl_head">
-				&{'debit_date'}<br>
-			</div>
-			<!-- 内容 -->
-			<div class="dl_balance_type dl_head">
-				&{'content'}<br>
-			</div>
-			<!-- お店 -->
-			<div class="dl_balance_type dl_head">
-				&{'store'}<br>
-			</div>
-			<!-- 備考 -->
-			<div class="dl_balance_type dl_head">
-				&{'remarks'}<br>
-			</div>
-			#{if session.get('actionMode')!='View'}
-				<!-- 備考(非公開) -->
-				<div class="dl_balance_type dl_head">
-					&{'secret_remarks'}<br>
-				</div>
-				
-			#{/if}
-				
-		</li>
-		<!-- 明細行 -->
-		#{if records.size() > 0}
-			#{list items:records, as:'record'}
-			<li>
-				<!-- 編集ボタン -->
-				<div class="dl_srch_edit">
-					<!-- id -->
-					<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
-					<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
-				</div>
-				<!-- 支払日 -->
-				<div class="dl_payment_date">
-					${record.payment_date.format('yyyy/MM/dd')}
-				</div>
-				<!-- 収支種類 -->
-				<div class="dl_balance_type">
-					${record.balance_type_mst.balance_type_name}
-				</div>
-				<!-- 取扱(実際) -->
-				<div class="dl_balance_type">
-					${record?.handling_mst?.handling_name}
-				</div>
-				<!-- 取扱(My貯金) -->
-				<div class="dl_balance_type">
-					${record?.ideal_deposit_mst?.ideal_deposit_name}
-				</div>
-				<!-- 項目 -->
-				<div class="dl_balance_type">
-					${record?.item_mst?.item_name}
-				</div>
-				<!-- 金額 -->
-				<div class="dl_balance_type">
-					${record?.amount}
-				</div>
-				<!-- 引落日 -->
-				<div class="dl_balance_type">
-					${record?.debit_date?.format('yyyy/MM/dd')}
-				</div>
-				<!-- 内容 -->
-				<div class="dl_balance_type">
-					${record?.content}
-				</div>
-				<!-- お店 -->
-				<div class="dl_balance_type">
-					${record?.store}
-				</div>
-				<!-- 備考 -->
-				<div class="dl_balance_type">
-					${record?.remarks}
-				</div>
-				#{if session.get('actionMode')!='View'}
-					<!-- 備考(非公開) -->
-					<div class="dl_balance_type">
-						${record?.secret_remarks}
+		<div id="dl_tblContent">
+			<ul class="dl_tbl">
+				<!-- ヘッダー行 -->
+				<li>
+					<div class="dl_srch_edit dl_head">
+						<input type="submit" class="dl_tbl_content" name="srch" value="絞込" />
 					</div>
-					
+					<!-- 支払日 -->
+					<div class="dl_payment_date dl_head">
+						&{'payment_date'}<br>
+						<input type="text" class="dl_tbl_content dl_payment_date_text" id="from" name="h_payment_date_fr" value="${h_payment_date_fr}" />
+						<br><label for="to">～</label><br>
+						<input type="text" class="dl_tbl_content dl_payment_date_text" id="to" name="h_payment_date_to" value="${h_payment_date_to}" />
+					</div>
+					<!-- 収支種類 -->
+					<div class="dl_balance_type dl_head">
+						&{'balance_type_mst'}<br>
+						<select class="dl_tbl_content" name="h_balance_type_id">
+							<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+							#{list items:bTypes, as:'bType'}
+							<option value="${bType.id}"${h_balance_type_id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
+							#{/list}
+						</select>
+					</div>
+					<!-- 取扱(実際) -->
+					<div class="dl_balance_type dl_head">
+						&{'handling_mst'}<br>
+						<select class="dl_tbl_content" name="h_handling_id">
+							<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+							#{list items:handlings, as:'handling'}
+							<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
+							#{/list}
+						</select>
+					</div>
+					<!-- 取扱(My貯金) -->
+					<div class="dl_balance_type dl_head">
+						&{'ideal_deposit_mst'}<br>
+						<select class="dl_tbl_content" name="h_ideal_deposit_id">
+							<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+							#{list items:iDepos, as:'iDepo'}
+							<option value="${iDepo.id}"${h_ideal_deposit_id==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
+							#{/list}
+							<option value="-1"${h_ideal_deposit_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
+							<option value="-2"${h_ideal_deposit_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
+						</select>
+					</div>
+					<!-- 項目 -->
+					<div class="dl_balance_type dl_head">
+						&{'item_mst'}<br>
+						<select class="dl_tbl_content" id="h_combo" name="h_item_id">
+							<option value="0"${h_item_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+							#{list items:itemsIn, as:'itemIn'}
+							<option value="${itemIn.id}"${h_item_id==itemIn.id ? ' selected' : ''}>${itemIn.item_name}</option>
+							#{/list}
+							#{list items:itemsOut, as:'itemOut'}
+							<option value="${itemOut.id}"${h_item_id==itemOut.id ? ' selected' : ''}>${itemOut.item_name}</option>
+							#{/list}
+						</select>
+					</div>
+					<!-- 金額 -->
+					<div class="dl_balance_type dl_head">
+						&{'amount'}<br>
+					</div>
+					<!-- 引落日 -->
+					<div class="dl_balance_type dl_head">
+						&{'debit_date'}<br>
+					</div>
+					<!-- 内容 -->
+					<div class="dl_balance_type dl_head">
+						&{'content'}<br>
+					</div>
+					<!-- お店 -->
+					<div class="dl_balance_type dl_head">
+						&{'store'}<br>
+					</div>
+					<!-- 備考 -->
+					<div class="dl_balance_type dl_head">
+						&{'remarks'}<br>
+					</div>
+					#{if session.get('actionMode')!='View'}
+						<!-- 備考(非公開) -->
+						<div class="dl_balance_type dl_head">
+							&{'secret_remarks'}<br>
+						</div>
+						
+					#{/if}
+						
+				</li>
+				<!-- 明細行 -->
+				#{if records.size() > 0}
+					#{list items:records, as:'record'}
+					<li>
+						<!-- 編集ボタン -->
+						<div class="dl_srch_edit">
+							<!-- id -->
+							<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
+							<!-- 
+							<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
+							 -->
+							<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
+						</div>
+						<!-- 支払日 -->
+						<div class="dl_payment_date">
+							${record.payment_date.format('yyyy/MM/dd')}
+						</div>
+						<!-- 収支種類 -->
+						<div class="dl_balance_type">
+							${record.balance_type_mst.balance_type_name}
+						</div>
+						<!-- 取扱(実際) -->
+						<div class="dl_balance_type">
+							${record?.handling_mst?.handling_name}
+						</div>
+						<!-- 取扱(My貯金) -->
+						<div class="dl_balance_type">
+							${record?.ideal_deposit_mst?.ideal_deposit_name}
+						</div>
+						<!-- 項目 -->
+						<div class="dl_balance_type">
+							${record?.item_mst?.item_name}
+						</div>
+						<!-- 金額 -->
+						<div class="dl_balance_type">
+							${record?.amount}
+						</div>
+						<!-- 引落日 -->
+						<div class="dl_balance_type">
+							${record?.debit_date?.format('yyyy/MM/dd')}
+						</div>
+						<!-- 内容 -->
+						<div class="dl_balance_type">
+							${record?.content}
+						</div>
+						<!-- お店 -->
+						<div class="dl_balance_type">
+							${record?.store}
+						</div>
+						<!-- 備考 -->
+						<div class="dl_balance_type">
+							${record?.remarks}
+						</div>
+						#{if session.get('actionMode')!='View'}
+							<!-- 備考(非公開) -->
+							<div class="dl_balance_type">
+								${record?.secret_remarks}
+							</div>
+							
+						#{/if}
+						
+					</li>
+					#{/list}
 				#{/if}
-				
-			</li>
-			#{/list}
-		#{/if}
-	</ul>	
-
+			</ul>	
+		</div>
 	</div>
-	</div>
-	
-	
 	
 	<div id="configListPagination">
 		#{DetailList.pagination /}

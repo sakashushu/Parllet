@@ -57,6 +57,7 @@ public class DetailList extends Controller {
 		//初回読み込み時の絞込日時範囲の設定
 		if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
 			
+			//セッションに絞込条件が入っている時はそれぞれセット
 			if((session.get("filExistFlg") != null) &&
 					(session.get("filExistFlg").equals("true"))) {
 				h_payment_date_fr = session.get("hPaymentDateFr");
@@ -70,11 +71,13 @@ public class DetailList extends Controller {
 		    	h_item_id = null;
 		    	if(!session.get("hItemId").equals(""))
 		    		h_item_id = Long.parseLong(session.get("hItemId"));
+		    	
+		    //初回読み込み時は絞込日時範囲は現在日付の前後日
 			} else {
 	    		Calendar calendar = Calendar.getInstance();
+	    		calendar.add(Calendar.DATE, 1);
 	    		h_payment_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-	    		calendar.add(Calendar.MONTH, -1);
-//	    		h_payment_date_fr = String.format("%1$tY/%1$tm", calendar.getTime()) + "/01";
+	    		calendar.add(Calendar.DATE, -2);
 	    		h_payment_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			}
 		}
@@ -243,9 +246,9 @@ public class DetailList extends Controller {
 	   		if(h_handling_id != null) {
 	   			if(h_handling_id == -1) {
 	   				strSrchRecSql += " and handling_mst.id is null ";
-	   			} else if(h_ideal_deposit_id == -2) {
+	   			} else if(h_handling_id == -2) {
 	   				strSrchRecSql += " and handling_mst.id is not null ";
-	   			} else if(h_ideal_deposit_id != 0) {
+	   			} else if(h_handling_id != 0) {
 	   				strSrchRecSql += " and handling_mst.id = " + h_handling_id;
 	   			}
 	   		}
@@ -277,7 +280,7 @@ public class DetailList extends Controller {
 	    	
 //		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
 //		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
-    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
+    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
 			
 		
 		
