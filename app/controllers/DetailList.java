@@ -41,6 +41,7 @@ public class DetailList extends Controller {
     		String h_payment_date_fr,		/* 絞込日時範囲（開始） */
     		String h_payment_date_to,		/* 絞込日時範囲（終了） */
     		Long h_balance_type_id,  		/* 絞込収支種類ID */
+    		Long h_handling_id,				/* 絞込取扱(実際)ID */
     		Long h_ideal_deposit_id,		/* 絞込取扱(My貯金)ID */
     		Long h_item_id,					/* 絞込項目ID */
     		List<Long> e_id,				/* 変更行のID */
@@ -85,6 +86,7 @@ public class DetailList extends Controller {
 		List<Record> records = null;
 		List<BalanceTypeMst> bTypes = null;
 		List<IdealDepositMst> iDepos = null;
+		List<HandlingMst> handlings = null;
 		BalanceTypeMst bTypeIn = null;
 		BalanceTypeMst bTypeOut = null;
 		List<ItemMst> itemsIn = null;
@@ -129,7 +131,7 @@ public class DetailList extends Controller {
 					    validation.valid(eRec);
 					    if(validation.hasErrors()) {
 					    	// 以下の描画では駄目かも？
-					    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
+					    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
@@ -204,6 +206,7 @@ public class DetailList extends Controller {
     		session.put("hPaymentDateFr", h_payment_date_fr==null ? "" : h_payment_date_fr);
     		session.put("hPaymentDateTo", h_payment_date_to==null ? "" : h_payment_date_to);
     		session.put("hBalanceTypeId", h_balance_type_id==null ? "" : h_balance_type_id);
+    		session.put("hHandlingId", h_handling_id==null ? "" : h_handling_id);
     		session.put("hIdealDepositId", h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
     		session.put("hItemId", h_item_id==null ? "" : h_item_id);
 				
@@ -211,6 +214,12 @@ public class DetailList extends Controller {
 			
 			// 検索処理(BalanceTypeMst)
 			bTypes = BalanceTypeMst.find("order by id").fetch();
+			
+			// 検索処理(IdealDepositMst)
+			iDepos = IdealDepositMst.find("ha_user = ? order by id", haUser).fetch();
+			
+			// 検索処理(HandlingMst)
+			handlings = HandlingMst.find("ha_user = ? order by id", haUser).fetch();
 			
 			// 検索処理(ItemMst(収入))
 			bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
@@ -220,9 +229,6 @@ public class DetailList extends Controller {
 			bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
 			itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
 	
-			// 検索処理(IdealDepositMst)
-			iDepos = IdealDepositMst.find("ha_user = ? order by id", haUser).fetch();
-			
 			// 検索処理(Record)
 			strSrchRecSql += "ha_user = " + haUser.id;
 	    	//  日付範囲
@@ -231,6 +237,16 @@ public class DetailList extends Controller {
 	   		if(h_balance_type_id != null) {
 	   			if(h_balance_type_id != 0L) {
 	   				strSrchRecSql += " and balance_type_mst.id = " + h_balance_type_id;
+	   			}
+	   		}
+	    	//  取扱(実際)
+	   		if(h_handling_id != null) {
+	   			if(h_handling_id == -1) {
+	   				strSrchRecSql += " and handling_mst.id is null ";
+	   			} else if(h_ideal_deposit_id == -2) {
+	   				strSrchRecSql += " and handling_mst.id is not null ";
+	   			} else if(h_ideal_deposit_id != 0) {
+	   				strSrchRecSql += " and handling_mst.id = " + h_handling_id;
 	   			}
 	   		}
 	    	//  取扱(My貯金)
@@ -261,7 +277,7 @@ public class DetailList extends Controller {
 	    	
 //		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
 //		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
-    	render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
+    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
 			
 		
 		

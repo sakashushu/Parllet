@@ -49,6 +49,13 @@ input[type="text"] {
    height: 15px;
 }
 
+input[type="submit"],input[type="button"] {
+    border-style: solid;
+    border-color: #aaa;
+    border-width: 1px;
+    cursor: pointer;
+}
+
 .tdNum {
 	text-align: right;
 }
@@ -153,8 +160,7 @@ input[type="text"] {
 /** views.admin.adminMenu.member **/
 
 #admin .data {
-	background: #fff;
-	filter:alpha(opacity=80);
+	background-image: url(/public/images/white60.png);
 	padding: 4px;
 	margin: 0;
 	font-size: 90%;
@@ -219,7 +225,7 @@ input[type="text"] {
  * Ç∑Ç◊ÇƒÇÃê¸Çï\é¶
  */
 .allLine {
-	border: 1px solid black;
+	border: 1px solid #aaa;
 }
 
 /*
@@ -229,18 +235,85 @@ input[type="text"] {
 	border: 1px;
 }
 
-/** DailyAccount **/
+/** dailyAccount **/
 #tblDailyAccount {
     font-size: 80%;
 }
 
-/** DetailList **/
+#tbody {
+	width: 646px;
+	height: 470px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/** detailList **/
 #tblDetailList {
     font-size: 80%;
     width: 100%;
     overflow-y: auto;
 }
 
+#dl_tblFrame {
+	width: 100%;
+    height: 100%;
+	overflow-x: auto;
+}
+
+#dl_tblContent {
+    width: 1300px;
+}
+
+.dl_tbl {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+    font-size: 80%;
+}
+
+.dl_tbl li {
+	clear:both;
+}
+
+.dl_tbl li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+
+.dl_head {
+	border-top: 1px solid #aaa;
+	height: 80px;
+	font-weight: bold;
+	text-align: center;
+	background-image: url(/public/images/white60.png);
+}
+
+.dl_srch_edit {
+	width:50px;
+	border-left: 1px solid #aaa;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/* â∫ãLÇ™ñ≥Ç¢Ç∆ .dl_tbl ÇÃ font-size: 80%; Ç™å¯Ç©Ç»Ç¢ */
+.dl_tbl_content {
+	font-size: 100%;
+}
+
+.dl_payment_date {
+	width:90px;
+	vertical-align: middle;
+}
+
+.dl_payment_date_text {
+    width: 80px;
+}
+
+.dl_balance_type {
+	width:110px;
+	vertical-align: middle;
+}
 
 
 /** Form **/
@@ -363,20 +436,4 @@ label.fieldName {
 
 .flashError {
 	background: #c00;
-}
-
-/** dailyAccount **/
-
-#tbody {
-	width: 646px;
-	height: 470px;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-/** detailList **/
-
-#dl_tblFrame {
-	width: 100%;
-	overflow-x: auto;
 }

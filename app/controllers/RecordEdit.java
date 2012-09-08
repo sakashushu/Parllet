@@ -137,7 +137,7 @@ public class RecordEdit extends Controller {
 				h_payment_date = payment_date.substring(0, 10);
 			}
 			
-			DetailList.detailList(1, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null);
+			DetailList.detailList(1, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, handlingMst==null ? null : handlingMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null);
 		} else {
 			callSessionDetailList();
 		}
@@ -159,6 +159,9 @@ public class RecordEdit extends Controller {
     	Long h_balance_type_id = null;
 		if(!session.get("hBalanceTypeId").equals(""))
 			h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+    	Long h_handling_id = null;
+		if(!session.get("hHandlingId").equals(""))
+			h_handling_id = Long.parseLong(session.get("hHandlingId"));
     	Long h_ideal_deposit_id = null;
 		if(!session.get("hIdealDepositId").equals(""))
 			h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
@@ -166,6 +169,6 @@ public class RecordEdit extends Controller {
 		if(!session.get("hItemId").equals(""))
 			h_item_id = Long.parseLong(session.get("hItemId"));
 		
-		DetailList.detailList(1, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null);
+		DetailList.detailList(1, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null);
 	}
 }

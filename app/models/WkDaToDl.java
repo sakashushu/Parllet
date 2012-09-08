@@ -8,6 +8,7 @@ public class WkDaToDl {
 	private String sPaymentDateFr;		/* 絞込日時範囲（開始） */
 	private String sPaymentDateTo;		/* 絞込日時範囲（終了） */
 	private Long lBalanceTypeId;  		/* 絞込収支種類ID */
+	private Long lHandlingId;			/* 絞込取扱(実際)ID */
 	private Long lIdealDepositId;		/* 絞込取扱(My貯金)ID */
 	private Long lItemId;				/* 絞込項目ID */
 	public long getlAmount() {
@@ -39,6 +40,12 @@ public class WkDaToDl {
 	}
 	public void setlBalanceTypeId(Long lBalanceTypeId) {
 		this.lBalanceTypeId = lBalanceTypeId;
+	}
+	public Long getlHandlingId() {
+		return lHandlingId;
+	}
+	public void setlHandlingId(Long lHandlingId) {
+		this.lHandlingId = lHandlingId;
 	}
 	public Long getlIdealDepositId() {
 		return lIdealDepositId;
