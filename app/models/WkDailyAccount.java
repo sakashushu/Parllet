@@ -6,6 +6,7 @@ import java.util.List;
 public class WkDailyAccount {
 	private String sLargeCategory;		/* 大分類 */
 	private String sItem;				/* 項目 */
+	private boolean bolLastItemFlg;	/* 大分類毎の項目の最終行フラグ */
 	private boolean bBudgetFlg;		/* 予算有無フラグ */
 	private long lBudgetId;			/* 予算ID */
 	private String sBudgetAmount;		/* 予算金額(表示用) */
@@ -25,6 +26,12 @@ public class WkDailyAccount {
 	}
 	public void setsItem(String sItem) {
 		this.sItem = sItem;
+	}
+	public boolean isBolLastItemFlg() {
+		return bolLastItemFlg;
+	}
+	public void setBolLastItemFlg(boolean bolLastItemFlg) {
+		this.bolLastItemFlg = bolLastItemFlg;
 	}
 	public boolean isbBudgetFlg() {
 		return bBudgetFlg;

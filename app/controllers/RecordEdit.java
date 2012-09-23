@@ -1,6 +1,7 @@
 package controllers;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class RecordEdit extends Controller {
 			Long handling_mst,
 			Long ideal_deposit_mst,
 			Long item_mst,
-			Integer amount,
+			String amount,
 			String debit_date,
 			String content,
 			String store,
@@ -73,6 +74,21 @@ public class RecordEdit extends Controller {
 		if(handling_mst!=null) {
 			handlingMst = HandlingMst.findById(handling_mst);
 		}
+		Integer intAmount = null;
+		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+		NumberFormat nf = NumberFormat.getInstance();
+		if(amount!=null) {
+			//数値文字列をNumber型のオブジェクトに変換する
+			Number numAmount;
+			try {
+				numAmount = nf.parse(amount);
+				//Number型のオブジェクトからInteger値を取得する
+				intAmount = numAmount.intValue();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Date debitDate = null;
 		if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
@@ -96,7 +112,7 @@ public class RecordEdit extends Controller {
 					idealDepositMst,
 					itemMst,
 					null,
-					amount,
+					intAmount,
 					0,
 					0,
 					debitDate,
@@ -115,7 +131,7 @@ public class RecordEdit extends Controller {
 			record.handling_mst = handlingMst;
 			record.ideal_deposit_mst = idealDepositMst;
 			record.item_mst = itemMst;
-			record.amount = amount;
+			record.amount = intAmount;
 			record.debit_date = debitDate;
 			record.content = content;
 			record.store = store;

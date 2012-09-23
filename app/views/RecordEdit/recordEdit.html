@@ -6,6 +6,7 @@
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 
 <script type="text/javascript">
 <!--
@@ -240,6 +241,27 @@ function fDebitDate(dBasic,cutoffDay,debitMonth,debitDay){
 	}
 	return dCutoff;
 }
+
+//3桁区切りの数値入力フィールドとして設定
+jQuery(function() {
+	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
+});
+
+//金額を3桁区切りに(初期表示)
+jQuery(document).ready(function(){
+	jQuery('input.numeric').each(function(i) {
+		var numStr = addFigure(jQuery(this).val());
+		jQuery(this).val(numStr);
+	});
+});
+
+//文字列を3桁区切りにする関数
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
+
 /****************************************************************
 * 機　能： 入力された値が日付でYYYY/MM/DD形式になっているか調べる
 * 引　数： datestr　入力された値
@@ -356,7 +378,7 @@ function ckDate(datestr) {
 	    <div class="crudField">
 	        #{field 'amount'}
 	        <label class="fieldName">&{'amount'}:</label>
-	        <input type="text" name="${field.name}" 
+	        <input type="text" name="${field.name}" class="numeric" 
 	            value="${record?.amount}" />
 	        <span class="error">#{error 'record.amount' /}</span>
 	        #{/field}

@@ -1,0 +1,92 @@
+#{extends 'login.html' /}
+#{set title:'日計表' /}
+
+
+<script type="text/javascript">
+<!--
+//起動時の日毎の部分の幅と高さを調整
+jQuery(document).ready(function() {
+	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-180);
+});
+
+//ウィンドウリサイズ時の日毎の部分の幅と高さを調整
+jQuery(document).ready(function() {
+	jQuery(window).resize(function() {
+		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-180);
+	});
+});
+
+//3桁区切りの数値入力フィールドとして設定
+jQuery(function() {
+	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
+});
+// -->
+</script>
+
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
+
+#{form @jump(), id:'frmJump'}
+	<input type="hidden" value="${strTableType}" name="strTableType" />
+	<!-- 対象年月日 -->
+	<input type="text" class="datepicker" name="e_basis_date"
+		value="${sBasisDate}" size="13" />
+	<input type="submit" value="移動" name="move" />
+#{/form}
+
+<ul class="bt_tbl_all">
+	<li>
+		<div id="bt_tcol">
+			<div class="bt_tbl_all_l">
+				<ul class="bt_tbl_each">
+			        %{topFlg = 1}%
+					#{list items:lWDA, as:'lwda'}
+					  #{if lwda.sLargeCategory == '実残高'}
+						<li>
+							#{if lwda.sItem != ''}
+								<div class="bt_cate_small_pre"></div>
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
+							#{/if}
+							#{else}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
+							#{/else}
+							#{list items:lwda.sAryDays, as:'sAryDay'}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
+									<a href="@{DetailList.detailList()}">${sAryDay}</a>
+								</div>
+							#{/list}
+						</li>
+				        %{topFlg = 0}%
+					  #{/if}
+					#{/list}
+				</ul>
+			</div>
+	
+			<div class="bt_tbl_all_r">
+				<ul class="bt_tbl_each">
+			        %{topFlg = 1}%
+					#{list items:lWDA, as:'lwda'}
+					  #{if lwda.sLargeCategory != '実残高'}
+						<li>
+							#{if lwda.sItem != ''}
+								<div class="bt_cate_small_pre"></div>
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
+							#{/if}
+							#{else}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
+							#{/else}
+							#{list items:lwda.sAryDays, as:'sAryDay'}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric">
+									<a href="@{DetailList.detailList()}">${sAryDay}</a>
+								</div>
+								%{leftFlg = 0}%
+							#{/list}
+						</li>
+				        %{topFlg = 0}%
+					  #{/if}
+					#{/list}
+				</ul>
+			</div>
+		</div>
+	</li>
+</ul>	

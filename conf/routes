@@ -12,9 +12,19 @@ GET     /                                       Application.index
 # Import Secure routes
 *       /                                       module:secure
 
+
 # DailyAccount
-GET     /dailyaccount                           DailyAccount.dailyAccount
-POST    /dailyaccount                           DailyAccount.jump
+GET     /dailyAccount/{intBasisDate}            DailyAccount.dailyAccountDisp
+GET     /dailyAccount                           DailyAccount.dailyAccountDisp
+#POST    /dailyAccount/{intBasisDate}            DailyAccount.dailyAccountDisp
+POST    /dailyAccount                           DailyAccount.dailyAccountDisp
+#POST    /dailyAccount/{intBasisDate}            DailyAccount.jump
+#POST    /dailyAccount                           DailyAccount.jump
+
+# BalanceTable
+GET     /balanceTable/{intBasisDate}            DailyAccount.balanceTableDisp
+#GET     /balanceTable                           DailyAccount.balanceTableDisp
+
 
 # RecordEdit new
 GET     /data/myData/{id}                       RecordEdit.recordEdit

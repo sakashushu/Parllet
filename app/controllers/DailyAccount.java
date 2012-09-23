@@ -21,6 +21,7 @@ import models.ItemMst;
 import models.Record;
 import models.WkDaToDl;
 import models.WkDailyAccount;
+import models.WkDailyAccountRender;
 
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -33,10 +34,10 @@ public class DailyAccount extends Controller {
 
 	@Before
 	static void setConnectedUser() {
-		if(Security.isConnected()) {
-			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
-			renderArgs.put("haUser", haUser);
-		}
+		if(!Security.isConnected())
+			return;
+		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+		renderArgs.put("haUser", haUser);
 	}
 	
 	static final String BALANCE_TYPE_IN = Messages.get("BalanceType.in");
@@ -56,243 +57,197 @@ public class DailyAccount extends Controller {
 	static final String VIEWS_DAILY_ACCOUNT = Messages.get("views.dailyaccount.dailyaccount");
 	static final String VIEWS_BALANCE_TABLE = Messages.get("views.dailyaccount.balancetable");
 	
+	
 	/**
-	 * 日計表の表示
+	 * 日計表
 	 * @param sBasisDate
 	 */
 	public static void dailyAccount(
 			String sBasisDate
 			) {
-		String sTableType = VIEWS_DAILY_ACCOUNT;
-		displayTable(sBasisDate, sTableType);
+   		//単純に呼ばれた時の基準日のセット
+		if(sBasisDate==null)
+			sBasisDate = setBasisDate();
+
+		Integer intBasisDate = null;
+		if(sBasisDate!=null)
+			intBasisDate = Integer.parseInt(sBasisDate.replace("/", ""));
+		dailyAccountDisp(intBasisDate);
+	}
+	
+	/**
+	 * 残高表
+	 * @param sBasisDate
+	 */
+	public static void balanceTable(
+			String sBasisDate
+			) {
+   		//単純に呼ばれた時の基準日のセット
+		if(sBasisDate==null)
+			sBasisDate = setBasisDate();
+
+		Integer intBasisDate = null;
+		if(sBasisDate!=null)
+			intBasisDate = Integer.parseInt(sBasisDate.replace("/", ""));
+		balanceTableDisp(intBasisDate);
+	}
+	
+	/**
+	 * 日計表の表示
+	 * @param intBasisDate
+	 */
+	public static void dailyAccountDisp(
+			Integer intBasisDate
+			) {
+		String strTableType = VIEWS_DAILY_ACCOUNT;
+
+		String sBasisDate = null;
+		if(intBasisDate!=null) {
+			String strTmp = intBasisDate.toString();
+			sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+		}
+		
+		//日計表・残高表の表示用ワーク作成
+		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
+		
+		int month = wkDAR.getIntMonth();
+		sBasisDate = wkDAR.getStrBasisDate();
+		String[] sAryDays = wkDAR.getStrAryDays();
+		List<WkDailyAccount> lWDA = wkDAR.getlWDA();
+		int iWidth = wkDAR.getIntWidth();
+		
+		render("@dailyAccount",  month, sBasisDate, strTableType, sAryDays, lWDA, iWidth);
 	}
 	
 	/**
 	 * 残高表の表示
 	 * @param sBasisDate
 	 */
-	public static void balanceTable(
-			String sBasisDate
+	public static void balanceTableDisp(
+			Integer intBasisDate
 			) {
-		String sTableType = VIEWS_BALANCE_TABLE;
-		displayTable(sBasisDate, sTableType);
+		String strTableType = VIEWS_BALANCE_TABLE;
+
+		String sBasisDate = null;
+		if(intBasisDate!=null) {
+			String strTmp = intBasisDate.toString();
+			sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+		}
+		
+		//日計表・残高表の表示用ワーク作成
+		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
+		
+		int month = wkDAR.getIntMonth();
+		sBasisDate = wkDAR.getStrBasisDate();
+		String[] sAryDays = wkDAR.getStrAryDays();
+		List<WkDailyAccount> lWDA = wkDAR.getlWDA();
+		int iWidth = wkDAR.getIntWidth();
+		
+		render("@balanceTable",  month, sBasisDate, strTableType, sAryDays, lWDA, iWidth);
 	}
 	
 	/**
-	 * 日計表・残高表の表示
-	 * @param sBasisDate
+	 * 日計表・残高表の表示用ワーク作成
+	 * @param strBasisDate
+	 * @param strTableType
+	 * @return
 	 */
-	public static void displayTable(
-			String sBasisDate,
-			String sTableType
+	public static WkDailyAccountRender makeWkDAR(
+			String strBasisDate,
+			String strTableType
 			) {
 
+		WkDailyAccountRender wkDAR = new WkDailyAccountRender();
    		Calendar calendar = Calendar.getInstance();
    		
-   		//単純に呼ばれた時（初回等）は、今日を表示
-		if(sBasisDate==null) {
-			sBasisDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-		}
+   		wkDAR.setStrBasisDate(strBasisDate);
+   		
+		//検索条件をセッションに保存
+		session.put("daFilExistFlg", "true");
+		session.put("daStrBasisDate", wkDAR.getStrBasisDate());
 		
-		//セッションのactionModeが空の時は編集モードをセット
-		if(session.get("actionMode")==null) {
-			session.put("actionMode", "Edit");
-		}
+		//セッションのactionModeが空の時は閲覧モードをセット
+		if(session.get("actionMode")==null)
+			session.put("actionMode", "View");
 		
 		Date dBasis = null;
 		try {
-			dBasis = DateFormat.getDateInstance().parse(sBasisDate);
+			dBasis = DateFormat.getDateInstance().parse(wkDAR.getStrBasisDate());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		calendar.setTime(dBasis);
 		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH) + 1;
+		wkDAR.setIntMonth(calendar.get(Calendar.MONTH) + 1);
 
 		int iDaysCnt = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
 		
-		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
 			iDaysCnt = 3;
 			calendar.add(Calendar.DATE, -1);
-		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
+		} else if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
 			iDaysCnt = 1;
 		}
 		
    		
 		//日計表のヘッダーの日付の配列
-		String[] sAryDays = new String[iDaysCnt];
+		String[] strAryDays = new String[iDaysCnt];
 		Date dStartDay = calendar.getTime();
 		SimpleDateFormat sdf1 = new SimpleDateFormat("M/d");
 		
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-			sAryDays[iDay] = sdf1.format(calendar.getTime());
+			strAryDays[iDay] = sdf1.format(calendar.getTime());
 			calendar.add(Calendar.DATE, 1);
 		}
+		wkDAR.setStrAryDays(strAryDays);
 		
 
 		//日計表の行に相当するリストの作成
-		List<WkDailyAccount> lWDA = makeWorkList(year, month, dStartDay, iDaysCnt, sTableType);
+		wkDAR.setlWDA(makeWorkList(year, wkDAR.getIntMonth(), dStartDay, iDaysCnt, strTableType));
    		
    		//日計表の日付ごとの部分のスクロール内の幅の設定
-		int iWidth = iDaysCnt * 100;
+		wkDAR.setIntWidth(iDaysCnt * 100);
    		
-//		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-////			render(year, month, sBasisDate, thisMonthFlg, iAryDays, lWDA, iWidth);
-//			render(month, sBasisDate, sTableType, iAryDays, lWDA, iWidth);
-//		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
-//			render("@dailyAccount",  month, sBasisDate, sTableType, iAryDays, lWDA, iWidth);
-//		}
-
-		render("@dailyAccount",  month, sBasisDate, sTableType, sAryDays, lWDA, iWidth);
-		
+		return wkDAR;
 	}
 
 	
 	/**
 	 * 基準日変更による移動
 	 * @param e_basis_date
-	 * @param sTableType
+	 * @param strTableType
 	 * @param move
 	 */
 	public static void jump(
     		String e_basis_date,
-    		String sTableType,
+    		String strTableType,
     		String move			/* 「移動」ボタン */
 			) {
-
+		
+		// 「移動」ボタンが押されていない時は処理を抜ける
+		if(move==null)
+			return;
+		
 		Calendar calendar = Calendar.getInstance();
-    	// 「移動」ボタンが押された場合
-		if(move != null) {
-			Date dBasis = null;
-			try {
-				dBasis = DateFormat.getDateInstance().parse(e_basis_date);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			calendar.setTime(dBasis);
-    		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-    			dailyAccount(e_basis_date);
-    		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
-    			balanceTable(e_basis_date);
-    		}
-    	}
-	}
-	
-	/**
-	 * 予算更新
-	 * @param bg_basis_date
-	 * @param e_budget_id
-	 * @param e_budget_amount
-	 */
-	public static void updBudget(
-			String bg_basis_date,
-    		List<Long> e_budget_id,			/* 変更行のID */
-    		List<String> e_large_category,	/* 変更行の大分類行の名称「収入」・「支出」・「My貯金預入」 */
-    		List<String> e_item,			/* 変更行の項目 */
-    		List<String> e_budget_amount	/* 変更行の金額 */
-			) {
-		
-		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
-		NumberFormat nf = NumberFormat.getInstance();
-
-		Iterator<String> sELargeCategory = e_large_category.iterator();
-		Iterator<String> sEItem = e_item.iterator();
-   		Iterator<String> sEBudgetAmount = e_budget_amount.iterator();
-		for (Long lId : e_budget_id) {
-			
-			String sELargeCategoryVal = sELargeCategory.next();
-			String sEItemVal = sEItem.next();
-			String sEBudgetAmountVal = sEBudgetAmount.next();
-			
-			Budget budget;
-				
-			//予算が空白にされた時
-			if(sEBudgetAmountVal.equals("")) {
-				//既存レコードがある場合レコード削除
-				if(lId!=0L) {
-					budget = Budget.findById(lId);
-					budget.delete();
-				}
-				
-			//予算が入力された時
-			} else {
-				try {
-					//数値文字列をNumber型のオブジェクトに変換する
-					Number nEBudgetAmount = nf.parse(sEBudgetAmountVal);
-					//Number型のオブジェクトからInteger値を取得する
-					Integer iEBudgetAmount = nEBudgetAmount.intValue();
-					
-					//既存レコードがある場合は更新
-					if(lId!=0L) {
-						budget = Budget.findById(lId);
-						// 変更有無チェック用のレコードにセット
-						Budget eBudget = new Budget(
-								budget.ha_user,
-								budget.year,
-								budget.month,
-								iEBudgetAmount,
-								budget.item_mst,
-								budget.ideal_deposit_mst
-								);
-						
-						// Validate
-					    validation.valid(eBudget);
-					    if(validation.hasErrors()) {
-					    	dailyAccount(bg_basis_date);
-					    }
-						// 項目が変更されていた行だけ更新
-						if (budget.amount != eBudget.amount) {
-							budget.amount = eBudget.amount;
-						    
-						    // 保存
-						    budget.save();
-						}
-					
-					//既存レコードが無い場合は新規登録
-					} else {
-						HaUser haUser = (HaUser)renderArgs.get("haUser");
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(DateFormat.getDateInstance().parse(bg_basis_date));
-						ItemMst itemMst = null;
-						IdealDepositMst idealDepositMst = null;
-						//大分類が「My貯金預入」の場合は「取扱(My貯金)」ごとの登録
-						if(sELargeCategoryVal.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-							idealDepositMst = IdealDepositMst.find("ha_user = " + haUser.id + " and ideal_deposit_name = '" + sEItemVal + "'").first();
-						//大分類が「My貯金預入」でない場合は「項目」ごとの登録
-						} else {
-							itemMst = ItemMst.find("ha_user = " + haUser.id + " and item_name = '" + sEItemVal + "'").first();
-						}
-						budget = new Budget(
-								haUser,
-								calendar.get(Calendar.YEAR),
-								calendar.get(Calendar.MONTH) + 1,
-								iEBudgetAmount,
-								itemMst,
-								idealDepositMst
-								);
-						
-						// Validate
-					    validation.valid(budget);
-					    if(validation.hasErrors()) {
-					    	dailyAccount(bg_basis_date);
-					    }
-					    // 保存
-					    budget.save();
-					}
-					
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+		Date dBasis = null;
+		try {
+			dBasis = DateFormat.getDateInstance().parse(e_basis_date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-    	dailyAccount(bg_basis_date);
+		calendar.setTime(dBasis);
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+			dailyAccount(e_basis_date);
+			return;
+		} 
+		if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
+			balanceTable(e_basis_date);
+			return;
+		}
 	}
-	
 	
 	/**
 	 * 日計表・残高表の行に相当するリストの作成
@@ -300,7 +255,7 @@ public class DailyAccount extends Controller {
 	 * @param month
 	 * @param dStartDay
 	 * @param iDaysCnt
-	 * @param sTableType
+	 * @param strTableType
 	 * @return
 	 */
 	private static List<WkDailyAccount> makeWorkList(
@@ -308,7 +263,7 @@ public class DailyAccount extends Controller {
 			Integer month,
 			Date dStartDay,
 			int iDaysCnt,
-			String sTableType
+			String strTableType
 			) {
 		//日計表・残高表の行に相当するリスト
    		List<WkDailyAccount> lWDA = new ArrayList<WkDailyAccount>();
@@ -323,7 +278,7 @@ public class DailyAccount extends Controller {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 
 		
-		if(sTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
 			//「収入」
 			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_IN, lWDA);
@@ -341,20 +296,20 @@ public class DailyAccount extends Controller {
 			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					BALANCE_TYPE_OUT_IDEAL_DEPOSIT, lWDA);
 			
-		} else if(sTableType.equals(VIEWS_BALANCE_TABLE)) {
+		} else if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
 			//「実残高」
 			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					REMAINDER_TYPE_REAL, lWDA);
+			
+			//「My貯金してないお金」
+			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+					REMAINDER_TYPE_NOT_IDEAL_DEPOSIT, lWDA);
 			
 			//「My貯金残高」
 			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
 					REMAINDER_TYPE_IDEAL_DEPOSIT, lWDA);
   	  	
   	  	
-			//「My貯金してないお金」
-			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-					REMAINDER_TYPE_NOT_IDEAL_DEPOSIT, lWDA);
-			
 		}
 
 		return lWDA;
@@ -407,7 +362,7 @@ public class DailyAccount extends Controller {
    				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
    			sSqlBase = "" +
    					"" +
-	   				" SELECT SUM(r.amount) FROM Record r " +
+	   				" SELECT COALESCE(SUM(r.amount), 0) FROM Record r " +
 					" LEFT JOIN ItemMst i " +
 					"   ON r.item_mst_id = i.id " +
 					" LEFT JOIN BalanceTypeMst b " +
@@ -647,6 +602,7 @@ public class DailyAccount extends Controller {
 			String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			workDaToDl.setsPaymentDateFr(sDate);
 			workDaToDl.setsPaymentDateTo(sDate);
+			workDaToDl.setlHandlingId(null);
 			// 「収入」・「支出」・「My貯金預入」
 			if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					sLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
@@ -682,6 +638,8 @@ public class DailyAccount extends Controller {
 		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 			//項目ごとのループ
 			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + haUser.id + " and balance_type_mst.balance_type_name = '" + sLargeCategoryName + "' order by id").fetch();
+			int intItemCnt = itemMsts.size();
+			int intCnt = 0;
 			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
 				ItemMst itemMst = itrItem.next();
 				
@@ -699,8 +657,13 @@ public class DailyAccount extends Controller {
 				wDaItem.setbBudgetFlg(true);
 				wDaItem.setLSumMonth(lSumMonth);
 				wDaItem.setsSumMonth(String.format("%1$,3d", lSumMonth));
-
-
+				
+				//項目の最終行フラグ
+				intCnt++;
+				if(intItemCnt==intCnt) {
+					wDaItem.setBolLastItemFlg(true);
+				}
+				
 				//ある時だけ予算をセット
 				Budget budget = Budget.find("ha_user = " + haUser.id + "" +
 						" and year = " + year + "" +
@@ -708,7 +671,7 @@ public class DailyAccount extends Controller {
 						" and item_mst = " + itemMst.id
 						).first();
 				if(budget!=null) {
-					String sBudgetAmount = String.format("%1$,3d", budget.amount);
+					String sBudgetAmount = String.format("%1$,3d", budget.amount).trim();
 					
 					wDaItem.setlBudgetId(budget.id);
 					wDaItem.setsBudgetAmount(sBudgetAmount);
@@ -752,6 +715,7 @@ public class DailyAccount extends Controller {
 					workDaToDl.setsPaymentDateFr(sDate);
 					workDaToDl.setsPaymentDateTo(sDate);
 					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+					workDaToDl.setlHandlingId(null);
 					//取扱(My貯金)＝NULL
 					workDaToDl.setlIdealDepositId((long) -1);
 					workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
@@ -773,6 +737,8 @@ public class DailyAccount extends Controller {
 				sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 			//My貯金ごとのループ
 			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + haUser.id).fetch();
+			int intIdealDepoCnt = idealDepositMsts.size();
+			int intCnt = 0;
 			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
 				IdealDepositMst idealDepositMst = itrIdealDeposit.next();
 				
@@ -826,6 +792,11 @@ public class DailyAccount extends Controller {
 					wDaIdealDepo.setbBudgetFlg(false);
 				}
 
+				//項目の最終行フラグ
+				intCnt++;
+				if(intIdealDepoCnt==intCnt) {
+					wDaIdealDepo.setBolLastItemFlg(true);
+				}
 				
 				//「My貯金預入」なら予算がある時だけセット
 				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
@@ -835,7 +806,7 @@ public class DailyAccount extends Controller {
 							" and ideal_deposit_mst = " + idealDepositMst.id
 							).first();
 					if(budget!=null) {
-						String sBudgetAmount = String.format("%1$,3d", budget.amount);
+						String sBudgetAmount = String.format("%1$,3d", budget.amount).trim();
 
 						wDaIdealDepo.setlBudgetId(budget.id);
 						wDaIdealDepo.setsBudgetAmount(sBudgetAmount);
@@ -906,6 +877,7 @@ public class DailyAccount extends Controller {
 					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 					workDaToDl.setsPaymentDateFr(sDate);
 					workDaToDl.setsPaymentDateTo(sDate);
+					workDaToDl.setlHandlingId(null);
 					// 「My貯金預入」
 					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
@@ -1050,5 +1022,164 @@ public class DailyAccount extends Controller {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * 単純に呼ばれた時の基準日のセット
+	 * @param calendar
+	 * @return
+	 */
+	private static String setBasisDate() {
+		//セッションに絞込条件が入っている時はセット
+		if((session.get("daFilExistFlg") != null) &&
+				(session.get("daFilExistFlg").equals("true")))
+			return session.get("daStrBasisDate");
+   		//単純に呼ばれた時（初回等）は、今日をセット
+   		Calendar calendar = Calendar.getInstance();
+		return  String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+	}
+	
+	/**
+	 * 予算更新
+	 * @param bg_basis_date
+	 * @param e_budget_id
+	 * @param e_budget_amount
+	 */
+	public static void updBudget(
+			String bg_basis_date,
+    		List<Long> e_budget_id,			/* 変更行のID */
+    		List<String> e_large_category,	/* 変更行の大分類行の名称「収入」・「支出」・「My貯金預入」 */
+    		List<String> e_item,			/* 変更行の項目 */
+    		List<String> e_budget_amount	/* 変更行の金額 */
+			) {
+		
+		Iterator<String> sELargeCategory = e_large_category.iterator();
+		Iterator<String> sEItem = e_item.iterator();
+   		Iterator<String> sEBudgetAmount = e_budget_amount.iterator();
+		for (Long lngId : e_budget_id) {
+			String sEBudgetAmountVal = sEBudgetAmount.next(); 
+			String sELargeCategoryVal = sELargeCategory.next();
+			String sEItemVal = sEItem.next();
+
+			//予算が空白にされた時
+			if(sEBudgetAmountVal.equals("")) {
+				//既存レコードが無ければなにもしない
+				if(lngId==0L)
+					continue;
+				//既存レコードがある場合レコード削除
+				Budget budget = Budget.findById(lngId);
+				budget.delete();
+				
+				continue;
+			}
+			//予算が入力された時
+			//予算更新実処理
+			actUpdBudget(
+					bg_basis_date,
+					lngId,
+					sELargeCategoryVal,
+					sEItemVal,
+					sEBudgetAmountVal
+					);
+		}
+		
+    	dailyAccount(bg_basis_date);
+	}
+	
+	/**
+	 * 予算更新実処理
+	 * @param bg_basis_date
+	 * @param lngId
+	 * @param sELargeCategoryVal
+	 * @param sEItemVal
+	 * @param sEBudgetAmountVal
+	 */
+	private static void actUpdBudget(
+			String bg_basis_date,
+			Long lngId,
+			String sELargeCategoryVal,
+			String sEItemVal,
+			String sEBudgetAmountVal
+			) {
+		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+		NumberFormat nf = NumberFormat.getInstance();
+
+		try {
+			//数値文字列をNumber型のオブジェクトに変換する
+			Number nEBudgetAmount = nf.parse(sEBudgetAmountVal);
+			//Number型のオブジェクトからInteger値を取得する
+			Integer iEBudgetAmount = nEBudgetAmount.intValue();
+			
+			//既存レコードがある場合は更新
+			if(lngId!=0L) {
+				Budget budget = Budget.findById(lngId);
+				// 変更有無チェック用のレコードにセット
+				Budget eBudget = new Budget(
+						budget.ha_user,
+						budget.year,
+						budget.month,
+						iEBudgetAmount,
+						budget.item_mst,
+						budget.ideal_deposit_mst
+						);
+				
+				// Validate
+			    validation.valid(eBudget);
+			    if(validation.hasErrors()) {
+			    	dailyAccount(bg_basis_date);
+			    }
+				// 項目が変更されていた行だけ更新
+				if (budget.amount != eBudget.amount) {
+					budget.amount = eBudget.amount;
+				    
+				    // 保存
+				    budget.save();
+				}
+				
+				return;
+			}
+			//既存レコードが無い場合は新規登録
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(DateFormat.getDateInstance().parse(bg_basis_date));
+			ItemMst itemMst = null;
+			IdealDepositMst idealDepositMst = null;
+			//大分類が「My貯金預入」の場合は「取扱(My貯金)」ごとの登録
+			if(sELargeCategoryVal.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+				idealDepositMst = IdealDepositMst.find("ha_user = " + haUser.id + " and ideal_deposit_name = '" + sEItemVal + "'").first();
+			//大分類が「My貯金預入」でない場合は「項目」ごとの登録
+			} else {
+				itemMst = ItemMst.find("ha_user = " + haUser.id + " and item_name = '" + sEItemVal + "'").first();
+			}
+			Budget budget = new Budget(
+					haUser,
+					calendar.get(Calendar.YEAR),
+					calendar.get(Calendar.MONTH) + 1,
+					iEBudgetAmount,
+					itemMst,
+					idealDepositMst
+					);
+			
+			// Validate
+		    validation.valid(budget);
+		    if(validation.hasErrors()) {
+		    	dailyAccount(bg_basis_date);
+		    }
+		    // 保存
+		    budget.save();
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * dailyAccount.html描画時の引数の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	static class RefDailyAccountRender {
+		WkDailyAccountRender wkDAR;
 	}
 }

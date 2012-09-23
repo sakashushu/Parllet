@@ -28,16 +28,16 @@
 		<!-- websocket -->
 		<script type="text/javascript" src="@{'/public/javascripts/swfobject.js'}" charset="${_response_encoding}"></script>
 		<script type="text/javascript" src="@{'/public/javascripts/web_socket.js'}" charset="${_response_encoding}"></script>
-		<!-- datepickerの見た目の調整 -->
+		<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
 		<style>
 		.ui-datepicker td span, .ui-datepicker td a {
-		    text-align: center;    /* 日付はセンタリングの方が好き */
+		    text-align: center;    /* 日付をセンタリング */
 		}
 		.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
 		    width: auto;    /* そのままだと改行してしまう */
 		}
 		.ui-datepicker select.ui-datepicker-month {
-		    margin-left: 1em;    /* ちょっと離すほうが好き */
+		    margin-left: 1em;    /* ちょっと離す */
 		}
 		</style>
 		<noscript>このページは javascript が有効になっている必要があります。</noscript>
@@ -63,9 +63,9 @@
     		<ul id="tools">
 			    <li>
 <!-- 
-			        <a href="@{DailyAccount.dailyAccount()}">&{'views.main.tools.login'}</a>
- -->
 			        <a href="@{DetailList.detailList()}">&{'views.main.tools.login'}</a>
+ -->
+			        <a href="@{DailyAccount.dailyAccount()}">&{'views.main.tools.login'}</a>
 			    </li>
 			</ul>
     	</div>

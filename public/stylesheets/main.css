@@ -24,7 +24,7 @@ body {
 	height: auto;
 	/* Set up positioning */
 	position: fixed;
-	/* �܂���absolute; */
+	/* またはabsolute; */
 	top: 0;
     left: 0;
 }
@@ -56,17 +56,12 @@ input[type="submit"],input[type="button"] {
     cursor: pointer;
 }
 
-.tdNum {
+.numeric {
 	text-align: right;
 }
 
-.daTdHt {
-	height:24.6px;
-}
-
-.daTd {
-	width:97px;
-	background-color:#e8e8e8;
+.num3 {
+	padding-right: 4px;
 }
 
 .aBtn {
@@ -214,38 +209,314 @@ input[type="submit"],input[type="button"] {
     background: pink;
 }
 
+
 /*
- * �אڂ�������d�˂ĕ\��
+ * dailyAccount
  */
+
+/* 隣接する線を重ねて表示 */
 .dailyAccountTbl {
 	border-collapse: collapse;
 }
 
-/*
- * ���ׂĂ̐���\��
- */
+/* すべての線を表示 */
 .allLine {
 	border: 1px solid #aaa;
 }
 
-/*
- * ���ׂĂ̐���\��(�F�Ȃ�)
- */
+/* 左右・下の線を表示 */
+.lrb_Line {
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+
+/* 上の線を表示 */
+.t_Line {
+	border-top: 1px solid #aaa;
+}
+
+/* すべての線を表示(色なし) */
 .allLineTransparence {
 	border: 1px;
 }
 
-/** dailyAccount **/
 #tblDailyAccount {
     font-size: 80%;
 }
 
-#tbody {
-	width: 646px;
+
+
+
+
+/* .da_tbl_all 日計表の枠固定の上下を分けるテーブル */
+.da_tbl_all {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+    font-size: 80%;
+}
+.da_tbl_all li {
+	clear: both;
+}
+.da_tbl_all li div.da_tbl_all_div {
+	display: table-cell;
+	float: left;
+}
+
+/* .da_tbl_lt 日計表の枠固定の左上のテーブル */
+.da_tbl_lt {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+	width: 320px;
+}
+.da_tbl_lt li div {
+	display: table-cell;
+	border-right: 1px solid transparent;
+	height: 26px;
+}
+
+/* .da_tbl_rt 日計表の枠固定の右上のテーブル */
+.da_tbl_rt {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+}
+.da_tbl_rt li div {
+	display: table-cell;
+	border-right: 1px solid #transparent;
+	border-bottom: 1px solid #aaa;
+	height: 26px;
+}
+
+/* .da_tbl_lb 日計表の枠固定の左下のテーブル */
+.da_tbl_lb {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+	width: 320px;
+}
+.da_tbl_lb li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	height: 26px;
+	vertical-align: middle;
+}
+
+/* .da_tbl_rb 日計表の枠固定の右下のテーブル */
+.da_tbl_rb {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+}
+.da_tbl_rb li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	height: 26px;
+	vertical-align: middle;
+}
+
+
+#da_trow {
+	overflow: hidden;
+}
+
+#da_tcol {
+	width: 320px;
+	height: 470px;
+	overflow: hidden;
+}
+
+#da_tbody {
 	height: 470px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+
+.da_head {
+	border-top: 1px solid transparent;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.da_hd_cate1 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid #aaa;
+	width: 22px;
+}
+
+.da_hd_cate1_2 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid #aaa;
+	width: 113px;
+}
+
+.da_hd_left_cell {
+	border-left: 1px solid transparent;
+}
+
+
+
+.da_cate1 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	width: 22px;
+}
+
+.da_cate1_last {
+	border-bottom: 1px solid #aaa;
+}
+
+.da_cate1_2 {
+	border-left: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	width: 113px;
+}
+
+.da_cate2 {
+	width: 90px;
+	border-bottom: 1px solid #aaa;
+}
+
+.da_budget {
+	width: 96px;
+	border-bottom: 1px solid #aaa;
+}
+.da_budget input[type="text"] {
+	width: 90px;
+	background-color: #fff;
+	font-size: 100%
+}
+
+
+.da_cate2_budget {
+	width: 187px; /* 90(cate2)+1(border)+96(budget) */
+	border-bottom: 1px solid #aaa;
+}
+
+.da_cate1_2_budget {
+	border-left: 1px solid #aaa;
+	width: 210px; /* 22(cate1)+1(border)+90(cate2)+1(border)+96(budget) */
+	border-bottom: 1px solid #aaa;
+}
+
+.da_sum_month {
+	width: 96px;
+	border-bottom: 1px solid #aaa;
+}
+
+.da_left_cell {
+	border-left: 1px solid #aaa;
+}
+
+.da_ary_day {
+	width: 99px;
+}
+
+.daBtn_upd_budget {
+	font-size: 90%;
+	padding: 0px 2px;
+	text-decoration: none;
+}
+
+.daBtnPreNext {
+	font-size: 90%;
+	padding: 1px 2px;
+	text-decoration: none;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+}
+
+.daBtnPreNext:hover , .daBtnPreNext:focus {
+	cursor: pointer;
+}
+
+a.daBtnPreNext span {
+	display:none;
+	padding:5px;
+	margin-left:10px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+ }
+ 
+a.daBtnPreNext:hover span{
+	display:inline;
+	position:absolute;
+}
+
+/*
+ * balanceTable
+ */
+
+/* .bt_tbl_all 残高表の大枠のテーブル */
+.bt_tbl_all {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+    font-size: 80%;
+    width: 700px;
+}
+.bt_tbl_all li {
+	clear: both;
+}
+.bt_tbl_all li div.bt_tbl_all_l {
+	display: table-cell;
+//	display: block;
+	float: left;
+}
+
+.bt_tbl_all li div.bt_tbl_all_r {
+	display: table-cell;
+//	display: block;
+	float: right;
+}
+
+#bt_tcol {
+	height: 470px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/* .bt_tbl_each 残高表の各々(実残高、My貯金・・・) */
+.bt_tbl_each {
+	list-style: none;
+	padding: 0;
+	mergin: 0;
+	width: 320px;
+	display: table;
+	border-collapse: collapse;
+}
+
+.bt_tbl_each li div {
+	display: table-cell;
+	height: 26px;
+	vertical-align: middle;
+}
+
+.bt_cate_large {
+	width: 170px;
+}
+
+.bt_cate_small_pre {
+	width: 20px;
+}
+
+.bt_cate_small {
+	width: 150px;
+}
+
+.bt_ary_day {
+	width: 99px;
+}
+
+
 
 /** detailList **/
 #tblDetailList {
@@ -261,14 +532,14 @@ input[type="submit"],input[type="button"] {
 }
 
 #dl_tblContent {
-    width: 1300px;
+    width: 1250px;
 }
 
 .dl_tbl {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-    font-size: 80%;
+    font-size: 90%;
 }
 
 .dl_tbl li div {
@@ -290,9 +561,10 @@ input[type="submit"],input[type="button"] {
 	border-left: 1px solid #aaa;
 	text-align: center;
 	vertical-align: middle;
+	padding: 4px 0px;
 }
 
-/* ���L�������� .dl_tbl �� font-size: 80%; �������Ȃ� */
+/* 下記が無いと .dl_tbl の font-size: 90%; が効かない */
 .dl_tbl_content , .dl_edit_link {
 	font-size: 100%;
 }
@@ -304,10 +576,6 @@ input[type="submit"],input[type="button"] {
 	text-decoration: none;
 }
 
-.dl_edit_link:active {
-	border-style: inset;
-}
-
 .dl_edit_link:hover , .dl_edit_link:focus {
 	background-color: #eee;
 	border-style: solid;
@@ -317,10 +585,18 @@ input[type="submit"],input[type="button"] {
 	cursor: pointer;
 }
 
+.dl_edit_link:active {
+	border-style: inset;
+}
+
 
 .dl_payment_date {
 	width:90px;
 	vertical-align: middle;
+}
+
+.dl_string {
+	padding-left: 4px;
 }
 
 .dl_payment_date_text {
@@ -329,6 +605,17 @@ input[type="submit"],input[type="button"] {
 
 .dl_balance_type {
 	width:110px;
+	vertical-align: middle;
+}
+
+.dl_amount {
+	width:110px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.dl_content {
+	width:120px;
 	vertical-align: middle;
 }
 
@@ -369,7 +656,7 @@ form .error {
 	opacity: .7;
 }
 
-/** crud.css�̐^�� **/
+/** crud.cssの真似 **/
 label.fieldName {
 	display: block;
 	font-weight: bold;

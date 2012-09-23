@@ -6,300 +6,275 @@
 <!--
 //枠固定の上下の動き
 jQuery(document).ready(function() {
-    jQuery('#tbody').scroll(function() {
-    	//jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
-    	jQuery('#tcol').scrollTop(jQuery(this).scrollTop());
+    jQuery('#da_tbody').scroll(function() {
+    	//jQuery('#da_trow').scrollLeft(jQuery(this).scrollLeft());
+    	jQuery('#da_tcol').scrollTop(jQuery(this).scrollTop());
+    });
+});
+jQuery(document).ready(function() {
+    jQuery('#da_tcol').scroll(function() {
+    	//jQuery('#da_trow').scrollLeft(jQuery(this).scrollLeft());
+    	jQuery('#da_tbody').scrollTop(jQuery(this).scrollTop());
     });
 });
 //jQuery(document).ready(function() {
-//    jQuery('#tbodyR').scroll(function() {
-//    	jQuery('#tbody').scrollTop(jQuery(this).scrollTop());
-//    	jQuery('#tcol').scrollTop(jQuery(this).scrollTop());
+//    jQuery('#da_tbodyR').scroll(function() {
+//    	jQuery('#da_tbody').scrollTop(jQuery(this).scrollTop());
+//    	jQuery('#da_tcol').scrollTop(jQuery(this).scrollTop());
 //    });
 //});
 
 //枠固定の左右の動き
 jQuery(document).ready(function() {
-    jQuery('#tbody2').scroll(function() {
-    	jQuery('#tbody').scrollLeft(jQuery(this).scrollLeft());
-    	jQuery('#trow').scrollLeft(jQuery(this).scrollLeft());
+    jQuery('#da_tbody2').scroll(function() {
+    	jQuery('#da_tbody').scrollLeft(jQuery(this).scrollLeft());
+    	jQuery('#da_trow').scrollLeft(jQuery(this).scrollLeft());
     });
 });
 
 //起動時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
-	jQuery('#tcol').height(jQuery(window).innerHeight()-220);
-	jQuery('#tbody').height(jQuery(window).innerHeight()-220);
-//	jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
-//	jQuery('#tbody').width(jQuery(window).innerWidth()-350);
-//	jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
+	jQuery('#da_tcol').height(jQuery(window).innerHeight()-220);
+	jQuery('#da_tbody').height(jQuery(window).innerHeight()-220);
+//	jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
+//	jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
+//	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
 });
 
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#tcol').height(jQuery(this).innerHeight()-220);
-		jQuery('#tbody').height(jQuery(this).innerHeight()-220);
-//		jQuery('#trow').width(jQuery(window).innerWidth()-350-16);
-//		jQuery('#tbody').width(jQuery(window).innerWidth()-350);
-//		jQuery('#tbody2').width(jQuery(window).innerWidth()-350);
+		jQuery('#da_tcol').height(jQuery(this).innerHeight()-220);
+		jQuery('#da_tbody').height(jQuery(this).innerHeight()-220);
+//		jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
+//		jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
+//		jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
 	});
 });
 
-jQuery(function() {
-	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
+//日付移動リンククリック時はjumpイベントへ
+jQuery(document).ready(function() {
+	var dateFormat = new DateFormat("yyyy/MM/dd");
+	var sDate = "${sBasisDate}";
+	var nYear = new Number(sDate.substr(0, 4)-0);
+	var nMonth = new Number(sDate.substr(5, 2)-1);
+	var nDay = new Number(sDate.substr(8, 2)-0);
+	var nQuantity = new Number(0);
+	jQuery('#idPre3, #idPre1, #idNext1, #idNext3').click(function() {
+		if(this.id=="idPre3")
+			nQuantity -= 3;
+		if(this.id=="idPre1")
+			nQuantity -= 1;
+		if(this.id=="idNext1")
+			nQuantity += 1;
+		if(this.id=="idNext3")
+			nQuantity += 3;
+		var dPre1 = new Date(nYear, nMonth, nDay+nQuantity);
+		jQuery('#idBasisDate').val(dateFormat.format(dPre1));
+		jQuery('#idMove').click();
+		jQuery('body').attr("disabled", "disabled");
+	});
 });
 
-//jQuery(function(){
-//    jQuery.contextMenu({
-//        selector: '.context-menu-one',
-////        trigger: 'hover',
-////        autoHide: true,
-//        callback: function(key, options) {
-//            var m = "clicked: " + options[0];
-////            window.console && console.log(m) || alert(m);
-//            window.console && console.log(m) || alert(this);
-////            location.href='@{DetailList.DetailList(null, null, null, null, null, null, null, null, null, null, null)}'
-//        },
-//        items: {
-//            "quit": {name: "明細へ", icon: "quit"}
-//        }
-//    });
-//});
-// -->
+/* 3桁区切りの数値入力フィールドとして設定 */
+jQuery(document).ready(function() {
+	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
+});
+
+/* 日付選択時にjumpするdatepicker */
+jQuery(function() {
+	jQuery(".datepickerJump").datepicker({
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		onSelect: function( e_basis_date ) {
+			var str_tmp = new String(e_basis_date).replace(/\//g, "");
+			var int_basis_date = Number(str_tmp);
+			jQuery('#idBasisDate').val(e_basis_date);
+			jQuery('#idMove').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		showOn: "button",
+		buttonImage: "@{'/public/images/calendar_shu.gif'}",
+		buttonImageOnly: true,
+		buttonText: "カレンダー",
+		showButtonPanel: true
+	});
+});
+-->
 </script>
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 
-
-#{form @jump(e_basis_date, sTableType)}
+#{form @jump(), id:'frmJump'}
+	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
-	<input type="text" class="datepicker" name="e_basis_date"
-		value="${sBasisDate}" size="13" />
-	<input type="submit" value="移動" name="move" />
+	<input type="hidden" id="idBasisDate" name="e_basis_date"
+		value="${sBasisDate}" style="width:80px;background:#eee;" readonly="readonly" />
+	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
-<table id="tblDailyAccount">
+<ul class="da_tbl_all">
 	#{form @updBudget()}
 	<input type="hidden" name="bg_basis_date" value="${sBasisDate}"/>
-	<tr>
-		<td valign="top">
-			<div style="width:320px;">
-			<table>
-				<td>
-					<!-- 枠固定の左上 -->
-					<table class="dailyAccountTbl">
-						<tr style="height:10px">
-							<th style="width:22px;"></th>
-							<th style="width:184px;" colspan="2" align="right">
-								  #{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
-									<!-- 予算 -->
-									${month}月予算
-									<input type="submit" value="更新" name="submitUpdBudget" style="font-size:70%" />
-								  #{/if}
-							</th>
-							<th style="width:92px;">${sTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</th>
-						</tr>
-					</table>
-				</td>
-			</table>
+	
+	<li>
+		<div class="da_tbl_all_div">
+			<!-- 枠固定の左上 -->
+			<ul class="da_tbl_lt">
+				<li>
+					%{year = sBasisDate.substring(0,4)}%
+					<div class="da_hd_cate1_2 da_head">${year}年</div>
+					<div class="da_budget da_head">
+						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
+							<!-- 予算 -->
+							${month}月予算
+							<input type="submit" value="更新" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
+						  #{/if}
+					</div>
+					<div class="da_sum_month da_head">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</div>
+				</li>
+			</ul>
+		</div>
+		<div class="da_tbl_all_div">
+			<div id="da_trow" style="width:${iWidth<630 ? iWidth : 630}px;" >
+			<div style="width:${iWidth}px;">
+				<!-- 枠固定の右上 -->
+				<ul class="da_tbl_rt">
+			        %{
+			        	leftFlg = 1
+			        	count = 0
+			        }%
+					<li>
+						#{list items:sAryDays, as:'sAryDay'}
+							%{count++}%
+							<div class="${leftFlg==1 ? 'da_hd_left_cell ' : ''}da_ary_day da_head ${}" style="${count==1 ? 'text-align: left;' : (count==3 ? 'text-align: right;' : '')}">
+							#{if count== 1}
+								<a id="idPre3" class="daBtnPreNext" tabindex="0"><<<span>3日前へ</span></a>
+								<a id="idPre1" class="daBtnPreNext" tabindex="0"><<span>1日前へ</span></a>
+							#{/if}
+							${count==2 ? "　" : ""}
+							${sAryDay}
+							#{if count== 2}
+								<input type="text" class="datepickerJump" value="${sBasisDate}" style="display:none;" />
+							#{/if}
+							#{if count== 3}
+								<a id="idNext1" class="daBtnPreNext" tabindex="0">><span>1日後へ</span></a>
+								<a id="idNext3" class="daBtnPreNext" tabindex="0">>><span>3日後へ</span></a>
+							#{/if}
+							</div>
+					        %{leftFlg = 0}%
+						#{/list}
+					</li>
+				</ul>
 			</div>
-		</td>
-		<td>
-			<div id="trow" style="width:630px;overflow:hidden;">
-			<div style="width:${iWidth}px">
-			<table>
-				<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
-					<!-- 枠固定の右上 -->
-					<table class="dailyAccountTbl">
-						<tr style="height:10px">
-							#{list items:sAryDays, as:'sAryDay'}
-								<!-- 
-								<th style="border: 1px solid transparent;">
-									<input type="text" value="${month}/${iAryDay}" readonly="readonly" style="width:90px;text-align:center;background-color:transparent;border-style:none;" />
-								</th>
-								 -->
-								<th style="width:99px;">
-								${sAryDay}
-								</th>
-							#{/list}
-						</tr>
-					</table>
-				</td>
-			</table>
 			</div>
-			</div>
-		</td>
-
-		
-		<!-- 
-		<td>
-		</td>
-		 -->
-	</tr>
-
-	<tr>
-		<td valign="top">
-			<div id="tcol" style="height:470px;overflow:hidden;">
-			<div style="width:320px;">
-			<table>
-				<td>
-					<!-- 枠固定の左下 -->
-					<table class="dailyAccountTbl">
-						#{list items:lWDA, as:'lwda'}
-							<tr>
-								<!-- 日計表 -->
-								#{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
-									<!-- 予算あり -->
-									#{if lwda.bBudgetFlg}
-										#{if lwda.sItem != ''}
-											<td style="width:20px;"></td>
-											<td class="allLine daTdHt" style="width:90px;">${lwda.sItem}</td>
-											<td class="allLine tdNum" style="width:90px;">
-												<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}"/>
-												<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}"/>
-												<input type="hidden" name="e_item" value="${lwda.sItem}"/>
-												<input type="text" class="numeric" name="e_budget_amount" value="${lwda.sBudgetAmount}" style="width:90px;text-align:right;background-color:#ffffff;margin:0 auto 0 auto;" />
-											</td>
-										#{/if}
-										#{else}
-											<td class="allLine daTdHt" colspan="2" style="width:110px;">${lwda.sLargeCategory}</td>
-											<td class="allLine tdNum" style="width:90px;">
-												<input type="text" readonly="readonly" value="${lwda.sBudgetAmount}" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-											</td>
-										#{/else}
-									#{/if}
-									<!-- 予算なし -->
-									#{else}
-										#{if lwda.sItem != ''}
-											<td style="width:20px;"></td>
-											<td class="allLine daTdHt" colspan="2" style="width:180px;">${lwda.sItem}</td>
-										#{/if}
-										#{else}
-											<td class="allLine daTdHt" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
-										#{/else}
-									#{/else}
-									<!-- 
-									<td class="allLine tdNum">${lwda.sSumMonth}</td>
-									 -->
-									<td class="allLine tdNum" style="width:97px;text-align:center;">
-										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-									</td>
+		</div>
+	</li>
+	
+	<li>
+		<div class="da_tbl_all_div">
+			<div id="da_tcol">
+			<div>
+				<!-- 枠固定の左下 -->
+				<ul class="da_tbl_lb">
+					#{list items:lWDA, as:'lwda'}
+						<li>
+							<!-- 予算あり -->
+							#{if lwda.bBudgetFlg}
+								<!-- 項目・My貯金　毎 -->
+								#{if lwda.sItem != ''}
+									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
+									<div class="da_cate2">${lwda.sItem}</div>
+									<div class="da_budget">
+										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" />
+										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
+										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
+										<input type="text" class="numeric" name="e_budget_amount" value="${lwda.sBudgetAmount}" />
+									</div>
 								#{/if}
-								<!-- 残高表 -->
+								<!-- 大分類毎 -->
 								#{else}
-									#{if lwda.sItem != ''}
-										<td style="width:20px;"></td>
-										<td class="allLine daTdHt" colspan="2" style="width:180px;">${lwda.sItem}</td>
-									#{/if}
-									#{else}
-										<td class="allLine daTdHt" colspan="3" style="width:200px;">${lwda.sLargeCategory}</td>
-									#{/else}
-									<!-- 
-									<td class="allLine tdNum">${lwda.sSumMonth}</td>
-									 -->
-									<td class="allLine tdNum" style="width:1px;text-align:center;">
-										<input type="text" value="${lwda.sSumMonth}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-									</td>
+									<div class="da_cate1_2">${lwda.sLargeCategory}</div>
+									<div class="da_budget numeric">
+										<span class="num3">
+											${lwda.sBudgetAmount}
+										</span>
+									</div>
 								#{/else}
-							</tr>
-							
-						#{/list}
-					</table>
-				</td>
-			</table>
+							#{/if}
+							<!-- 予算なし -->
+							#{else}
+								<!-- 項目・My貯金　毎 -->
+								#{if lwda.sItem != ''}
+									<div class="da_cate1"></div>
+									<div class="da_cate2_budget">${lwda.sItem}</div>
+								#{/if}
+								<!-- 大分類毎 -->
+								#{else}
+									<div class="da_cate1_2_budget">${lwda.sLargeCategory}</div>
+								#{/else}
+							#{/else}
+							<div class="da_sum_month numeric">
+								<span class="num3">
+									${lwda.sSumMonth}
+								</span>
+							</div>
+						</li>
+						
+					#{/list}
+				</ul>
 			</div>
 			</div>
-		</td>
-		<td>
-			<!-- 
-			<div id="tbody" style="width:816px;height:486px;overflow:auto;">
-			<div id="tbody" style="width:630px;height:470px;overflow-x:hidden;overflow-y:hidden;">
-
-			<div id="tbody" style="width:646px;height:470px;overflow-x:hidden;overflow-y:auto;">
-			 -->
-			<div id="tbody">
-			<div style="width:${iWidth}px">
-			<table>
-				<td>  <!-- このtdの囲いが無いと、firefoxで左のborderが消えてしまう -->
-					<!-- 枠固定の右下 -->
-					<table class="dailyAccountTbl">
-						#{list items:lWDA, as:'lwda'}
-							<tr>
-							  <!-- 日計表 -->
-							  #{if sTableType== messages.get('views.dailyaccount.dailyaccount')}
-								#{list items:lwda.lstWdtd, as:'sAryDay'}
-									<!-- 下のtdのstyleをmain.css内に書くと何故かレイアウトが崩れまくる -->
-									<!-- 
-									<td style="border: 1px solid black;text-align: right;">${sAryDay}</td>
-
-									<td style="border: 1px solid black;width:97px;text-align:center;">
-										<input type="text" id="sAryDay_${sAryDay}" class="context-menu-one box menu-1" value="${sAryDay}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-									 -->
-									<td class="daTdHt daTd allLine tdNum">
-										<div style="margin-right : 3px">
-										<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lIdealDepositId,sAryDay.lItemId)}">${sAryDay.sAmount}</a>
-										</div>
-									</td>
-								#{/list}
-							  #{/if}
-							  <!-- 残高表 -->
-							  #{else}
-								#{list items:lwda.sAryDays, as:'sAryDay'}
-									<!-- 下のtdのstyleをmain.css内に書くと何故かレイアウトが崩れまくる -->
-									<!-- 
-									<td style="border: 1px solid black;text-align: right;">${sAryDay}</td>
-
-									<td style="border: 1px solid black;width:97px;text-align:center;">
-										<input type="text" id="sAryDay_${sAryDay}" class="context-menu-one box menu-1" value="${sAryDay}" readonly="readonly" style="width:90px;text-align:right;background-color:#e8e8e8;margin:0 auto 0 auto;" />
-									 -->
-									<td class="daTdHt daTd allLine tdNum">
-										<a href="@{DetailList.detailList()}">${sAryDay}</a>
-									</td>
-								#{/list}
-							  #{/else}
-							</tr>
-							
-						#{/list}
-					</table>
-				</td>
-			</table>
+		</div>
+		<div class="da_tbl_all_div">
+			<div id="da_tbody" style="width:${iWidth<630 ? iWidth+16+2 : 630+16}px;">
+			<div style="width:${iWidth+2}px">
+				<!-- 枠固定の右下 -->
+				<ul class="da_tbl_rb">
+					#{list items:lWDA, as:'lwda'}
+				        %{leftFlg = 1}%
+						<li>
+							#{list items:lwda.lstWdtd, as:'sAryDay'}
+								<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
+									<span class="num3">
+										<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}">${sAryDay.sAmount}</a>
+									</span>
+								</div>
+								%{leftFlg = 0}%
+							#{/list}
+						</li>
+						
+					#{/list}
+				</ul>
 			</div>
 			</div>
-		</td>
-		<!-- 
-		<td>
-			<div id="tbodyR" style="width:26px;height:470px;overflow-x:hidden;overflow-y:auto;">
-				<div style="height:500px">
-				</div>
-			</div>
-		</td>
-		 -->
-	</tr>
+		</div>
+	</li>
 	#{/form}
 
-	<tr>
-		<td>
+	<li>
+		<div class="da_tbl_all_div">
 			<div>
 				<div style="width:320px;">
 				</div>
 			</div>
-		</td>
-		<td>
-			<div id="tbody2" style="width:646px;height:16px;overflow:auto;">
+		</div>
+		<div class="da_tbl_all_div">
+			<div id="da_tbody2" style="width:646px;height:16px;overflow:auto;">
 				<div style="width:${iWidth}px">
 				　
 				</div>
 			</div>
-		</td>
-		
-		
-		<!-- 
-		<td>
-		</td>
-		 -->
-	</tr>
+		</div>
+	</li>
 	
-</table>
-	
+</ul>	

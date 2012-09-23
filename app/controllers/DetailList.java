@@ -226,11 +226,11 @@ public class DetailList extends Controller {
 			
 			// 検索処理(ItemMst(収入))
 			bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
-			itemsIn = ItemMst.find("byBalance_type_mst", bTypeIn).fetch();
+			itemsIn = ItemMst.find("ha_user = ? and balance_type_mst = ? ", haUser, bTypeIn).fetch();
 			
 	    	// 検索処理(ItemMst(支出))
 			bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
-			itemsOut = ItemMst.find("byBalance_type_mst", bTypeOut).fetch();
+			itemsOut = ItemMst.find("ha_user = ? and balance_type_mst = ?", haUser, bTypeOut).fetch();
 	
 			// 検索処理(Record)
 			strSrchRecSql += "ha_user = " + haUser.id;

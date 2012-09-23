@@ -15,8 +15,8 @@ public class Security extends Secure.Security {
 	}
 	
 	static void onAuthenticated() {
-//		DailyAccount.dailyAccount(null, null);
-		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		DailyAccount.dailyAccount(null);
+//		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 	
 	static boolean check(String profile) {

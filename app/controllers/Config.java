@@ -483,11 +483,11 @@ public class Config extends Controller {
 			) {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		
-		EditHandlingMst editHandlingMst = new EditHandlingMst();
+		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, editHandlingMst, sHandlingType);
-		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, refHandlingMst, sHandlingType);
+		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -506,11 +506,11 @@ public class Config extends Controller {
 			) {
 		String sHandlingType = Messages.get("HandlingType.emoney");
 		
-		EditHandlingMst editHandlingMst = new EditHandlingMst();
+		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, editHandlingMst, sHandlingType);
-		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, refHandlingMst, sHandlingType);
+		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -533,11 +533,11 @@ public class Config extends Controller {
 			) {
 		String sHandlingType = Messages.get("HandlingType.creca");
 		
-		EditHandlingMst editHandlingMst = new EditHandlingMst();
+		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, editHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
-		HandlingMst handlingMst = editHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
+		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -556,11 +556,11 @@ public class Config extends Controller {
 			) {
 		String sBalanceType = Messages.get("BalanceType.in");
 		
-		EditItemMst editItemMst = new EditItemMst();
+		RefItemMst refItemMst = new RefItemMst();
 		
 		//ItemMst保存
-		Integer iRtn = cf_item_mst_save(id, item_name, editItemMst, sBalanceType);
-		ItemMst itemMst = editItemMst.itemMst;
+		Integer iRtn = cf_item_mst_save(id, item_name, refItemMst, sBalanceType);
+		ItemMst itemMst = refItemMst.itemMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -579,11 +579,11 @@ public class Config extends Controller {
 			) {
 		String sBalanceType = Messages.get("BalanceType.out");
 		
-		EditItemMst editItemMst = new EditItemMst();
+		RefItemMst refItemMst = new RefItemMst();
 		
 		//ItemMst保存
-		Integer iRtn = cf_item_mst_save(id, item_name, editItemMst, sBalanceType);
-		ItemMst itemMst = editItemMst.itemMst;
+		Integer iRtn = cf_item_mst_save(id, item_name, refItemMst, sBalanceType);
+		ItemMst itemMst = refItemMst.itemMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -601,11 +601,11 @@ public class Config extends Controller {
 			String ideal_deposit_name,
 			Boolean zero_hidden
 			) {
-		EditIdealDepositMst editItemMst = new EditIdealDepositMst();
+		RefIdealDepositMst refItemMst = new RefIdealDepositMst();
 		
 		//IdealDepositMst保存
-		Integer iRtn = cf_ideal_deposit_mst_save(id, ideal_deposit_name, zero_hidden, editItemMst);
-		IdealDepositMst idealDepositMst = editItemMst.idealDepositMst;
+		Integer iRtn = cf_ideal_deposit_mst_save(id, ideal_deposit_name, zero_hidden, refItemMst);
+		IdealDepositMst idealDepositMst = refItemMst.idealDepositMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -663,7 +663,7 @@ public class Config extends Controller {
 	 * @param id
 	 * @param handling_name
 	 * @param zero_hidden
-	 * @param editHandlingMst
+	 * @param refHandlingMst
 	 * @param sHandlingType
 	 * @return
 	 */
@@ -671,7 +671,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name,
 			Boolean zero_hidden,
-			EditHandlingMst editHandlingMst,
+			RefHandlingMst refHandlingMst,
 			String sHandlingType
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
@@ -680,7 +680,7 @@ public class Config extends Controller {
 		Integer iDebitDay = null;
 		if(id == null) {
 			// 取扱データの作成
-			editHandlingMst.handlingMst = new HandlingMst(
+			refHandlingMst.handlingMst = new HandlingMst(
 					haUser,
 					handlingTypeMst,
 					handling_name,
@@ -692,18 +692,18 @@ public class Config extends Controller {
 			);
 		} else {
 			// 取扱データの読み出し
-			editHandlingMst.handlingMst = HandlingMst.findById(id);
+			refHandlingMst.handlingMst = HandlingMst.findById(id);
 			// 編集
-			editHandlingMst.handlingMst.handling_name = handling_name;
-			editHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
+			refHandlingMst.handlingMst.handling_name = handling_name;
+			refHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
 		}
 		// Validate
-		validation.valid(editHandlingMst.handlingMst);
+		validation.valid(refHandlingMst.handlingMst);
 		if(validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
-		editHandlingMst.handlingMst.save();
+		refHandlingMst.handlingMst.save();
 		
 		return 0;
 	}
@@ -713,7 +713,7 @@ public class Config extends Controller {
 	 * @param id
 	 * @param handling_name
 	 * @param zero_hidden
-	 * @param editHandlingMst
+	 * @param refHandlingMst
 	 * @param sHandlingType
 	 * @return
 	 */
@@ -721,7 +721,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name,
 			Boolean zero_hidden,
-			EditHandlingMst editHandlingMst,
+			RefHandlingMst refHandlingMst,
 			String sHandlingType,
 			Long debit_bank,
 			Integer cutoff_day,
@@ -736,7 +736,7 @@ public class Config extends Controller {
 		}
 		if(id == null) {
 			// 取扱データの作成
-			editHandlingMst.handlingMst = new HandlingMst(
+			refHandlingMst.handlingMst = new HandlingMst(
 					haUser,
 					handlingTypeMst,
 					handling_name,
@@ -748,22 +748,22 @@ public class Config extends Controller {
 			);
 		} else {
 			// 取扱データの読み出し
-			editHandlingMst.handlingMst = HandlingMst.findById(id);
+			refHandlingMst.handlingMst = HandlingMst.findById(id);
 			// 編集
-			editHandlingMst.handlingMst.handling_name = handling_name;
-			editHandlingMst.handlingMst.debit_bank = debitBank;
-			editHandlingMst.handlingMst.cutoff_day = cutoff_day;
-			editHandlingMst.handlingMst.debit_month = debit_month;
-			editHandlingMst.handlingMst.debit_day = debit_day;
-			editHandlingMst.handlingMst.zero_hidden = zero_hidden;
+			refHandlingMst.handlingMst.handling_name = handling_name;
+			refHandlingMst.handlingMst.debit_bank = debitBank;
+			refHandlingMst.handlingMst.cutoff_day = cutoff_day;
+			refHandlingMst.handlingMst.debit_month = debit_month;
+			refHandlingMst.handlingMst.debit_day = debit_day;
+			refHandlingMst.handlingMst.zero_hidden = zero_hidden;
 		}
 		// Validate
-		validation.valid(editHandlingMst.handlingMst);
+		validation.valid(refHandlingMst.handlingMst);
 		if(validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
-		editHandlingMst.handlingMst.save();
+		refHandlingMst.handlingMst.save();
 		
 		return 0;
 	}
@@ -772,38 +772,38 @@ public class Config extends Controller {
 	 * ItemMstの保存メソッド
 	 * @param id
 	 * @param item_name
-	 * @param editItemMst
+	 * @param refItemMst
 	 * @param sBalanceType
 	 * @return
 	 */
 	private static Integer cf_item_mst_save(
 			Long id,
 			String item_name,
-			EditItemMst editItemMst,
+			RefItemMst refItemMst,
 			String sBalanceType
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("byBalance_type_name", sBalanceType).first();
 		if(id == null) {
 			// 取扱データの作成
-			editItemMst.itemMst = new ItemMst(
+			refItemMst.itemMst = new ItemMst(
 					haUser,
 					balanceTypeMst,
 					item_name
 			);
 		} else {
 			// 取扱データの読み出し
-			editItemMst.itemMst = ItemMst.findById(id);
+			refItemMst.itemMst = ItemMst.findById(id);
 			// 編集
-			editItemMst.itemMst.item_name = item_name;
+			refItemMst.itemMst.item_name = item_name;
 		}
 		// Validate
-		validation.valid(editItemMst.itemMst);
+		validation.valid(refItemMst.itemMst);
 		if(validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
-		editItemMst.itemMst.save();
+		refItemMst.itemMst.save();
 		
 		return 0;
 	}
@@ -813,37 +813,37 @@ public class Config extends Controller {
 	 * @param id
 	 * @param ideal_deposit_name
 	 * @param zero_hidden
-	 * @param editIdealDepositMst
+	 * @param refIdealDepositMst
 	 * @return
 	 */
 	private static Integer cf_ideal_deposit_mst_save(
 			Long id,
 			String ideal_deposit_name,
 			Boolean zero_hidden,
-			EditIdealDepositMst editIdealDepositMst
+			RefIdealDepositMst refIdealDepositMst
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		if(id == null) {
 			// My貯金データの作成
-			editIdealDepositMst.idealDepositMst = new IdealDepositMst(
+			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
 					haUser,
 					ideal_deposit_name,
 					zero_hidden
 			);
 		} else {
 			// My貯金データの読み出し
-			editIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
+			refIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
 			// 編集
-			editIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
-			editIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden;
+			refIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
+			refIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden;
 		}
 		// Validate
-		validation.valid(editIdealDepositMst.idealDepositMst);
+		validation.valid(refIdealDepositMst.idealDepositMst);
 		if(validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
-		editIdealDepositMst.idealDepositMst.save();
+		refIdealDepositMst.idealDepositMst.save();
 		
 		return 0;
 	}
@@ -863,7 +863,7 @@ public class Config extends Controller {
 	 * @author sakashushu
 	 *
 	 */
-	static class EditHandlingMst {
+	static class RefHandlingMst {
 		HandlingMst handlingMst;
 	}
 
@@ -872,7 +872,7 @@ public class Config extends Controller {
 	 * @author sakashushu
 	 *
 	 */
-	static class EditItemMst {
+	static class RefItemMst {
 		ItemMst itemMst;
 	}
 	
@@ -881,7 +881,7 @@ public class Config extends Controller {
 	 * @author sakashushu
 	 *
 	 */
-	static class EditIdealDepositMst {
+	static class RefIdealDepositMst {
 		IdealDepositMst idealDepositMst;
 	}
 	

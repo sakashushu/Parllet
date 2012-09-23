@@ -13,16 +13,16 @@
 		<script type="text/javascript">google.load('jqueryui', '1')</script>
 		<!-- datepicker日本語化 -->
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-		<!-- datepickerの見た目の調整 -->
+		<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
 		<style>
 		.ui-datepicker td span, .ui-datepicker td a {
-		    text-align: center;    /* 日付はセンタリングの方が好き */
+		    text-align: center;    /* 日付をセンタリング */
 		}
 		.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
 		    width: auto;    /* そのままだと改行してしまう */
 		}
 		.ui-datepicker select.ui-datepicker-month {
-		    margin-left: 1em;    /* ちょっと離すほうが好き */
+		    margin-left: 1em;    /* ちょっと離す */
 		}
 		</style>
 		<noscript>このページは javascript が有効になっている必要があります。</noscript>
@@ -75,11 +75,11 @@
     	<div id="main">
 		    <ul id="loginMenu">
 		        <li class="${request.controller == 'DailyAccount' &&
-		        			sTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
+		        			strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
 		            <a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
 		        </li>
 		        <li class="${request.controller == 'DailyAccount' &&
-		        			sTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
+		        			strTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
 		            <a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a>
 		        </li>
 		        <li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
