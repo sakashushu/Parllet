@@ -9,11 +9,10 @@ public class WkDailyAccount {
 	private boolean bolLastItemFlg;	/* 大分類毎の項目の最終行フラグ */
 	private boolean bBudgetFlg;		/* 予算有無フラグ */
 	private long lBudgetId;			/* 予算ID */
+	private Long lBudgetAmount;		/* 予算金額(数値) */
 	private String sBudgetAmount;		/* 予算金額(表示用) */
 	private long lSumMonth;			/* 月計(数値) */
-	private String sSumMonth;			/* 月計(表示用) */
 	private long[] lAryDays;			/* 日付毎(数値) */
-	private String[] sAryDays;			/* 日付毎(表示用) */
 	private List<WkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
 	public String getsLargeCategory() {
 		return sLargeCategory;
@@ -45,6 +44,12 @@ public class WkDailyAccount {
 	public void setlBudgetId(long lBudgetId) {
 		this.lBudgetId = lBudgetId;
 	}
+	public Long getlBudgetAmount() {
+		return lBudgetAmount;
+	}
+	public void setlBudgetAmount(Long lBudgetAmount) {
+		this.lBudgetAmount = lBudgetAmount;
+	}
 	public String getsBudgetAmount() {
 		return sBudgetAmount;
 	}
@@ -69,23 +74,11 @@ public class WkDailyAccount {
 	public void setLSumMonth(long lSumMonth) {
 		this.lSumMonth = lSumMonth;
 	}
-	public String getsSumMonth() {
-		return sSumMonth;
-	}
-	public void setsSumMonth(String sSumMonth) {
-		this.sSumMonth = sSumMonth;
-	}
 	public long[] getLAryDays() {
 		return lAryDays;
 	}
 	public void setLAryDays(long[] lAryDays) {
 		this.lAryDays = lAryDays;
-	}
-	public String[] getsAryDays() {
-		return sAryDays;
-	}
-	public void setsAryDays(String[] sAryDays) {
-		this.sAryDays = sAryDays;
 	}
 	public List<WkDaToDl> getLstWdtd() {
 		return lstWdtd;

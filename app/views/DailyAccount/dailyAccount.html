@@ -81,6 +81,22 @@ jQuery(document).ready(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
 });
 
+//表示金額を3桁区切りに
+jQuery(document).ready(function(){
+	jQuery('.num3').each(function(i) {
+		var numStr = addFigure(jQuery(this).html());
+		jQuery(this).html(numStr);
+	});
+});
+
+//文字列を3桁区切りにする関数
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
+
 /* 日付選択時にjumpするdatepicker */
 jQuery(function() {
 	jQuery(".datepickerJump").datepicker({
@@ -206,7 +222,10 @@ jQuery(function() {
 									<div class="da_cate1_2">${lwda.sLargeCategory}</div>
 									<div class="da_budget numeric">
 										<span class="num3">
+											<!-- 
 											${lwda.sBudgetAmount}
+											 -->
+											${lwda.lBudgetAmount}
 										</span>
 									</div>
 								#{/else}
@@ -225,7 +244,7 @@ jQuery(function() {
 							#{/else}
 							<div class="da_sum_month numeric">
 								<span class="num3">
-									${lwda.sSumMonth}
+									${lwda.lSumMonth}
 								</span>
 							</div>
 						</li>
@@ -245,9 +264,13 @@ jQuery(function() {
 						<li>
 							#{list items:lwda.lstWdtd, as:'sAryDay'}
 								<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
+									<!-- 
 									<span class="num3">
-										<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}">${sAryDay.sAmount}</a>
+									 -->
+										<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
+									<!-- 
 									</span>
+									 -->
 								</div>
 								%{leftFlg = 0}%
 							#{/list}
@@ -262,9 +285,9 @@ jQuery(function() {
 	#{/form}
 
 	<li>
-		<div class="da_tbl_all_div">
-			<div>
-				<div style="width:320px;">
+		<div class="da_tbl_all_div" style="backgtound:white;">
+			<div style="height:16px;width:320px;">
+				<div>
 				</div>
 			</div>
 		</div>

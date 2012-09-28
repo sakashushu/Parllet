@@ -20,6 +20,22 @@ jQuery(document).ready(function() {
 jQuery(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
 });
+
+//表示金額を3桁区切りに
+jQuery(document).ready(function(){
+	jQuery('.num3').each(function(i) {
+		var numStr = addFigure(jQuery(this).html());
+		jQuery(this).html(numStr);
+	});
+});
+
+//文字列を3桁区切りにする関数
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
 // -->
 </script>
 
@@ -50,9 +66,9 @@ jQuery(function() {
 							#{else}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
 							#{/else}
-							#{list items:lwda.sAryDays, as:'sAryDay'}
+							#{list items:lwda.lstWdtd, as:'sAryDay'}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
-									<a href="@{DetailList.detailList()}">${sAryDay}</a>
+									<a href="@{DetailList.detailList()}" class="num3">${sAryDay.lAmount}</a>
 								</div>
 							#{/list}
 						</li>
@@ -75,9 +91,9 @@ jQuery(function() {
 							#{else}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
 							#{/else}
-							#{list items:lwda.sAryDays, as:'sAryDay'}
+							#{list items:lwda.lstWdtd, as:'sAryDay'}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric">
-									<a href="@{DetailList.detailList()}">${sAryDay}</a>
+									<a href="@{DetailList.detailList()}" class="num3">${sAryDay.lAmount}</a>
 								</div>
 								%{leftFlg = 0}%
 							#{/list}
