@@ -828,14 +828,14 @@ public class Config extends Controller {
 			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
 					haUser,
 					ideal_deposit_name,
-					zero_hidden
+					zero_hidden==null ? false : (zero_hidden==true ? true : false)
 			);
 		} else {
 			// My貯金データの読み出し
 			refIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
 			// 編集
 			refIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
-			refIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden;
+			refIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
 		}
 		// Validate
 		validation.valid(refIdealDepositMst.idealDepositMst);

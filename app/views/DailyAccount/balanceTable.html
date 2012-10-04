@@ -36,6 +36,33 @@ function addFigure(str) {
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
     return num;
 }
+
+/* 日付選択時にjumpするdatepicker */
+jQuery(function() {
+	jQuery(".datepickerJump").datepicker({
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		onSelect: function( e_basis_date ) {
+//			var str_tmp = new String(e_basis_date).replace(/\//g, "");
+//			var int_basis_date = Number(str_tmp);
+			jQuery('#idBasisDate').val(e_basis_date);
+			jQuery('#idMove').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		showOn: "button",
+		buttonImage: "@{'/public/images/calendar_shu.gif'}",
+		buttonImageOnly: true,
+		buttonText: "カレンダー",
+		showButtonPanel: true
+	});
+});
 // -->
 </script>
 
@@ -45,9 +72,25 @@ function addFigure(str) {
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
+<!-- 
 	<input type="text" class="datepicker" name="e_basis_date"
 		value="${sBasisDate}" size="13" />
 	<input type="submit" value="移動" name="move" />
+ -->
+	<div style="font-size:90%;font-weight:bold;">
+	${sBasisDate}
+	<input type="text" class="datepickerJump" name="e_basis_date"
+		value="${sBasisDate}" style="display:none;" />
+	</div>
+	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
+#{/form}
+
+#{form @jump(), id:'frmJump'}
+	<input type="hidden" value="${strTableType}" name="strTableType" />
+	<!-- 対象年月日 -->
+	<input type="hidden" id="idBasisDate" name="e_basis_date"
+		value="${sBasisDate}" style="width:80px;background:#eee;" readonly="readonly" />
+	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
 <ul class="bt_tbl_all">

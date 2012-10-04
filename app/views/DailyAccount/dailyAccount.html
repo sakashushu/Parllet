@@ -34,8 +34,8 @@ jQuery(document).ready(function() {
 
 //起動時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
-	jQuery('#da_tcol').height(jQuery(window).innerHeight()-220);
-	jQuery('#da_tbody').height(jQuery(window).innerHeight()-220);
+	jQuery('#da_tcol').height(jQuery(window).innerHeight()-200);
+	jQuery('#da_tbody').height(jQuery(window).innerHeight()-200);
 //	jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //	jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -44,8 +44,8 @@ jQuery(document).ready(function() {
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#da_tcol').height(jQuery(this).innerHeight()-220);
-		jQuery('#da_tbody').height(jQuery(this).innerHeight()-220);
+		jQuery('#da_tcol').height(jQuery(this).innerHeight()-200);
+		jQuery('#da_tbody').height(jQuery(this).innerHeight()-200);
 //		jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //		jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //		jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -59,17 +59,22 @@ jQuery(document).ready(function() {
 	var nYear = new Number(sDate.substr(0, 4)-0);
 	var nMonth = new Number(sDate.substr(5, 2)-1);
 	var nDay = new Number(sDate.substr(8, 2)-0);
-	var nQuantity = new Number(0);
-	jQuery('#idPre3, #idPre1, #idNext1, #idNext3').click(function() {
-		if(this.id=="idPre3")
-			nQuantity -= 3;
-		if(this.id=="idPre1")
-			nQuantity -= 1;
-		if(this.id=="idNext1")
-			nQuantity += 1;
-		if(this.id=="idNext3")
-			nQuantity += 3;
-		var dPre1 = new Date(nYear, nMonth, nDay+nQuantity);
+//	var nQuantity = new Number(0);
+	jQuery('#idPreYear, #idPreMonth, #idNextMonth, #idNextYear').click(function() {
+		if(this.id=="idPreYear")
+//			nQuantity -= 3;
+			nYear -= 1;
+		if(this.id=="idPreMonth")
+//			nQuantity -= 1;
+			nMonth -= 1;
+		if(this.id=="idNextMonth")
+//			nQuantity += 1;
+			nMonth += 1;
+		if(this.id=="idNextYear")
+//			nQuantity += 3;
+			nYear += 1;
+//		var dPre1 = new Date(nYear, nMonth, nDay+nQuantity);
+		var dPre1 = new Date(nYear, nMonth, nDay);
 		jQuery('#idBasisDate').val(dateFormat.format(dPre1));
 		jQuery('#idMove').click();
 		jQuery('body').attr("disabled", "disabled");
@@ -96,33 +101,6 @@ function addFigure(str) {
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
     return num;
 }
-
-/* 日付選択時にjumpするdatepicker */
-jQuery(function() {
-	jQuery(".datepickerJump").datepicker({
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		onSelect: function( e_basis_date ) {
-			var str_tmp = new String(e_basis_date).replace(/\//g, "");
-			var int_basis_date = Number(str_tmp);
-			jQuery('#idBasisDate').val(e_basis_date);
-			jQuery('#idMove').click();
-			jQuery('body').attr("disabled", "disabled");
-		},
-		showOn: "button",
-		buttonImage: "@{'/public/images/calendar_shu.gif'}",
-		buttonImageOnly: true,
-		buttonText: "カレンダー",
-		showButtonPanel: true
-	});
-});
 -->
 </script>
 
@@ -133,8 +111,8 @@ jQuery(function() {
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
-	<input type="hidden" id="idBasisDate" name="e_basis_date"
-		value="${sBasisDate}" style="width:80px;background:#eee;" readonly="readonly" />
+	<input type="text" class="datepickerJump" name="e_basis_date" id="idBasisDate"
+		value="${sBasisDate}" style="display:none;" />
 	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
@@ -148,15 +126,23 @@ jQuery(function() {
 			<ul class="da_tbl_lt">
 				<li>
 					%{year = sBasisDate.substring(0,4)}%
-					<div class="da_hd_cate1_2 da_head">${year}年</div>
+					<div class="da_hd_cate1_2 da_head">
+						<a id="idPreYear" class="daBtnPreNext" tabindex="0"><<<span>年移動</span></a>
+						${year}年
+						<a id="idNextYear" class="daBtnPreNext" tabindex="0">>><span>年移動</span></a>
+						<br>
+						<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>月移動</span></a>
+						&nbsp;&nbsp;${month}月&nbsp;
+						<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>月移動</span></a>
+					</div>
 					<div class="da_budget da_head">
 						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
 							<!-- 予算 -->
-							${month}月予算
+							月予算
 							<input type="submit" value="更新" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
 						  #{/if}
 					</div>
-					<div class="da_sum_month da_head">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? month+"月計" : ""}</div>
+					<div class="da_sum_month da_head">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? "月計" : ""}</div>
 				</li>
 			</ul>
 		</div>
@@ -172,20 +158,9 @@ jQuery(function() {
 					<li>
 						#{list items:sAryDays, as:'sAryDay'}
 							%{count++}%
-							<div class="${leftFlg==1 ? 'da_hd_left_cell ' : ''}da_ary_day da_head ${}" style="${count==1 ? 'text-align: left;' : (count==3 ? 'text-align: right;' : '')}">
-							#{if count== 1}
-								<a id="idPre3" class="daBtnPreNext" tabindex="0"><<<span>3日前へ</span></a>
-								<a id="idPre1" class="daBtnPreNext" tabindex="0"><<span>1日前へ</span></a>
-							#{/if}
+							<div class="da_hd_ary_day da_head ">
 							${count==2 ? "　" : ""}
 							${sAryDay}
-							#{if count== 2}
-								<input type="text" class="datepickerJump" value="${sBasisDate}" style="display:none;" />
-							#{/if}
-							#{if count== 3}
-								<a id="idNext1" class="daBtnPreNext" tabindex="0">><span>1日後へ</span></a>
-								<a id="idNext3" class="daBtnPreNext" tabindex="0">>><span>3日後へ</span></a>
-							#{/if}
 							</div>
 					        %{leftFlg = 0}%
 						#{/list}
@@ -264,13 +239,7 @@ jQuery(function() {
 						<li>
 							#{list items:lwda.lstWdtd, as:'sAryDay'}
 								<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
-									<!-- 
-									<span class="num3">
-									 -->
-										<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
-									<!-- 
-									</span>
-									 -->
+									<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
 								</div>
 								%{leftFlg = 0}%
 							#{/list}
@@ -300,4 +269,4 @@ jQuery(function() {
 		</div>
 	</li>
 	
-</ul>	
+</ul>

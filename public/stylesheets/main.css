@@ -285,7 +285,11 @@ input[type="submit"],input[type="button"] {
 }
 .da_tbl_rt li div {
 	display: table-cell;
+	/* border-right: 1px solid #transparent; としても幅を取っていない(CSSのバグ？)ようなので、
+	 * 下記は コメントアウトし、ヘッダー部分は「.da_hd_ary_day」で対応 */
+/*
 	border-right: 1px solid #transparent;
+*/
 	border-bottom: 1px solid #aaa;
 	height: 26px;
 }
@@ -356,6 +360,14 @@ input[type="submit"],input[type="button"] {
 
 .da_hd_left_cell {
 	border-left: 1px solid transparent;
+}
+
+/*
+ * border-right: 1px solid #transparent; としても幅を取っていない(CSSのバグ？)ようなので、下記で対応
+ */
+.da_hd_ary_day {
+	/* 99px(da_ary_dayの幅)+1px(透明borderの代わり)=100px */
+	width: 100px;
 }
 
 

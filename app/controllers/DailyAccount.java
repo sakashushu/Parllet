@@ -65,9 +65,10 @@ public class DailyAccount extends Controller {
 	public static void dailyAccount(
 			String sBasisDate
 			) {
+		DailyAccount da = new DailyAccount();
    		//単純に呼ばれた時の基準日のセット
 		if(sBasisDate==null)
-			sBasisDate = setBasisDate();
+			sBasisDate = da.setBasisDate();
 
 		Integer intBasisDate = null;
 		if(sBasisDate!=null)
@@ -82,9 +83,10 @@ public class DailyAccount extends Controller {
 	public static void balanceTable(
 			String sBasisDate
 			) {
-   		//単純に呼ばれた時の基準日のセット
+		DailyAccount da = new DailyAccount();
+   		//単純に呼ばれた時の基準日のセット(残高表)
 		if(sBasisDate==null)
-			sBasisDate = setBasisDate();
+			sBasisDate = da.setBasisDateBt();
 
 		Integer intBasisDate = null;
 		if(sBasisDate!=null)
@@ -163,8 +165,14 @@ public class DailyAccount extends Controller {
    		wkDAR.setStrBasisDate(strBasisDate);
    		
 		//検索条件をセッションに保存
-		session.put("daFilExistFlg", "true");
-		session.put("daStrBasisDate", wkDAR.getStrBasisDate());
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+			session.put("daFilExistFlg", "true");
+			session.put("daStrBasisDate", strBasisDate);
+		}
+		if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
+			session.put("btFilExistFlg", "true");
+			session.put("btStrBasisDate", strBasisDate);
+		}
 		
 		//セッションのactionModeが空の時は閲覧モードをセット
 		if(session.get("actionMode")==null)
@@ -172,7 +180,7 @@ public class DailyAccount extends Controller {
 		
 		Date dBasis = null;
 		try {
-			dBasis = DateFormat.getDateInstance().parse(wkDAR.getStrBasisDate());
+			dBasis = DateFormat.getDateInstance().parse(strBasisDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -188,7 +196,7 @@ public class DailyAccount extends Controller {
 //			iDaysCnt = 3;
 //			calendar.add(Calendar.DATE, -1);
 		} else if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
-//			iDaysCnt = 1;
+			iDaysCnt = 1;
 		}
 		
    		
@@ -208,7 +216,7 @@ public class DailyAccount extends Controller {
 		wkDAR.setlWDA(makeWorkList(year, wkDAR.getIntMonth(), dStartDay, iDaysCnt, strTableType));
    		
    		//日計表の日付ごとの部分のスクロール内の幅の設定
-		wkDAR.setIntWidth(iDaysCnt * 100);
+		wkDAR.setIntWidth(iDaysCnt * 101);
    		
 		return wkDAR;
 	}
@@ -266,6 +274,7 @@ public class DailyAccount extends Controller {
 			int iDaysCnt,
 			String strTableType
 			) {
+		
 		//日計表・残高表の行に相当するリスト
    		List<WkDailyAccount> lWDA = new ArrayList<WkDailyAccount>();
    		
@@ -280,9 +289,11 @@ public class DailyAccount extends Controller {
 
 		DailyAccount da = new DailyAccount();
 		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+//			System.out.println("ここから");
 			//「収入」
-			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-					BALANCE_TYPE_IN, lWDA);
+//			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
+//					BALANCE_TYPE_IN, lWDA);
+			da.addWorkListBalIn(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
 			
 			//「支出」
 			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
@@ -298,44 +309,210 @@ public class DailyAccount extends Controller {
 					BALANCE_TYPE_OUT_IDEAL_DEPOSIT, lWDA);
 			
 			
-			//「実残高」
+			//「実残高」・「My貯金してないお金」・「My貯金残高」
 			lWDA = da.addWorkListRemReal(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
 			
-			//「My貯金残高」(My貯金してないお金を含む)
-			lWDA = da.addWorkListRemIdealDepo(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
+			//「My貯金してないお金」
+//			lWDA = da.addWorkListRemNotIdealDepo(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
 			
+			//「My貯金残高」
+//			lWDA = da.addWorkListRemIdealDepo(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
 			
 		} else if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
-			//「実残高」
-//			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					REMAINDER_TYPE_REAL, lWDA);
+			sFirstDay =  String.format("%1$tY%1$tm%1$td", dStartDay);
+			
+			//「実残高」・「My貯金してないお金」・「My貯金残高」
 			lWDA = da.addWorkListRemReal(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
 			
-//			//「My貯金してないお金」
-//			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					REMAINDER_TYPE_NOT_IDEAL_DEPOSIT, lWDA);
-//			
-//			//「My貯金残高」
-//			makeWorkListEach(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst,
-//					REMAINDER_TYPE_IDEAL_DEPOSIT, lWDA);
-  	  	
+			//「My貯金してないお金」
+//			lWDA = da.addWorkListRemNotIdealDepo(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
+			
+			//「My貯金残高」
+//			lWDA = da.addWorkListRemIdealDepo(year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst, lWDA);
   	  	
 		}
 
 		return lWDA;
 	}
-	
 
 	
 	/**
-	 * 初日の残高取得用SQL作成（取扱合計）
+	 * 残高取得用SQL作成(実残高)
+	 * @param bolEach
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @return
+	 */
+	private String makeSqlRemReal(
+			boolean bolEach,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst
+			) {
+		
+		String sql = "";
+		
+		/** 
+   		 * SQL固定部分作成
+   		 */
+		
+		//  FROM句
+		String sqlFromPhrase = "" +
+				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id " +
+				" LEFT JOIN HandlingMst hb " +
+				"   ON h.debit_bank_id = hb.id " +
+				"";
+		
+		
+		/* CASE文内の加減算の条件 */
+		
+		// 収入：加算、支出：減算
+		String sqlSumAllCaseInOut = "" +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount " +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount " +
+				"";
+		// 口座引出：加算、口座預入：減算
+		String sqlSumCashCaseBankInOut = "" +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN r.amount " +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN -r.amount " +
+				"";
+		// 口座引出：減算、口座預入：加算
+		String sqlSumNotCashCaseBankInOut = "" +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN -r.amount" +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
+				"";
+		
+		if(!bolEach) {
+			//残高取得用SQL作成(実残高)(取扱合計)
+			sql = makeSqlRemRealAll(
+					dStartDay,
+					iDaysCnt,
+					haUser,
+					sFirstDay,
+					sNextFirst,
+					sqlFromPhrase,
+					sqlSumAllCaseInOut
+					);
+			
+			return sql;
+		}
+		
+		
+		String sqlDailyLater = "";
+		String sqlDailyZero = "";
+   		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dStartDay);
+		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
+			sqlDailyZero += "" +
+					" OR  sum_day_" + iDay + " <> 0 ";
+			calendar.add(Calendar.DATE, 1);
+			if(iDay > 1)
+				sqlDailyLater += "" +
+						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " " +
+						"";
+		}
+		
+		//残高取得用SQL作成(実残高)(取扱毎)
+		sql = makeSqlRemRealEach(
+				dStartDay,
+				iDaysCnt,
+				haUser,
+				sFirstDay,
+				sNextFirst,
+				sqlFromPhrase,
+				sqlSumAllCaseInOut,
+				sqlSumCashCaseBankInOut,
+				sqlSumNotCashCaseBankInOut,
+				sqlDailyLater,
+				sqlDailyZero);
+		
+		return sql;
+	}
+				
+	/**
+	 * 残高取得用SQL作成(実残高)(取扱合計)
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumAllCaseInOut
+	 * @return
+	 */
+	private String makeSqlRemRealAll(
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst,
+			String sqlFromPhrase,
+			String sqlSumAllCaseInOut
+			) {
+	
+		String sql = "";
+		
+		//初日の残高取得用SQL作成（取扱合計）
+		String sqlAllFirstDay = makeSqlRemRealAllFirstDay(
+				haUser,
+				sFirstDay,
+				sqlFromPhrase,
+				sqlSumAllCaseInOut
+				);
+		sql = "" +
+				" SELECT " +
+				"   *" +
+				" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
+				" CROSS JOIN ( SELECT 0 as dummy ) rem_later " +	//SELECT句での取得項目が１つのみだと結果がBigInteger型となり、Object[]へのキャストエラーとなるため、ダミーの取得項目を追加
+				"";
+		//2日目以降の残高取得用SQL作成（取扱合計）
+		if(iDaysCnt>=2) {
+			String sqlAllLater = makeSqlRemRealAllLater(
+					dStartDay,
+					iDaysCnt,
+					haUser,
+					sFirstDay,
+					sNextFirst,
+					sqlFromPhrase,
+					sqlSumAllCaseInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   *" +
+					" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
+					" CROSS JOIN (" + sqlAllLater + " ) rem_later " +
+					"";
+		}
+		
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		
+		return sql;
+	}
+	
+	/**
+	 * 初日の残高取得用SQL作成(実残高)(取扱合計)
 	 * @param haUser
 	 * @param sFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @return
 	 */
-	private String makeSqlRemAllFirstDay(
+	private String makeSqlRemRealAllFirstDay(
 			HaUser haUser,
 			String sFirstDay,
 			String sqlFromPhrase,
@@ -369,7 +546,7 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * 2日目以降の残高取得用SQL作成（取扱合計）
+	 * 2日目以降の残高取得用SQL作成(実残高)(取扱合計)
 	 * @param dStartDay
 	 * @param iDaysCnt
 	 * @param haUser
@@ -379,7 +556,7 @@ public class DailyAccount extends Controller {
 	 * @param sqlSumAllCaseInOut
 	 * @return
 	 */
-	private String makeSqlRemAllLater(
+	private String makeSqlRemRealAllLater(
 			Date dStartDay,
 			int iDaysCnt,
 			HaUser haUser,
@@ -429,8 +606,9 @@ public class DailyAccount extends Controller {
 		return sqlLater;
 	}
 	
+	
 	/**
-	 * 初日の残高取得用SQL作成（取扱毎）
+	 * 残高取得用SQL作成(実残高)(取扱毎)
 	 * @param bolEach
 	 * @param haUser
 	 * @param sFirstDay
@@ -440,7 +618,93 @@ public class DailyAccount extends Controller {
 	 * @param sqlSumNotCashCaseBankInOut
 	 * @return
 	 */
-	private String makeSqlRemEachFirstDay(
+	private String makeSqlRemRealEach(
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst,
+			String sqlFromPhrase,
+			String sqlSumAllCaseInOut,
+			String sqlSumCashCaseBankInOut,
+			String sqlSumNotCashCaseBankInOut,
+			String sqlDailyLater,
+			String sqlDailyZero
+			) {
+		
+		String sql = "";
+		
+		//初日の残高取得用SQL作成（取扱(実際)毎）
+		String sqlEachFirstDay = makeSqlRemRealEachFirstDay(
+				haUser,
+				sFirstDay,
+				sqlFromPhrase,
+				sqlSumAllCaseInOut,
+				sqlSumCashCaseBankInOut,
+				sqlSumNotCashCaseBankInOut
+				);
+		sql = "" +
+				" SELECT " +
+				"   hm.id as item_id " +
+				"  ,hm.handling_name as item_name " +
+				"  ,50 as cate_order " +
+				"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
+				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " +
+				" FROM HandlingMst hm " +
+				" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
+				"   ON hm.id = rem_firstday.hd_id " +
+				" WHERE hm.ha_user_id = " + haUser.id +
+				"   AND hm.zero_hidden = false " + sqlDailyZero +
+//				" ORDER by hm.id" +
+				"";
+		//2日目以降の残高取得用SQL作成（取扱(実際)毎）
+		if(iDaysCnt>=2) {
+			String sqlEachLater = makeSqlRemRealEachLater(
+					dStartDay,
+					iDaysCnt,
+					haUser,
+					sFirstDay,
+					sNextFirst,
+					sqlFromPhrase,
+					sqlSumAllCaseInOut,
+					sqlSumCashCaseBankInOut,
+					sqlSumNotCashCaseBankInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   hm.id as item_id" +
+					"  ,hm.handling_name as item_name " +
+					"  ,50 as cate_order " +
+					"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
+					"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " + sqlDailyLater +
+					" FROM HandlingMst hm " +
+					" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
+					"   ON hm.id = rem_firstday.hd_id " +
+					" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
+					"   ON hm.id = rem_later.hd_id " +
+					" WHERE hm.ha_user_id = " + haUser.id +
+					"   AND hm.zero_hidden = false " + sqlDailyZero +
+//					" ORDER by hm.id" +
+					"";
+		}
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 初日の残高取得用SQL作成(実残高)(取扱毎)
+	 * @param bolEach
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sqlFromPhrase
+	 * @param sqlSumAllCaseInOut
+	 * @param sqlSumCashCaseBankInOut
+	 * @param sqlSumNotCashCaseBankInOut
+	 * @return
+	 */
+	private String makeSqlRemRealEachFirstDay(
 			HaUser haUser,
 			String sFirstDay,
 			String sqlFromPhrase,
@@ -475,10 +739,11 @@ public class DailyAccount extends Controller {
 		String sqlCash = "" +
 				" SELECT " +
 				sqlCashDaily +		//日付毎の合計取得部分(現金)
-				"  ,'" + HANDLING_TYPE_CASH + "' as hd_handling_name " +
-				"  ,0 as hd_id " +
-				"  ,false as hd_zero_hidden " +
+				"  ,hcash.handling_name as hd_handling_name " +
+				"  ,hcash.id as hd_id" +
+				"  ,hcash.zero_hidden as hd_zero_hidden " +
 				sqlFromPhrase +		//FROM句
+				" CROSS JOIN HandlingMst hcash " +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    ht.handling_type_name = '" + HANDLING_TYPE_CASH + "' " +
 				"            AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
@@ -489,7 +754,8 @@ public class DailyAccount extends Controller {
 				"        ) " +
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-				" GROUP BY hd_id, hd_handling_name " +
+				"   AND hcash.handling_name = '" + HANDLING_TYPE_CASH + "' " +
+				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
 				"";
 		
 		//現金以外取得用SQL
@@ -538,7 +804,7 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * 2日目以降の残高取得用SQL作成（取扱毎）
+	 * 2日目以降の残高取得用SQL作成(実残高)(取扱毎)
 	 * @param bolEach
 	 * @param dStartDay
 	 * @param iDaysCnt
@@ -551,7 +817,7 @@ public class DailyAccount extends Controller {
 	 * @param sqlSumNotCashCaseBankInOut
 	 * @return
 	 */
-	private String makeSqlRemEachLater(
+	private String makeSqlRemRealEachLater(
 			Date dStartDay,
 			int iDaysCnt,
 			HaUser haUser,
@@ -609,10 +875,11 @@ public class DailyAccount extends Controller {
 		String sqlCash = "" +
 				" SELECT " +
 				sqlCashDaily +		//日付毎の合計取得部分(現金)
-				"  ,'" + HANDLING_TYPE_CASH + "' as hd_handling_name " +
-				"  ,0 as hd_id " +
-				"  ,false as hd_zero_hidden " +
+				"  ,hcash.handling_name as hd_handling_name " +
+				"  ,hcash.id as hd_id" +
+				"  ,hcash.zero_hidden as hd_zero_hidden " +
 				sqlFromPhrase +		//FROM句
+				" CROSS JOIN HandlingMst hcash " +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    ht.handling_type_name = '" + HANDLING_TYPE_CASH + "' " +
 				"            AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
@@ -623,7 +890,9 @@ public class DailyAccount extends Controller {
 				"        ) " +
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
-				" GROUP BY hd_id, hd_handling_name " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"   AND hcash.handling_name = '" + HANDLING_TYPE_CASH + "' " +
+				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
 				"";
 		
 		//現金以外取得用SQL
@@ -653,6 +922,7 @@ public class DailyAccount extends Controller {
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
 				"   AND h.handling_name <> '" + HANDLING_TYPE_CASH + "' " +
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
 				"";
 
@@ -670,7 +940,7 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * 日計表の行に相当するリストの作成（実残高）
+	 * 日計表の行に相当するリストの作成(実残高)
 	 * @param year
 	 * @param month
 	 * @param dStartDay
@@ -691,59 +961,10 @@ public class DailyAccount extends Controller {
 			String sNextFirst,
 			List<WkDailyAccount> lWDA
 			) {
-		String strSql = "";
+		String sql = "";
 		Calendar calendar = Calendar.getInstance();
 		
-   		/** 
-   		 * SQL固定部分作成
-   		 */
-		
-		//  FROM句
-		String sqlFromPhrase = "" +
-				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id " +
-				" LEFT JOIN HandlingMst hb " +
-				"   ON h.debit_bank_id = hb.id " +
-				"";
-		
-		//CASE文内 収入加算・支出減算
-		String sqlSumAllCaseInOut = "" +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount " +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount " +
-				"";
-		
-		//CASE文内 口座引出加算・口座預入減算
-		String sqlSumCashCaseBankInOut = "" +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN r.amount " +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN -r.amount " +
-				"";
-		
-		//CASE文内 口座引出減算・口座預入加算
-		String sqlSumNotCashCaseBankInOut = "" +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN -r.amount" +
-				" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
-				"";
-		
-		String sqlDailyLater = "";
-		String sqlDailyZero = "";
-		calendar.setTime(dStartDay);
-		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
-			sqlDailyZero += "" +
-					" OR  sum_day_" + iDay + " <> 0 ";
-			calendar.add(Calendar.DATE, 1);
-			if(iDay > 1)
-				sqlDailyLater += "" +
-						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " " +
-						"";
-		}
-		
+
    		/** 
    		 * 合計行
    		 */
@@ -751,36 +972,21 @@ public class DailyAccount extends Controller {
    		long lSumMonthG = 0L;
 		List<WkDaToDl> lstWdtdG = new ArrayList<WkDaToDl>();
 		if(Calendar.getInstance().get(Calendar.DATE)==32) {	//有り得ない日付(32)で条件付けし、if文内を通らないようにしている。日計表画面でアコーディオンで明細を開く機能を追加したら、その条件で通るようにする予定。
-			//初日の残高取得用SQL作成（取扱合計）
-			String sqlAllFirstDay = makeSqlRemAllFirstDay(
-					haUser,
-					sFirstDay,
-					sqlFromPhrase,
-					sqlSumAllCaseInOut
-					);
-			//2日目以降の残高取得用SQL作成（取扱合計）
-			String sqlAllLater = makeSqlRemAllLater(
+
+			//残高取得用SQL作成(実残高)(取扱合計)
+			sql = makeSqlRemReal(
+					false,
 					dStartDay,
 					iDaysCnt,
 					haUser,
 					sFirstDay,
-					sNextFirst,
-					sqlFromPhrase,
-					sqlSumAllCaseInOut
+					sNextFirst
 					);
 			
-			strSql = "" +
-					" SELECT " +
-					"   *" +
-					" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
-					" CROSS JOIN (" + sqlAllLater + " ) rem_later " +
-					"";
-			while(!(strSql.equals(strSql.replaceAll("  ", " "))))
-				strSql = strSql.replaceAll("  ", " ");
-	   		
+//			System.out.println("合計行 " + REMAINDER_TYPE_REAL + " : " + sql);
 	   		Object[] obj = null;
 			obj = (Object[])JPA.em().createNativeQuery(
-					strSql).getSingleResult();
+					sql).getSingleResult();
 			lSumMonthG = obj[0]==null ? 0L : Long.parseLong(String.valueOf(obj[0]));
 			wDA.setLSumMonth(lSumMonthG);
 			wDA.setsLargeCategory(REMAINDER_TYPE_REAL);
@@ -813,63 +1019,117 @@ public class DailyAccount extends Controller {
 		 *  取扱(実際)毎の行
 		 * （クレジットカードは除いて、引落口座に集約）
 		 */
-		//合計行は先にリストに追加し、最後に中身に明細行からの加算合計をセット
-		lWDA.add(wDA);
-		long[] lAryDaysRlAll = new long[iDaysCnt];
-		
-		//初日の残高取得用SQL作成（取扱(実際)毎）
-		String sqlEachFirstDay = makeSqlRemEachFirstDay(
-				haUser,
-				sFirstDay,
-				sqlFromPhrase,
-				sqlSumAllCaseInOut,
-				sqlSumCashCaseBankInOut,
-				sqlSumNotCashCaseBankInOut
+		//残高取得用SQL作成(実残高)(取扱毎)
+//		sql = makeSqlRemReal(
+//				true,
+//				dStartDay,
+//				iDaysCnt,
+//				haUser,
+//				sFirstDay,
+//				sNextFirst
+//				);
+		String sqlRemReal = makeSqlRemReal(
+						true,
+						dStartDay,
+						iDaysCnt,
+						haUser,
+						sFirstDay,
+						sNextFirst
 				);
-		//2日目以降の残高取得用SQL作成（取扱(実際)毎）
-		String sqlEachLater = makeSqlRemEachLater(
-				dStartDay,
-				iDaysCnt,
-				haUser,
-				sFirstDay,
-				sNextFirst,
-				sqlFromPhrase,
-				sqlSumAllCaseInOut,
-				sqlSumCashCaseBankInOut,
-				sqlSumNotCashCaseBankInOut
+		String sqlRemNotIdealDeposit = makeSqlRemNotIdealDeposit(
+						dStartDay,
+						iDaysCnt,
+						haUser,
+						sFirstDay,
+						sNextFirst
 				);
-		
-		strSql = "" +
-				" SELECT " +
-				"   rem_firstday.hd_id " +
-				"  ,rem_firstday.hd_handling_name" +
-				"  ,rem_firstday.sum_day_1" + sqlDailyLater +
-				" FROM ( " + sqlEachFirstDay + " ) rem_firstday " +
-				" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
-				" ON rem_firstday.hd_id = rem_later.hd_id " +
-				" WHERE rem_firstday.hd_zero_hidden = false " + sqlDailyZero +
-				" ORDER by rem_firstday.hd_id" +
+		String sqlRemIdealDeposit = makeSqlRemIdealDeposit(
+						true,
+						dStartDay,
+						iDaysCnt,
+						haUser,
+						sFirstDay,
+						sNextFirst
+				);
+//		sql = " ( " + sqlRemReal + " ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemIdealDeposit + " ) " +
+//				" ORDER BY cate_order, item_id " +
+//				"";
+		sql = " ( " + sqlRemReal + " ) " +
+				" UNION ALL " +
+				" ( " + sqlRemNotIdealDeposit + " ) " +
+				" UNION ALL " +
+				" ( " + sqlRemIdealDeposit + " ) " +
+				" ORDER BY cate_order, item_id " +
 				"";
-		while(!(strSql.equals(strSql.replaceAll("  ", " "))))
-			strSql = strSql.replaceAll("  ", " ");
 		
+//		System.out.println("明細行 残高 : " + sql);
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(
-				strSql
+				sql
 				).getResultList();
+		
+		//合計行は先にリストに追加し、最後に中身に明細行からの加算合計をセット
+		WkDailyAccount wdaReal = new WkDailyAccount();
+		WkDailyAccount wdaIdeal = new WkDailyAccount();
+		List<WkDaToDl> lstWdtdReal = new ArrayList<WkDaToDl>();
+		List<WkDaToDl> lstWdtdIdeal = new ArrayList<WkDaToDl>();
+		lWDA.add(wdaReal);
+		long[] lAryDaysRlAll = new long[iDaysCnt];
 		
 		int intItemCnt = lstObjEach.size();
 		int intCnt = 0;
+		String strOldCateName = "";
 		for(Object[] objEach : lstObjEach) {
-			WkDailyAccount wDaHandling = new WkDailyAccount();
+			if(intCnt==0)
+				strOldCateName = String.valueOf(objEach[3]);
+			//大分類が変わる時
+			if(!strOldCateName.equals(String.valueOf(objEach[3]))) {
+				//合計行の中身に明細行からの加算合計をセット
+				
+				//現在行が合計行でない場合のみ日毎の値をセット(「Myちょきんしてないお金」は明細行が無く合計行のみ)
+				if(!strOldCateName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
+					calendar.setTime(dStartDay);
+					for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+						WkDaToDl wkDaToDlG = new WkDaToDl();
+						wkDaToDlG.setlAmount(lAryDaysRlAll[iDay]);
+						String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+						wkDaToDlG.setsPaymentDateFr(sDate);
+						wkDaToDlG.setsPaymentDateTo(sDate);
+						wkDaToDlG.setlHandlingId(null);
+						lstWdtdReal.add(wkDaToDlG);
+						calendar.add(Calendar.DATE, 1);
+					}
+				}
+				if(strOldCateName.equals(REMAINDER_TYPE_REAL)) {
+//					wdaG.setLSumMonth(lSumMonthG);
+					wdaReal.setsLargeCategory(strOldCateName);
+					wdaReal.setsItem("");
+					wdaReal.setbBudgetFlg(false);
+					wdaReal.setLstWdtd(lstWdtdReal);
+				}
+				if(String.valueOf(objEach[3]).equals(REMAINDER_TYPE_IDEAL_DEPOSIT))
+					lWDA.add(wdaIdeal);
+					
+				
+				strOldCateName = String.valueOf(objEach[3]);
+				
+				lAryDaysRlAll = new long[iDaysCnt];
+			}
 			
-			wDaHandling.setsLargeCategory(REMAINDER_TYPE_REAL);
-			wDaHandling.setsItem(String.valueOf(objEach[1]));
-			wDaHandling.setbBudgetFlg(false);
+			
+			
+			
+			WkDailyAccount wDaEach = new WkDailyAccount();
+			
+			wDaEach.setsLargeCategory(String.valueOf(objEach[3]));
+			wDaEach.setsItem(String.valueOf(objEach[1]));
+			wDaEach.setbBudgetFlg(false);
 	
 			//項目の最終行フラグ
 			intCnt++;
 			if(intItemCnt==intCnt) {
-				wDaHandling.setBolLastItemFlg(true);
+				wDaEach.setBolLastItemFlg(true);
 			}
 					
 			// 日毎
@@ -878,7 +1138,7 @@ public class DailyAccount extends Controller {
 			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
 			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 				//初日のみそのままの値。2日目以降は加算。
-				lngSum += Long.parseLong(String.valueOf(objEach[iDay+2]));
+				lngSum += Long.parseLong(String.valueOf(objEach[iDay+4]));
 				lAryDaysRlAll[iDay] += lngSum;
 				
 				WkDaToDl workDaToDl = new WkDaToDl();
@@ -896,17 +1156,13 @@ public class DailyAccount extends Controller {
 				
 				calendar.add(Calendar.DATE, 1);
 			}
-			wDaHandling.setLstWdtd(lstWdtd);
+			wDaEach.setLstWdtd(lstWdtd);
 			
-			lWDA.add(wDaHandling);
+			lWDA.add(wDaEach);
 			
 		}
 		
-		//合計行の中身に中身に明細行からの加算合計をセット
-//		wDA.setLSumMonth(lSumMonthG);
-		wDA.setsLargeCategory(REMAINDER_TYPE_REAL);
-		wDA.setsItem("");
-		wDA.setbBudgetFlg(false);
+		//合計行の中身に明細行からの加算合計をセット
 		calendar.setTime(dStartDay);
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			WkDaToDl wkDaToDlG = new WkDaToDl();
@@ -915,25 +1171,199 @@ public class DailyAccount extends Controller {
 			wkDaToDlG.setsPaymentDateFr(sDate);
 			wkDaToDlG.setsPaymentDateTo(sDate);
 			wkDaToDlG.setlHandlingId(null);
-			lstWdtdG.add(wkDaToDlG);
+			lstWdtdIdeal.add(wkDaToDlG);
 			calendar.add(Calendar.DATE, 1);
 		}
-		wDA.setLstWdtd(lstWdtdG);
+//		wdaG.setLSumMonth(lSumMonthG);
+		wdaIdeal.setsLargeCategory(strOldCateName);
+		wdaIdeal.setsItem("");
+		wdaIdeal.setbBudgetFlg(false);
+		wdaIdeal.setLstWdtd(lstWdtdIdeal);
 		
 		
 		return lWDA;
 	}
 	
+
+	/**
+	 * 残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdealDeposit(
+			boolean bolEach,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst
+			) {
+		
+		String sql = "";
+
+   		/** 
+   		 * SQL固定部分作成
+   		 */
+		
+		//  FROM句
+		String sqlFromPhrase = "" +
+   				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				"";
+		
+		/* CASE文内の加減算の条件 */
+		// My貯金から直接支払：減算、My貯金に直接入金：加算、My貯金預入：加算、My貯金引出：減算
+		String sqlSumCaseIdealDepoInOut = "" +
+   				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
+   				"       AND r.ideal_deposit_mst_id IS NOT NULL " +
+   				"       ) THEN -r.amount " +
+   				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_IN + "' " +
+   				"       AND r.ideal_deposit_mst_id IS NOT NULL " +
+   				"       ) THEN r.amount " +
+   				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
+   				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
+				"";
+
+		if(!bolEach) {
+			//初日の残高取得用SQL作成（My貯金合計）
+			String sqlAllFirstDay = makeSqlRemIdealFirstDay(
+					false,
+					haUser,
+					sFirstDay,
+					sqlFromPhrase,
+					sqlSumCaseIdealDepoInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   *" +
+					" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
+					" CROSS JOIN ( SELECT 0 as dummy ) rem_later " +	//SELECT句での取得項目が１つのみだと結果がBigInteger型となり、Object[]へのキャストエラーとなるため、ダミーの取得項目を追加
+					"";
+			//2日目以降の残高取得用SQL作成（My貯金合計）
+			if(iDaysCnt>=2) {
+				String sqlAllLater = makeSqlRemIdealLater(
+						false,
+						dStartDay,
+						iDaysCnt,
+						haUser,
+						sFirstDay,
+						sNextFirst,
+						sqlFromPhrase,
+						sqlSumCaseIdealDepoInOut
+						);
+				sql = "" +
+						" SELECT " +
+						"   *" +
+						" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
+						" CROSS JOIN (" + sqlAllLater + " ) rem_later " +
+						"";
+			}
+			while(!(sql.equals(sql.replaceAll("  ", " "))))
+				sql = sql.replaceAll("  ", " ");
+			
+			return sql;
+		}
+
+		
+		
+		
+		String sqlDailyLater = "";
+		String sqlDailyZero = "";
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dStartDay);
+		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
+			sqlDailyZero += "" +
+					" OR  sum_day_" + iDay + " <> 0 ";
+			calendar.add(Calendar.DATE, 1);
+			if(iDay > 1)
+				sqlDailyLater += "" +
+						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " ";
+		}
+		
+		//初日の残高取得用SQL作成（取扱(My貯金)毎）
+		String sqlEachFirstDay = makeSqlRemIdealFirstDay(
+				true,
+				haUser,
+				sFirstDay,
+				sqlFromPhrase,
+				sqlSumCaseIdealDepoInOut
+				);
+		sql = "" +
+				" SELECT " +
+				"   idm.id as item_id " +
+				"  ,idm.ideal_deposit_name as item_name " +
+				"  ,70 as cate_order " +
+				"  ,cast('" + REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " +
+				" FROM IdealDepositMst idm " +
+				" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
+				"   ON idm.id = rem_firstday.id_id" +
+				" WHERE idm.ha_user_id = " + haUser.id +
+				"   AND idm.zero_hidden = false " + sqlDailyZero +
+//				" ORDER by idm.id" +
+				"";
+		//2日目以降の残高取得用SQL作成（取扱(My貯金)毎）
+		if(iDaysCnt>=2) {
+			String sqlEachLater = makeSqlRemIdealLater(
+					true,
+					dStartDay,
+					iDaysCnt,
+					haUser,
+					sFirstDay,
+					sNextFirst,
+					sqlFromPhrase,
+					sqlSumCaseIdealDepoInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   idm.id as item_id " +
+					"  ,idm.ideal_deposit_name as item_name " +
+					"  ,70 as cate_order " +
+					"  ,cast('" + REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+					"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " + sqlDailyLater +
+					" FROM IdealDepositMst idm " +
+					" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
+					"   ON idm.id = rem_firstday.id_id" +
+					" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
+					"   ON rem_firstday.id_id = rem_later.id_id " +
+					" WHERE idm.ha_user_id = " + haUser.id +
+					"   AND idm.zero_hidden = false " + sqlDailyZero +
+//					" ORDER by idm.id" +
+					"";
+		}
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	private String makeSqlRemIdealEachFirstDay(
+	/**
+	 * 初日の残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdealFirstDay(
+			boolean bolEach,
 			HaUser haUser,
 			String sFirstDay,
 			String sqlFromPhrase,
@@ -952,19 +1382,23 @@ public class DailyAccount extends Controller {
 		String sqlFirstDay = "" +
 				" SELECT " +
 				sqlDaily +		//日付毎の合計取得部分
+   				(bolEach ?
    				"   ,id.ideal_deposit_name as id_ideal_deposit_name " +
    				"   ,id.id as id_id " +
-   				"   ,id.zero_hidden as id_zero_hidden " +
-				sqlFromPhrase +		//FROM句
+   				"   ,id.zero_hidden as id_zero_hidden "
+   				: "") +
+				sqlFromPhrase +	//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
 				"            AND r.ideal_deposit_mst_id IS NOT NULL " +
 				"            ) " +
    				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
    				"        ) " +
-				"   AND cast(r.payment_date as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden" +
+   				(bolEach ?
+				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
+   				: "") +
 				"";
 
 		while(!(sqlFirstDay.equals(sqlFirstDay.replaceAll("  ", " "))))
@@ -973,7 +1407,20 @@ public class DailyAccount extends Controller {
 		return sqlFirstDay;
 	}
 	
-	private String makeSqlRemIdealEachLater(
+	/**
+	 * 2日目以降の残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdealLater(
+			boolean bolEach,
 			Date dStartDay,
 			int iDaysCnt,
 			HaUser haUser,
@@ -995,7 +1442,7 @@ public class DailyAccount extends Controller {
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
 					"       CASE " +
 					sqlSumCaseIdealDepoInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
 					"       END " +
@@ -1008,9 +1455,11 @@ public class DailyAccount extends Controller {
 		String sqlLater = "" +
 				" SELECT " +
 				sqlDaily +		//日付毎の合計取得部分
+   				(bolEach ?
    				"   ,id.ideal_deposit_name as id_ideal_deposit_name " +
    				"   ,id.id as id_id " +
-   				"   ,id.zero_hidden as id_zero_hidden " +
+   				"   ,id.zero_hidden as id_zero_hidden "
+   				: "") +
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
@@ -1018,9 +1467,12 @@ public class DailyAccount extends Controller {
 				"            ) " +
    				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
    				"        ) " +
-				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
-				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden" +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+   				(bolEach ?
+				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
+   				: "") +
 				"";
 		
 		while(!(sqlLater.equals(sqlLater.replaceAll("  ", " "))))
@@ -1029,8 +1481,18 @@ public class DailyAccount extends Controller {
 		return sqlLater;
 	}
 	
-	
-	
+	/**
+	 * 日計表の行に相当するリストの作成（My貯金残高）
+	 * @param year
+	 * @param month
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param lWDA
+	 * @return
+	 */
 	private List<WkDailyAccount> addWorkListRemIdealDepo(
 			Integer year,
 			Integer month,
@@ -1041,49 +1503,9 @@ public class DailyAccount extends Controller {
 			String sNextFirst,
 			List<WkDailyAccount> lWDA
 			) {
-		String strSql = "";
+		String sql = "";
 		Calendar calendar = Calendar.getInstance();
-		
-   		/** 
-   		 * SQL固定部分作成
-   		 */
-		
-		//  FROM句
-		String sqlFromPhrase = "" +
-   				" FROM Record r " +
-				" LEFT JOIN ItemMst i " +
-				"   ON r.item_mst_id = i.id " +
-				" LEFT JOIN BalanceTypeMst b " +
-				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN IdealDepositMst id " +
-				"   ON r.ideal_deposit_mst_id = id.id " +
-				" LEFT JOIN HandlingMst h " +
-				"   ON r.handling_mst_id = h.id " +
-				" LEFT JOIN HandlingTypeMst ht " +
-				"   ON h.handling_type_mst_id = ht.id" +
-				"";
-		
-		//CASE文内 My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
-		String sqlSumCaseIdealDepoInOut = "" +
-   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-   				"              r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
-   				"              r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
-   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
-   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
-				"";
 
-		String sqlDailyLater = "";
-		String sqlDailyZero = "";
-		calendar.setTime(dStartDay);
-		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
-			sqlDailyZero += "" +
-					" OR  sum_day_" + iDay + " <> 0 ";
-			calendar.add(Calendar.DATE, 1);
-			if(iDay > 1)
-				sqlDailyLater += "" +
-						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " ";
-		}
 		
    		/** 
    		 * 合計行
@@ -1092,39 +1514,24 @@ public class DailyAccount extends Controller {
    		long lSumMonthG = 0L;
 		List<WkDaToDl> lstWdtdG = new ArrayList<WkDaToDl>();
 		if(Calendar.getInstance().get(Calendar.DATE)==32) {	//有り得ない日付(32)で条件付けし、if文内を通らないようにしている。日計表画面でアコーディオンで明細を開く機能を追加したら、その条件で通るようにする予定。
-			//初日の残高取得用SQL作成（取扱合計）
-			String sqlAllFirstDay = makeSqlRemAllFirstDay(
-					haUser,
-					sFirstDay,
-					sqlFromPhrase,
-					sqlSumCaseIdealDepoInOut
-					);
-			//2日目以降の残高取得用SQL作成（取扱合計）
-			String sqlAllLater = makeSqlRemAllLater(
+			
+			//残高取得用SQL作成(My貯金残高)(My貯金合計)
+			sql = makeSqlRemIdealDeposit(
+					false,
 					dStartDay,
 					iDaysCnt,
 					haUser,
 					sFirstDay,
-					sNextFirst,
-					sqlFromPhrase,
-					sqlSumCaseIdealDepoInOut
+					sNextFirst
 					);
 			
-			strSql = "" +
-					" SELECT " +
-					"   *" +
-					" FROM ( " + sqlAllFirstDay + " ) rem_firstday " +
-					" CROSS JOIN (" + sqlAllLater + " ) rem_later " +
-					"";
-			while(!(strSql.equals(strSql.replaceAll("  ", " "))))
-				strSql = strSql.replaceAll("  ", " ");
-	   		
+//			System.out.println("合計行 " + REMAINDER_TYPE_IDEAL_DEPOSIT + " : " + sql);
 	   		Object[] obj = null;
 			obj = (Object[])JPA.em().createNativeQuery(
-					strSql).getSingleResult();
+					sql).getSingleResult();
 			lSumMonthG = obj[0]==null ? 0L : Long.parseLong(String.valueOf(obj[0]));
 			wDA.setLSumMonth(lSumMonthG);
-			wDA.setsLargeCategory(REMAINDER_TYPE_REAL);
+			wDA.setsLargeCategory(REMAINDER_TYPE_IDEAL_DEPOSIT);
 			wDA.setsItem("");
 			wDA.setbBudgetFlg(false);
 			
@@ -1157,41 +1564,21 @@ public class DailyAccount extends Controller {
 		lWDA.add(wDA);
 		long[] lAryDaysIdealAll = new long[iDaysCnt];
 		
-		//初日の残高取得用SQL作成（取扱(My貯金)毎）
-		String sqlEachFirstDay = makeSqlRemIdealEachFirstDay(
-				haUser,
-				sFirstDay,
-				sqlFromPhrase,
-				sqlSumCaseIdealDepoInOut
-				);
-		//2日目以降の残高取得用SQL作成（取扱(My貯金)毎）
-		String sqlEachLater = makeSqlRemIdealEachLater(
+		//残高取得用SQL作成(My貯金残高)(My貯金毎)
+		sql = makeSqlRemIdealDeposit(
+				true,
 				dStartDay,
 				iDaysCnt,
 				haUser,
 				sFirstDay,
-				sNextFirst,
-				sqlFromPhrase,
-				sqlSumCaseIdealDepoInOut
-				);
-		
-		
-		strSql = "" +
-				" SELECT " +
-				"   rem_firstday.id_id " +
-				"  ,rem_firstday.id_ideal_deposit_name" +
-				"  ,rem_firstday.sum_day_1" + sqlDailyLater +
-				" FROM ( " + sqlEachFirstDay + " ) rem_firstday " +
-				" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
-				" ON rem_firstday.id_id = rem_later.id_id " +
-				" WHERE rem_firstday.id_zero_hidden = false " + sqlDailyZero +
-				" ORDER by rem_firstday.id_id" +
+				sNextFirst
+				) + "" +
+				" ORDER BY cate_order, item_id " +
 				"";
-		while(!(strSql.equals(strSql.replaceAll("  ", " "))))
-			strSql = strSql.replaceAll("  ", " ");
 		
+//		System.out.println("明細行 " + REMAINDER_TYPE_IDEAL_DEPOSIT + " : " + sql);
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(
-				strSql
+				sql
 				).getResultList();
 		
 		int intItemCnt = lstObjEach.size();
@@ -1239,7 +1626,7 @@ public class DailyAccount extends Controller {
 			
 		}
 		
-		//合計行の中身に中身に明細行からの加算合計をセット
+		//合計行の中身に明細行からの加算合計をセット
 //		wDA.setLSumMonth(lSumMonthG);
 		wDA.setsLargeCategory(REMAINDER_TYPE_IDEAL_DEPOSIT);
 		wDA.setsItem("");
@@ -1260,311 +1647,601 @@ public class DailyAccount extends Controller {
 		
 		return lWDA;
 
-		
-		
-		
-		
-		
-
-//	   	//「My貯金残高」
-//   		if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
-//   			
-//			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-//				strSqlDaily += "" +
-//						",COALESCE(SUM(" +
-//						"  CASE " +
-//						"    WHEN cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-//		   				"      CASE " +
-//		   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//		   				"              r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-//		   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
-//		   				"              r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
-//		   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
-//		   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
-//		   				"      END" +
-//						"    ELSE 0 " +
-//						"  END" +
-//		   				" ), 0) as rem_day_" + iDay + "";
-//				calendar.add(Calendar.DATE, 1);
-//			}
-//   			
-//	   		sSqlBase = "" +
-//	   				" SELECT COALESCE(SUM(" +
-//	   				"   CASE " +
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
-//	   				"   END" +
-//	   				"   ), 0) " +
-/////	   				" FROM Record r " +
-/////					" LEFT JOIN ItemMst i " +
-/////					"   ON r.item_mst_id = i.id " +
-/////					" LEFT JOIN BalanceTypeMst b " +
-/////					"   ON r.balance_type_mst_id = b.id " +
-/////					" LEFT JOIN IdealDepositMst id " +
-/////					"   ON r.ideal_deposit_mst_id = id.id " +
-/////					" LEFT JOIN HandlingMst h " +
-/////					"   ON r.handling_mst_id = h.id " +
-/////					" LEFT JOIN HandlingTypeMst ht " +
-/////					"   ON h.handling_type_mst_id = ht.id" +
-//					" WHERE r.ha_user_id = " + haUser.id;
-//	   		sSqlBaseG = "" +
-//					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-//
-//   			sSqlBaseEach = "" +
-//	   				" SELECT COALESCE(SUM(" +
-//	   				"   CASE " +
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN -r.amount" +
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount" +
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
-//	   				"   END" +
-//	   				"   ), 0) as rem_month" +
-//	   				strSqlDaily +
-//	   				"   ,id.ideal_deposit_name " +
-//	   				"   ,id.id as ideal_deposit_id " +
-//	   				"   ,id.zero_hidden " +
-/////	   				" FROM Record r " +
-/////					" LEFT JOIN ItemMst i " +
-/////					"   ON r.item_mst_id = i.id " +
-/////					" LEFT JOIN BalanceTypeMst b " +
-/////					"   ON r.balance_type_mst_id = b.id " +
-/////					" LEFT JOIN IdealDepositMst id " +
-/////					"   ON r.ideal_deposit_mst_id = id.id " +
-/////					" LEFT JOIN HandlingMst h " +
-/////					"   ON r.handling_mst_id = h.id " +
-/////					" LEFT JOIN HandlingTypeMst ht " +
-/////					"   ON h.handling_type_mst_id = ht.id" +
-//					" WHERE r.ha_user_id = " + haUser.id;
-//	   		
-//	   		
-//	   		
-//	   	//「My貯金してないお金」
-//   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
-//   			
-//			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-//				strSqlDaily += "" +
-//						",COALESCE(SUM(" +
-//						"  CASE " +
-//						"    WHEN cast(r.payment_date as date) <= to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-//		   				"      CASE " +
-//		   				//「収入」で「取扱(My貯金)」未選択は加算
-//		   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND" +
-//		   				"              r.ideal_deposit_mst_id IS NULL) THEN r.amount " +
-//		   				//「支出」で「取扱(My貯金)」未選択は減算
-//		   				"        WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//		   				"              r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
-//		   				//「My貯金預入」は減算
-//		   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
-//		   				//「My貯金引出」は加算
-//		   				"        WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
-//		   				"      END" +
-//						"    ELSE 0 " +
-//						"  END" +
-//		   				" ), 0) as rem_day_" + iDay + "";
-//				calendar.add(Calendar.DATE, 1);
-//			}
-//   			
-//	   		sSqlBase = "" +
-//	   				" SELECT COALESCE(SUM(" +
-//	   				"   CASE " +
-//	   				//「収入」で「取扱(My貯金)」未選択は加算
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND" +
-//	   				"           r.ideal_deposit_mst_id IS NULL) THEN r.amount " +
-//	   				//「支出」で「取扱(My貯金)」未選択は減算
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
-//	   				//「My貯金預入」は減算
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
-//	   				//「My貯金引出」は加算
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
-//	   				"   END" +
-//	   				"   ), 0) " +
-/////	   				" FROM Record r " +
-/////					" LEFT JOIN ItemMst i " +
-/////					"   ON r.item_mst_id = i.id " +
-/////					" LEFT JOIN BalanceTypeMst b " +
-/////					"   ON r.balance_type_mst_id = b.id " +
-/////					" LEFT JOIN IdealDepositMst id " +
-/////					"   ON r.ideal_deposit_mst_id = id.id " +
-/////					" LEFT JOIN HandlingMst h " +
-/////					"   ON r.handling_mst_id = h.id " +
-/////					" LEFT JOIN HandlingTypeMst ht " +
-/////					"   ON h.handling_type_mst_id = ht.id" +
-//					" WHERE r.ha_user_id = " + haUser.id +
-//					""
-//					;
-//	   		sSqlBaseG = "" +
-//					"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
-//
-//   			sSqlBaseEach = "" +
-//	   				" SELECT COALESCE(SUM(" +
-//	   				"   CASE " +
-//	   				//「収入」で「取扱(My貯金)」未選択は加算
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_IN + "' AND" +
-//	   				"           r.ideal_deposit_mst_id IS NULL) THEN r.amount " +
-//	   				//「支出」で「取扱(My貯金)」未選択は減算
-//	   				"     WHEN (b.balance_type_name = '" + BALANCE_TYPE_OUT + "' AND " +
-//	   				"           r.ideal_deposit_mst_id IS NULL) THEN -r.amount " +
-//	   				//「My貯金預入」は減算
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
-//	   				//「My貯金引出」は加算
-//	   				"     WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
-//	   				"   END" +
-//	   				"   ), 0) " +
-//	   				strSqlDaily +
-/////	   				" FROM Record r " +
-/////					" LEFT JOIN ItemMst i " +
-/////					"   ON r.item_mst_id = i.id " +
-/////					" LEFT JOIN BalanceTypeMst b " +
-/////					"   ON r.balance_type_mst_id = b.id " +
-/////					" LEFT JOIN IdealDepositMst id " +
-/////					"   ON r.ideal_deposit_mst_id = id.id " +
-/////					" LEFT JOIN HandlingMst h " +
-/////					"   ON r.handling_mst_id = h.id " +
-/////					" LEFT JOIN HandlingTypeMst ht " +
-/////					"   ON h.handling_type_mst_id = ht.id" +
-//					" WHERE r.ha_user_id = " + haUser.id;
-//   		
-//   		
-//   		}
-//
-//   		
-//   		
-//   		
-//   		//「My貯金残高」
-//   		if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
-//   			sSql = sSqlBase + sSqlBaseG +
-//					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
-//	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//	   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
-//	   				"        )";
-//   		//「My貯金してないお金」
-//   		} else if(sLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT)) {
-//   			sSql = sSqlBase + sSqlBaseG +
-//					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_OUT + "') AND " +
-//					"         r.ideal_deposit_mst_id IS NULL) OR " +
-//   				    "        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-//	   				"        )";
-//   		}   		
-//   		
-//   		
-//   		
-//		//「My貯金残高」
-//		if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
-//			
-//			sSql = sSqlBase + sSqlBaseG +
-//					"   AND ((b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') AND " +
-//	   				"         r.ideal_deposit_mst_id IS NOT NULL) OR " +
-//	   				"        b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "')" +
-//	   				"        )" +
-////					"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'" +
-//					((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-//					" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden" +
-//					" ORDER BY id.id" +
-//					"";
-//		}
-//   		
-//		
-//		List<Object[]> lstObjEach = null;
-//		lstObjEach = JPA.em().createNativeQuery(
-//				strSqlEach).getResultList();
-//
-//		int intIdealDepoCnt = lstObjEach.size();
-//		for(Object[] objEach : lstObjEach) {
-//			
-//			WkDailyAccount wDaIdealDepo = new WkDailyAccount();
-//			
-//			//残高表示フラグ
-//			boolean bRemainderDispFlg = true;
-//			
-//			//「My貯金残高」
-//			if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
-//				bRemainderDispFlg = false;
-//				if(Boolean.valueOf(String.valueOf(objEach[iDaysCnt+3]))==false)
-//					bRemainderDispFlg = true;
-//			}
-//				
-//			
-//			
-//			// 月計をセット
-////			long lSumMonthMyDp = objEach[0] == null ? 0L : Long.parseLong(String.valueOf(objEach[0]));
-//			
-//			
-//			wDaIdealDepo.setsLargeCategory(sLargeCategoryName);
-//			wDaIdealDepo.setsItem(String.valueOf(objEach[iDaysCnt+1]));
-//			if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-//				wDaIdealDepo.setbBudgetFlg(true);
-//			} else {
-//				wDaIdealDepo.setbBudgetFlg(false);
-//			}
-//
-//			//項目の最終行フラグ
-//			intCnt++;
-//			if(intIdealDepoCnt==intCnt) {
-//				wDaIdealDepo.setBolLastItemFlg(true);
-//			}
-//			
-//			// 日毎
-//			long[] lAryDaysMyDp = new long[iDaysCnt];
-//			String[] sAryDaysMyDp = new String[iDaysCnt];
-//			calendar.setTime(dStartDay);
-//			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
-//			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-//
-//				lAryDaysMyDp[iDay] = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
-//				if(sLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT) &&
-//						lAryDaysMyDp[iDay]!=0L) {
-//					bRemainderDispFlg = true;
-//				}
-//				sAryDaysMyDp[iDay] = df.format(lAryDaysMyDp[iDay]);
-//				
-//				WkDaToDl workDaToDl = new WkDaToDl();
-//				long lAmount = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
-//				workDaToDl.setlAmount(lAmount);
-//				workDaToDl.setsAmount(df.format(lAmount));
-//				String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-//				workDaToDl.setsPaymentDateFr(sDate);
-//				workDaToDl.setsPaymentDateTo(sDate);
-//				workDaToDl.setlHandlingId(null);
-////				// 「My貯金預入」
-////				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-////					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
-////					
-////				// 「My貯金から支払」
-////				} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-////					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
-////					workDaToDl.setlIdealDepositId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
-////				}
-//				lstWdtd.add(workDaToDl);
-//
-//				calendar.add(Calendar.DATE, 1);
-//			}
-//			//残高有りか、0でも表示設定の場合、列を作成する
-//			if(bRemainderDispFlg) {
-//				wDaIdealDepo.setLAryDays(lAryDaysMyDp);
-//	
-//				wDaIdealDepo.setLstWdtd(lstWdtd);
-//				
-//				lWDA.add(wDaIdealDepo);
-//			}
-//			
-//		}
-		
-		
-		
-		
-		
 	}
 	
 	
+	/**
+	 * 残高取得用SQL作成(My貯金してないお金)
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseNotIdealInOut
+	 * @return
+	 */
+	private String makeSqlRemNotIdealDeposit(
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst
+			) {
+		
+		String sql = "";
+		
+		/** 
+		 * SQL固定部分作成
+		 */
+		
+		//  FROM句
+		String sqlFromPhrase = "" +
+				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				"";
+		
+		/* CASE文内の加減算の条件 */
+		// 収入でMy貯金未選択：加算、支出でMy貯金未選択：減算、My貯金引出：加算、My貯金預入：減算
+		String sqlSumCaseNotIdealInOut = "" +
+				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_IN + "' " +
+				"       AND r.ideal_deposit_mst_id IS NULL " +
+				"       ) THEN r.amount " +
+				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
+				"       AND r.ideal_deposit_mst_id IS NULL " +
+				"       ) THEN -r.amount " +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
+				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
+				"";
+		
+		//初日の残高取得用SQL作成（My貯金してないお金合計）
+		String sqlAllFirstDay = makeSqlRemNotIdealFirstDay(
+				haUser,
+				sFirstDay,
+				sqlFromPhrase,
+				sqlSumCaseNotIdealInOut
+				);
+		sql = "" +
+				" SELECT " +
+				"   *" +
+				" FROM ( SELECT 0 as item_id, cast('' as character varying(255)) as item_name, 60 as cate_order" +
+				"  ,cast('" + REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+				" ) rem_item " +
+				" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
+//				" CROSS JOIN ( SELECT 0 as dummy ) rem_later " +	//SELECT句での取得項目が１つのみだと結果がBigInteger型となり、Object[]へのキャストエラーとなるため、ダミーの取得項目を追加
+				"";
+		//2日目以降の残高取得用SQL作成（My貯金してないお金合計）
+		if(iDaysCnt>=2) {
+			String sqlAllLater = makeSqlRemNotIdealLater(
+					dStartDay,
+					iDaysCnt,
+					haUser,
+					sFirstDay,
+					sNextFirst,
+					sqlFromPhrase,
+					sqlSumCaseNotIdealInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   *" +
+					" FROM ( SELECT 0 as item_id, cast('' as character varying(255)) as item_name, 60 as cate_order" +
+					"  ,cast('" + REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+					" ) rem_item " +
+					" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
+					" CROSS JOIN (" + sqlAllLater + " ) rem_later " +
+					"";
+		}
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 初日の残高取得用SQL作成(My貯金してないお金)
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseNotIdealInOut
+	 * @return
+	 */
+	private String makeSqlRemNotIdealFirstDay(
+			HaUser haUser,
+			String sFirstDay,
+			String sqlFromPhrase,
+			String sqlSumCaseNotIdealInOut
+			) {
+		
+		//日付毎の合計取得部分のSQL
+		String sqlDaily = "" +
+				" COALESCE(SUM(" +
+				"   CASE " +
+				sqlSumCaseNotIdealInOut +		//収入でMy貯金未選択：加算、支出でMy貯金未選択：減算、My貯金引出：加算、My貯金預入：減算
+				"   END " +
+				" ), 0) as sum_day_1";
+		
+		//SQL
+		String sqlFirstDay = "" +
+				" SELECT " +
+				sqlDaily +		//日付毎の合計取得部分
+				sqlFromPhrase +	//FROM句
+				" WHERE r.ha_user_id = " + haUser.id +
+				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
+				"            AND r.ideal_deposit_mst_id IS NULL " +
+				"            ) " +
+   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+   				"        ) " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"";
+
+		while(!(sqlFirstDay.equals(sqlFirstDay.replaceAll("  ", " "))))
+			sqlFirstDay = sqlFirstDay.replaceAll("  ", " ");
+		
+		return sqlFirstDay;
+	}
+	
+	/**
+	 * 2日目以降の残高取得用SQL作成(My貯金残高)
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseNotIdealInOut
+	 * @return
+	 */
+	private String makeSqlRemNotIdealLater(
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst,
+			String sqlFromPhrase,
+			String sqlSumCaseNotIdealInOut
+			) {
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		String sqlDaily = "";
+		
+		//日付毎の合計取得部分のSQL
+		calendar.setTime(dStartDay);
+		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+			calendar.add(Calendar.DATE, 1);
+			sqlDaily += "" +
+					(iDay==2 ? " " : ",") +
+					" COALESCE(SUM(" +
+					"   CASE " +
+					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+					"       CASE " +
+					sqlSumCaseNotIdealInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
+					"       END " +
+					"     ELSE 0 " +
+					"   END" +
+					" ), 0) as sum_day_" + iDay + " ";
+		}
+		
+		//SQL
+		String sqlLater = "" +
+				" SELECT " +
+				sqlDaily +		//日付毎の合計取得部分
+				sqlFromPhrase +		//FROM句
+				" WHERE r.ha_user_id = " + haUser.id +
+				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
+				"            AND r.ideal_deposit_mst_id IS NULL " +
+				"            ) " +
+   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+   				"        ) " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"";
+		
+		while(!(sqlLater.equals(sqlLater.replaceAll("  ", " "))))
+			sqlLater = sqlLater.replaceAll("  ", " ");
+		
+		return sqlLater;
+	}
+	
+	/**
+	 * 日計表の行に相当するリストの作成（My貯金してないお金）
+	 * @param year
+	 * @param month
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @param lWDA
+	 * @return
+	 */
+	private List<WkDailyAccount> addWorkListRemNotIdealDepo(
+			Integer year,
+			Integer month,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst,
+			List<WkDailyAccount> lWDA
+			) {
+		String sql = "";
+		Calendar calendar = Calendar.getInstance();
+
+		WkDailyAccount wDA = new WkDailyAccount();
+		long lSumMonthG = 0L;
+		List<WkDaToDl> lstWdtdG = new ArrayList<WkDaToDl>();
+		
+		//残高取得用SQL作成(My貯金してないお金)
+		sql = makeSqlRemNotIdealDeposit(
+				dStartDay,
+				iDaysCnt,
+				haUser,
+				sFirstDay,
+				sNextFirst
+				);
+		
+//		System.out.println("合計行 " + REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + " : " + sql);
+		Object[] obj = null;
+		obj = (Object[])JPA.em().createNativeQuery(
+				sql).getSingleResult();
+		lSumMonthG = obj[0]==null ? 0L : Long.parseLong(String.valueOf(obj[0]));
+		wDA.setLSumMonth(lSumMonthG);
+		wDA.setsLargeCategory(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT);
+		wDA.setsItem("");
+		wDA.setbBudgetFlg(false);
+		
+		// 日毎
+		calendar.setTime(dStartDay);
+		long lAmount = 0L;
+		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			lAmount += Long.parseLong(String.valueOf(obj[iDay+4]));
+			WkDaToDl workDaToDl = new WkDaToDl();
+			workDaToDl.setlAmount(lAmount);
+			String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			workDaToDl.setsPaymentDateFr(sDate);
+			workDaToDl.setsPaymentDateTo(sDate);
+			workDaToDl.setlHandlingId(null);
+			lstWdtdG.add(workDaToDl);
+			calendar.add(Calendar.DATE, 1);
+		}
+		wDA.setLstWdtd(lstWdtdG);
+		
+		lWDA.add(wDA);
+		
+		return lWDA;
+	}
+
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private String makeSqlBalIn(
+			boolean bolEach,
+			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」
+			Integer year,
+			Integer month,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst
+			) {
+		
+   		String sqlDaily = "";
+   		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dStartDay);
+		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			sqlDaily += "" +
+					",COALESCE(SUM(" +
+					"  CASE " +
+					"    WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN r.amount " +
+					"    ELSE 0 " +
+					"  END" +
+					"  ), 0) as sum_day_" + iDay + "";
+			calendar.add(Calendar.DATE, 1);
+		}
+		
+		String sqlSelGroupby = "" +
+   				"   0 as item_id " +
+   				"  ,cast('' as character varying(255)) as item_name" +
+   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
+				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+   				"  ,0 as bg_id " +
+   				"  ,COALESCE(SUM(bg.amount), 0) as bg_amount " +
+				"";
+		String sqlGroupby = "";
+		if(bolEach) {
+			sqlSelGroupby = "" +
+	   				"   i.id as item_id " +
+	   				"  ,i.item_name as item_name" +
+	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
+					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+	   				"  ,bg.id as bg_id " +
+	   				"  ,bg.amount as bg_amount " +
+					"";
+			sqlGroupby = "" +
+					" GROUP BY item_id, item_name, bg_id, bg_amount " +
+					"";
+		}
+		
+		String sql = "" +
+   				" SELECT " +
+   				sqlSelGroupby +
+   				sqlDaily +
+   				" FROM ItemMst i " +
+				" LEFT JOIN Record r " +
+				"   ON r.item_mst_id = i.id " +
+				"   AND i.ha_user_id = " + haUser.id +
+				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
+				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')" +
+				"   AND r.ideal_deposit_mst_id IS NULL "
+				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON i.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN Budget bg " +
+				"   ON i.id = bg.item_mst_id" +
+				"   AND bg.ha_user_id = " + haUser.id +
+				"   AND bg.year = " + year +
+				"   AND bg.month = " + month +
+				" WHERE i.ha_user_id = " + haUser.id +
+				"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
+				sqlGroupby +
+//				" ORDER BY i.id " +
+				"";
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	private List<WkDailyAccount> addWorkListBalIn(
+			Integer year,
+			Integer month,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst,
+			List<WkDailyAccount> lWDA
+			) {
+		String sql = "";
+		Calendar calendar = Calendar.getInstance();
+		
+
+   		/** 
+   		 * 合計行　→　一旦保留
+   		 */
+		
+		
+		/**
+		 *  取扱(実際)毎の行
+		 * （クレジットカードは除いて、引落口座に集約）
+		 */
+		//収支取得用SQL作成(収入)(項目毎)
+		String sqlBalIn = makeSqlBalIn(
+				true,
+				BALANCE_TYPE_IN,
+				year,
+				month,
+				dStartDay,
+				iDaysCnt,
+				haUser,
+				sFirstDay,
+				sNextFirst
+				);
+//		String sqlRemNotIdealDeposit = makeSqlRemNotIdealDeposit(
+//						dStartDay,
+//						iDaysCnt,
+//						haUser,
+//						sFirstDay,
+//						sNextFirst
+//				);
+//		String sqlRemIdealDeposit = makeSqlRemIdealDeposit(
+//						true,
+//						dStartDay,
+//						iDaysCnt,
+//						haUser,
+//						sFirstDay,
+//						sNextFirst
+//				);
+		sql = "" +
+//				" ( " + 
+				sqlBalIn +
+//				" ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemNotIdealDeposit + " ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemIdealDeposit + " ) " +
+				" ORDER BY cate_order, item_id " +
+				"";
+		
+//		System.out.println("明細行 " + BALANCE_TYPE_IN + " : " + sql);
+		List<Object[]> lstObjEach = JPA.em().createNativeQuery(
+				sql
+				).getResultList();
+		
+		//合計行は先にリストに追加し、最後に中身に明細行からの加算合計をセット
+		WkDailyAccount wdaIn = new WkDailyAccount();
+		WkDailyAccount wdaOut = new WkDailyAccount();
+		List<WkDaToDl> lstWdtdIn = new ArrayList<WkDaToDl>();
+		List<WkDaToDl> lstWdtdOut = new ArrayList<WkDaToDl>();
+		lWDA.add(wdaIn);
+		Long lngBgAmountG = null;						//合計行の予算
+		long lngSumMonth = 0L;							//合計行の月計
+		long[] lAryDaysRlAll = new long[iDaysCnt];		//合計行の日毎金額
+		
+		int intItemCnt = lstObjEach.size();
+		int intCnt = 0;
+		String strOldCateName = "";
+		for(Object[] objEach : lstObjEach) {
+			if(intCnt==0)
+				strOldCateName = String.valueOf(objEach[3]);
+			//大分類が変わる時
+			if(!strOldCateName.equals(String.valueOf(objEach[3]))) {
+				//合計行の中身に明細行からの加算合計をセット
+				
+				calendar.setTime(dStartDay);
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+					WkDaToDl wkDaToDlG = new WkDaToDl();
+					wkDaToDlG.setlAmount(lAryDaysRlAll[iDay]);
+					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+					wkDaToDlG.setsPaymentDateFr(sDate);
+					wkDaToDlG.setsPaymentDateTo(sDate);
+					wkDaToDlG.setlHandlingId(null);
+					lstWdtdIn.add(wkDaToDlG);
+					calendar.add(Calendar.DATE, 1);
+				}
+				
+				if(strOldCateName.equals(BALANCE_TYPE_IN)) {
+//					wdaG.setLSumMonth(lSumMonthG);
+					wdaIn.setsLargeCategory(strOldCateName);
+					wdaIn.setsItem("");
+					wdaIn.setbBudgetFlg(true);
+					wdaIn.setlBudgetAmount(lngBgAmountG);
+					wdaIn.setLSumMonth(lngSumMonth);
+					wdaIn.setLstWdtd(lstWdtdIn);
+				}
+				if(String.valueOf(objEach[3]).equals(REMAINDER_TYPE_IDEAL_DEPOSIT))
+					lWDA.add(wdaOut);
+					
+				strOldCateName = String.valueOf(objEach[3]);
+				lngBgAmountG = null;
+				lngSumMonth = 0L;
+				lAryDaysRlAll = new long[iDaysCnt];
+			}
+			
+			WkDailyAccount wDaEach = new WkDailyAccount();
+			
+			wDaEach.setsLargeCategory(String.valueOf(objEach[3]));
+			wDaEach.setsItem(String.valueOf(objEach[1]));
+			wDaEach.setbBudgetFlg(false);
+	
+			//項目の最終行フラグ
+			intCnt++;
+			if(intItemCnt==intCnt) {
+				wDaEach.setBolLastItemFlg(true);
+			}
+			
+			
+			//  「収入」・「支出」・「My貯金預入」の場合、予算有無フラグを立てる
+			if(String.valueOf(objEach[3]).equals(BALANCE_TYPE_IN) ||
+					String.valueOf(objEach[3]).equals(BALANCE_TYPE_OUT) ||
+					String.valueOf(objEach[3]).equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+				wDaEach.setbBudgetFlg(true);
+			}
+			
+			
+			//ある時だけ予算をセット
+			if(objEach[4]!=null) {
+				Long lngBgId = Long.parseLong(String.valueOf(objEach[4]));
+				Long lngBgAmount = Long.parseLong(String.valueOf(objEach[5]));
+				
+				String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
+				
+				wDaEach.setlBudgetId(lngBgId);
+				wDaEach.setlBudgetAmount(lngBgAmount);
+				wDaEach.setsBudgetAmount(sBudgetAmount);
+				
+				//大分類行に加算
+				if(lngBgAmountG==null)
+					lngBgAmountG = 0L;
+				lngBgAmountG += lngBgAmount;
+			}
+			
+			
+			
+			// 日毎
+			calendar.setTime(dStartDay);
+			long lngEach = 0L;
+			long lngSum = 0L;
+			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
+			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+				lngEach = Long.parseLong(String.valueOf(objEach[iDay+6]));	//日毎金額
+				lngSum += lngEach;				//月計
+				lAryDaysRlAll[iDay] += lngEach;	//合計行の日毎金額
+				
+				WkDaToDl workDaToDl = new WkDaToDl();
+				workDaToDl.setlAmount(lngEach);
+				String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+				workDaToDl.setsPaymentDateFr(sDate);
+				workDaToDl.setsPaymentDateTo(sDate);
+//				workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+				workDaToDl.setlHandlingId(null);
+//				//取扱(My貯金)＝NULL
+//				workDaToDl.setlIdealDepositId((long) -1);
+////						workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
+//				workDaToDl.setiItemId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
+				lstWdtd.add(workDaToDl);
+				
+				calendar.add(Calendar.DATE, 1);
+			}
+			lngSumMonth += lngSum;			//合計行の月計
+			wDaEach.setLstWdtd(lstWdtd);
+			wDaEach.setLSumMonth(lngSum);
+			
+			lWDA.add(wDaEach);
+		}
+		
+		//合計行の中身に明細行からの加算合計をセット
+		calendar.setTime(dStartDay);
+		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			WkDaToDl wkDaToDlG = new WkDaToDl();
+			wkDaToDlG.setlAmount(lAryDaysRlAll[iDay]);
+			String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			wkDaToDlG.setsPaymentDateFr(sDate);
+			wkDaToDlG.setsPaymentDateTo(sDate);
+			wkDaToDlG.setlHandlingId(null);
+			if(strOldCateName.equals(BALANCE_TYPE_IN))
+				lstWdtdIn.add(wkDaToDlG);
+			if(strOldCateName.equals(BALANCE_TYPE_OUT))
+				lstWdtdOut.add(wkDaToDlG);
+			calendar.add(Calendar.DATE, 1);
+		}
+		if(strOldCateName.equals(BALANCE_TYPE_IN)) {
+//			wdaG.setLSumMonth(lSumMonthG);
+			wdaIn.setsLargeCategory(strOldCateName);
+			wdaIn.setsItem("");
+			wdaIn.setbBudgetFlg(true);
+			wdaIn.setlBudgetAmount(lngBgAmountG);
+			wdaIn.setLSumMonth(lngSumMonth);
+			wdaIn.setLstWdtd(lstWdtdIn);
+		}
+		if(strOldCateName.equals(BALANCE_TYPE_OUT)) {
+//			wdaG.setLSumMonth(lSumMonthG);
+			wdaOut.setsLargeCategory(strOldCateName);
+			wdaOut.setsItem("");
+			wdaOut.setbBudgetFlg(true);
+			wdaOut.setlBudgetAmount(lngBgAmountG);
+			wdaOut.setLSumMonth(lngSumMonth);
+			wdaOut.setLstWdtd(lstWdtdIn);
+		}
+		
+		
+		return lWDA;
+	}
 	
 	/**
 	 * 日計表の行に相当するリストの作成（「収入」・「支出」・「My貯金預入」・「My貯金から支払」毎に作成する）
@@ -1597,23 +2274,23 @@ public class DailyAccount extends Controller {
 		DecimalFormat df = new DecimalFormat("###,###");
 		
    		Calendar calendar = Calendar.getInstance();
-   		String sSql = "";
+   		String sql = "";
 		
    		/**
    		 * 合計行
    		 */
    		WkDailyAccount wDA = new WkDailyAccount();
 
-   		String sSqlBase = "";
-   		String sSqlBaseG = "";
+   		String sqlBase = "";
+   		String sqlBaseG = "";
    		
-   		String sSqlBaseEach = "";
+   		String sqlBaseEach = "";
    		
-   		String strSqlDaily = "";
+   		String sqlDaily = "";
    		
 		calendar.setTime(dStartDay);
 		for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-			strSqlDaily += "" +
+			sqlDaily += "" +
 					",COALESCE(SUM(" +
 					"  CASE " +
 					"    WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN r.amount " +
@@ -1623,9 +2300,9 @@ public class DailyAccount extends Controller {
 			calendar.add(Calendar.DATE, 1);
 		}
 		
-		sSqlBase = "" +
+		sqlBase = "" +
 //   				" SELECT COALESCE(SUM(r.amount), 0)" +
-   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + strSqlDaily +
+   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + sqlDaily +
    				" FROM Record r " +
 				" LEFT JOIN ItemMst i " +
 				"   ON r.item_mst_id = i.id " +
@@ -1635,7 +2312,7 @@ public class DailyAccount extends Controller {
 				"   ON r.ideal_deposit_mst_id = id.id " +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"";
-   		sSqlBaseG = "" +
+   		sqlBaseG = "" +
 				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')";
 
@@ -1643,8 +2320,8 @@ public class DailyAccount extends Controller {
    		//項目毎の行取得用（「収入」・「支出」）
    		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) ||
    				sLargeCategoryName.equals(BALANCE_TYPE_OUT))
-   			sSqlBaseEach = "" +
-	   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + strSqlDaily +
+   			sqlBaseEach = "" +
+	   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + sqlDaily +
 	   				"   ,i.item_name " +
 	   				"   ,i.id as item_id " +
 	   				"   ,bg.id as bg_id " +
@@ -1666,8 +2343,8 @@ public class DailyAccount extends Controller {
    		//項目毎の行取得用（「My貯金預入」・「My貯金から支払」）
    		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
    				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
-   			sSqlBaseEach = "" +
-	   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + strSqlDaily +
+   			sqlBaseEach = "" +
+	   				" SELECT COALESCE(SUM(r.amount), 0) as sum_month" + sqlDaily +
 	   				"   ,id.ideal_deposit_name " +
 	   				"   ,id.id as ideal_deposit_id " +
 	   				"   ,bg.id as bg_id " +
@@ -1687,32 +2364,31 @@ public class DailyAccount extends Controller {
 					" WHERE r.ha_user_id = " + haUser.id +
 					"";
    		
-   		
-   		
-   		
-   		
-   		
    		//「収入」・「支出」
    		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
-   			sSql = sSqlBase + sSqlBaseG +
+   			sql = sqlBase + sqlBaseG +
 					"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
 					"   AND r.ideal_deposit_mst_id IS NULL ";
    		//「My貯金預入」
    		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-   			sSql = sSqlBase + sSqlBaseG +
+   			sql = sqlBase + sqlBaseG +
 					"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		//「My貯金から支払」
    		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-   			sSql = sSqlBase + sSqlBaseG +
+   			sql = sqlBase + sqlBaseG +
 					"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
 					"   AND r.ideal_deposit_mst_id IS NOT NULL ";
    		}
    		
+   		sql += ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "");
+   		
+//   		System.out.println("合計行 " + sLargeCategoryName + " : " + sSql);
+   		
 		//月計をセット
    		Object[] obj = null;
 		obj = (Object[])JPA.em().createNativeQuery(
-				sSql + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();
+				sql).getSingleResult();
 		long lSumMonthG = obj[0] == null ? 0L : Long.parseLong(String.valueOf(obj[0]));
 		wDA.setLSumMonth(lSumMonthG);
 		
@@ -1779,80 +2455,162 @@ public class DailyAccount extends Controller {
 		//「収入」・「支出」
 		if(sLargeCategoryName.equals(BALANCE_TYPE_IN) || sLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 			//項目ごとのループ
-//			List<ItemMst> itemMsts = ItemMst.find("ha_user = " + haUser.id + " and balance_type_mst.balance_type_name = '" + sLargeCategoryName + "' order by id").fetch();
-//			int intItemCnt = itemMsts.size();
 			int intCnt = 0;
-//			for(Iterator<ItemMst> itrItem = itemMsts.iterator(); itrItem.hasNext();) {
-//				ItemMst itemMst = itrItem.next();
+			String sqlEach = sqlBaseEach + sqlBaseG +
+					"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
+					"   AND r.ideal_deposit_mst_id IS NULL "
+					 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+					" GROUP BY i.id, i.item_name, bg.id, bg.amount " +
+					" ORDER BY i.id " +
+					"";
+//			System.out.println("明細行 " + sLargeCategoryName + " : " + sqlEach);
+			List<Object[]> lstObjEach = JPA.em().createNativeQuery(
+					sqlEach
+					).getResultList();
+			
+			int intItemCnt = lstObjEach.size();
+			for(Object[] objEach : lstObjEach) {
 				
-	
+				WkDailyAccount wDaItem = new WkDailyAccount();
 				
-//				BigInteger biSumMonth = (BigInteger)JPA.em().createNativeQuery(
-//						sSqlBase + sSqlBaseG +
-//						"   AND i.item_name = '" + itemMst.item_name + "' " +
-//						"   AND r.ideal_deposit_mst_id IS NULL "
-//						 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
-//				long lSumMonth = biSumMonth == null ? 0L : biSumMonth.longValue();
-				String strSqlEach = sSqlBaseEach + sSqlBaseG +
-//						"   AND i.item_name = '" + itemMst.item_name + "' " +
-						"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
-						"   AND r.ideal_deposit_mst_id IS NULL "
-						 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-						" GROUP BY i.id, i.item_name, bg.id, bg.amount " +
-						" ORDER BY i.id " +
-						"";
-				List<Object[]> lstObjEach = JPA.em().createNativeQuery(
-						strSqlEach
-						).getResultList();
+				long lSumMonth = objEach[0] == null ? 0L : Long.parseLong(String.valueOf(objEach[0]));
 				
-				int intItemCnt = lstObjEach.size();
-				for(Object[] objEach : lstObjEach) {
+				wDaItem.setsLargeCategory(sLargeCategoryName);
+//				wDaItem.setsItem(itemMst.item_name);
+				wDaItem.setsItem(String.valueOf(objEach[iDaysCnt+1]));
+				wDaItem.setbBudgetFlg(true);
+				wDaItem.setLSumMonth(lSumMonth);
+				
+				//項目の最終行フラグ
+				intCnt++;
+				if(intItemCnt==intCnt) {
+					wDaItem.setBolLastItemFlg(true);
+				}
+			
+				
+				//ある時だけ予算をセット
+				if(objEach[iDaysCnt+3]!=null) {
+					Long lngBgId = Long.parseLong(String.valueOf(objEach[iDaysCnt+3]));
+//					Integer intBgAmount = Integer.parseInt(String.valueOf(objEach[iDaysCnt+4]));
+					Long lngBgAmount = Long.parseLong(String.valueOf(objEach[iDaysCnt+4]));
 					
+					String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
 					
+					wDaItem.setlBudgetId(lngBgId);
+					wDaItem.setlBudgetAmount(lngBgAmount);
+					wDaItem.setsBudgetAmount(sBudgetAmount);
 					
-					
-					WkDailyAccount wDaItem = new WkDailyAccount();
-					
-					
-					
-					long lSumMonth = objEach[0] == null ? 0L : Long.parseLong(String.valueOf(objEach[0]));
-					
-					wDaItem.setsLargeCategory(sLargeCategoryName);
-//					wDaItem.setsItem(itemMst.item_name);
-					wDaItem.setsItem(String.valueOf(objEach[iDaysCnt+1]));
-					wDaItem.setbBudgetFlg(true);
-					wDaItem.setLSumMonth(lSumMonth);
-					
-					//項目の最終行フラグ
-					intCnt++;
-					if(intItemCnt==intCnt) {
-						wDaItem.setBolLastItemFlg(true);
+					//大分類行に加算
+					if(!(wDA.getsBudgetAmount()==null || wDA.getsBudgetAmount().equals(""))) {
+						Number nEBudgetAmount;
+						try {
+							nEBudgetAmount = nf.parse(wDA.getsBudgetAmount());
+							sBudgetAmount = String.format("%1$,3d", nEBudgetAmount.intValue() + lngBgAmount);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-
+					if(!(wDA.getlBudgetAmount()==null || wDA.getlBudgetAmount().equals("")))
+						lngBgAmount += wDA.getlBudgetAmount();
+					wDA.setlBudgetAmount(lngBgAmount);
+					wDA.setsBudgetAmount(sBudgetAmount);
+				}
+				
+				
+				// 日毎
+				calendar.setTime(dStartDay);
+				List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+					WkDaToDl workDaToDl = new WkDaToDl();
+					long lAmount = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
+					workDaToDl.setlAmount(lAmount);
+					workDaToDl.setsAmount(df.format(lAmount));
+					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+					workDaToDl.setsPaymentDateFr(sDate);
+					workDaToDl.setsPaymentDateTo(sDate);
+					workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
+					workDaToDl.setlHandlingId(null);
+					//取扱(My貯金)＝NULL
+					workDaToDl.setlIdealDepositId((long) -1);
+//					workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
+					workDaToDl.setiItemId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
+					lstWdtd.add(workDaToDl);
 					
-					
-					
-					
-					
-					
-					//ある時だけ予算をセット
-//					Budget budget = Budget.find("ha_user = " + haUser.id + "" +
-//							" and year = " + year + "" +
-//							" and month = " + month + "" +
-//							" and item_mst = " + Long.parseLong(String.valueOf(objEach[iDaysCnt+2]))
-//							).first();
-					
+					calendar.add(Calendar.DATE, 1);
+				}
+				wDaItem.setLstWdtd(lstWdtd);
+			
+				lWDA.add(wDaItem);
+				
+			}
+				
+		//「My貯金預入」・「My貯金から支払」
+		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
+				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+			//My貯金ごとのループ
+			int intCnt = 0;
+			String sqlEach = "";
+			//「My貯金預入」
+			if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+				sqlEach = sqlBaseEach + sqlBaseG +
+						"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
+						"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+						((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+						" GROUP BY id.id, id.ideal_deposit_name, bg.id, bg.amount " +
+						" ORDER BY id.id" +
+						"";
+				
+			//「My貯金から支払」
+			} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+				sqlEach = sqlBaseEach + sqlBaseG +
+						"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
+						"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+						((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+						" GROUP BY id.id, id.ideal_deposit_name, bg.id, bg.amount" +
+						" ORDER BY id.id" +
+						"";
+			}
+//			System.out.println("明細行 " + sLargeCategoryName + " : " + sqlEach);
+			
+			List<Object[]> lstObjEach = null;
+			lstObjEach = JPA.em().createNativeQuery(
+					sqlEach).getResultList();
+			
+			int intIdealDepoCnt = lstObjEach.size();
+			for(Object[] objEach : lstObjEach) {
+				
+				WkDailyAccount wDaIdealDepo = new WkDailyAccount();
+				
+				//  月計をセット
+				long lSumMonthMyDp = objEach[0] == null ? 0L : Long.parseLong(String.valueOf(objEach[0]));
+				
+				wDaIdealDepo.setsLargeCategory(sLargeCategoryName);
+				wDaIdealDepo.setsItem(String.valueOf(objEach[iDaysCnt+1]));
+				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+					wDaIdealDepo.setbBudgetFlg(true);
+				} else {
+					wDaIdealDepo.setbBudgetFlg(false);
+				}
+			
+				//項目の最終行フラグ
+				intCnt++;
+				if(intIdealDepoCnt==intCnt) {
+					wDaIdealDepo.setBolLastItemFlg(true);
+				}
+				
+				//「My貯金預入」なら予算がある時だけセット
+				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 					if(objEach[iDaysCnt+3]!=null) {
 						Long lngBgId = Long.parseLong(String.valueOf(objEach[iDaysCnt+3]));
 //						Integer intBgAmount = Integer.parseInt(String.valueOf(objEach[iDaysCnt+4]));
 						Long lngBgAmount = Long.parseLong(String.valueOf(objEach[iDaysCnt+4]));
 						
-						
 						String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
-						
-						wDaItem.setlBudgetId(lngBgId);
-						wDaItem.setlBudgetAmount(lngBgAmount);
-						wDaItem.setsBudgetAmount(sBudgetAmount);
+			
+						wDaIdealDepo.setlBudgetId(lngBgId);
+						wDaIdealDepo.setlBudgetAmount(lngBgAmount);
+						wDaIdealDepo.setsBudgetAmount(sBudgetAmount);
 						
 						//大分類行に加算
 						if(!(wDA.getsBudgetAmount()==null || wDA.getsBudgetAmount().equals(""))) {
@@ -1864,210 +2622,55 @@ public class DailyAccount extends Controller {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							
 						}
 						if(!(wDA.getlBudgetAmount()==null || wDA.getlBudgetAmount().equals("")))
 							lngBgAmount += wDA.getlBudgetAmount();
 						wDA.setlBudgetAmount(lngBgAmount);
 						wDA.setsBudgetAmount(sBudgetAmount);
 					}
-
-					
-					
-					
-					
-					
-					
-					
-					// 日毎
-	//				long[] lAryDays = new long[iDaysCnt];
-	//				String[] sAryDays = new String[iDaysCnt];
-					calendar.setTime(dStartDay);
-					List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
-					for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-	//			   		String sSqlBaseD = "" +
-	//							"   AND cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD')";
-	//					BigInteger biAryDays = (BigInteger)JPA.em().createNativeQuery(
-	//							sSqlBase + sSqlBaseD +
-	//							"   AND i.item_name = '" + itemMst.item_name + "' " +
-	//							"   AND r.ideal_deposit_mst_id IS NULL "
-	//							 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "")).getSingleResult();;
-	//					lAryDays[iDay] = objEach[iDay] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay]));
-	//					sAryDays[iDay] = df.format(lAryDays[iDay]);
-	
-						WkDaToDl workDaToDl = new WkDaToDl();
-						long lAmount = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
-						workDaToDl.setlAmount(lAmount);
-						workDaToDl.setsAmount(df.format(lAmount));
-						String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-						workDaToDl.setsPaymentDateFr(sDate);
-						workDaToDl.setsPaymentDateTo(sDate);
-						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
-						workDaToDl.setlHandlingId(null);
-						//取扱(My貯金)＝NULL
-						workDaToDl.setlIdealDepositId((long) -1);
-//						workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
-						workDaToDl.setiItemId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
-						lstWdtd.add(workDaToDl);
-						
-						calendar.add(Calendar.DATE, 1);
-					}
-	//				wDaItem.setLAryDays(lAryDays);
-	//				wDaItem.setsAryDays(sAryDays);
-		
-					wDaItem.setLstWdtd(lstWdtd);
-			
-					lWDA.add(wDaItem);
-					
-					
-					
-					
-					
-					
 				}
 				
 				
-				
-				
-//			}
-		//「My貯金預入」・「My貯金から支払」
-		} else if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
-				sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-			//My貯金ごとのループ
-//			List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = " + haUser.id).fetch();
-//			int intIdealDepoCnt = idealDepositMsts.size();
-			int intCnt = 0;
-//			for(Iterator<IdealDepositMst> itrIdealDeposit = idealDepositMsts.iterator(); itrIdealDeposit.hasNext();) {
-//				IdealDepositMst idealDepositMst = itrIdealDeposit.next();
-				
+				// 日毎
+				long[] lAryDaysMyDp = new long[iDaysCnt];
+				String[] sAryDaysMyDp = new String[iDaysCnt];
+				calendar.setTime(dStartDay);
+				List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
+				for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 			
-				String strSqlEach = "";
-				//「My貯金預入」
-				if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-					strSqlEach = sSqlBaseEach + sSqlBaseG +
-							"   AND b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' " +
-							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
-//							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'" +
-							((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-							" GROUP BY id.id, id.ideal_deposit_name, bg.id, bg.amount " +
-							" ORDER BY id.id" +
-							"";
+					lAryDaysMyDp[iDay] = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
+					sAryDaysMyDp[iDay] = df.format(lAryDaysMyDp[iDay]);
 					
-		   		//「My貯金から支払」
-		   		} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-					strSqlEach = sSqlBaseEach + sSqlBaseG +
-							"   AND b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
-							"   AND r.ideal_deposit_mst_id IS NOT NULL " +
-//							"   AND id.ideal_deposit_name = '" + idealDepositMst.ideal_deposit_name + "'" +
-							((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
-							" GROUP BY id.id, id.ideal_deposit_name, bg.id, bg.amount" +
-							" ORDER BY id.id" +
-							"";
-		   			
-		   		}
-				
-				List<Object[]> lstObjEach = null;
-	   			lstObjEach = JPA.em().createNativeQuery(
-						strSqlEach).getResultList();
-
-	   			int intIdealDepoCnt = lstObjEach.size();
-	   			for(Object[] objEach : lstObjEach) {
-	   				
-					WkDailyAccount wDaIdealDepo = new WkDailyAccount();
-					
-					//  月計をセット
-					long lSumMonthMyDp = objEach[0] == null ? 0L : Long.parseLong(String.valueOf(objEach[0]));
-					
-					wDaIdealDepo.setsLargeCategory(sLargeCategoryName);
-					wDaIdealDepo.setsItem(String.valueOf(objEach[iDaysCnt+1]));
+					WkDaToDl workDaToDl = new WkDaToDl();
+					long lAmount = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
+					workDaToDl.setlAmount(lAmount);
+					workDaToDl.setsAmount(df.format(lAmount));
+					String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+					workDaToDl.setsPaymentDateFr(sDate);
+					workDaToDl.setsPaymentDateTo(sDate);
+					workDaToDl.setlHandlingId(null);
+					// 「My貯金預入」
 					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-						wDaIdealDepo.setbBudgetFlg(true);
-					} else {
-						wDaIdealDepo.setbBudgetFlg(false);
-					}
-	
-					//項目の最終行フラグ
-					intCnt++;
-					if(intIdealDepoCnt==intCnt) {
-						wDaIdealDepo.setBolLastItemFlg(true);
-					}
-					
-					//「My貯金預入」なら予算がある時だけセット
-					if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-						if(objEach[iDaysCnt+3]!=null) {
-							Long lngBgId = Long.parseLong(String.valueOf(objEach[iDaysCnt+3]));
-//							Integer intBgAmount = Integer.parseInt(String.valueOf(objEach[iDaysCnt+4]));
-							Long lngBgAmount = Long.parseLong(String.valueOf(objEach[iDaysCnt+4]));
-							
-							String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
-	
-							wDaIdealDepo.setlBudgetId(lngBgId);
-							wDaIdealDepo.setlBudgetAmount(lngBgAmount);
-							wDaIdealDepo.setsBudgetAmount(sBudgetAmount);
-							
-							//大分類行に加算
-							if(!(wDA.getsBudgetAmount()==null || wDA.getsBudgetAmount().equals(""))) {
-								Number nEBudgetAmount;
-								try {
-									nEBudgetAmount = nf.parse(wDA.getsBudgetAmount());
-									sBudgetAmount = String.format("%1$,3d", nEBudgetAmount.intValue() + lngBgAmount);
-								} catch (ParseException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-							if(!(wDA.getlBudgetAmount()==null || wDA.getlBudgetAmount().equals("")))
-								lngBgAmount += wDA.getlBudgetAmount();
-							wDA.setlBudgetAmount(lngBgAmount);
-							wDA.setsBudgetAmount(sBudgetAmount);
-						}
-					}
-					
-					
-					// 日毎
-					long[] lAryDaysMyDp = new long[iDaysCnt];
-					String[] sAryDaysMyDp = new String[iDaysCnt];
-					calendar.setTime(dStartDay);
-					List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
-					for(int iDay = 0; iDay < iDaysCnt; iDay++) {
-	
-						lAryDaysMyDp[iDay] = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
-						sAryDaysMyDp[iDay] = df.format(lAryDaysMyDp[iDay]);
+						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
 						
-						WkDaToDl workDaToDl = new WkDaToDl();
-						long lAmount = objEach[iDay+1] == null ? 0L : Long.parseLong(String.valueOf(objEach[iDay+1]));
-						workDaToDl.setlAmount(lAmount);
-						workDaToDl.setsAmount(df.format(lAmount));
-						String sDate = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
-						workDaToDl.setsPaymentDateFr(sDate);
-						workDaToDl.setsPaymentDateTo(sDate);
-						workDaToDl.setlHandlingId(null);
-						// 「My貯金預入」
-						if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-							workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", sLargeCategoryName)).first()).id);
-							
-						// 「My貯金から支払」
-						} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-							workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
-							workDaToDl.setlIdealDepositId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
-						}
-						lstWdtd.add(workDaToDl);
-	
-						calendar.add(Calendar.DATE, 1);
+					// 「My貯金から支払」
+					} else if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+						workDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+						workDaToDl.setlIdealDepositId(Long.parseLong(String.valueOf(objEach[iDaysCnt+2])));
 					}
-					//列を作成
-					wDaIdealDepo.setLAryDays(lAryDaysMyDp);
-		
-					wDaIdealDepo.setLstWdtd(lstWdtd);
-					
-					lWDA.add(wDaIdealDepo);
-	   				
-	   			}
-	   			
-	   			
-	   			
+					lstWdtd.add(workDaToDl);
+			
+					calendar.add(Calendar.DATE, 1);
+				}
+				//列を作成
+				wDaIdealDepo.setLAryDays(lAryDaysMyDp);
+			
+				wDaIdealDepo.setLstWdtd(lstWdtd);
 				
-//			}
+				lWDA.add(wDaIdealDepo);
+				
+			}
+	   			
 		}
 	}
 	
@@ -2077,11 +2680,26 @@ public class DailyAccount extends Controller {
 	 * @param calendar
 	 * @return
 	 */
-	private static String setBasisDate() {
+	private String setBasisDate() {
 		//セッションに絞込条件が入っている時はセット
 		if((session.get("daFilExistFlg") != null) &&
 				(session.get("daFilExistFlg").equals("true")))
 			return session.get("daStrBasisDate");
+   		//単純に呼ばれた時（初回等）は、今月１日をセット
+   		Calendar calendar = Calendar.getInstance();
+		return  String.format("%1$tY/%1$tm/01", calendar.getTime());
+	}
+	
+	/**
+	 * 単純に呼ばれた時の基準日のセット(残高表)
+	 * @param calendar
+	 * @return
+	 */
+	private String setBasisDateBt() {
+		//セッションに絞込条件が入っている時はセット
+		if((session.get("btFilExistFlg") != null) &&
+				(session.get("btFilExistFlg").equals("true")))
+			return session.get("btStrBasisDate");
    		//単純に呼ばれた時（初回等）は、今日をセット
    		Calendar calendar = Calendar.getInstance();
 		return  String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
