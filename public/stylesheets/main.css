@@ -214,11 +214,6 @@ input[type="submit"],input[type="button"] {
  * dailyAccount
  */
 
-/* 隣接する線を重ねて表示 */
-.dailyAccountTbl {
-	border-collapse: collapse;
-}
-
 /* すべての線を表示 */
 .allLine {
 	border: 1px solid #aaa;
@@ -503,7 +498,7 @@ a.daBtnPreNext:hover span{
 	mergin: 0;
 	width: 320px;
 	display: table;
-	border-collapse: collapse;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
 }
 
 .bt_tbl_each li div {

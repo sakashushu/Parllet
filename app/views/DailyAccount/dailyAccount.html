@@ -209,7 +209,7 @@ function addFigure(str) {
 							#{else}
 								<!-- 項目・My貯金　毎 -->
 								#{if lwda.sItem != ''}
-									<div class="da_cate1"></div>
+									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
 									<div class="da_cate2_budget">${lwda.sItem}</div>
 								#{/if}
 								<!-- 大分類毎 -->
@@ -235,16 +235,15 @@ function addFigure(str) {
 				<!-- 枠固定の右下 -->
 				<ul class="da_tbl_rb">
 					#{list items:lWDA, as:'lwda'}
-				        %{leftFlg = 1}%
-						<li>
-							#{list items:lwda.lstWdtd, as:'sAryDay'}
-								<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
-									<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
-								</div>
-								%{leftFlg = 0}%
-							#{/list}
-						</li>
-						
+			        %{leftFlg = 1}%
+					<li>
+						#{list items:lwda.lstWdtd, as:'sAryDay'}
+						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
+							<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
+						</div>
+						%{leftFlg = 0}%
+						#{/list}
+					</li>
 					#{/list}
 				</ul>
 			</div>
