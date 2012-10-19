@@ -5,6 +5,7 @@ import java.util.*;
 import models.*;
 
 import play.db.Model;
+import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -38,33 +39,40 @@ public class DetailList extends Controller {
 	
 	public static void detailList(
     		int page,						/* 現在ページ */
-    		String h_payment_date_fr,		/* 絞込日時範囲（開始） */
-    		String h_payment_date_to,		/* 絞込日時範囲（終了） */
+    		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
+    		String h_payment_date_fr,		/* 絞込支払日範囲（開始） */
+    		String h_payment_date_to,		/* 絞込支払日範囲（終了） */
     		Long h_balance_type_id,  		/* 絞込収支種類ID */
     		Long h_handling_id,				/* 絞込取扱(実際)ID */
     		Long h_ideal_deposit_id,		/* 絞込取扱(My貯金)ID */
     		Long h_item_id,					/* 絞込項目ID */
+    		String h_debit_date_fr,			/* 絞込引落日範囲（開始） */
+    		String h_debit_date_to,			/* 絞込引落日範囲（終了） */
     		List<Long> e_id,				/* 変更行のID */
     		List<String> e_payment_date,	/* 変更行の支払日 */
     		List<Long> e_item_id,			/* 変更行の項目ID */
     		List<String> n_payment_date,	/* 変更行の支払日 */
     		List<Long> n_item_id,			/* 変更行の項目ID */
-    		String srch,		/* 「絞込」ボタン */
-    		String save			/* 「保存」ボタン */
+    		String srch,					/* 「絞込」ボタン */
+    		String save						/* 「保存」ボタン */
     		) {
 		
-		String strSrchRecSql = "";
-		//初回読み込み時の絞込日時範囲の設定
-		if(h_payment_date_fr==null || h_payment_date_fr.equals("")) {
-			
+		String sqlSrchRec = "";
+		//「絞込」ボタンが押されていない時
+		if(srch==null) {
 			//セッションに絞込条件が入っている時はそれぞれセット
 			if((session.get("filExistFlg") != null) &&
 					(session.get("filExistFlg").equals("true"))) {
+		    	if(!session.get("hSecretRecFlg").equals(""))
+		    		h_secret_rec_flg = Integer.parseInt(session.get("hSecretRecFlg"));
 				h_payment_date_fr = session.get("hPaymentDateFr");
 				h_payment_date_to = session.get("hPaymentDateTo");
 		    	h_balance_type_id = null;
 				if(!session.get("hBalanceTypeId").equals(""))
 					h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+		    	h_handling_id = null;
+				if(!session.get("hHandlingId").equals(""))
+					h_handling_id = Long.parseLong(session.get("hHandlingId"));
 				h_ideal_deposit_id = null;
 				if(!session.get("hIdealDepositId").equals(""))
 					h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
@@ -72,7 +80,7 @@ public class DetailList extends Controller {
 		    	if(!session.get("hItemId").equals(""))
 		    		h_item_id = Long.parseLong(session.get("hItemId"));
 		    	
-		    //初回読み込み時は絞込日時範囲は現在日付の前後日
+		    //初回読み込み時は絞込支払日範囲は現在日付の前後日
 			} else {
 	    		Calendar calendar = Calendar.getInstance();
 	    		calendar.add(Calendar.DATE, 1);
@@ -206,6 +214,7 @@ public class DetailList extends Controller {
 		} else {
 			//検索条件をセッションに保存
 			session.put("filExistFlg", "true");
+    		session.put("hSecretRecFlg", h_secret_rec_flg==null ? "" : h_secret_rec_flg);
     		session.put("hPaymentDateFr", h_payment_date_fr==null ? "" : h_payment_date_fr);
     		session.put("hPaymentDateTo", h_payment_date_to==null ? "" : h_payment_date_to);
     		session.put("hBalanceTypeId", h_balance_type_id==null ? "" : h_balance_type_id);
@@ -222,7 +231,12 @@ public class DetailList extends Controller {
 			iDepos = IdealDepositMst.find("ha_user = ? order by id", haUser).fetch();
 			
 			// 検索処理(HandlingMst)
-			handlings = HandlingMst.find("ha_user = ? order by id", haUser).fetch();
+	    	if((session.get("detailMode")).equals("Balance")) {
+	    		handlings = HandlingMst.find("ha_user = ? order by id", haUser).fetch();
+	    	}
+	    	if((session.get("detailMode")).equals("RemainderBank")) {
+	    		handlings = HandlingMst.find("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?) order by id", haUser, Messages.get("HandlingType.bank"), Messages.get("HandlingType.emoney")).fetch();
+	    	}
 			
 			// 検索処理(ItemMst(収入))
 			bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
@@ -233,56 +247,64 @@ public class DetailList extends Controller {
 			itemsOut = ItemMst.find("ha_user = ? and balance_type_mst = ?", haUser, bTypeOut).fetch();
 	
 			// 検索処理(Record)
-			strSrchRecSql += "ha_user = " + haUser.id;
-	    	//  日付範囲
-	   		strSrchRecSql += " and payment_date between '" + h_payment_date_fr + " 00:00:00' and '" + h_payment_date_to + " 23:59:59'";
+			sqlSrchRec += "ha_user = " + haUser.id;
+	    	//  非公開フラグ
+			if((session.get("actionMode") != null) &&
+					(session.get("actionMode").equals("Edit")))
+		   		if(h_secret_rec_flg != null)
+		   			if(h_secret_rec_flg != 0)
+		   				sqlSrchRec += " and secret_rec_flg = " + (h_secret_rec_flg==2 ? "true" : "false");
+	    	//  支払日範囲(自)
+	   		if(h_payment_date_fr != null && !h_payment_date_fr.equals(""))
+	   			sqlSrchRec += " and payment_date >= '" + h_payment_date_fr + " 00:00:00'";
+	    	//  支払日範囲(至)
+	   		if(h_payment_date_to != null && !h_payment_date_to.equals(""))
+	   			sqlSrchRec += " and payment_date <= '" + h_payment_date_to + " 23:59:59'";
 	   		//  収支種類
-	   		if(h_balance_type_id != null) {
-	   			if(h_balance_type_id != 0L) {
-	   				strSrchRecSql += " and balance_type_mst.id = " + h_balance_type_id;
-	   			}
-	   		}
+	   		if(h_balance_type_id != null)
+	   			if(h_balance_type_id != 0L)
+	   				sqlSrchRec += " and balance_type_mst.id = " + h_balance_type_id;
 	    	//  取扱(実際)
-	   		if(h_handling_id != null) {
-	   			if(h_handling_id == -1) {
-	   				strSrchRecSql += " and handling_mst.id is null ";
-	   			} else if(h_handling_id == -2) {
-	   				strSrchRecSql += " and handling_mst.id is not null ";
-	   			} else if(h_handling_id != 0) {
-	   				strSrchRecSql += " and handling_mst.id = " + h_handling_id;
-	   			}
-	   		}
+	   		if(h_handling_id != null)
+	   			if(h_handling_id != 0)
+	   				sqlSrchRec += " and handling_mst.id " +
+	   						(h_handling_id==-1 ? "is null "
+	   								: (h_handling_id==-2 ? "is not null "
+	   										: "= " + h_handling_id));
 	    	//  取扱(My貯金)
-	   		if(h_ideal_deposit_id != null) {
-	   			if(h_ideal_deposit_id == -1) {
-	   				strSrchRecSql += " and ideal_deposit_mst.id is null ";
-	   			} else if(h_ideal_deposit_id == -2) {
-	   				strSrchRecSql += " and ideal_deposit_mst.id is not null ";
-	   			} else if(h_ideal_deposit_id != 0) {
-	   				strSrchRecSql += " and ideal_deposit_mst.id = " + h_ideal_deposit_id;
-	   			}
-	   		}
+	   		if(h_ideal_deposit_id != null)
+	   			if(h_ideal_deposit_id != 0)
+	   				sqlSrchRec += " and ideal_deposit_mst.id " +
+	   						(h_ideal_deposit_id==-1 ? "is null "
+	   								: (h_ideal_deposit_id==-2 ? "is not null "
+	   										: "= " + h_ideal_deposit_id));
 	    	//  項目
-	   		if(h_item_id != null) {
-	   			if(h_item_id != 0) {
-	   				strSrchRecSql += " and item_mst.id = " + h_item_id;
-	   			}
-	   		}
-	    	count = Record.count(strSrchRecSql);
-	    	nbPages = (int) (Math.ceil((double)count/iLinage));
-	    	strSrchRecSql += " order by payment_date, id";
-//	    	records = Record.find(
-//	    			strSrchRecSql).from(0).fetch(30);
-	    	records = Record.find(
-	    			strSrchRecSql).from(0).fetch(page, 30);
+	   		if(h_item_id != null)
+	   			if(h_item_id != 0)
+	   				sqlSrchRec += " and item_mst.id = " + h_item_id;
+	    	//  引落日範囲(自)
+	   		if(h_debit_date_fr != null && !h_debit_date_fr.equals(""))
+	   			sqlSrchRec += " and debit_date >= '" + h_debit_date_fr + " 00:00:00'";
+	    	//  引落日範囲(至)
+	   		if(h_debit_date_to != null && !h_debit_date_to.equals(""))
+	   			sqlSrchRec += " and debit_date <= '" + h_debit_date_to + " 23:59:59'";
+	   		
+	    	sqlSrchRec += "" +
+	    			((session.get("actionMode")).equals("View") ? " and secret_rec_flg = false " : "") +
+	    			"";
+	    	if((session.get("detailMode")).equals("Balance")) {
+	    	}
+	    	if((session.get("detailMode")).equals("RemainderBank")) {
+	    		
+	    	}
+		    	count = Record.count(sqlSrchRec);
+		    	nbPages = (int) (Math.ceil((double)count/iLinage));
+		    	sqlSrchRec += " order by payment_date, id";
+		    	records = Record.find(
+		    			sqlSrchRec).from(0).fetch(page, 30);
 		}
-	
-	    	
-//		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id);
-//		render(iDepos, bTypes, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_ideal_deposit_id, h_item_id, type, objects, count, totalCount, page, orderBy, order);
-    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, count, nbPages, page);
-			
 		
+    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
 		
     }
 	
@@ -362,4 +384,22 @@ public class DetailList extends Controller {
 		}
 	}
 
+	
+	//明細表のモードを収支モードに
+	public static void detailMode_changeToBalance() {
+		session.put("detailMode", "Balance");
+		detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+	}
+	
+	//明細表のモードを残高モード(口座系)に
+	public static void detailMode_changeToRemainderBank() {
+		session.put("detailMode", "RemainderBank");
+		detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+	}
+	
+	//明細表のモードを残高モード(My貯金)に
+	public static void detailMode_changeToRemainderIdeal() {
+		session.put("detailMode", "RemainderIdeal");
+		detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+	}
 }

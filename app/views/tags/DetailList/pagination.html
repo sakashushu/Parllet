@@ -24,16 +24,14 @@
 
         #{if _caller.page > 1}
             <span class="previous">
-            	<a href="@{detailList(_caller.page-1,
-            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_handling_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	<a href="detailList?page=${_caller.page-1}">
             	&{'crud.pagination.previous'}</a>
             </span>
         #{/if}
 
         #{if start > 1}
             <span class="first">
-            	<a href="@{detailList(1,
-            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_handling_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	<a href="detailList?page=${1}">
             	&{'crud.pagination.first'}</a>
             </span>
         #{/if}
@@ -44,8 +42,7 @@
                     <strong>${i}</strong>
                 #{/if}
                 #{else}
-	            	<a href="@{detailList(i,
-	            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_handling_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+	            	<a href="detailList?page=${i}">
 	            	${i}</a>
                 #{/else}
             </span>
@@ -53,16 +50,14 @@
 
         #{if end < _caller.nbPages}
             <span class="last">
-            	<a href="@{detailList(_caller.nbPages,
-            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_handling_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	<a href="detailList?page=${_caller.nbPages}">
             	&{'crud.pagination.last'}</a>
             </span>
         #{/if}
 
         #{if _caller.page < _caller.nbPages}
             <span class="next">
-            	<a href="@{detailList(_caller.page+1,
-            	_caller.h_payment_date_fr,_caller.h_payment_date_to,_caller.h_balance_type_id,_caller.h_handling_id,_caller.h_ideal_deposit_id,_caller.h_item_id,_caller.e_id,_caller.e_payment_date,_caller.e_item_id,_caller.n_payment_date,_caller.n_item_id,_caller.srch,_caller.save)}">
+            	<a href="detailList?page=${_caller.page+1}">
             	&{'crud.pagination.next'}</a>
             </span>
         #{/if}

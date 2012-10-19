@@ -1,7 +1,6 @@
 #{extends 'login.html' /}
 #{set title:'日計表' /}
 
-
 <script type="text/javascript">
 <!--
 //枠固定の上下の動き
@@ -59,21 +58,15 @@ jQuery(document).ready(function() {
 	var nYear = new Number(sDate.substr(0, 4)-0);
 	var nMonth = new Number(sDate.substr(5, 2)-1);
 	var nDay = new Number(sDate.substr(8, 2)-0);
-//	var nQuantity = new Number(0);
 	jQuery('#idPreYear, #idPreMonth, #idNextMonth, #idNextYear').click(function() {
 		if(this.id=="idPreYear")
-//			nQuantity -= 3;
 			nYear -= 1;
 		if(this.id=="idPreMonth")
-//			nQuantity -= 1;
 			nMonth -= 1;
 		if(this.id=="idNextMonth")
-//			nQuantity += 1;
 			nMonth += 1;
 		if(this.id=="idNextYear")
-//			nQuantity += 3;
 			nYear += 1;
-//		var dPre1 = new Date(nYear, nMonth, nDay+nQuantity);
 		var dPre1 = new Date(nYear, nMonth, nDay);
 		jQuery('#idBasisDate').val(dateFormat.format(dPre1));
 		jQuery('#idMove').click();
@@ -96,25 +89,80 @@ jQuery(document).ready(function(){
 
 //文字列を3桁区切りにする関数
 function addFigure(str) {
-    var num = new String(str).replace(/,|\n| |\t/g, "");
+	var num = new String(str).replace(/,|\n| |\t/g, "");
 //    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
-    return num;
+	return num;
 }
+
+jQuery(function(){
+	// 左クリックか右クリックでメニュー表示
+	jQuery('.da_menu').mousedown(function(e) {
+		if(e.which==1 || e.which==3) {
+			//明細表へジャンプする際の絞込項目セット
+			jQuery('#hPaymentDateFr').val(jQuery('.ToDlPaymentDateFr',this).val());
+			jQuery('#hPaymentDateTo').val(jQuery('.ToDlPaymentDateTo',this).val());
+			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
+			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
+			jQuery('#hIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			jQuery('#hItemId').val(jQuery('.ToDlItemId',this).val());
+			
+			e.preventDefault();
+			jQuery('.da_menu').contextMenu({x: e.pageX, y: e.pageY});
+		}
+	});
+	jQuery.contextMenu({
+		selector: '.da_menu',
+		trigger: 'none',
+		callback: function(key, options) {
+//			var m = "clicked: " + key;
+//			window.console && console.log(m) || alert(m);
+			jQuery('#submitDetailList').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		items: {
+			"detailList": {name: "明細表示"},
+//			"cut": {name: "Cut", icon: "cut"},
+//			"copy": {name: "Copy", icon: "copy"},
+//			"paste": {name: "Paste", icon: "paste"},
+//			"delete": {name: "Delete", icon: "delete"},
+//			"sep1": "---------",
+//			"quit": {name: "Quit", icon: "quit"}
+		}
+	});
+});
 -->
 </script>
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+
+<!-- 明細表へジャンプ用フォーム（非表示） -->
+#{form @DetailList.detailList(), name:'frmDetailList'}
+	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" style="display:none;" />
+	<input type="text" name="h_payment_date_fr" id="hPaymentDateFr" style="display:none;" />
+	<input type="text" name="h_payment_date_to" id="hPaymentDateTo" style="display:none;" />
+	<input type="text" name="h_balance_type_id" id="hBalanceTypeId" style="display:none;" />
+	<input type="text" name="h_handling_id" id="hHandlingId" style="display:none;" />
+	<input type="text" name="h_ideal_deposit_id" id="hIdealDepositId" style="display:none;" />
+	<input type="text" name="h_item_id" id="hItemId" style="display:none;" />
+	<input type="submit" name="srch" id="submitDetailList" style="display:none;" />
+#{/form}
+
+	
+<!-- 年月移動用フォーム -->
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
 	<input type="text" class="datepickerJump" name="e_basis_date" id="idBasisDate"
 		value="${sBasisDate}" style="display:none;" />
-	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
+	<input type="submit" name="move" id="idMove" style="display:none;" />
 #{/form}
+
 
 <ul class="da_tbl_all">
 	#{form @updBudget()}
@@ -127,13 +175,13 @@ function addFigure(str) {
 				<li>
 					%{year = sBasisDate.substring(0,4)}%
 					<div class="da_hd_cate1_2 da_head">
-						<a id="idPreYear" class="daBtnPreNext" tabindex="0"><<<span>年移動</span></a>
+						<a id="idPreYear" class="daBtnPreNext" tabindex="0"><<<span>&{'year'}&{'views.common.move'}</span></a>
 						${year}年
-						<a id="idNextYear" class="daBtnPreNext" tabindex="0">>><span>年移動</span></a>
+						<a id="idNextYear" class="daBtnPreNext" tabindex="0">>><span>&{'year'}&{'views.common.move'}</span></a>
 						<br>
-						<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>月移動</span></a>
+						<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'month'}&{'views.common.move'}</span></a>
 						&nbsp;&nbsp;${month}月&nbsp;
-						<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>月移動</span></a>
+						<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>&{'month'}&{'views.common.move'}</span></a>
 					</div>
 					<div class="da_budget da_head">
 						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
@@ -237,9 +285,19 @@ function addFigure(str) {
 					#{list items:lWDA, as:'lwda'}
 			        %{leftFlg = 1}%
 					<li>
-						#{list items:lwda.lstWdtd, as:'sAryDay'}
-						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric">
-							<a href="@{DetailList.detailList(1,sAryDay.sPaymentDateFr,sAryDay.sPaymentDateTo,sAryDay.lBalanceTypeId,sAryDay.lHandlingId,sAryDay.lIdealDepositId,sAryDay.lItemId)}" class="num3">${sAryDay.lAmount}</a>
+						#{list items:lwda.lstWdtd, as:'wdtd'}
+						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric da_menu box menu-1">
+							<!-- 
+							<a href="@{DetailList.detailList(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
+							<a href="" class="num3" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
+							 -->
+							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd.sPaymentDateFr}" />
+							<input type="hidden" class="ToDlPaymentDateTo" value="${wdtd.sPaymentDateTo}" />
+							<input type="hidden" class="ToDlBalanceTypeId" value="${wdtd.lBalanceTypeId}" />
+							<input type="hidden" class="ToDlHandlingId" value="${wdtd.lHandlingId}" />
+							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd.lIdealDepositId}" />
+							<input type="hidden" class="ToDlItemId" value="${wdtd.lItemId}" />
+							<span class="num3">${wdtd.lAmount}</span>
 						</div>
 						%{leftFlg = 0}%
 						#{/list}

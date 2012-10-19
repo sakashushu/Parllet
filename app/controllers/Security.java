@@ -15,8 +15,12 @@ public class Security extends Secure.Security {
 	}
 	
 	static void onAuthenticated() {
+		//セッションに保持する値の初期化
+		Security sec = new Security();
+		sec.initializeSessionValue();
+		
+		//初期画面は日計表
 		DailyAccount.dailyAccount(null);
-//		DetailList.detailList(1, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 	
 	static boolean check(String profile) {
@@ -26,12 +30,11 @@ public class Security extends Secure.Security {
 		return false;
 	}
 	
-	static String getUserFullname() {
-		if(HaUser.find("byEmail", connected()).<HaUser>first().fullname ==null) {
-			return "null";
-		} else {
-			return "not null";
-		}
-		//return HaUser.find("byEmail", connected()).<HaUser>first().fullname;
+	/**
+	 * セッションに保持する値の初期化
+	 */
+	void initializeSessionValue() {
+		session.put("actionMode", "View");		//actionModeは閲覧モード
+		session.put("detailMode", "Balance");	//detailModeは収支モード
 	}
 }

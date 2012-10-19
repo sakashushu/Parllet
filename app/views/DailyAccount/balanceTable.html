@@ -105,15 +105,20 @@ jQuery(function() {
 							#{if lwda.sItem != ''}
 								<div class="bt_cate_small_pre"></div>
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
+								#{list items:lwda.lstWdtd, as:'sAryDay'}
+									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
+										<a href="@{DetailList.detailList()}" class="num3">${sAryDay.lAmount}</a>
+									</div>
+								#{/list}
 							#{/if}
 							#{else}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
+								#{list items:lwda.lstWdtd, as:'sAryDay'}
+									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
+										<span class="num3">${sAryDay.lAmount}</span>
+									</div>
+								#{/list}
 							#{/else}
-							#{list items:lwda.lstWdtd, as:'sAryDay'}
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
-									<a href="@{DetailList.detailList()}" class="num3">${sAryDay.lAmount}</a>
-								</div>
-							#{/list}
 						</li>
 				        %{topFlg = 0}%
 					  #{/if}

@@ -269,7 +269,7 @@ input[type="submit"],input[type="button"] {
 .da_tbl_lt li div {
 	display: table-cell;
 	border-right: 1px solid transparent;
-	height: 26px;
+	height: 30px;
 }
 
 /* .da_tbl_rt 日計表の枠固定の右上のテーブル */
@@ -286,7 +286,7 @@ input[type="submit"],input[type="button"] {
 	border-right: 1px solid #transparent;
 */
 	border-bottom: 1px solid #aaa;
-	height: 26px;
+	height: 30px;
 }
 
 /* .da_tbl_lb 日計表の枠固定の左下のテーブル */
@@ -458,6 +458,16 @@ a.daBtnPreNext:hover span{
 	position:absolute;
 }
 
+
+/* .da_menu 日計表のセル部分のクリックイベント用 */
+.da_menu {
+	background-image: url(/public/images/white20.png);
+}
+.da_menu:hover {
+//	background-color: #eee;
+	cursor: pointer;
+}
+
 /*
  * balanceTable
  */
@@ -539,7 +549,7 @@ a.daBtnPreNext:hover span{
 }
 
 #dl_tblContent {
-    width: 1250px;
+    width: 1300px;
 }
 
 .dl_tbl {
@@ -596,6 +606,12 @@ a.daBtnPreNext:hover span{
 	border-style: inset;
 }
 
+
+.dl_secret_rec_flg {
+	width:45px;
+	text-align: center;
+	vertical-align: middle;
+}
 
 .dl_payment_date {
 	width:90px;
