@@ -124,25 +124,361 @@ HandlingMst(cash1):
 HandlingMst(bank1):
     ha_user:          sakashushu
     handling_type_mst:    bank
-    handling_name:        ゆうちょ
+    handling_name:        三銀
+    zero_hidden:          true
+
+HandlingMst(bank2):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        楽銀
+    zero_hidden:          true
+
+HandlingMst(bank3):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        宮銀
+    zero_hidden:          true
+
+HandlingMst(bank4):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        郵貯2
+    zero_hidden:          true
+
+HandlingMst(bank5):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        じぶん
+    zero_hidden:          true
+
+HandlingMst(bank6):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        太陽
+    zero_hidden:          true
+
+HandlingMst(bank7):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        太陽北
+    zero_hidden:          true
+
+HandlingMst(bank8):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ｸｵｶｰﾄﾞ
+    zero_hidden:          true
+
+HandlingMst(bank9):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        UFJ西
+    zero_hidden:          true
+
+HandlingMst(bank10):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        郵貯1
+    zero_hidden:          true
+
+HandlingMst(bank11):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        両替ｽﾄｯｸ
+    zero_hidden:          true
+
+HandlingMst(bank12):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ｶｰｽﾃﾌﾟﾘｶ
+    zero_hidden:          true
+
+HandlingMst(bank13):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾎﾟｲﾝﾄ
+    zero_hidden:          true
+
+HandlingMst(bank14):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾆｼﾀﾞﾌﾟﾘｶ
+    zero_hidden:          true
+
+HandlingMst(bank15):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        図書ｶｰﾄﾞ
+    zero_hidden:          true
+
+HandlingMst(bank16):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾊﾞｽｶｰﾄﾞ
+    zero_hidden:          true
+
+HandlingMst(bank17):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀2
+    zero_hidden:          true
+
+HandlingMst(bank18):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀3
+    zero_hidden:          true
+
+HandlingMst(bank19):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀4
+    zero_hidden:          true
+
+HandlingMst(bank20):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        常銀
+    zero_hidden:          true
+
+HandlingMst(bank21):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        UFJ
+    zero_hidden:          true
 
 HandlingMst(card1):
     ha_user:          sakashushu
     handling_type_mst:    card
-    handling_name:        セゾン
+    handling_name:        ｾｿﾞﾝ
+    debit_bank:           bank2
+    cutoff_day:           99
+    debit_month:          nextTwo
+    debit_day:            4
+
+HandlingMst(card2):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ｾｿﾞﾝ_三
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          nextTwo
+    debit_day:            4
+
+HandlingMst(card3):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ｲｵﾝｶｰﾄﾞ
+    debit_bank:           bank2
+    cutoff_day:           10
+    debit_month:          next
+    debit_day:            2
+
+HandlingMst(card4):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ｱｲﾜｲ
+    debit_bank:           bank1
+    cutoff_day:           10
+    debit_month:          next
+    debit_day:            10
+
+HandlingMst(card5):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ｱｲﾜｲ妻
+    debit_bank:           bank1
+    cutoff_day:           10
+    debit_month:          next
+    debit_day:            10
+
+HandlingMst(card6):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ﾕﾆﾃﾞｨｶｰﾄﾞ
+    debit_bank:           bank2
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            27
+
+HandlingMst(card7):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ﾕﾆﾃﾞｨ妻
+    debit_bank:           bank2
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            27
+
+HandlingMst(card8):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ﾕﾆﾃﾞｨ_三
     debit_bank:           bank1
     cutoff_day:           99
     debit_month:          next
-    debit_day:            4
+    debit_day:            27
+
+HandlingMst(card9):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ﾕﾆﾃﾞｨ妻_三
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            27
+
+HandlingMst(card10):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        FSCaｶｰﾄﾞ
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            27
+
+HandlingMst(card11):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        sony
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            25
+
+HandlingMst(card12):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        三井VISA
+    debit_bank:           bank1
+    cutoff_day:           25
+    debit_month:          next
+    debit_day:            10
+
+HandlingMst(card13):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        amazon
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          next
+    debit_day:            10
 
 HandlingMst(e-money1):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        ワオン
+    handling_name:        nanacoF2
+    zero_hidden:          true
 
-IdealDepositMst(child-raising):
+HandlingMst(e-money2):
     ha_user:          sakashushu
-    ideal_deposit_name:   子育て貯金
+    handling_type_mst:    e-money
+    handling_name:        Edy1
+    zero_hidden:          true
+
+HandlingMst(e-money3):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        ｲｵﾝｾﾚｸﾄ
+    zero_hidden:          true
+
+HandlingMst(e-money4):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        nanacoF
+    zero_hidden:          true
+
+HandlingMst(e-money5):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        nanaco
+    zero_hidden:          true
+
+HandlingMst(e-money6):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        Edy
+    zero_hidden:          true
+
+HandlingMst(e-money7):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        Suica
+    zero_hidden:          true
+
+HandlingMst(e-money8):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        PASMO
+    zero_hidden:          true
+
+HandlingMst(e-money9):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        Suica2
+    zero_hidden:          true
+
+HandlingMst(e-money10):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        Suica3
+    zero_hidden:          true
+
+HandlingMst(e-money11):
+    ha_user:          sakashushu
+    handling_type_mst:    e-money
+    handling_name:        PASMO1
+    zero_hidden:          true
+
+IdealDepositMst(ideal1):
+    ha_user:          sakashushu
+    ideal_deposit_name:   交際貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal2):
+    ha_user:          sakashushu
+    ideal_deposit_name:   学資貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal3):
+    ha_user:          sakashushu
+    ideal_deposit_name:   通勤費
+    zero_hidden:          true
+
+IdealDepositMst(ideal4):
+    ha_user:          sakashushu
+    ideal_deposit_name:   帰省貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal5):
+    ha_user:          sakashushu
+    ideal_deposit_name:   市民税貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal6):
+    ha_user:          sakashushu
+    ideal_deposit_name:   オモチャ貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal7):
+    ha_user:          sakashushu
+    ideal_deposit_name:   雑多貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal8):
+    ha_user:          sakashushu
+    ideal_deposit_name:   臨時貯金
+    zero_hidden:          true
+
+IdealDepositMst(ideal9):
+    ha_user:          sakashushu
+    ideal_deposit_name:   宮崎引越
+    zero_hidden:          true
+
+IdealDepositMst(ideal10):
+    ha_user:          sakashushu
+    ideal_deposit_name:   自動車貯金
+    zero_hidden:          true
 
 Record(test1):
     ha_user:          member1
@@ -176,4 +512,4 @@ Record(test4):
     payment_date:         '2012-07-04T00:00:00'
     balance_type_mst:     ideal_deposit_in
     amount:               10000
-    ideal_deposit_mst:    child-raising
+    ideal_deposit_mst:    ideal1
