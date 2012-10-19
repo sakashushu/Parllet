@@ -145,7 +145,7 @@ IdealDepositMst(child-raising):
     ideal_deposit_name:   子育て貯金
 
 Record(test1):
-    ha_user:          sakashushu
+    ha_user:          member1
     payment_date:     '2012-07-01T00:00:00'
     balance_type_mst: in
     item_mst:         in1
@@ -153,7 +153,7 @@ Record(test1):
     handling_mst:     bank1
 
 Record(test2):
-    ha_user:          sakashushu
+    ha_user:          member1
     payment_date:     '2012-07-02T00:00:00'
     balance_type_mst: out
     item_mst:         out1
@@ -162,7 +162,7 @@ Record(test2):
     content:          カレー
 
 Record(test3):
-    ha_user:          sakashushu
+    ha_user:          member1
     payment_date:     '2012-07-03T00:00:00'
     balance_type_mst: out
     item_mst:         out3
@@ -172,7 +172,7 @@ Record(test3):
     store:            ハンズマン
 
 Record(test4):
-    ha_user:              sakashushu
+    ha_user:              member1
     payment_date:         '2012-07-04T00:00:00'
     balance_type_mst:     ideal_deposit_in
     amount:               10000
