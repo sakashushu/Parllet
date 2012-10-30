@@ -49,56 +49,67 @@ ItemMst(in1):
     ha_user:          sakashushu
     balance_type_mst: in
     item_name:        給与
+    order_seq:        1
 
 ItemMst(in2):
     ha_user:          sakashushu
     balance_type_mst: in
     item_name:        その他収入
+    order_seq:        2
 
 ItemMst(out1):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        食費
-
-ItemMst(out2):
-    ha_user:          sakashushu
-    balance_type_mst: out
-    item_name:        衣類
+    order_seq:        1
 
 ItemMst(out3):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        居住日用
+    order_seq:        2
 
 ItemMst(out4):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        水道光熱
+    order_seq:        3
 
 ItemMst(out5):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        健康
+    order_seq:        4
 
 ItemMst(out6):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        教育
+    order_seq:        5
+
+ItemMst(out2):
+    ha_user:          sakashushu
+    balance_type_mst: out
+    item_name:        衣類
+    order_seq:        6
 
 ItemMst(out7):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        娯楽
+    order_seq:        7
 
 ItemMst(out8):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        交通通信
+    order_seq:        8
 
 ItemMst(out9):
     ha_user:          sakashushu
     balance_type_mst: out
     item_name:        その他
+    order_seq:        9
 
 HandlingTypeMst(cash):
     handling_type_name:   現金
@@ -120,132 +131,154 @@ HandlingMst(cash1):
     ha_user:          sakashushu
     handling_type_mst:    cash
     handling_name:        現金
-
-HandlingMst(bank1):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        三銀
-    zero_hidden:          true
+    order_seq:            1
 
 HandlingMst(bank2):
     ha_user:          sakashushu
     handling_type_mst:    bank
     handling_name:        楽銀
     zero_hidden:          true
+    order_seq:            1
 
 HandlingMst(bank3):
     ha_user:          sakashushu
     handling_type_mst:    bank
     handling_name:        宮銀
     zero_hidden:          true
+    order_seq:            2
 
 HandlingMst(bank4):
     ha_user:          sakashushu
     handling_type_mst:    bank
     handling_name:        郵貯2
     zero_hidden:          true
-
-HandlingMst(bank5):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        じぶん
-    zero_hidden:          true
-
-HandlingMst(bank6):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        太陽
-    zero_hidden:          true
-
-HandlingMst(bank7):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        太陽北
-    zero_hidden:          true
-
-HandlingMst(bank8):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        ｸｵｶｰﾄﾞ
-    zero_hidden:          true
-
-HandlingMst(bank9):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        UFJ西
-    zero_hidden:          true
+    order_seq:            3
 
 HandlingMst(bank10):
     ha_user:          sakashushu
     handling_type_mst:    bank
     handling_name:        郵貯1
     zero_hidden:          true
+    order_seq:            4
 
-HandlingMst(bank11):
+HandlingMst(bank5):
     ha_user:          sakashushu
     handling_type_mst:    bank
-    handling_name:        両替ｽﾄｯｸ
+    handling_name:        じぶん
     zero_hidden:          true
+    order_seq:            5
 
-HandlingMst(bank12):
+HandlingMst(bank6):
     ha_user:          sakashushu
     handling_type_mst:    bank
-    handling_name:        ｶｰｽﾃﾌﾟﾘｶ
+    handling_name:        太陽
     zero_hidden:          true
+    order_seq:            6
 
-HandlingMst(bank13):
+HandlingMst(bank7):
     ha_user:          sakashushu
     handling_type_mst:    bank
-    handling_name:        ﾎﾟｲﾝﾄ
+    handling_name:        太陽北
     zero_hidden:          true
+    order_seq:            7
 
-HandlingMst(bank14):
+HandlingMst(bank9):
     ha_user:          sakashushu
     handling_type_mst:    bank
-    handling_name:        ﾆｼﾀﾞﾌﾟﾘｶ
+    handling_name:        UFJ西
     zero_hidden:          true
-
-HandlingMst(bank15):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        図書ｶｰﾄﾞ
-    zero_hidden:          true
-
-HandlingMst(bank16):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        ﾊﾞｽｶｰﾄﾞ
-    zero_hidden:          true
-
-HandlingMst(bank17):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        三銀2
-    zero_hidden:          true
-
-HandlingMst(bank18):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        三銀3
-    zero_hidden:          true
-
-HandlingMst(bank19):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        三銀4
-    zero_hidden:          true
-
-HandlingMst(bank20):
-    ha_user:          sakashushu
-    handling_type_mst:    bank
-    handling_name:        常銀
-    zero_hidden:          true
+    order_seq:            8
 
 HandlingMst(bank21):
     ha_user:          sakashushu
     handling_type_mst:    bank
     handling_name:        UFJ
     zero_hidden:          true
+    order_seq:            9
+
+HandlingMst(bank11):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        両替ｽﾄｯｸ
+    zero_hidden:          true
+    order_seq:            10
+
+HandlingMst(bank12):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ｶｰｽﾃﾌﾟﾘｶ
+    zero_hidden:          true
+    order_seq:            11
+
+HandlingMst(bank13):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾎﾟｲﾝﾄ
+    zero_hidden:          true
+    order_seq:            12
+
+HandlingMst(bank14):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾆｼﾀﾞﾌﾟﾘｶ
+    zero_hidden:          true
+    order_seq:            13
+
+HandlingMst(bank1):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀
+    zero_hidden:          true
+    order_seq:            14
+
+HandlingMst(bank17):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀2
+    zero_hidden:          true
+    order_seq:            15
+
+HandlingMst(bank18):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀3
+    zero_hidden:          true
+    order_seq:            16
+
+HandlingMst(bank19):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        三銀4
+    zero_hidden:          true
+    order_seq:            17
+
+HandlingMst(bank20):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        常銀
+    zero_hidden:          true
+    order_seq:            18
+
+HandlingMst(bank8):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ｸｵｶｰﾄﾞ
+    zero_hidden:          true
+    order_seq:            19
+
+HandlingMst(bank15):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        図書ｶｰﾄﾞ
+    zero_hidden:          true
+    order_seq:            20
+
+HandlingMst(bank16):
+    ha_user:          sakashushu
+    handling_type_mst:    bank
+    handling_name:        ﾊﾞｽｶｰﾄﾞ
+    zero_hidden:          true
+    order_seq:            21
 
 HandlingMst(card1):
     ha_user:          sakashushu
@@ -253,26 +286,29 @@ HandlingMst(card1):
     handling_name:        ｾｿﾞﾝ
     debit_bank:           bank2
     cutoff_day:           99
-    debit_month:          nextTwo
+    debit_month:          翌々月
     debit_day:            4
+    order_seq:            1
 
 HandlingMst(card2):
-    ha_user:          sakashushu
-    handling_type_mst:    card
-    handling_name:        ｾｿﾞﾝ_三
-    debit_bank:           bank1
-    cutoff_day:           99
-    debit_month:          nextTwo
-    debit_day:            4
-
-HandlingMst(card3):
     ha_user:          sakashushu
     handling_type_mst:    card
     handling_name:        ｲｵﾝｶｰﾄﾞ
     debit_bank:           bank2
     cutoff_day:           10
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            2
+    order_seq:            2
+
+HandlingMst(card3):
+    ha_user:          sakashushu
+    handling_type_mst:    card
+    handling_name:        ｾｿﾞﾝ_三
+    debit_bank:           bank1
+    cutoff_day:           99
+    debit_month:          翌々月
+    debit_day:            4
+    order_seq:            3
 
 HandlingMst(card4):
     ha_user:          sakashushu
@@ -280,8 +316,9 @@ HandlingMst(card4):
     handling_name:        ｱｲﾜｲ
     debit_bank:           bank1
     cutoff_day:           10
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            10
+    order_seq:            4
 
 HandlingMst(card5):
     ha_user:          sakashushu
@@ -289,8 +326,9 @@ HandlingMst(card5):
     handling_name:        ｱｲﾜｲ妻
     debit_bank:           bank1
     cutoff_day:           10
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            10
+    order_seq:            5
 
 HandlingMst(card6):
     ha_user:          sakashushu
@@ -298,8 +336,9 @@ HandlingMst(card6):
     handling_name:        ﾕﾆﾃﾞｨｶｰﾄﾞ
     debit_bank:           bank2
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            27
+    order_seq:            6
 
 HandlingMst(card7):
     ha_user:          sakashushu
@@ -307,8 +346,9 @@ HandlingMst(card7):
     handling_name:        ﾕﾆﾃﾞｨ妻
     debit_bank:           bank2
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            27
+    order_seq:            7
 
 HandlingMst(card8):
     ha_user:          sakashushu
@@ -316,8 +356,9 @@ HandlingMst(card8):
     handling_name:        ﾕﾆﾃﾞｨ_三
     debit_bank:           bank1
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            27
+    order_seq:            8
 
 HandlingMst(card9):
     ha_user:          sakashushu
@@ -325,8 +366,9 @@ HandlingMst(card9):
     handling_name:        ﾕﾆﾃﾞｨ妻_三
     debit_bank:           bank1
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            27
+    order_seq:            9
 
 HandlingMst(card10):
     ha_user:          sakashushu
@@ -334,8 +376,9 @@ HandlingMst(card10):
     handling_name:        FSCaｶｰﾄﾞ
     debit_bank:           bank1
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            27
+    order_seq:            10
 
 HandlingMst(card11):
     ha_user:          sakashushu
@@ -343,8 +386,9 @@ HandlingMst(card11):
     handling_name:        sony
     debit_bank:           bank1
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            25
+    order_seq:            11
 
 HandlingMst(card12):
     ha_user:          sakashushu
@@ -352,8 +396,9 @@ HandlingMst(card12):
     handling_name:        三井VISA
     debit_bank:           bank1
     cutoff_day:           25
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            10
+    order_seq:            12
 
 HandlingMst(card13):
     ha_user:          sakashushu
@@ -361,124 +406,146 @@ HandlingMst(card13):
     handling_name:        amazon
     debit_bank:           bank1
     cutoff_day:           99
-    debit_month:          next
+    debit_month:          翌月
     debit_day:            10
+    order_seq:            13
 
 HandlingMst(e-money1):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        nanacoF2
     zero_hidden:          true
+    order_seq:            1
 
 HandlingMst(e-money2):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        Edy1
     zero_hidden:          true
+    order_seq:            2
 
 HandlingMst(e-money3):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        ｲｵﾝｾﾚｸﾄ
     zero_hidden:          true
+    order_seq:            3
 
 HandlingMst(e-money4):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        nanacoF
     zero_hidden:          true
+    order_seq:            4
 
 HandlingMst(e-money5):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        nanaco
     zero_hidden:          true
+    order_seq:            5
 
 HandlingMst(e-money6):
     ha_user:          sakashushu
     handling_type_mst:    e-money
     handling_name:        Edy
     zero_hidden:          true
+    order_seq:            6
 
 HandlingMst(e-money7):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        Suica
+    handling_name:        Suica3
     zero_hidden:          true
+    order_seq:            7
 
 HandlingMst(e-money8):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        PASMO
+    handling_name:        Suica2
     zero_hidden:          true
+    order_seq:            8
 
 HandlingMst(e-money9):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        Suica2
+    handling_name:        Suica
     zero_hidden:          true
+    order_seq:            9
 
 HandlingMst(e-money10):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        Suica3
+    handling_name:        PASMO1
     zero_hidden:          true
+    order_seq:            10
 
 HandlingMst(e-money11):
     ha_user:          sakashushu
     handling_type_mst:    e-money
-    handling_name:        PASMO1
+    handling_name:        PASMO
     zero_hidden:          true
+    order_seq:            11
 
 IdealDepositMst(ideal1):
     ha_user:          sakashushu
     ideal_deposit_name:   交際貯金
     zero_hidden:          true
+    order_seq:            1
 
 IdealDepositMst(ideal2):
     ha_user:          sakashushu
     ideal_deposit_name:   学資貯金
     zero_hidden:          true
+    order_seq:            2
 
 IdealDepositMst(ideal3):
     ha_user:          sakashushu
-    ideal_deposit_name:   通勤費
+    ideal_deposit_name:   雑多貯金
     zero_hidden:          true
+    order_seq:            3
 
 IdealDepositMst(ideal4):
     ha_user:          sakashushu
-    ideal_deposit_name:   帰省貯金
+    ideal_deposit_name:   オモチャ貯金
     zero_hidden:          true
+    order_seq:            4
 
 IdealDepositMst(ideal5):
     ha_user:          sakashushu
-    ideal_deposit_name:   市民税貯金
+    ideal_deposit_name:   帰省貯金
     zero_hidden:          true
+    order_seq:            5
 
 IdealDepositMst(ideal6):
     ha_user:          sakashushu
-    ideal_deposit_name:   オモチャ貯金
+    ideal_deposit_name:   臨時貯金
     zero_hidden:          true
+    order_seq:            6
 
 IdealDepositMst(ideal7):
     ha_user:          sakashushu
-    ideal_deposit_name:   雑多貯金
+    ideal_deposit_name:   市民税貯金
     zero_hidden:          true
+    order_seq:            7
 
 IdealDepositMst(ideal8):
     ha_user:          sakashushu
-    ideal_deposit_name:   臨時貯金
+    ideal_deposit_name:   宮崎引越
     zero_hidden:          true
+    order_seq:            8
 
 IdealDepositMst(ideal9):
     ha_user:          sakashushu
-    ideal_deposit_name:   宮崎引越
+    ideal_deposit_name:   通勤費
     zero_hidden:          true
+    order_seq:            9
 
 IdealDepositMst(ideal10):
     ha_user:          sakashushu
     ideal_deposit_name:   自動車貯金
     zero_hidden:          true
+    order_seq:            10
 
 Record(test1):
     ha_user:          member1

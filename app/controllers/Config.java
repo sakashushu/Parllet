@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -399,20 +400,20 @@ public class Config extends Controller {
 	//項目(収入)編集（リスト）
 	public static void cf_item_in_list() {
 		String sBalanceType = Messages.get("BalanceType.in");
-		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by id").fetch();
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
 	//項目(支出)編集（リスト）
 	public static void cf_item_out_list() {
 		String sBalanceType = Messages.get("BalanceType.out");
-		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by id").fetch();
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
 	//My貯金編集（リスト）
 	public static void cf_idealdepo_list() {
-		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by id").fetch();
+		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq").fetch();
 		render("@cf_idealdepo_list", idealDepositMsts);
 	}
 	
@@ -479,14 +480,15 @@ public class Config extends Controller {
 	public static void cf_bank_save(
 			Long id,
 			String handling_name,
-			Boolean zero_hidden
+			Boolean zero_hidden,
+			Boolean invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, refHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, invalidity_flg, refHandlingMst, sHandlingType);
 		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -502,14 +504,16 @@ public class Config extends Controller {
 	//電子マネー保存
 	public static void cf_emoney_save(
 			Long id,
-			String handling_name
+			String handling_name,
+			Boolean zero_hidden,
+			Boolean invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.emoney");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, refHandlingMst, sHandlingType);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, invalidity_flg, refHandlingMst, sHandlingType);
 		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -536,7 +540,7 @@ public class Config extends Controller {
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, true, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
 		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -657,7 +661,98 @@ public class Config extends Controller {
 		cf_idealdepo_list();
 	}
 	
-
+	/**
+	 * HandlingMstの並べ替え
+	 * @param id
+	 * @param order
+	 * @param sHandlingType
+	 */
+	public static void cf_handling_orderChange(
+    		List<Long> id,
+    		List<Integer> order,
+    		String sHandlingType
+    		) {
+		Iterator<Integer> intOrder = order.iterator();
+		for (Long lngId : id) {
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
+			// 「取扱（実際）」データの読み出し
+			HandlingMst handlingMst = HandlingMst.findById(lngId);
+			// 編集
+			handlingMst.order_seq = intOrder.next();
+			// Validate
+			validation.valid(handlingMst);
+			if(validation.hasErrors()) {
+				break;
+		    }
+			// 保存
+			handlingMst.save();
+		}
+		
+		if(sHandlingType.equals(Messages.get("HandlingType.bank"))) {
+			cf_bank_list();
+		} else if(sHandlingType.equals(Messages.get("HandlingType.creca"))) {
+			cf_creca_list();
+		} else if(sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
+			cf_emoney_list();
+		}
+	}
+	
+	public static void cf_item_orderChange(
+    		List<Long> id,
+    		List<Integer> order,
+    		String sBalanceType
+    		) {
+		Iterator<Integer> intOrder = order.iterator();
+		for (Long lngId : id) {
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
+			// 「項目」データの読み出し
+			ItemMst itemMst = ItemMst.findById(lngId);
+			// 編集
+			itemMst.order_seq = intOrder.next();
+			// Validate
+			validation.valid(itemMst);
+			if(validation.hasErrors()) {
+				break;
+		    }
+			// 保存
+			itemMst.save();
+		}
+		
+		if(sBalanceType.equals(Messages.get("BalanceType.in"))) {
+			cf_item_in_list();
+		} else if(sBalanceType.equals(Messages.get("BalanceType.out"))) {
+			cf_item_out_list();
+		}
+	}
+	
+	/**
+	 * IdealDepositMstの並べ替え
+	 * @param id
+	 * @param order
+	 */
+	public static void cf_ideal_orderChange(
+    		List<Long> id,
+    		List<Integer> order
+    		) {
+		Iterator<Integer> intOrder = order.iterator();
+		for (Long lngId : id) {
+			HaUser haUser = (HaUser)renderArgs.get("haUser");
+			// 「取扱（実際）」データの読み出し
+			IdealDepositMst idealDepositMst = IdealDepositMst.findById(lngId);
+			// 編集
+			idealDepositMst.order_seq = intOrder.next();
+			// Validate
+			validation.valid(idealDepositMst);
+			if(validation.hasErrors()) {
+				break;
+		    }
+			// 保存
+			idealDepositMst.save();
+		}
+		
+		cf_idealdepo_list();
+	}
+	
 	/**
 	 * HandlingMstの保存メソッド
 	 * @param id
@@ -671,6 +766,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name,
 			Boolean zero_hidden,
+			Boolean invalidity_flg,
 			RefHandlingMst refHandlingMst,
 			String sHandlingType
 			) {
@@ -688,7 +784,9 @@ public class Config extends Controller {
 					iCutoffDay,
 					null,
 					iDebitDay,
-					zero_hidden==null ? false : (zero_hidden==true ? true : false)
+					zero_hidden==null ? false : (zero_hidden==true ? true : false),
+					false,
+					10000
 			);
 		} else {
 			// 取扱データの読み出し
@@ -696,6 +794,7 @@ public class Config extends Controller {
 			// 編集
 			refHandlingMst.handlingMst.handling_name = handling_name;
 			refHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg;
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);
@@ -721,6 +820,7 @@ public class Config extends Controller {
 			Long id,
 			String handling_name,
 			Boolean zero_hidden,
+			Boolean invalidity_flg,
 			RefHandlingMst refHandlingMst,
 			String sHandlingType,
 			Long debit_bank,
@@ -744,7 +844,9 @@ public class Config extends Controller {
 					cutoff_day,
 					debit_month,
 					debit_day,
-					zero_hidden
+					zero_hidden,
+					false,
+					10000
 			);
 		} else {
 			// 取扱データの読み出し
@@ -756,6 +858,7 @@ public class Config extends Controller {
 			refHandlingMst.handlingMst.debit_month = debit_month;
 			refHandlingMst.handlingMst.debit_day = debit_day;
 			refHandlingMst.handlingMst.zero_hidden = zero_hidden;
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg;
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);
@@ -789,7 +892,8 @@ public class Config extends Controller {
 			refItemMst.itemMst = new ItemMst(
 					haUser,
 					balanceTypeMst,
-					item_name
+					item_name,
+					10000
 			);
 		} else {
 			// 取扱データの読み出し
@@ -828,7 +932,8 @@ public class Config extends Controller {
 			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
 					haUser,
 					ideal_deposit_name,
-					zero_hidden==null ? false : (zero_hidden==true ? true : false)
+					zero_hidden==null ? false : (zero_hidden==true ? true : false),
+					10000
 			);
 		} else {
 			// My貯金データの読み出し
@@ -854,7 +959,7 @@ public class Config extends Controller {
 	 * @return
 	 */
 	private static List<HandlingMst> get_handling_msts(String sHandlingType) {
-		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by id").fetch();
+		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by order_seq").fetch();
 		return handlingMsts;
 	}
 	

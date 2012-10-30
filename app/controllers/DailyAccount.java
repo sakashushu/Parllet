@@ -299,7 +299,7 @@ public class DailyAccount extends Controller {
 		int intLwdaCnt = lWDA.size();
 		String strOldLargeCategoryName = "";	//大分類ブレイク用の旧大分類名
 		for(Object[] objEach : lstObjEach) {
-			String strLargeCategoryName = String.valueOf(objEach[3]);
+			String strLargeCategoryName = String.valueOf(objEach[4]);
 			
 			if(intCnt==0)
 				strOldLargeCategoryName = strLargeCategoryName;
@@ -315,7 +315,7 @@ public class DailyAccount extends Controller {
 			WkDailyAccount wDaEach = new WkDailyAccount();
 			
 			wDaEach.setsLargeCategory(strLargeCategoryName);
-			wDaEach.setsItem(String.valueOf(objEach[1]));
+			wDaEach.setsItem(String.valueOf(objEach[2]));
 			wDaEach.setbBudgetFlg(false);
 	
 			//「収入」・「支出」・「My貯金預入」の場合、予算有無フラグを立てる
@@ -326,9 +326,9 @@ public class DailyAccount extends Controller {
 			}
 			
 			// ある時だけ予算をセット
-			if(objEach[5]!=null) {
-				Long lngBgId = Long.parseLong(String.valueOf(objEach[4]));
-				Long lngBgAmount = Long.parseLong(String.valueOf(objEach[5]));
+			if(objEach[6]!=null) {
+				Long lngBgId = Long.parseLong(String.valueOf(objEach[5]));
+				Long lngBgAmount = Long.parseLong(String.valueOf(objEach[6]));
 				
 				String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
 				
@@ -347,10 +347,10 @@ public class DailyAccount extends Controller {
 				if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
 						strLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) ||
 						strLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
-					lngEach += Long.parseLong(String.valueOf(objEach[iDay+6]));	//日毎金額
+					lngEach += Long.parseLong(String.valueOf(objEach[iDay+7]));	//日毎金額
 					lngSum = lngEach;											//月計
 				} else {
-					lngEach = Long.parseLong(String.valueOf(objEach[iDay+6]));	//日毎金額
+					lngEach = Long.parseLong(String.valueOf(objEach[iDay+7]));	//日毎金額
 					lngSum += lngEach;											//月計
 				}
 				lAryDaysRlAll[iDay] += lngEach;	//合計行の日毎金額
@@ -468,6 +468,7 @@ public class DailyAccount extends Controller {
 					" UNION ALL " +
 					" ( " + sqlBalOutIdeal + " ) " +
 //					" UNION ALL " +
+					" ORDER BY cate_order, item_order " +
 					"";
 			
 			while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -511,7 +512,7 @@ public class DailyAccount extends Controller {
 				" ( " + sqlRemIdealDepositAll + " ) " +
 				" UNION ALL " +
 				" ( " + sqlRemIdealDeposit + " ) " +
-				" ORDER BY cate_order, item_id " +
+				" ORDER BY cate_order, item_order " +
 				"";
 		
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -659,7 +660,7 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   *" +
-				" FROM ( SELECT 0 as item_id, cast('' as character varying(255)) as item_name, 50 as cate_order " +
+				" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 50 as cate_order " +
 				"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
 				"  ,0 as bg_id " +
 				"  ,0 as bg_amount " +
@@ -829,6 +830,7 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   hm.id as item_id " +
+				"  ,(htm.handling_type_order + hm.order_seq) as item_order " +
 				"  ,hm.handling_name as item_name " +
 				"  ,50 as cate_order " +
 				"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
@@ -836,11 +838,10 @@ public class DailyAccount extends Controller {
 				"  ,0 as bg_amount " +
 				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " +
 				" FROM HandlingMst hm " +
+				" LEFT JOIN HandlingTypeMst htm " +
+				"   ON hm.handling_type_mst_id = htm.id " +
 				" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
 				"   ON hm.id = rem_firstday.hd_id " +
-				" WHERE hm.ha_user_id = " + haUser.id +
-				"   AND hm.zero_hidden = false " + sqlDailyZero +
-//				" ORDER by hm.id" +
 				"";
 		//2日目以降の残高取得用SQL作成（取扱(実際)毎）
 		if(iDaysCnt>=2) {
@@ -855,24 +856,15 @@ public class DailyAccount extends Controller {
 					sqlSumCashCaseBankInOut,
 					sqlSumNotCashCaseBankInOut
 					);
-			sql = "" +
-					" SELECT " +
-					"   hm.id as item_id" +
-					"  ,hm.handling_name as item_name " +
-					"  ,50 as cate_order " +
-					"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
-					"  ,0 as bg_id " +
-					"  ,0 as bg_amount " +
-					"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " + sqlDailyLater +
-					" FROM HandlingMst hm " +
-					" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
-					"   ON hm.id = rem_firstday.hd_id " +
+			sql += "" +
 					" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
 					"   ON hm.id = rem_later.hd_id " +
-					" WHERE hm.ha_user_id = " + haUser.id +
-					"   AND hm.zero_hidden = false " + sqlDailyZero +
 					"";
 		}
+		sql += "" +
+				" WHERE hm.ha_user_id = " + haUser.id +
+				"   AND hm.zero_hidden = false " + sqlDailyZero +
+				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
 			sql = sql.replaceAll("  ", " ");
 		
@@ -1192,7 +1184,7 @@ public class DailyAccount extends Controller {
 			sql = "" +
 					" SELECT " +
 					"   *" +
-					" FROM ( SELECT 0 as item_id, cast('' as character varying(255)) as item_name, 70 as cate_order" +
+					" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 70 as cate_order" +
 					"  ,cast('" + REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
 					"  ,0 as bg_id " +
 					"  ,0 as bg_amount " +
@@ -1265,6 +1257,7 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   idm.id as item_id " +
+				"  ,idm.order_seq as item_order " +
 				"  ,idm.ideal_deposit_name as item_name " +
 				"  ,70 as cate_order " +
 				"  ,cast('" + REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
@@ -1475,7 +1468,7 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   *" +
-				" FROM ( SELECT 0 as item_id, cast('' as character varying(255)) as item_name, 60 as cate_order " +
+				" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 60 as cate_order " +
 				"  ,cast('" + REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
 				"  ,0 as bg_id " +
 				"  ,0 as bg_amount " +
@@ -1686,7 +1679,7 @@ public class DailyAccount extends Controller {
 		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
 		
 		String sqlSelGroupby = "" +
-   				"   0 as item_id " +
+   				"   0 as item_id, 0 as item_order" +
    				"  ,cast('' as character varying(255)) as item_name" +
    				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
 				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
@@ -1712,6 +1705,7 @@ public class DailyAccount extends Controller {
 		if(bolEach) {
 			sqlSelGroupby = "" +
 	   				"   i.id as item_id " +
+	   				"  ,i.order_seq as item_order" +
 	   				"  ,i.item_name as item_name" +
 	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
 					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
@@ -1719,7 +1713,7 @@ public class DailyAccount extends Controller {
 	   				"  ,bg.amount as bg_amount " +
 					"";
 			sqlGroupby = "" +
-					" GROUP BY item_id, item_name, bg_id, bg_amount " +
+					" GROUP BY item_id, item_order, item_name, bg_id, bg_amount " +
 					"";
 		}
 		
@@ -1727,6 +1721,7 @@ public class DailyAccount extends Controller {
 				(!bolEach ? 
 				" SELECT " +
 				"   item_id, " +
+				"   item_order, " +
 				"   item_name, " +
 				"   cate_order, " +
 				"   cate_name, " +
@@ -1796,7 +1791,7 @@ public class DailyAccount extends Controller {
 		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
 		
 		String sqlSelGroupby = "" +
-   				"   0 as item_id " +
+   				"   0 as item_id, 0 as item_order " +
    				"  ,cast('' as character varying(255)) as item_name" +
    				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
 				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
@@ -1818,6 +1813,7 @@ public class DailyAccount extends Controller {
 		if(bolEach) {
 			sqlSelGroupby = "" +
 	   				"   id.id as item_id " +
+	   				"  ,id.order_seq as item_order" +
 	   				"  ,id.ideal_deposit_name as item_name" +
 	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
 					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
@@ -1825,7 +1821,7 @@ public class DailyAccount extends Controller {
 	   				"  ,bg.amount as bg_amount " +
 					"";
 			sqlGroupby = "" +
-					" GROUP BY item_id, item_name, bg_id, bg_amount " +
+					" GROUP BY item_id, item_order, item_name, bg_id, bg_amount " +
 					"";
 		}
 		
@@ -1839,6 +1835,7 @@ public class DailyAccount extends Controller {
 				(!bolEach ? 
 				" SELECT " +
 				"   item_id, " +
+				"   item_order, " +
 				"   item_name, " +
 				"   cate_order, " +
 				"   cate_name, " +

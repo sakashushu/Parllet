@@ -126,6 +126,15 @@ jQuery(document).ready(function() {
 		#{/else}
 		
 	    <div class="crudField">
+	        #{field 'invalidity_flg'}
+	        <label class="fieldName">&{'invalidity_flg'}:</label>
+	        <input type="checkbox" name="${field.name}"
+	            ${handlingMst?.invalidity_flg ? 'checked' : ''} />
+	        <span class="error">#{error 'handlingMst.invalidity_flg' /}</span>
+	        #{/field}
+	    </div>
+	    
+	    <div class="crudField">
 	        <input type="submit" value="&{'insupd.save'}" />
 	    </div>
 	    

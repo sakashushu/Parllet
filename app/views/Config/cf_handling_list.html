@@ -2,7 +2,12 @@
 
 <h3>${sHandlingType}　&{'views.common.update.edit'}</h3>
 
-<div class="objectForm">
+#{if handlingMsts?.size() > 0}
+　&{'views.common.order.change'}
+#{/if}
+
+#{form @cf_handling_orderChange()}
+<div class="objectForm sortable">
 #{list items:handlingMsts, as:'handlingMst'}
 	<p class="data ${handlingMst_parity} crudField">
 	  #{if sHandlingType == messages.get('HandlingType.bank')}
@@ -15,10 +20,31 @@
 		<a href="@{cf_emoney_edit(handlingMst.id)}">
 	  #{/elseif}
 		${handlingMst.handling_name}</a>
+		<input type="hidden" name="id" value="${handlingMst.id}" />
+		<input type="hidden" class="order" name="order" />
 	</p>
 #{/list}
 </div>
- 
+<input type="hidden" name="sHandlingType" value="${sHandlingType}" />
+<input type="submit" id="submitOrder" style="display:none;" />
+#{/form}
+<script src="jquery.sortable.js"></script>
+<script type="text/javascript">
+<!--
+jQuery('.sortable').sortable();
+jQuery('.sortable').sortable().bind('sortupdate', function() {
+	//Triggered when the user stopped sorting and the DOM position has changed.
+	jQuery('.sortable .order').each(function(i) {
+		i++;
+		jQuery(this).val(i);
+	});
+
+	jQuery('#submitOrder').click();
+	jQuery('body').attr("disabled", "disabled");
+});
+// -->
+</script>
+
 <p id="newData" >
   #{if sHandlingType == messages.get('HandlingType.bank')}
     <a href="@{cf_bank_edit()}">

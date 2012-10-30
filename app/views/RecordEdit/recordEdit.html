@@ -39,7 +39,7 @@ var subcategoryHandling = {
 //            "key":"0",
 //            "value":"&{'views.common.combo.required.long'}"
 //          },
-          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
@@ -54,7 +54,7 @@ var subcategoryHandling = {
 //            "key":"0",
 //            "value":"&{'views.common.combo.required.long'}"
 //          },
-          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
@@ -178,11 +178,12 @@ jQuery(document).ready(function(){
 //「収支種類」・「支払日」・「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
 jQuery(document).ready(function(){
 	jQuery('#balance_type_mst, #handling_mst, #payment_date').change(function(){
-		//「取扱(実際)」が現金の時は「引落日」は選択不可
+		var sDate = jQuery('#payment_date').val().substr(0,10);
+		//「取扱(実際)」が現金の時は「引落日」は「支払日」と同じ日とし、選択不可
 		if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
 			jQuery('#debit_date_lbl').attr("disabled", "disabled");
 			jQuery('#debit_date').attr("disabled", "disabled");
-			jQuery('#debit_date').val('');
+			jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
 		//「取扱(実際)」が現金以外の時
 		} else {
 			//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
@@ -191,7 +192,7 @@ jQuery(document).ready(function(){
 					) {
 				jQuery('#debit_date_lbl').attr("disabled", "disabled");
 				jQuery('#debit_date').attr("disabled", "disabled");
-				jQuery('#debit_date').val('');
+				jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
 				
 			//「収支種類」が上記以外の時は「引落日」は選択可能で、デフォルト日付を表示
 			} else {
@@ -200,7 +201,7 @@ jQuery(document).ready(function(){
 				#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
 				  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
 					//支払日が正しく入っている時
-					var sDate = jQuery('#payment_date').val().substr(0,10);
+//					var sDate = jQuery('#payment_date').val().substr(0,10);
 					if(ckDate(sDate)==true) {
 						//「取扱(実際)」がクレジットカードの場合
 						if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
@@ -215,7 +216,7 @@ jQuery(document).ready(function(){
 						//「取扱(実際)」がクレジットカード以外の場合
 						} else {
 							//引落日に支払日をセット
-							jQuery('#debit_date').val(jQuery('#payment_date').val().substr(0,10));
+							jQuery('#debit_date').val(sDate);
 						}
 					}
 				  }			
@@ -325,7 +326,7 @@ function ckDate(datestr) {
 	    <div class="crudField">
 	        #{field 'balance_type_mst'}
 	        <label class="fieldName">&{'balance_type_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" style="width:150px;">
+			<select id="${field.name}" name="${field.name}" class="re_w150">
 				<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 				#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 				<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
@@ -334,12 +335,12 @@ function ckDate(datestr) {
 	        <span class="error">#{error 'record.balance_type_mst' /}</span>
 	        #{/field}
 	    </div>
-	 
+	 	
 	    <div class="crudField">
 	        #{field 'handling_mst'}
 	        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" style="width:150px;">
-				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} order by handling_type_mst.handling_type_order, id").fetch(), as:'handling'}
+			<select id="${field.name}" name="${field.name}" class="re_w150">
+				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
 				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
 			</select>
@@ -350,7 +351,7 @@ function ckDate(datestr) {
 	    <div class="crudField">
 	        #{field 'ideal_deposit_mst'}
 	        <label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
-			<select id="${field.name}" name="${field.name}">
+			<select id="${field.name}" name="${field.name}" class="re_w150">
 				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
 				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
 				<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
@@ -363,7 +364,7 @@ function ckDate(datestr) {
 	    <div class="crudField">
 	        #{field 'item_mst'}
 	        <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" style="width:150px;">
+			<select id="${field.name}" name="${field.name}" class="re_w150">
 				#{if record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.in') ||
 						record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
 					<option value="0"${record?.item_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>

@@ -23,6 +23,7 @@ views.common.combo.space=(空白)
 views.common.combo.notspace=(空白以外)
 views.common.update.edit=編集
 views.common.move=移動
+views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
 
 views.application.tools.home=ホーム
 views.detaillist.detaillist=明細表
@@ -89,6 +90,7 @@ cutoff_day=締日
 debit_month=引落月
 debit_day=引落日
 zero_hidden=残高ゼロの時には残高表の対象外とする
+invalidity_flg=無効化（解約・しばらく利用しない等）
 
 # ItemMstの項目名
 item_name=項目名

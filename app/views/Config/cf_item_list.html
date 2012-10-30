@@ -2,7 +2,12 @@
 
 <h3>&{'views.config.cf_item'}(${sBalanceType})　&{'views.common.update.edit'}</h3>
 
-<div class="objectForm">
+#{if itemMsts?.size() > 0}
+　&{'views.common.order.change'}
+#{/if}
+
+#{form @cf_item_orderChange()}
+<div class="objectForm sortable">
 #{list items:itemMsts, as:'itemMst'}
 	<p class="data ${itemMst_parity} crudField">
 	  #{if sBalanceType == messages.get('BalanceType.in')}
@@ -12,9 +17,30 @@
 		<a href="@{cf_item_out_edit(itemMst.id)}">
 	  #{/elseif}
 		${itemMst.item_name}</a>
+		<input type="hidden" name="id" value="${itemMst.id}" />
+		<input type="hidden" class="order" name="order" />
 	</p>
 #{/list}
+<input type="hidden" name="sBalanceType" value="${sBalanceType}" />
+<input type="submit" id="submitOrder" style="display:none;" />
 </div>
+#{/form}
+<script src="jquery.sortable.js"></script>
+<script type="text/javascript">
+<!--
+jQuery('.sortable').sortable();
+jQuery('.sortable').sortable().bind('sortupdate', function() {
+	//Triggered when the user stopped sorting and the DOM position has changed.
+	jQuery('.sortable .order').each(function(i) {
+		i++;
+		jQuery(this).val(i);
+	});
+
+	jQuery('#submitOrder').click();
+	jQuery('body').attr("disabled", "disabled");
+});
+// -->
+</script>
  
 <p id="newData" >
 	<!-- 

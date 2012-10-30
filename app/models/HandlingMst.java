@@ -35,6 +35,8 @@ public class HandlingMst extends Model {
 	public Integer debit_day;					//引落日
 
 	public Boolean zero_hidden;					//残高ゼロの時には残高表の対象外とする
+	public Boolean invalidity_flg;				//無効フラグ(解約した口座等)
+	public Integer order_seq;					//表示順序
 	
 	public HandlingMst(
 			HaUser ha_user,
@@ -44,7 +46,9 @@ public class HandlingMst extends Model {
 			Integer cutoff_day,
 			String debit_month,
 			Integer debit_day,
-			Boolean zero_hidden
+			Boolean zero_hidden,
+			Boolean invalidity_flg,
+			Integer order_seq
 			) {
 		this.ha_user = ha_user;
 		this.handling_type_mst = handling_type_mst;
@@ -54,6 +58,8 @@ public class HandlingMst extends Model {
 		this.debit_month = debit_month;
 		this.debit_day = debit_day;
 		this.zero_hidden = zero_hidden;
+		this.invalidity_flg = invalidity_flg;
+		this.order_seq = order_seq;
 	}
 
 	public String toString() {

@@ -2,15 +2,40 @@
 
 <h3>&{'views.config.cf_idealdepo'}　&{'views.common.update.edit'}</h3>
 
-<div class="objectForm">
+#{if idealDepositMsts?.size() > 0}
+　&{'views.common.order.change'}
+#{/if}
+
+#{form @cf_ideal_orderChange()}
+<div class="objectForm sortable">
 #{list items:idealDepositMsts, as:'idealDepositMst'}
 	<p class="data ${idealDepositMst_parity} crudField">
 		<a href="@{cf_idealdepo_edit(idealDepositMst.id)}">
 		${idealDepositMst.ideal_deposit_name}</a>
+		<input type="hidden" name="id" value="${idealDepositMst.id}" />
+		<input type="hidden" class="order" name="order" />
 	</p>
 #{/list}
 </div>
- 
+<input type="submit" id="submitOrder" style="display:none;" />
+#{/form} 
+<script src="jquery.sortable.js"></script>
+<script type="text/javascript">
+<!--
+jQuery('.sortable').sortable();
+jQuery('.sortable').sortable().bind('sortupdate', function() {
+	//Triggered when the user stopped sorting and the DOM position has changed.
+	jQuery('.sortable .order').each(function(i) {
+		i++;
+		jQuery(this).val(i);
+	});
+
+	jQuery('#submitOrder').click();
+	jQuery('body').attr("disabled", "disabled");
+});
+// -->
+</script>
+
 <p id="newData" >
     <a href="@{cf_idealdepo_edit()}">
     <span>+</span> &{'insupd.add', messages.get('views.config.cf_idealdepo')}</a>

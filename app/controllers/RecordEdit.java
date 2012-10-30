@@ -153,7 +153,7 @@ public class RecordEdit extends Controller {
 				h_payment_date = payment_date.substring(0, 10);
 			}
 			
-			DetailList.detailList(1, 0, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, handlingMst==null ? null : handlingMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null, null, null);
+			DetailList.detailList(1, 0, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, handlingMst==null ? null : handlingMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null, "srch", null);
 		} else {
 			callSessionDetailList();
 		}

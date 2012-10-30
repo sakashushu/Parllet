@@ -167,7 +167,10 @@ input[type="submit"],input[type="button"] {
 
 	background: #dbb96b;
 **/
+/**
 	background: transparent;
+**/
+	background-image: url(/public/images/white60.png);
 }
 
 #admin .data a {
@@ -534,6 +537,10 @@ a.daBtnPreNext:hover span{
 }
 
 
+/** recordEdit **/
+.re_w150 {
+	width:150px;
+}
 
 /** detailList **/
 #tblDetailList {

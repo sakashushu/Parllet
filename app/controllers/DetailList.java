@@ -228,11 +228,11 @@ public class DetailList extends Controller {
 			bTypes = BalanceTypeMst.find("order by id").fetch();
 			
 			// 検索処理(IdealDepositMst)
-			iDepos = IdealDepositMst.find("ha_user = ? order by id", haUser).fetch();
+			iDepos = IdealDepositMst.find("ha_user = ? order by order_seq", haUser).fetch();
 			
 			// 検索処理(HandlingMst)
 	    	if((session.get("detailMode")).equals("Balance")) {
-	    		handlings = HandlingMst.find("ha_user = ? order by id", haUser).fetch();
+	    		handlings = HandlingMst.find("ha_user = ? order by handling_type_mst.handling_type_order, order_seq", haUser).fetch();
 	    	}
 	    	if((session.get("detailMode")).equals("RemainderBank")) {
 	    		handlings = HandlingMst.find("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?) order by id", haUser, Messages.get("HandlingType.bank"), Messages.get("HandlingType.emoney")).fetch();
@@ -240,11 +240,11 @@ public class DetailList extends Controller {
 			
 			// 検索処理(ItemMst(収入))
 			bTypeIn = BalanceTypeMst.find("balance_type_name = '収入'").first();
-			itemsIn = ItemMst.find("ha_user = ? and balance_type_mst = ? ", haUser, bTypeIn).fetch();
+			itemsIn = ItemMst.find("ha_user = ? and balance_type_mst = ? order by order_seq ", haUser, bTypeIn).fetch();
 			
 	    	// 検索処理(ItemMst(支出))
 			bTypeOut = BalanceTypeMst.find("balance_type_name = '支出'").first();
-			itemsOut = ItemMst.find("ha_user = ? and balance_type_mst = ?", haUser, bTypeOut).fetch();
+			itemsOut = ItemMst.find("ha_user = ? and balance_type_mst = ? order by order_seq ", haUser, bTypeOut).fetch();
 	
 			// 検索処理(Record)
 			sqlSrchRec += "ha_user = " + haUser.id;
