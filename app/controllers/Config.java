@@ -21,6 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import jp.sf.orangesignal.csv.manager.CsvManager;
+import jp.sf.orangesignal.csv.manager.CsvManagerFactory;
+
 import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
@@ -56,7 +59,28 @@ public class Config extends Controller {
 	 */
 	public static void cf_upload(File csv) {
 		if(csv != null) {
+			
+			CsvManager csvManager = CsvManagerFactory.newCsvManager();      // CsvManager を取得します。
+			
+			
+			
+			
+			// 入力
 			try {
+				List<Record> customers = csvManager.load(Record.class).from(csv);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+
+			
+			
+			
+			try {
+				
+				
+				
 				//Shift-JISファイルを読み込む想定。（良く分かっていないが、色々試して文字化けしたが、下記のやり方なら文字化けしないようだ。）
 	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
 	
@@ -113,8 +137,8 @@ public class Config extends Controller {
 						Date paymentDate = null;
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 //							paymentDate = DateFormat.getDateInstance().parse(payment_date);
-//							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
-							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
+							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
+//							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
