@@ -76,69 +76,73 @@
 			</li>
 			<!-- 明細行 -->
 			#{if records?.size() > 0}
-				#{list items:records, as:'record'}
-				<li>
-					<!-- 編集ボタン -->
-					<div class="dl_srch_edit">
-						<!-- id -->
-						<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
-						<!-- 
-						<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
-						 -->
-						<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
-					</div>
-					#{if session.get('actionMode')!='View'}
-						<!-- 非公開フラグ -->
-						<div class="dl_secret_rec_flg">
-							${record.secret_rec_flg ? '非' : '公'}
-						</div>
-					#{/if}
-					<!-- 引落日 -->
-					<div class="dl_payment_date">
-					  <span class="dl_string">
-						${record?.debit_date?.format('yyyy/MM/dd')}
-					  </span>
-					</div>
-					<!-- 支払日 -->
-					<div class="dl_payment_date">
-					  <span class="dl_string">
-						${record.payment_date.format('yyyy/MM/dd')}
-					  </span>
-					</div>
-					<!-- 収支種類 -->
-					<div class="dl_balance_type">
-					  <span class="dl_string">
-						${record.balance_type_mst.balance_type_name}
-					  </span>
-					</div>
-					<!-- 取扱(実際) -->
-					<div class="dl_balance_type">
-					  <span class="dl_string">
-						${record?.handling_mst?.handling_name}
-					  </span>
-					</div>
-					<!-- 取扱(My貯金) -->
-					<div class="dl_balance_type">
-					  <span class="dl_string">
-						${record?.ideal_deposit_mst?.ideal_deposit_name}
-					  </span>
-					</div>
-					<!-- 項目 -->
+			#{list items:records, as:'record'}
+			<li>
+				<!-- 編集ボタン -->
+				<div class="dl_srch_edit">
+					<!-- id -->
+					<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
 					<!-- 
-					<div class="dl_balance_type">
-					  <span class="dl_string">
-						${record?.item_mst?.item_name}
-					  </span>
-					</div>
+					<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
 					 -->
-					<!-- 金額 -->
-					<div class="dl_amount">
-					  <span class="num3">
-						${record?.amount}
-					  </span>
+					<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
+				</div>
+				#{if session.get('actionMode')!='View'}
+					<!-- 非公開フラグ -->
+					<div class="dl_secret_rec_flg">
+						${record.secret_rec_flg ? '非' : '公'}
 					</div>
-				</li>
-				#{/list}
+				#{/if}
+				<!-- 引落日 -->
+				<div class="dl_payment_date">
+				  <span class="dl_string">
+					${record?.debit_date?.format('yyyy/MM/dd')}
+				  </span>
+				</div>
+				<!-- 支払日 -->
+				<div class="dl_payment_date">
+				  <span class="dl_string">
+					${record.payment_date.format('yyyy/MM/dd')}
+				  </span>
+				</div>
+				<!-- 収支種類 -->
+				<div class="dl_balance_type">
+				  <span class="dl_string">
+					${record.balance_type_mst.balance_type_name}
+				  </span>
+				</div>
+				<!-- 取扱(実際) -->
+				<div class="dl_balance_type">
+				  <span class="dl_string">
+					${record?.handling_mst?.handling_name}
+				  </span>
+				</div>
+				<!-- 取扱(My貯金) -->
+				<div class="dl_balance_type">
+				  <span class="dl_string">
+					${record?.ideal_deposit_mst?.ideal_deposit_name}
+				  </span>
+				</div>
+				<!-- 項目 -->
+				<!-- 
+				<div class="dl_balance_type">
+				  <span class="dl_string">
+					${record?.item_mst?.item_name}
+				  </span>
+				</div>
+				 -->
+				<!-- 金額 -->
+				<div class="dl_amount">
+				  <span class="num3">
+					${record?.amount}
+				  </span>
+				</div>
+				<!-- 残高 -->
+				<div class="dl_amount">
+					${record?.remainder}
+				</div>
+			</li>
+			#{/list}
 			#{/if}
 		</ul>	
 	</div>

@@ -26,14 +26,14 @@ function addFigure(str) {
 
 <div>
 	<ul id="loginMenu">
-		<li class="${session.get('detailMode')=='Balance' ? 'selected' : ''}">
-			<a href="@{DetailList.detailMode_changeToBalance()}">収支モード</a>
+        <li class="selected">
+			<a href="@{DetailList.detailList()}">収支明細</a>
 		</li>
-		<li class="${session.get('detailMode')=='RemainderBank' ? 'selected' : ''}">
-			<a href="@{DetailList.detailMode_changeToRemainderBank()}">残高モード(口座系)</a>
+        <li>
+			<a href="@{DetailList.dl_remainder_bank()}">残高明細(口座系)</a>
 		</li>
-		<li class="${session.get('detailMode')=='RemainderIdeal' ? 'selected' : ''}">
-			<a href="@{DetailList.detailMode_changeToRemainderIdeal()}">残高モード(My貯金)</a>
+		<li>
+			<a>残高明細(My貯金)</a>
 		</li>
 	</ul>
 </div>

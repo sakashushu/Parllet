@@ -102,6 +102,7 @@ jQuery(document).ready(function() {
 		jQuery('#debit_date_lbl').removeAttr("disabled");
 		jQuery('#debit_date').removeAttr("disabled");
 	} else {
+		jQuery('#handling_mst').empty();
 		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
 		jQuery('#handling_mst').attr("disabled", "disabled");
 		jQuery('#debit_date_lbl').attr("disabled", "disabled");
@@ -293,6 +294,17 @@ function ckDate(datestr) {
         return false;
     }
 }
+
+/**
+ * フォームデータ送信時に、disabledを外して値を送信できるようにする
+ */
+jQuery(document).ready(function(){
+	jQuery('#idInsupd').click(function(){
+		jQuery('#debit_date').css('color','#aaa');
+		jQuery('#debit_date').removeAttr('disabled');
+		jQuery('#debit_date').attr('readonly', 'readonly');
+	});
+});
 // -->
 </script>
 
@@ -304,155 +316,154 @@ function ckDate(datestr) {
 	    
 <div id="crudShow">
 
-	#{ifnot record?.id}
-		<h3><span>&{'insupd.add', messages.get('Record')}</span></h3>
-	#{/ifnot}
-	#{else}
-		<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
-	#{/else}
-	
-    <div class="objectForm">
-	#{form @save_rec(record?.id)}
-	 
-	    <div class="crudField">
-	        #{field 'payment_date'}
-	        <label class="fieldName">&{'payment_date'}:</label>
-	        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
-	            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
-	        <span class="error">#{error 'record.payment_date' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'balance_type_mst'}
-	        <label class="fieldName">&{'balance_type_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" class="re_w150">
-				<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-				#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-				<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
+#{ifnot record?.id}
+	<h3><span>&{'insupd.add', messages.get('Record')}</span></h3>
+#{/ifnot}
+#{else}
+	<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
+#{/else}
+
+   <div class="objectForm">
+#{form @save_rec(record?.id)}
+ 
+    <div class="crudField">
+        #{field 'payment_date'}
+        <label class="fieldName">&{'payment_date'}:</label>
+        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
+            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
+        <span class="error">#{error 'record.payment_date' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'balance_type_mst'}
+        <label class="fieldName">&{'balance_type_mst'}:</label>
+		<select id="${field.name}" name="${field.name}" class="re_w150">
+			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
+			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+			<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.balance_type_mst' /}</span>
+        #{/field}
+    </div>
+ 	
+    <div class="crudField">
+        #{field 'handling_mst'}
+        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
+		<select id="${field.name}" name="${field.name}" class="re_w150">
+			#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.handling_mst' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'ideal_deposit_mst'}
+        <label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
+		<select id="${field.name}" name="${field.name}" class="re_w150">
+			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
+			#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
+			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
+			#{/list}
+		</select>
+        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'item_mst'}
+        <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
+		<select id="${field.name}" name="${field.name}" class="re_w150">
+			#{if record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.in') ||
+					record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
+				<option value="0"${record?.item_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
+				%{bType = models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first()}%
+				#{list items:models.ItemMst.find("ha_user = ${haUser.id} and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
 				#{/list}
-			</select>
-	        <span class="error">#{error 'record.balance_type_mst' /}</span>
-	        #{/field}
-	    </div>
-	 	
-	    <div class="crudField">
-	        #{field 'handling_mst'}
-	        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" class="re_w150">
-				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
-				<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
-				#{/list}
-			</select>
-	        <span class="error">#{error 'record.handling_mst' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'ideal_deposit_mst'}
-	        <label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" class="re_w150">
-				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
-				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
-				<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
-				#{/list}
-			</select>
-	        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'item_mst'}
-	        <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
-			<select id="${field.name}" name="${field.name}" class="re_w150">
-				#{if record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.in') ||
-						record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
-					<option value="0"${record?.item_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-					#{list items:models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first(), as:'bType'}
-					#{list items:models.ItemMst.find("ha_user = ${haUser.id} and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
-					<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
-					#{/list}
-					#{/list}
-				#{/if}
-			</select>
-	        <span class="error">#{error 'record.item_mst' /}</span>
-	        #{/field}
-	    </div>
+			#{/if}
+		</select>
+        <span class="error">#{error 'record.item_mst' /}</span>
+        #{/field}
+    </div>
+
+    <div class="crudField">
+        #{field 'amount'}
+        <label class="fieldName">&{'amount'}:</label>
+        <input type="text" name="${field.name}" class="numeric" 
+            value="${record?.amount}" />
+        <span class="error">#{error 'record.amount' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'debit_date'}
+        <label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
+        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
+            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
+        <span class="error">#{error 'record.debit_date' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'content'}
+        <label class="fieldName">&{'content'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.content}" />
+        <span class="error">#{error 'record.content' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'store'}
+        <label class="fieldName">&{'store'}:</label>
+        <input type="text" name="${field.name}" 
+            value="${record?.store}" />
+        <span class="error">#{error 'record.store' /}</span>
+        #{/field}
+    </div>
+
+    <div class="crudField">
+        #{field 'remarks'}
+        <label class="fieldName">&{'remarks'}:</label>
+        <textarea name="${field.name}">${record?.remarks}</textarea>
+        <span class="error">#{error 'record.remarks' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'secret_remarks'}
+        <label class="fieldName">&{'secret_remarks'}:</label>
+        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
+        <span class="error">#{error 'record.secret_remarks' /}</span>
+        #{/field}
+    </div>
+ 
+    <div class="crudField">
+        #{field 'secret_rec_flg'}
+        <label class="fieldName">&{'secret_rec_flg'}:</label>
+        <input type="checkbox" name="${field.name}"
+            ${record?.secret_rec_flg ? 'checked' : ''} />
+        <span class="error">#{error 'record.secret_rec_flg' /}</span>
+        #{/field}
+    </div>
 	
-	    <div class="crudField">
-	        #{field 'amount'}
-	        <label class="fieldName">&{'amount'}:</label>
-	        <input type="text" name="${field.name}" class="numeric" 
-	            value="${record?.amount}" />
-	        <span class="error">#{error 'record.amount' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'debit_date'}
-	        <label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
-	        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
-	            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
-	        <span class="error">#{error 'record.debit_date' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'content'}
-	        <label class="fieldName">&{'content'}:</label>
-	        <input type="text" name="${field.name}" 
-	            value="${record?.content}" />
-	        <span class="error">#{error 'record.content' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'store'}
-	        <label class="fieldName">&{'store'}:</label>
-	        <input type="text" name="${field.name}" 
-	            value="${record?.store}" />
-	        <span class="error">#{error 'record.store' /}</span>
-	        #{/field}
-	    </div>
-	
-	    <div class="crudField">
-	        #{field 'remarks'}
-	        <label class="fieldName">&{'remarks'}:</label>
-	        <textarea name="${field.name}">${record?.remarks}</textarea>
-	        <span class="error">#{error 'record.remarks' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'secret_remarks'}
-	        <label class="fieldName">&{'secret_remarks'}:</label>
-	        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
-	        <span class="error">#{error 'record.secret_remarks' /}</span>
-	        #{/field}
-	    </div>
-	 
-	    <div class="crudField">
-	        #{field 'secret_rec_flg'}
-	        <label class="fieldName">&{'secret_rec_flg'}:</label>
-	        <input type="checkbox" name="${field.name}"
-	            ${record?.secret_rec_flg ? 'checked' : ''} />
-	        <span class="error">#{error 'record.secret_rec_flg' /}</span>
-	        #{/field}
-	    </div>
-		
-	    <div class="crudField">
-	        <input type="submit" value="&{'insupd.save'}" />
-	    </div>
-	    
+    <div class="crudField">
+        <input type="submit" value="&{'insupd.save'}" id="idInsupd" />
+    </div>
+    
+#{/form}
+</div>
+
+#{if record?.id}
+	#{form @del_rec(record?.id)}
+	    <p class="crudDelete">
+        	<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
+	    </p>
 	#{/form}
-	</div>
-	
-	#{if record?.id}
-		#{form @del_rec(record?.id)}
-		    <p class="crudDelete">
-	        	<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
-		    </p>
-		#{/form}
-	#{/if}
+#{/if}
 
 </div>

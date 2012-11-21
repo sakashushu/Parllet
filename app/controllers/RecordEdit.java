@@ -120,7 +120,8 @@ public class RecordEdit extends Controller {
 					store,
 					remarks,
 					secret_remarks,
-					secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false)
+					secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false),
+					null
 			);
 		} else {
 			// 収支データの読み出し

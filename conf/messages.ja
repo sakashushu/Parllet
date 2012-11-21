@@ -134,6 +134,8 @@ DebitMonth.nextTwo=翌々月
 validation.title=以下のエラーを修正して下さい
 validation.required=必須
 validation.cutoff_debit=締日より未来
+validation.invalid=日付誤りで移動できませんでした
+validation.dateError=日付誤りで移動できませんでした
 
 #crudを真似
 insupd.add=追加  [ &{%s} ]

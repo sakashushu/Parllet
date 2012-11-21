@@ -164,6 +164,14 @@ jQuery(function(){
 #{/form}
 
 
+#{ifErrors}
+    <p class="crudFlash flashError">
+		#{errors}
+			${error}
+		#{/errors}
+    </p>
+#{/ifErrors}
+
 <ul class="da_tbl_all">
 	#{form @updBudget()}
 	<input type="hidden" name="bg_basis_date" value="${sBasisDate}"/>

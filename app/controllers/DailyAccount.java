@@ -3,6 +3,7 @@ package controllers;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,12 +66,12 @@ public class DailyAccount extends Controller {
 	public static void dailyAccount(
 			String sBasisDate
 			) {
-		DailyAccount da = new DailyAccount();
-   		//単純に呼ばれた時の基準日のセット
-		if(sBasisDate==null)
-			sBasisDate = da.setBasisDate();
-
-		Integer intBasisDate = null;
+//		DailyAccount da = new DailyAccount();
+//		//単純に呼ばれた時の基準日のセット
+//		if(sBasisDate==null)
+//			sBasisDate = da.setBasisDate();
+		
+		Integer intBasisDate = null; 
 		if(sBasisDate!=null)
 			intBasisDate = Integer.parseInt(sBasisDate.replace("/", ""));
 		dailyAccountDisp(intBasisDate);
@@ -101,14 +102,21 @@ public class DailyAccount extends Controller {
 	public static void dailyAccountDisp(
 			Integer intBasisDate
 			) {
-		String strTableType = VIEWS_DAILY_ACCOUNT;
-
 		String sBasisDate = null;
-		if(intBasisDate!=null) {
-			String strTmp = intBasisDate.toString();
-			sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+		DailyAccount da = new DailyAccount();
+		//単純に呼ばれた時の基準日のセット
+		if(intBasisDate==null) {
+			sBasisDate = da.setBasisDate();
+		} else {
+			if(!da.checkIntDate(intBasisDate)) {
+				validation.addError("dateError", Messages.get("validation.dateError"));
+				sBasisDate = da.setBasisDate();
+			}
+				
 		}
 		
+		String strTableType = VIEWS_DAILY_ACCOUNT;
+
 		//日計表・残高表の表示用ワーク作成
 		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
 		
@@ -863,6 +871,7 @@ public class DailyAccount extends Controller {
 		}
 		sql += "" +
 				" WHERE hm.ha_user_id = " + haUser.id +
+				"   AND htm.handling_type_name != '" + HANDLING_TYPE_CRECA + "' " +
 				"   AND hm.zero_hidden = false " + sqlDailyZero +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -2109,6 +2118,44 @@ public class DailyAccount extends Controller {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 日付数値の妥当性チェック
+	 * @param intDate
+	 * @return 存在する日付の場合true
+	 */
+	private boolean checkIntDate(Integer intDate) {
+			if(intDate<10000101 ||
+					intDate>99991231)
+				return false;
+				
+			String strTmp = intDate.toString();
+			String sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6);
+			//日付の妥当性チェック
+			return checkDate(sBasisDate);
+	}
+	
+	/**
+	 * 日付の妥当性チェックを行います。
+	 * 指定した日付文字列（yyyy/MM/dd or yyyy-MM-dd）が
+	 * カレンダーに存在するかどうかを返します。
+	 * @param strDate チェック対象の文字列
+	 * @return 存在する日付の場合true
+	 */
+	public static boolean checkDate(String strDate) {
+		if (strDate == null || strDate.length() != 10)
+			return false;
+		strDate = strDate.replace('-', '/');
+		DateFormat format = DateFormat.getDateInstance();
+		// 日付/時刻解析を厳密に行うかどうかを設定する。
+		format.setLenient(false);
+		try {
+			format.parse(strDate);
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
 	}
 }

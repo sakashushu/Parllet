@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -9,7 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
@@ -21,8 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import jp.sf.orangesignal.csv.manager.CsvManager;
-import jp.sf.orangesignal.csv.manager.CsvManagerFactory;
+import javax.mail.internet.MimeUtility;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import models.BalanceTypeMst;
 import models.HaUser;
@@ -59,86 +63,47 @@ public class Config extends Controller {
 	 */
 	public static void cf_upload(File csv) {
 		if(csv != null) {
-			
-			CsvManager csvManager = CsvManagerFactory.newCsvManager();      // CsvManager を取得します。
-			
-			
-			
-			
-			// 入力
 			try {
-				List<Record> customers = csvManager.load(Record.class).from(csv);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-
-			
-			
-			
-			try {
-				
-				
-				
 				//Shift-JISファイルを読み込む想定。（良く分かっていないが、色々試して文字化けしたが、下記のやり方なら文字化けしないようだ。）
 	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
-	
+	            
+	            //CSVパーサとして「OpenCSV」を使用する
+	            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csv),"MS932"),',','"',1);
+	            
 	            String str = null;
-//	            String sOut = "";
+	            String[] strAryColumn;
 	            boolean bFst = true;	//初回フラグ
 	            
 	            int iCnt = 0;
 	            
 	            // ファイルを1行ずつ読み込む
-				while ( ( str = br.readLine() ) != null ) {
-					//初回はヘッダー行のため、何もしない
-					if(bFst) {
-						bFst = false;
-						continue;
-					}
-					
-					//split()に区切り文字を指定してトークンに分割する
-					String[] tokens = str.split(",");
-					
-//					//トークンを表示する
-//					for(String token : tokens) {
-//						System.out.print("<");
-//						System.out.print(token);
-//						System.out.print(">");
-//					}					
-//					System.out.println();
-					
+				while ( ( strAryColumn = reader.readNext() ) != null ) {
 					boolean bTransferFlg = false;
 					
 					Record record = null;
-					String payment_date = tokens[0].substring(1, tokens[0].length()-1);			//支払日
-					String balance_type_name = tokens[1].substring(1, tokens[1].length()-1);	//収支種類
+					String payment_date = strAryColumn[0];				//支払日
+					String balance_type_name = strAryColumn[1];			//収支種類
 					if(balance_type_name.equals("口座振替")) {
 						bTransferFlg = true;
 						balance_type_name = "口座預入";
 					}
-					String handling_name = tokens[2].substring(1, tokens[2].length()-1);		//取扱
-					String ideal_deposit_name = tokens[3].substring(1, tokens[3].length()-1);	//My貯金
-					String item_name = tokens[4].substring(1, tokens[4].length()-1);			//項目
-					Integer amount = Integer.parseInt(tokens[5]);								//金額
-					String debit_date = tokens[6].substring(1, tokens[6].length()-1);			//引落日
-//					System.out.println(tokens[7]);
-//					System.out.println(tokens[7].length());
-					String content = tokens[7].substring(1, tokens[7].length()-1);				//内容
-					String store = tokens[8].substring(1, tokens[8].length()-1);				//お店
-					String remarks = tokens[9].substring(1, tokens[9].length()-1);				//備考
-					
-					//remarks = "インポートテスト";
-					
-					String secret_remarks = tokens[10].substring(1, tokens[10].length()-1);		//備考（非公開）
+					String handling_name = strAryColumn[2];				//取扱
+					String ideal_deposit_name = strAryColumn[3];		//My貯金
+					String item_name = strAryColumn[4];					//項目
+					Integer amount = Integer.parseInt(strAryColumn[5]);	//金額
+					String debit_date = strAryColumn[6];				//引落日
+					String content = strAryColumn[7];					//内容
+					String store = strAryColumn[8];						//お店		
+					String remarks = strAryColumn[9];					//備考
+					String secret_remarks = strAryColumn[10];			//備考（非公開）
 					
 					try {
 						Date paymentDate = null;
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-//							paymentDate = DateFormat.getDateInstance().parse(payment_date);
+							String strPdTail = payment_date.substring(payment_date.length()-5);
+							if(!strPdTail.equals("00:00"))
+								payment_date += " 00:00";
 							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
-//							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
@@ -170,7 +135,8 @@ public class Config extends Controller {
 								store,
 								remarks,
 								secret_remarks,
-								false
+								false,
+								null
 						);
 						
 					} catch (ParseException e) {
@@ -195,7 +161,10 @@ public class Config extends Controller {
 						try {
 							Date paymentDate = null;
 							if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-								paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + " 00:00:00");
+								String strPdTail = payment_date.substring(payment_date.length()-5);
+								if(!strPdTail.equals("00:00"))
+									payment_date += " 00:00";
+								paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 							}
 							HaUser haUser = (HaUser)renderArgs.get("haUser");
 							BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
@@ -227,7 +196,8 @@ public class Config extends Controller {
 									store,
 									remarks,
 									secret_remarks,
-									false
+									false,
+									null
 							);
 							
 						} catch (ParseException e) {
@@ -247,32 +217,10 @@ public class Config extends Controller {
 						record.save();
 					}
 					
-					
-					
 					iCnt++;
 					System.out.println(iCnt);
 					
-					
-					
-//					sOut += str + System.getProperty("line.separator");
-					
-//					byte[]bytes = str.getBytes(); // Shift-JISのコードを表示
-//					for (byte b: bytes) {
-//						System.out.print(String.format("%02X ", (int)b & 0xff));
-//					}
 				}
-//				// 書き込みストリームを生成します。
-//				BufferedWriter out
-//				  = new BufferedWriter(new FileWriter("C:\\Saya\\test.csv"));
-//				// ファイルに書き込みします
-//				out.write(sOut);
-//				
-//				// ストリームを閉じます
-//				out.close();				    
-//	
-//	            // ファイルを閉じる
-//	            br.close();
-	            
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -281,10 +229,6 @@ public class Config extends Controller {
 				e.printStackTrace();
 			}
 
-            
-//			File saveTo = new File("C:\\Saya\\" + csv.getName());
-//			csv.renameTo(saveTo);
-			
 		}
 
 	}
@@ -313,19 +257,20 @@ public class Config extends Controller {
 		//ヘッダー行
 		Field[] fldAryHd = Record.class.getDeclaredFields();
 		for(Field fldHd : fldAryHd) {
-			iCnt++;
-			
 			//「家計簿ユーザー」・「項目詳細」・「単価」・「数量」は無視
 			if(fldHd.getName().equals("ha_user") ||
 					fldHd.getName().equals("detail_mst") ||
 					fldHd.getName().equals("price") ||
-					fldHd.getName().equals("quantity")) continue;
+					fldHd.getName().equals("quantity") ||
+					fldHd.getName().equals("remainder")) continue;
 			
+			iCnt++;
+			
+			//先頭項目以外はカンマで区切る
+			if(iCnt != 1) sOutCsv += ",";
+
 			sOutCsv += "\"" + Messages.get(fldHd.getName()) + "\"";
 			
-			//最終項目以外はカンマで区切る
-			if(iCnt < fldAryHd.length) sOutCsv += ",";
-
 		}
 		sOutCsv += System.getProperty("line.separator");	//改行
 		
@@ -338,14 +283,18 @@ public class Config extends Controller {
 			
 			//項目毎に取得し、カンマ区切り
 			for(Field fld : fldAry) {
-				iCnt++;
-				
-				//「家計簿ユーザー」・「項目詳細」・「単価」・「数量」は無視
+				//「家計簿ユーザー」・「項目詳細」・「単価」・「数量」・「残高」は無視
 				if(fld.getName().equals("ha_user") ||
 						fld.getName().equals("detail_mst") ||
 						fld.getName().equals("price") ||
-						fld.getName().equals("quantity")) continue;
+						fld.getName().equals("quantity") ||
+						fld.getName().equals("remainder")) continue;
 				
+				iCnt++;
+				
+				//先頭項目以外はカンマで区切る
+				if(iCnt != 1) sOutCsv += ",";
+	
 				boolean bDblQwtFlg = false;
 				
 				//ダブルクウォーテーション判定
@@ -357,9 +306,7 @@ public class Config extends Controller {
 						fld.getType() == IdealDepositMst.class) {
 					bDblQwtFlg = true;
 				}
-				if(bDblQwtFlg) {
-					sOutCsv += "\"";
-				}
+				if(bDblQwtFlg) sOutCsv += "\"";
 				
 				try {
 					if(fld.get(rec) != null) {
@@ -376,13 +323,8 @@ public class Config extends Controller {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(bDblQwtFlg) {
-					sOutCsv += "\"";
-				}
+				if(bDblQwtFlg) sOutCsv += "\"";
 
-				//最終項目以外はカンマで区切る
-				if(iCnt < fldAry.length) sOutCsv += ",";
-				
 			}
 			
 			sOutCsv += System.getProperty("line.separator");	//改行
