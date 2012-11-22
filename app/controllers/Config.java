@@ -275,7 +275,7 @@ public class Config extends Controller {
 		sOutCsv += System.getProperty("line.separator");	//改行
 		
 		//明細行
-		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date ").fetch();
+		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
 		for(Record rec : records) {
 			iCnt = 0;
 			
