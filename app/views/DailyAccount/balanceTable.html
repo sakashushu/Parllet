@@ -69,6 +69,14 @@ jQuery(function() {
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 
+#{ifErrors}
+    <p class="crudFlash flashError">
+		#{errors}
+			${error}
+		#{/errors}
+    </p>
+#{/ifErrors}
+
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
@@ -82,14 +90,6 @@ jQuery(function() {
 	<input type="text" class="datepickerJump" name="e_basis_date"
 		value="${sBasisDate}" style="display:none;" />
 	</div>
-	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
-#{/form}
-
-#{form @jump(), id:'frmJump'}
-	<input type="hidden" value="${strTableType}" name="strTableType" />
-	<!-- 対象年月日 -->
-	<input type="hidden" id="idBasisDate" name="e_basis_date"
-		value="${sBasisDate}" style="width:80px;background:#eee;" readonly="readonly" />
 	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 

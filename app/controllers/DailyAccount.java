@@ -66,10 +66,10 @@ public class DailyAccount extends Controller {
 	public static void dailyAccount(
 			String sBasisDate
 			) {
-//		DailyAccount da = new DailyAccount();
-//		//単純に呼ばれた時の基準日のセット
-//		if(sBasisDate==null)
-//			sBasisDate = da.setBasisDate();
+		DailyAccount da = new DailyAccount();
+		//単純に呼ばれた時の基準日のセット
+		if(sBasisDate==null)
+			sBasisDate = da.setBasisDate();
 		
 		Integer intBasisDate = null; 
 		if(sBasisDate!=null)
@@ -108,11 +108,18 @@ public class DailyAccount extends Controller {
 		if(intBasisDate==null) {
 			sBasisDate = da.setBasisDate();
 		} else {
-			if(!da.checkIntDate(intBasisDate)) {
+			if(da.checkIntDate(intBasisDate)) {
+				String strTmp = intBasisDate.toString();
+				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+			} else {
 				validation.addError("dateError", Messages.get("validation.dateError"));
 				sBasisDate = da.setBasisDate();
 			}
 				
+		}
+		String strDispDate = sBasisDate;
+		if (!sBasisDate.substring(sBasisDate.length()-2).equals("01")) {
+			sBasisDate = sBasisDate.substring(0, sBasisDate.length()-2) + "01";
 		}
 		
 		String strTableType = VIEWS_DAILY_ACCOUNT;
@@ -121,12 +128,12 @@ public class DailyAccount extends Controller {
 		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
 		
 		int month = wkDAR.getIntMonth();
-		sBasisDate = wkDAR.getStrBasisDate();
+//		sBasisDate = wkDAR.getStrBasisDate();
 		String[] sAryDays = wkDAR.getStrAryDays();
 		List<WkDailyAccount> lWDA = wkDAR.getlWDA();
 		int iWidth = wkDAR.getIntWidth();
 		
-		render("@dailyAccount",  month, sBasisDate, strTableType, sAryDays, lWDA, iWidth);
+		render("@dailyAccount",  month, sBasisDate, strDispDate, strTableType, sAryDays, lWDA, iWidth);
 	}
 	
 	/**
@@ -136,14 +143,24 @@ public class DailyAccount extends Controller {
 	public static void balanceTableDisp(
 			Integer intBasisDate
 			) {
-		String strTableType = VIEWS_BALANCE_TABLE;
-
 		String sBasisDate = null;
-		if(intBasisDate!=null) {
-			String strTmp = intBasisDate.toString();
-			sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+		DailyAccount da = new DailyAccount();
+		//単純に呼ばれた時の基準日のセット(残高表)
+		if(intBasisDate==null) {
+			sBasisDate = da.setBasisDateBt();
+		} else {
+			if(da.checkIntDate(intBasisDate)) {
+				String strTmp = intBasisDate.toString();
+				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
+			} else {
+				validation.addError("dateError", Messages.get("validation.dateError"));
+				sBasisDate = da.setBasisDateBt();
+			}
+				
 		}
 		
+		String strTableType = VIEWS_BALANCE_TABLE;
+
 		//日計表・残高表の表示用ワーク作成
 		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
 		

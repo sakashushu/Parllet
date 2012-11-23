@@ -96,27 +96,31 @@ public class Config extends Controller {
 					String store = strAryColumn[8];						//お店		
 					String remarks = strAryColumn[9];					//備考
 					String secret_remarks = strAryColumn[10];			//備考（非公開）
+					Boolean secret_rec_flg = Boolean.valueOf(strAryColumn[11]);	//非公開レコードフラグ
 					
 					try {
 						Date paymentDate = null;
 						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-							String strPdTail = payment_date.substring(payment_date.length()-5);
-							if(!strPdTail.equals("00:00"))
+							String strPdTail = payment_date.substring(payment_date.length()-3, payment_date.length()-2);
+							if(!strPdTail.equals(":"))
 								payment_date += " 00:00";
 							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
-						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
+						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = ?", balance_type_name).first();
 						ItemMst itemMst = null;
 						if(item_name!=null) {
-							itemMst = ItemMst.find("item_name = '" + item_name + "'").first(); 
+							itemMst = ItemMst.find("ha_user = ? and item_name = ?", haUser, item_name).first(); 
 						}
-						HandlingMst handlingMst = HandlingMst.find("handling_name = '" + handling_name + "'").first();
+						HandlingMst handlingMst = HandlingMst.find("ha_user = ? and handling_name = ?", haUser, handling_name).first();
 						Date debitDate = null;
 						if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-							debitDate = DateFormat.getDateInstance().parse(debit_date);
+							String strDdTail = debit_date.substring(debit_date.length()-3, debit_date.length()-2);
+							if(!strDdTail.equals(":"))
+								debit_date += " 00:00";
+							debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 						}
-						IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = '" + ideal_deposit_name + "'").first(); 
+						IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = ?", ideal_deposit_name).first(); 
 						
 						// 収支データの作成
 						record = new Record(
@@ -135,7 +139,7 @@ public class Config extends Controller {
 								store,
 								remarks,
 								secret_remarks,
-								false,
+								secret_rec_flg,
 								null
 						);
 						
@@ -161,23 +165,26 @@ public class Config extends Controller {
 						try {
 							Date paymentDate = null;
 							if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-								String strPdTail = payment_date.substring(payment_date.length()-5);
-								if(!strPdTail.equals("00:00"))
+								String strPdTail = payment_date.substring(payment_date.length()-3, payment_date.length()-2);
+								if(!strPdTail.equals(":"))
 									payment_date += " 00:00";
 								paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 							}
 							HaUser haUser = (HaUser)renderArgs.get("haUser");
-							BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = '" + balance_type_name + "'").first();
+							BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = ?", balance_type_name).first();
 							ItemMst itemMst = null;
 							if(item_name!=null) {
-								itemMst = ItemMst.find("item_name = '" + item_name + "'").first(); 
+								itemMst = ItemMst.find("ha_user = ? and item_name = ?", haUser, item_name).first(); 
 							}
-							HandlingMst handlingMst = HandlingMst.find("handling_name = '" + handling_name + "'").first();
+							HandlingMst handlingMst = HandlingMst.find("ha_user = ? and handling_name = ?", haUser, handling_name).first();
 							Date debitDate = null;
 							if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
-								debitDate = DateFormat.getDateInstance().parse(debit_date);
+								String strDdTail = debit_date.substring(debit_date.length()-3, debit_date.length()-2);
+								if(!strDdTail.equals(":"))
+									debit_date += " 00:00";
+								debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 							}
-							IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = '" + ideal_deposit_name + "'").first(); 
+							IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = ?", ideal_deposit_name).first(); 
 							
 							// 収支データの作成
 							record = new Record(
@@ -196,7 +203,7 @@ public class Config extends Controller {
 									store,
 									remarks,
 									secret_remarks,
-									false,
+									secret_rec_flg,
 									null
 							);
 							
