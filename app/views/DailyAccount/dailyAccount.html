@@ -142,7 +142,7 @@ jQuery(function(){
 
 
 <!-- 明細表へジャンプ用フォーム（非表示） -->
-#{form @DetailList.detailList(), name:'frmDetailList'}
+#{form @DetailList.detailList()}
 	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" style="display:none;" />
 	<input type="text" name="h_payment_date_fr" id="hPaymentDateFr" style="display:none;" />
 	<input type="text" name="h_payment_date_to" id="hPaymentDateTo" style="display:none;" />
@@ -293,17 +293,17 @@ jQuery(function(){
 			        %{leftFlg = 1}%
 					<li>
 						#{list items:lwda.lstWdtd, as:'wdtd'}
-						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric da_menu box menu-1">
+						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric da_menu">
 							<!-- 
 							<a href="@{DetailList.detailList(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
 							<a href="" class="num3" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
 							 -->
-							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd.sPaymentDateFr}" />
-							<input type="hidden" class="ToDlPaymentDateTo" value="${wdtd.sPaymentDateTo}" />
-							<input type="hidden" class="ToDlBalanceTypeId" value="${wdtd.lBalanceTypeId}" />
-							<input type="hidden" class="ToDlHandlingId" value="${wdtd.lHandlingId}" />
-							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd.lIdealDepositId}" />
-							<input type="hidden" class="ToDlItemId" value="${wdtd.lItemId}" />
+							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd?.sPaymentDateFr}" />
+							<input type="hidden" class="ToDlPaymentDateTo" value="${wdtd?.sPaymentDateTo}" />
+							<input type="hidden" class="ToDlBalanceTypeId" value="${wdtd?.lBalanceTypeId}" />
+							<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
+							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
+							<input type="hidden" class="ToDlItemId" value="${wdtd?.lItemId}" />
 							<span class="num3">${wdtd.lAmount}</span>
 						</div>
 						%{leftFlg = 0}%

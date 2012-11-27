@@ -5,8 +5,10 @@ import java.math.BigInteger;
 public class WkDaToDl {
 	private long lAmount;				/* 金額 */
 	private String sAmount;			/* 金額(表示用) */
-	private String sPaymentDateFr;		/* 絞込日時範囲（開始） */
-	private String sPaymentDateTo;		/* 絞込日時範囲（終了） */
+	private String sPaymentDateFr;		/* 絞込支払日範囲（開始） */
+	private String sPaymentDateTo;		/* 絞込支払日範囲（終了） */
+	private String sDebitDateFr;		/* 絞込引落日範囲（開始） */
+	private String sDebitDateTo;		/* 絞込引落日範囲（終了） */
 	private Long lBalanceTypeId;  		/* 絞込収支種類ID */
 	private Long lHandlingId;			/* 絞込取扱(実際)ID */
 	private Long lIdealDepositId;		/* 絞込取扱(My貯金)ID */
@@ -28,6 +30,18 @@ public class WkDaToDl {
 	}
 	public void setsPaymentDateFr(String sPaymentDateFr) {
 		this.sPaymentDateFr = sPaymentDateFr;
+	}
+	public String getsDebitDateFr() {
+		return sDebitDateFr;
+	}
+	public void setsDebitDateFr(String sDebitDateFr) {
+		this.sDebitDateFr = sDebitDateFr;
+	}
+	public String getsDebitDateTo() {
+		return sDebitDateTo;
+	}
+	public void setsDebitDateTo(String sDebitDateTo) {
+		this.sDebitDateTo = sDebitDateTo;
 	}
 	public String getsPaymentDateTo() {
 		return sPaymentDateTo;

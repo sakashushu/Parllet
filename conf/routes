@@ -36,6 +36,7 @@ POST    /data/new                               RecordEdit.save_rec
 POST	/detailList                             DetailList.detailList
 GET		/detailList	                            DetailList.detailList
 WS      /detailList                             DetailList.WebSocketApp.listen
+GET		/detailList/remainderBank	            DetailList.dl_remainderBank
 
 # Config
 GET     /config/bank/list                       Config.cf_bank_list

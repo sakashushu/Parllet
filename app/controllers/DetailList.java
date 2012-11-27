@@ -309,7 +309,7 @@ public class DetailList extends Controller {
 		render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
     }
 	
-	public static void dl_remainder_bank(
+	public static void dl_remainderBank(
     		int page,						/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
     		String h_debit_date_fr,			/* 絞込引落日範囲（開始） */
@@ -384,9 +384,8 @@ public class DetailList extends Controller {
 		
 		//  取扱(実際)
 		//意図的に絞り込まれていない時は口座・電子マネーの先頭のモノで絞り込む
-		if(srch==null) {
+		if(srch==null && h_handling_id==null)
 			h_handling_id = handlings.get(0).id;
-		}
 		sqlSrchRec += " and " +
 				" ((    handling_mst.handling_type_mst.handling_type_name = '" + HANDLING_TYPE_CRECA + "' " +
 				"   and handling_mst.debit_bank.id = " + h_handling_id +

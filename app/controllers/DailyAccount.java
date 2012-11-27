@@ -855,7 +855,7 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   hm.id as item_id " +
-				"  ,(htm.handling_type_order + hm.order_seq) as item_order " +
+				"  ,(htm.handling_type_order*10000 + hm.order_seq) as item_order " +
 				"  ,hm.handling_name as item_name " +
 				"  ,50 as cate_order " +
 				"  ,cast('" + REMAINDER_TYPE_REAL + "' as character varying(255)) as cate_name " +
@@ -1967,6 +1967,16 @@ public class DailyAccount extends Controller {
 		if(strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
 			wkDaToDl.setlIdealDepositId(lngItemId);
+		}
+		// 「実残高」
+		if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
+			calendar.add(Calendar.MONTH, -1);
+			String sDateFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			wkDaToDl.setsDebitDateFr(sDateFr);
+			calendar.add(Calendar.MONTH, 7);
+			String sDateTo = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+			wkDaToDl.setsDebitDateTo(sDateTo);
+			wkDaToDl.setlHandlingId(lngItemId);
 		}
 		
 		return wkDaToDl;

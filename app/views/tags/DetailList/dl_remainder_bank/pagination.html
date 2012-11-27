@@ -24,14 +24,14 @@
 
         #{if _caller.page > 1}
             <span class="previous">
-            	<a href="dl_remainder_bank?page=${_caller.page-1}">
+            	<a href="dl_remainderBank?page=${_caller.page-1}">
             	&{'crud.pagination.previous'}</a>
             </span>
         #{/if}
 
         #{if start > 1}
             <span class="first">
-            	<a href="dl_remainder_bank?page=${1}">
+            	<a href="dl_remainderBank?page=${1}">
             	&{'crud.pagination.first'}</a>
             </span>
         #{/if}
@@ -42,7 +42,7 @@
                     <strong>${i}</strong>
                 #{/if}
                 #{else}
-	            	<a href="dl_remainder_bank?page=${i}">
+	            	<a href="dl_remainderBank?page=${i}">
 	            	${i}</a>
                 #{/else}
             </span>
@@ -50,14 +50,14 @@
 
         #{if end < _caller.nbPages}
             <span class="last">
-            	<a href="dl_remainder_bank?page=${_caller.nbPages}">
+            	<a href="dl_remainderBank?page=${_caller.nbPages}">
             	&{'crud.pagination.last'}</a>
             </span>
         #{/if}
 
         #{if _caller.page < _caller.nbPages}
             <span class="next">
-            	<a href="dl_remainder_bank?page=${_caller.page+1}">
+            	<a href="dl_remainderBank?page=${_caller.page+1}">
             	&{'crud.pagination.next'}</a>
             </span>
         #{/if}

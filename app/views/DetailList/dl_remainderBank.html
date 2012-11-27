@@ -30,7 +30,7 @@ function addFigure(str) {
 			<a href="@{DetailList.detailList()}">収支明細</a>
 		</li>
 		<li class="selected">
-			<a href="@{DetailList.dl_remainder_bank()}">残高明細(口座系)</a>
+			<a href="@{DetailList.dl_remainderBank()}">残高明細(口座系)</a>
 		</li>
 		<li>
 			<a>残高明細(My貯金)</a>
@@ -38,10 +38,7 @@ function addFigure(str) {
 	</ul>
 </div>
 
-#{form @DetailList.dl_remainder_bank()}
-
-
-
+#{form @DetailList.dl_remainderBank()}
 
 <div id="dl_tblFrame">
 
