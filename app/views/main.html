@@ -2,51 +2,15 @@
 
 <html>
     <head>
-        <title>#{get 'title' /}</title>
-        <meta charset="${_response_encoding}">
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        #{get 'moreStyles' /}
-        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
-        <!-- 
-		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
-         -->
-		<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/jqgrid/css/ui.jqgrid.css'}" />
-        <!-- 
-        <script src="@{'/public/javascripts/jquery-1.6.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-         -->
-		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript">google.load('jquery', '1')</script>
-		<script type="text/javascript">google.load('jqueryui', '1')</script>
-		<!-- datepicker日本語化 -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-		<!-- datepickerにtimepickerアドオン -->
-		<script type="text/javascript" src="http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js"></script>
-		<!-- jqgrid -->
-		<script type="text/javascript" src="@{'/public/jqgrid/js/jquery.jqGrid.min.js'}" ></script>
-		<!-- websocket -->
-		<script type="text/javascript" src="@{'/public/javascripts/swfobject.js'}" charset="${_response_encoding}"></script>
-		<script type="text/javascript" src="@{'/public/javascripts/web_socket.js'}" charset="${_response_encoding}"></script>
-		<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
-		<style>
-		.ui-datepicker td span, .ui-datepicker td a {
-		    text-align: center;    /* 日付をセンタリング */
-		}
-		.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
-		    width: auto;    /* そのままだと改行してしまう */
-		}
-		.ui-datepicker select.ui-datepicker-month {
-		    margin-left: 1em;    /* ちょっと離す */
-		}
-		</style>
-		<noscript>このページは javascript が有効になっている必要があります。</noscript>
-        #{get 'moreScripts' /}
+		#{include 'head.html' /}
     </head>
     <body>
     	<img src="/public/images/background_test.jpg" alt="" id="bg-img" />
     	<div id="container">
+<!-- 
     	<div id="header">
+ -->
+    	<div id="cmHeader">
     		<table id="logo-table">
     		<tr>
 	    		<td id="logo-pre">

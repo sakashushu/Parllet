@@ -1,5 +1,5 @@
 #{extends 'login.html' /}
-#{set title:'残高明細（口座系）' /}
+#{set title:messages.get('views.detaillist.remainderBank.title') /}
 
 <script type="text/javascript">
 <!--
@@ -18,177 +18,279 @@ function addFigure(str) {
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
     return num;
 }
+
+jQuery(function(){
+	// 左クリックか右クリックでメニュー表示
+	jQuery('.menu_cell').mousedown(function(e) {
+		if(e.which==1 || e.which==3) {
+			//家計簿編集へジャンプする際のIDをセット
+			jQuery('#idRecordEdit').val(jQuery('.ToReId',this).val());
+			
+			e.preventDefault();
+			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
+		}
+	});
+	jQuery.contextMenu({
+		selector: '.menu_cell',
+		trigger: 'none',
+		callback: function(key, options) {
+			jQuery('#submitRecordEdit').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		items: {
+			"dl_remainderBank": {name: "このデータを編集"},
+		}
+	});
+});
+
+/* 日付選択時にjumpするdatepicker(範囲指定) */
+jQuery(function() {
+	var dates = jQuery("#frJump, #toJump").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		onSelect: function( selectedDate ) {
+			var option = this.id == "frJump" ? "minDate" : "maxDate",
+				instance = jQuery( this ).data( "datepicker" ),
+				date = jQuery.datepicker.parseDate(
+					instance.settings.dateFormat ||
+					jQuery.datepicker._defaults.dateFormat,
+					selectedDate, instance.settings );
+			dates.not( this ).datepicker( "option", option, date );
+			jQuery('#idSrch').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		showButtonPanel: true
+	});
+});
+
+jQuery(function() {
+	// 「公開フラグ」・「取扱（実際）」の変更イベント
+	jQuery("#idHdSecretRecFlg, #idHdHandling").change(function() {
+		jQuery('#idSrch').click();
+		jQuery('body').attr("disabled", "disabled");
+    });
+});
 // -->
 </script>
 
-<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+<div id="dlHeader">
+#{include 'loginBodyHeader.html' /}
 
+<!-- 家計簿編集へジャンプ用フォーム（非表示） -->
+#{form @RecordEdit.recordEdit()}
+	<input type="text" name="id" id="idRecordEdit" value="0" style="display:none;" />
+	<input type="submit" id="submitRecordEdit" style="display:none;" />
+#{/form}
+	
 <div>
-	<ul id="loginMenu">
-		<li>
-			<a href="@{DetailList.detailList()}">収支明細</a>
-		</li>
-		<li class="selected">
-			<a href="@{DetailList.dl_remainderBank()}">残高明細(口座系)</a>
-		</li>
-		<li>
-			<a>残高明細(My貯金)</a>
-		</li>
-	</ul>
+  <ul id="loginMenu">
+	<li>
+		<a href="@{DetailList.detailList()}">&{'views.detaillist.balance.title'}</a>
+	</li>
+	<li class="selected">
+		<a href="@{DetailList.dl_remainderBank()}">&{'views.detaillist.remainderBank.title'}</a>
+	</li>
+	<li>
+		<a>残高明細(My貯金)</a>
+	</li>
+  </ul>
 </div>
 
 #{form @DetailList.dl_remainderBank()}
 
-<div id="dl_tblFrame">
+<div id="dl_tblFrameHd">
 
-<div id="dl_tblContent">
-	<ul class="dl_tbl">
-		<!-- ヘッダー行 -->
-		<li>
-			<!-- 絞込ボタン -->
-			<div class="dl_srch_edit dl_head">
-				<input type="submit" class="dl_tbl_content" name="srch" value="絞込" />
-			</div>
-			#{if session.get('actionMode')!='View'}
-				<!-- 非公開フラグ -->
-				<div class="dl_secret_rec_flg dl_head">
-					公<br>開<br>
-					<select class="dl_tbl_content" name="h_secret_rec_flg">
-						<option value="0"${h_secret_rec_flg==0 ? ' selected' : ''}>--</option>
-						<option value="1"${h_secret_rec_flg==1 ? ' selected' : ''}>公</option>
-						<option value="2"${h_secret_rec_flg==2 ? ' selected' : ''}>非</option>
-					</select>
-				</div>
-			#{/if}
-			<!-- 引落日 -->
-			<div class="dl_payment_date dl_head">
-				&{'debit_date'}<br>
-				<input type="text" class="dl_tbl_content dl_payment_date_text" id="from2" name="h_debit_date_fr" value="${h_debit_date_fr}" />
-				<br><label for="to">～</label><br>
-				<input type="text" class="dl_tbl_content dl_payment_date_text" id="to2" name="h_debit_date_to" value="${h_debit_date_to}" />
-			</div>
-			<!-- 支払日 -->
-			<div class="dl_payment_date dl_head">
-				&{'payment_date'}
-			</div>
-			<!-- 収支種類 -->
-			<div class="dl_balance_type dl_head">
-				&{'balance_type_mst'}<br>
-			</div>
-			<!-- 取扱(実際) -->
-			<div class="dl_balance_type dl_head">
-				&{'handling_mst'}<br>
-				<select class="dl_tbl_content" name="h_handling_id">
-					<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-					#{list items:handlings, as:'handling'}
-					<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
-					#{/list}
+<div id="dlRb_tblContent" >
+  <ul class="dl_tbl">
+	<!-- ヘッダー行 -->
+	<li>
+		<!-- 絞込ボタン -->
+		<div class="dl_srch_edit dl_head" style="display:none;" ><!-- 「display:none」もmain.cssに入れたいが、入れると完全に非表示にならないため、ここにstyleを記載。 -->
+			<input type="submit" id="idSrch" class="dl_tbl_content" name="srch" value="絞込" />
+		</div>
+		
+		#{if session.get('actionMode')!='View'}
+			<!-- 非公開フラグ -->
+			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft" >
+				公<br>開<br>
+				<select class="dl_tbl_content" name="h_secret_rec_flg">
+					<option value="0"${h_secret_rec_flg==0 ? ' selected' : ''}>--</option>
+					<option value="1"${h_secret_rec_flg==1 ? ' selected' : ''}>公</option>
+					<option value="2"${h_secret_rec_flg==2 ? ' selected' : ''}>非</option>
 				</select>
 			</div>
-			<!-- 取扱(My貯金) -->
-			<div class="dl_balance_type dl_head">
-				&{'ideal_deposit_mst'}<br>
-			</div>
-			<!-- 金額 -->
-			<div class="dl_balance_type dl_head">
-				&{'amount'}<br>
-			</div>
-			<!-- お店 -->
-			<div class="dl_balance_type dl_head">
-				&{'store'}<br>
-			</div>
-			<!-- 残高 -->
-			<div class="dl_balance_type dl_head">
-				&{'views.detaillist.remainder'}<br>
-			</div>
-		</li>
-		<!-- 明細行 -->
-		#{if records?.size() > 0}
-		#{list items:records, as:'record'}
-		<li>
-			<!-- 編集ボタン -->
-			<div class="dl_srch_edit">
-				<!-- id -->
-				<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
-			</div>
-			#{if session.get('actionMode')!='View'}
-				<!-- 非公開フラグ -->
-				<div class="dl_secret_rec_flg">
-					${record.secret_rec_flg ? '非' : '公'}
-				</div>
-			#{/if}
-			<!-- 引落日 -->
-			<div class="dl_payment_date">
-			  <span class="dl_string">
-				${record?.debit_date?.format('yyyy/MM/dd')}
-			  </span>
-			</div>
-			<!-- 支払日 -->
-			<div class="dl_payment_date">
-			  <span class="dl_string">
-				${record.payment_date.format('yyyy/MM/dd')}
-			  </span>
-			</div>
-			<!-- 収支種類 -->
-			<div class="dl_balance_type">
-			  <span class="dl_string">
-				${record.balance_type_mst.balance_type_name}
-			  </span>
-			</div>
-			<!-- 取扱(実際) -->
-			<div class="dl_balance_type">
-			  <span class="dl_string">
-				${record?.handling_mst?.handling_name}
-			  </span>
-			</div>
-			<!-- 取扱(My貯金) -->
-			<div class="dl_balance_type">
-			  <span class="dl_string">
-				${record?.ideal_deposit_mst?.ideal_deposit_name}
-			  </span>
-			</div>
-			<!-- 項目 -->
-			<!-- 
-			<div class="dl_balance_type">
-			  <span class="dl_string">
-				${record?.item_mst?.item_name}
-			  </span>
-			</div>
-			 -->
-			<!-- 金額 -->
-			<div class="dl_amount">
-			  <span class="num3">
-				${record?.amount}
-			  </span>
-			</div>
-			<!-- お店 -->
-			<div class="dl_balance_type">
-			  <span class="dl_string">
-				${record?.store}
-			  </span>
-			</div>
-			<!-- 残高 -->
-			<div class="dl_amount">
-			  <span class="num3">
-				${record?.remainder}
-			  </span>
-			</div>
-		</li>
-		#{/list}
 		#{/if}
-	</ul>	
-</div>
-
-</div>
-
-
-
-
-	<div id="configListPagination">
-		#{DetailList.dl_remainder_bank.pagination /}
-	</div>
-
+		<!-- 引落日 -->
+		%{
+			clDlRbDebitDateHd = 'dlRb_debit_date dl_head'
+            if(session.get('actionMode')=='View'){
+                clDlRbDebitDateHd += ' dl_borderLeft'
+            }
+		}%
+		<div class="${clDlRbDebitDateHd}">
+			&{'debit_date'}<br>
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="h_debit_date_fr" value="${h_debit_date_fr}" />
+			<br><label for="to">～</label><br>
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="h_debit_date_to" value="${h_debit_date_to}" />
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date dl_head">
+			&{'payment_date'}
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type dl_head">
+			&{'balance_type_mst'}<br>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_balance_type dl_head">
+			&{'handling_mst'}<br>
+			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
+				<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+				#{list items:handlings, as:'handling'}
+				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
+				#{/list}
+			</select>
+		</div>
+		<!-- 取扱(My貯金) -->
+		<div class="dl_balance_type dl_head">
+			&{'ideal_deposit_mst'}<br>
+		</div>
+		<!-- 金額 -->
+		<div class="dl_balance_type dl_head">
+			&{'amount'}<br>
+		</div>
+		<!-- お店 -->
+		<div class="dl_balance_type dl_head">
+			&{'store'}<br>
+		</div>
+		<!-- 残高 -->
+		<div class="dl_balance_type dl_head">
+			&{'views.detaillist.remainder'}<br>
+		</div>
+	</li>
+  </ul>
+</div>  <!-- dlRb_tblContent -->
+</div>  <!-- dl_tblFrameHd -->
 #{/form}
+</div>  <!-- dlHeader -->
 
-	
+
+<div id="dlMain">
+<div id="dl_tblFrame">
+<div id="dlRb_tblContent" >
+  <ul class="dl_tbl">
+	<!-- 明細行 -->
+	#{if records?.size() > 0}
+	#{list items:records, as:'record'}
+	<li>
+		<!-- 編集ボタン -->
+		<div class="dl_srch_edit" style="display:none;" >
+			<!-- id -->
+			<a href="@{RecordEdit.recordEdit(record?.id)}" class="dl_edit_link" >編集</a>
+		</div>
+		
+		<!-- 
+		<div class="dl_borderLeft">
+		</div>
+		 -->
+		
+		#{if session.get('actionMode')!='View'}
+			<!-- 非公開フラグ -->
+			<div class="dl_secret_rec_flg dl_borderLeft menu_cell">
+				<input type="hidden" class="ToReId" value="${record?.id}" />
+				${record.secret_rec_flg ? '非' : '公'}
+			</div>
+		#{/if}
+		<!-- 引落日 -->
+		%{
+			clDlRbDebitDate = 'dlRb_debit_date menu_cell'
+            if(session.get('actionMode')=='View'){
+                clDlRbDebitDate += ' dl_borderLeft'
+            }
+		}%
+		<div class="${clDlRbDebitDate}">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record?.debit_date?.format('yyyy/MM/dd')}
+		  </span>
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record.payment_date.format('yyyy/MM/dd')}
+		  </span>
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record.balance_type_mst.balance_type_name}
+		  </span>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_balance_type menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record?.handling_mst?.handling_name}
+		  </span>
+		</div>
+		<!-- 取扱(My貯金) -->
+		<div class="dl_balance_type menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record?.ideal_deposit_mst?.ideal_deposit_name}
+		  </span>
+		</div>
+		<!-- 項目 -->
+		<!-- 
+		<div class="dl_balance_type">
+		  <span class="dl_string">
+			${record?.item_mst?.item_name}
+		  </span>
+		</div>
+		 -->
+		<!-- 金額 -->
+		<div class="dl_amount menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="num3">
+			${record?.amount}
+		  </span>
+		</div>
+		<!-- お店 -->
+		<div class="dl_balance_type menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="dl_string">
+			${record?.store}
+		  </span>
+		</div>
+		<!-- 残高 -->
+		<div class="dl_amount menu_cell">
+		  <input type="hidden" class="ToReId" value="${record?.id}" />
+		  <span class="num3">
+			${record?.remainder}
+		  </span>
+		</div>
+	</li>
+	#{/list}
+	#{/if}
+  </ul>
+</div>  <!-- dlRb_tblContent -->
+</div>  <!-- dl_tblFrame -->
+
+<div id="configListPagination">
+	#{DetailList.dl_remainder_bank.pagination /}
+</div>
+
+</div>  <!-- dlMain -->

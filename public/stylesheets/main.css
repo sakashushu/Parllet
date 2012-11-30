@@ -5,7 +5,7 @@ html, body {
 
 body {
     width: 980px;
-    padding: 0 15px;
+    padding: 0 10px;
     margin: auto;
 	font-size: 11pt;
 //	background-color: #FFFACD;
@@ -69,30 +69,94 @@ input[type="submit"],input[type="button"] {
     width: auto;
 }
 
+.invisible {
+	display: none;	
+}
+
+
 /** HouseholdAccounts header **/
 
 #header {
-    padding: 10px 0;
-    position: relative;
+//	padding: 10px 0;
+//	position: relative;
+	position: fixed;
+    width: 980px;
+//	background-image: url(/public/images/brown2_80.png);
+	background-image: url(/public/images/brown3_90.png);
+	z-index: 99;
+//	height: 193px;
+	height: 74px;
+}
+
+
+#cmHeader {
+	position: fixed;
+    width: 980px;
+	background-image: url(/public/images/brown3_90.png);
+	z-index: 99;
+	height: 40px;
+}
+
+#dlHeader {
+	position: fixed;
+    width: 980px;
+	background-image: url(/public/images/brown3_90.png);
+	z-index: 99;
+	height: 159px;
+//	height: 100px;
+}
+
+#cfHeader {
+	position: fixed;
+    width: 980px;
+	background-image: url(/public/images/brown3_90.png);
+	z-index: 99;
+	height: 68px;
+}
+
+
+#main {
+	padding-top: 70px;	
+}
+
+#cmMain {
+	padding-top: 42px;	
+}
+
+#dlMain {
+	padding-top: 146px;	
+}
+
+#cfMain {
+	padding-top: 70px;	
 }
 
 #logo-table {
-    display: table;
-    width: 540px;
+	display: table;
+	width: 660px;
 }
 
 #logo-pre {
-    color: #a34c00;
-    font-size: 24px;
-	padding-left: 20px;
+//	color: #a34c00;
+	color: #ffd391;
+//	font-size: 24px;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 4px;
 }
 
 #logo {
-    color: #a34c00;
-    font-size: 48px;
-    font-weight: bold;
-    letter-spacing: -4px;
-    text-shadow: 1px 2px 2px #000;
+//	color: #a34c00;
+	color: #ffd391;
+//	font-size: 48px;
+	font-size: 24px;
+	font-weight: bold;
+	letter-spacing: -4px;
+	text-shadow: 1px 2px 2px #000;
+	background-image: url(/public/images/logo.png);
+	width: 130px;
+	height: 30px;
+	z-index: 100;
 }
 
 #logo span {
@@ -106,18 +170,20 @@ input[type="submit"],input[type="button"] {
     padding: 0;
     position: absolute;
     right: 0;
-    top: 30px;
+    top: 10px;
     right: 20px;
 }
 
 #tools a {
-    color: #612d00;
+//    color: #612d00;
+	color: #ffd391;
 //    text-decoration: none;
     text-decoration: underline;
 }
 
 #tools li {
     display: inline;
+	color: #ffd391;
 }
 
 /** Login , Admin **/
@@ -125,7 +191,7 @@ input[type="submit"],input[type="button"] {
 #loginMenu, #adminMenu {
     list-style: none;
     padding: 0;
-    margin: 0 0 20px 0;
+    margin: 5px 0 0px 5px;
 }
 
 #loginMenu li, #adminMenu li {
@@ -141,7 +207,9 @@ input[type="submit"],input[type="button"] {
     -moz-border-radius: 9px;
 }
 #loginMenu li a {
-    background: #733405;
+//    background: #733405;
+//    background: #755a36;
+    background: #633308;
 }
 #adminMenu li a {
     background: #591C64;
@@ -155,7 +223,7 @@ input[type="submit"],input[type="button"] {
 /** views.admin.adminMenu.member **/
 
 #admin .data {
-	background-image: url(/public/images/white60.png);
+	background-image: url(/public/images/white20.png);
 	padding: 4px;
 	margin: 0;
 	font-size: 90%;
@@ -170,7 +238,7 @@ input[type="submit"],input[type="button"] {
 /**
 	background: transparent;
 **/
-	background-image: url(/public/images/white60.png);
+	background-image: url(/public/images/white20.png);
 }
 
 #admin .data a {
@@ -462,11 +530,11 @@ a.daBtnPreNext:hover span{
 }
 
 
-/* .da_menu 日計表のセル部分のクリックイベント用 */
-.da_menu {
+/* .menu_cell コンテキストメニューを出すセルのクリックイベント用 */
+.menu_cell {
 	background-image: url(/public/images/white20.png);
 }
-.da_menu:hover {
+.menu_cell:hover {
 //	background-color: #eee;
 	cursor: pointer;
 }
@@ -474,6 +542,12 @@ a.daBtnPreNext:hover span{
 /*
  * balanceTable
  */
+
+#bt_basisDate {
+	font-size:90%;
+ 	font-weight:bold;
+	padding-top: 10px;	
+}
 
 /* .bt_tbl_all 残高表の大枠のテーブル */
 .bt_tbl_all {
@@ -549,6 +623,12 @@ a.daBtnPreNext:hover span{
     overflow-y: auto;
 }
 
+#dl_tblFrameHd {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
 #dl_tblFrame {
 	width: 100%;
     height: 100%;
@@ -556,7 +636,11 @@ a.daBtnPreNext:hover span{
 }
 
 #dl_tblContent {
-    width: 1300px;
+    width: 1240px;
+}
+
+#dlRb_tblContent {
+    width: 900px;
 }
 
 .dl_tbl {
@@ -577,7 +661,9 @@ a.daBtnPreNext:hover span{
 	height: 80px;
 	font-weight: bold;
 	text-align: center;
-	background-image: url(/public/images/white60.png);
+//	background-image: url(/public/images/white20.png);
+	background-image: url(/public/images/black20.png);
+	color: #e6be83;
 }
 
 .dl_srch_edit {
@@ -586,6 +672,10 @@ a.daBtnPreNext:hover span{
 	text-align: center;
 	vertical-align: middle;
 	padding: 4px 0px;
+}
+
+.dl_borderLeft {
+	border-left: 1px solid #aaa;
 }
 
 /* 下記が無いと .dl_tbl の font-size: 90%; が効かない */
@@ -623,6 +713,7 @@ a.daBtnPreNext:hover span{
 .dl_payment_date {
 	width:90px;
 	vertical-align: middle;
+	padding: 4px 0px;
 }
 
 .dl_string {
@@ -646,6 +737,19 @@ a.daBtnPreNext:hover span{
 
 .dl_content {
 	width:120px;
+	vertical-align: middle;
+}
+
+.dlRb_debit_date {
+	width:90px;
+	vertical-align: middle;
+	padding: 4px 0px;
+}
+
+.dlRb_secret_rec_flg {
+	width:45px;
+	border-left: 1px solid #aaa;
+	text-align: center;
 	vertical-align: middle;
 }
 

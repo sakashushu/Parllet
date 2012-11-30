@@ -1,0 +1,61 @@
+<div id="header_inner">
+	<table id="logo-table">
+		<tr>
+			<td id="logo-pre">
+				&{'views.main.tools.logo.pre'}
+			</td>
+			<!-- 
+				&{'views.main.tools.logo'}
+
+			<td>
+				<img alt="&{'views.main.tools.logo'}" src="@{'/public/images/logo.png'}" width="110px">
+			 -->
+			<td id="logo">
+			</td>
+			
+		#{secure.check 'admin'}
+			<td>
+				<ul id="loginMenu" >
+					<li class="${request.controller == 'DailyAccount' &&
+								strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
+						<a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
+					</li>
+					<li class="${request.controller == 'DailyAccount' &&
+								strTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
+						<a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a>
+					</li>
+					<li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
+						<a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
+					</li>
+					<li class="${request.controller == 'DetailList' ? 'selected' : ''}">
+						<a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
+					</li>
+					<li class="${request.controller == 'Config' ? 'selected' : ''}">
+						<a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
+					</li>
+				</ul>
+			</td>
+		#{/secure.check}
+		</tr>
+   	</table>
+	<ul id="tools">
+		<li>
+			${models.HaUser.find("byEmail", session.username).first()?.fullname}
+		</li>
+		<li>
+			｜
+		</li>
+		#{secure.check 'admin'}
+			<li>
+				<a href="@{HaUsers.list()}">&{'views.admin.adminMenu'}</a>
+			</li>
+			<li>
+				｜
+			</li>
+		#{/secure.check}
+		<li>
+			<a href="@{Secure.logout()}">&{'views.login.tools.logout'}</a>
+		</li>
+	</ul>
+
+</div>

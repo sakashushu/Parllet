@@ -1,5 +1,5 @@
 #{extends 'login.html' /}
-#{set title:'日計表' /}
+#{set title:messages.get('views.dailyaccount.dailyaccount') /}
 
 <script type="text/javascript">
 <!--
@@ -33,8 +33,8 @@ jQuery(document).ready(function() {
 
 //起動時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
-	jQuery('#da_tcol').height(jQuery(window).innerHeight()-200);
-	jQuery('#da_tbody').height(jQuery(window).innerHeight()-200);
+	jQuery('#da_tcol').height(jQuery(window).innerHeight()-130);
+	jQuery('#da_tbody').height(jQuery(window).innerHeight()-130);
 //	jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //	jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -43,8 +43,8 @@ jQuery(document).ready(function() {
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#da_tcol').height(jQuery(this).innerHeight()-200);
-		jQuery('#da_tbody').height(jQuery(this).innerHeight()-200);
+		jQuery('#da_tcol').height(jQuery(this).innerHeight()-130);
+		jQuery('#da_tbody').height(jQuery(this).innerHeight()-130);
 //		jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //		jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //		jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -97,7 +97,7 @@ function addFigure(str) {
 
 jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
-	jQuery('.da_menu').mousedown(function(e) {
+	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
 			//明細表へジャンプする際の絞込項目セット
 			jQuery('#hPaymentDateFr').val(jQuery('.ToDlPaymentDateFr',this).val());
@@ -108,11 +108,11 @@ jQuery(function(){
 			jQuery('#hItemId').val(jQuery('.ToDlItemId',this).val());
 			
 			e.preventDefault();
-			jQuery('.da_menu').contextMenu({x: e.pageX, y: e.pageY});
+			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
 		}
 	});
 	jQuery.contextMenu({
-		selector: '.da_menu',
+		selector: '.menu_cell',
 		trigger: 'none',
 		callback: function(key, options) {
 //			var m = "clicked: " + key;
@@ -121,7 +121,7 @@ jQuery(function(){
 			jQuery('body').attr("disabled", "disabled");
 		},
 		items: {
-			"detailList": {name: "明細表示"},
+			"detailList": {name: "収支明細へ"},
 //			"cut": {name: "Cut", icon: "cut"},
 //			"copy": {name: "Copy", icon: "copy"},
 //			"paste": {name: "Paste", icon: "paste"},
@@ -141,16 +141,23 @@ jQuery(function(){
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
 
+<div id="cmHeader">
+#{include 'loginBodyHeader.html' /}
+</div>  <!-- cmHeader -->
+
+<div id="cmMain">
+
+
 <!-- 明細表へジャンプ用フォーム（非表示） -->
 #{form @DetailList.detailList()}
-	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" style="display:none;" />
-	<input type="text" name="h_payment_date_fr" id="hPaymentDateFr" style="display:none;" />
-	<input type="text" name="h_payment_date_to" id="hPaymentDateTo" style="display:none;" />
-	<input type="text" name="h_balance_type_id" id="hBalanceTypeId" style="display:none;" />
-	<input type="text" name="h_handling_id" id="hHandlingId" style="display:none;" />
-	<input type="text" name="h_ideal_deposit_id" id="hIdealDepositId" style="display:none;" />
-	<input type="text" name="h_item_id" id="hItemId" style="display:none;" />
-	<input type="submit" name="srch" id="submitDetailList" style="display:none;" />
+	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" class="invisible" />
+	<input type="text" name="h_payment_date_fr" id="hPaymentDateFr" class="invisible" />
+	<input type="text" name="h_payment_date_to" id="hPaymentDateTo" class="invisible" />
+	<input type="text" name="h_balance_type_id" id="hBalanceTypeId" class="invisible" />
+	<input type="text" name="h_handling_id" id="hHandlingId" class="invisible" />
+	<input type="text" name="h_ideal_deposit_id" id="hIdealDepositId" class="invisible" />
+	<input type="text" name="h_item_id" id="hItemId" class="invisible" />
+	<input type="submit" name="srch" id="submitDetailList" class="invisible" />
 #{/form}
 
 	
@@ -158,9 +165,9 @@ jQuery(function(){
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
-	<input type="text" class="datepickerJump" name="e_basis_date" id="idBasisDate"
-		value="${sBasisDate}" style="display:none;" />
-	<input type="submit" name="move" id="idMove" style="display:none;" />
+	<input type="text" class="datepickerJump invisible" name="e_basis_date" id="idBasisDate"
+		value="${sBasisDate}" />
+	<input type="submit" name="move" id="idMove" class="invisible" />
 #{/form}
 
 #{ifErrors}
@@ -293,7 +300,7 @@ jQuery(function(){
 			        %{leftFlg = 1}%
 					<li>
 						#{list items:lwda.lstWdtd, as:'wdtd'}
-						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric da_menu">
+						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric menu_cell">
 							<!-- 
 							<a href="@{DetailList.detailList(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
 							<a href="" class="num3" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
@@ -334,3 +341,5 @@ jQuery(function(){
 	</li>
 	
 </ul>
+
+</div>  <!-- cmMain -->

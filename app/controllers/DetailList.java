@@ -332,12 +332,13 @@ public class DetailList extends Controller {
 				if(!session.get("daRbHdHandlingId").equals(""))
 					h_handling_id = Long.parseLong(session.get("daRbHdHandlingId"));
 		    	
-		    //初回読み込み時は絞込引落日範囲は1か月前から現在日付
+		    //初回読み込み時は絞込引落日範囲は1か月前から半年後
 			} else {
 	    		Calendar calendar = Calendar.getInstance();
-	    		h_debit_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 	    		calendar.add(Calendar.MONTH, -1);
 	    		h_debit_date_fr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+	    		calendar.add(Calendar.MONTH, 7);
+	    		h_debit_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			}
 		}
 		
@@ -347,8 +348,6 @@ public class DetailList extends Controller {
 	
 		List<Record> records = null;
 		List<HandlingMst> handlings = null;
-		BalanceTypeMst bTypeIn = null;
-		BalanceTypeMst bTypeOut = null;
 		
 		long count = 0L;		//レコード数
 		int iLinage = 30;		//１ページあたりの行数

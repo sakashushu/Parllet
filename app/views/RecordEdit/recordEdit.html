@@ -1,4 +1,10 @@
 #{extends 'login.html' /}
+#{ifnot record?.id}
+	#{set title:messages.get('Record')+' '+messages.get('views.common.update.add') /}
+#{/ifnot}
+#{else}
+	#{set title:messages.get('Record')+' '+messages.get('views.common.update.edit') /}
+#{/else}
 
 <!-- datepickerにtimepickerアドオン -->
 <!-- 
@@ -308,10 +314,16 @@ jQuery(document).ready(function(){
 // -->
 </script>
 
+<div id="cmHeader">
+#{include 'loginBodyHeader.html' /}
+</div>  <!-- cmHeader -->
+
+<div id="cmMain">
+
 #{ifErrors}
-    <p class="crudFlash flashError">
-        &{'validation.title'}
-    </p>
+<p class="crudFlash flashError">
+	&{'validation.title'}
+</p>
 #{/ifErrors}
 	    
 <div id="crudShow">
@@ -323,7 +335,7 @@ jQuery(document).ready(function(){
 	<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
 #{/else}
 
-   <div class="objectForm">
+<div class="objectForm">
 #{form @save_rec(record?.id)}
  
     <div class="crudField">
@@ -467,3 +479,5 @@ jQuery(document).ready(function(){
 #{/if}
 
 </div>
+
+</div>  <!-- cmMain -->

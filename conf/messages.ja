@@ -4,6 +4,7 @@ secure.signin=ログイン
 secure.remember=次回以降IDを省略
 
 views.main.tools.login=ログイン
+views.main.tools.logo.pre=イメージで貯金できる家計簿
 views.main.tools.logo.pre1=イメージで
 views.main.tools.logo.pre2=貯金できる家計簿
 views.main.tools.logo=安心My貯金
@@ -21,11 +22,15 @@ views.common.combo.notrequired=(なし)
 views.common.combo.all=すべて
 views.common.combo.space=(空白)
 views.common.combo.notspace=(空白以外)
+views.common.update.list=リスト
+views.common.update.add=追加
 views.common.update.edit=編集
 views.common.move=移動
 views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
 
 views.application.tools.home=ホーム
+views.detaillist.balance.title=収支明細
+views.detaillist.remainderBank.title=残高明細（口座系）
 views.detaillist.detaillist=明細表
 views.detaillist.diff=差額
 views.detaillist.remainder=残高

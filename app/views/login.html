@@ -2,100 +2,12 @@
 
 <html>
     <head>
-        <title>Administration</title>
-        <meta charset="${_response_encoding}">
-        #{get 'moreStyles' /}
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
-		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript">google.load('jquery', '1')</script>
-		<script type="text/javascript">google.load('jqueryui', '1')</script>
-		<!-- datepicker日本語化 -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-		<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
-		<style>
-		.ui-datepicker td span, .ui-datepicker td a {
-		    text-align: center;    /* 日付をセンタリング */
-		}
-		.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
-		    width: auto;    /* そのままだと改行してしまう */
-		}
-		.ui-datepicker select.ui-datepicker-month {
-		    margin-left: 1em;    /* ちょっと離す */
-		}
-		</style>
-		<noscript>このページは javascript が有効になっている必要があります。</noscript>
-        #{get 'moreScripts' /}
+		#{include 'head.html' /}
     </head>
     <body id="admin">
     	<img src="/public/images/background_test.jpg" alt="" id="bg-img" />
     	<div id="container">
-
-    	<div id="header">
-<!-- 
-    		<div id="logo">
-    			&{'views.admin.logo'}.<span>&{'views.admin.logo.span'}</span>
-    		</div>
- -->
-    		<table id="logo-table">
-	    		<tr>
-		    		<td id="logo-pre">
-			   			&{'views.main.tools.logo.pre1'}
-			   			<br>
-			   			&nbsp;&nbsp;&nbsp;&nbsp;
-			   			&{'views.main.tools.logo.pre2'}
-		    		</td>
-		    		<td id="logo">
-		    			&{'views.main.tools.logo'}
-		    		</td>
-		    	</tr>
-    		</table>
-    		<ul id="tools">
-			    <li>	
-					${models.HaUser.find("byEmail", session.username).first()?.fullname}
-			    </li>
-	            <li>
-	                ｜
-	            </li>
-		        #{secure.check 'admin'}
-		            <li>
-		                <a href="@{HaUsers.list()}">&{'views.admin.adminMenu'}</a>
-		            </li>
-		            <li>
-		                ｜
-		            </li>
-		        #{/secure.check}
-			    <li>	
-					<a href="@{Secure.logout()}">&{'views.login.tools.logout'}</a>
-			    </li>
-			</ul>
-    	</div>
-    	
-    	<div id="main">
-		    <ul id="loginMenu">
-		        <li class="${request.controller == 'DailyAccount' &&
-		        			strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
-		            <a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
-		        </li>
-		        <li class="${request.controller == 'DailyAccount' &&
-		        			strTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
-		            <a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a>
-		        </li>
-		        <li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
-		            <a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
-		        </li>
-		        <li class="${request.controller == 'DetailList' ? 'selected' : ''}">
-		            <a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
-		        </li>
-		        <li class="${request.controller == 'Config' ? 'selected' : ''}">
-		            <a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
-		        </li>
-		    </ul>
-        	
 	        #{doLayout /}
-    	</div>
-    	
     	</div>
     </body>
 </html>

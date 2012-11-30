@@ -1,18 +1,17 @@
 #{extends 'login.html' /}
-#{set title:'日計表' /}
-
+#{set title:messages.get('views.dailyaccount.balancetable') /}
 
 <script type="text/javascript">
 <!--
 //起動時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
-	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-180);
+	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-110);
 });
 
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-180);
+		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-110);
 	});
 });
 
@@ -66,7 +65,7 @@ jQuery(function() {
 
 jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
-	jQuery('.da_menu').mousedown(function(e) {
+	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
 			//明細表へジャンプする際の絞込項目セット
 			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
@@ -74,11 +73,11 @@ jQuery(function(){
 			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
 			
 			e.preventDefault();
-			jQuery('.da_menu').contextMenu({x: e.pageX, y: e.pageY});
+			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
 		}
 	});
 	jQuery.contextMenu({
-		selector: '.da_menu',
+		selector: '.menu_cell',
 		trigger: 'none',
 		callback: function(key, options) {
 			jQuery('#submitDlRemainderBank').click();
@@ -96,6 +95,12 @@ jQuery(function(){
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
+
+<div id="cmHeader">
+#{include 'loginBodyHeader.html' /}
+</div>  <!-- cmHeader -->
+
+<div id="cmMain">
 
 <!-- 残高明細(口座系)へジャンプ用フォーム（非表示） -->
 #{form @DetailList.dl_remainderBank()}
@@ -123,7 +128,7 @@ jQuery(function(){
 		value="${sBasisDate}" size="13" />
 	<input type="submit" value="移動" name="move" />
  -->
-	<div style="font-size:90%;font-weight:bold;">
+	<div id="bt_basisDate">
 	${sBasisDate}
 	<input type="text" class="datepickerJump" name="e_basis_date"
 		value="${sBasisDate}" style="display:none;" />
@@ -152,7 +157,7 @@ jQuery(function(){
 								<div class="bt_cate_small_pre"></div>
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
 								#{list items:lwda.lstWdtd, as:'wdtd'}
-									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric da_menu">
+									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
 										<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
 										<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
 										<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
@@ -195,3 +200,5 @@ jQuery(function(){
 		</div>
 	</li>
 </ul>	
+
+</div>  <!-- cmMain -->
