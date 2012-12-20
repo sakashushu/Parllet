@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.postgresql.ssl.MakeSSL;
 
 import models.*;
 
@@ -45,7 +46,7 @@ public class DetailList extends Controller {
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
 	static final String HANDLING_TYPE_CRECA = Messages.get("HandlingType.creca");
 	
-	public static void detailList(
+	public static void dl_balance(
     		int page,						/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
     		String h_payment_date_fr,		/* 絞込支払日範囲（開始） */
@@ -87,6 +88,10 @@ public class DetailList extends Controller {
 		    	h_item_id = null;
 		    	if(!session.get("hItemId").equals(""))
 		    		h_item_id = Long.parseLong(session.get("hItemId"));
+		    	if(!session.get("hDebitDateFr").equals(""))
+		    		h_debit_date_fr = session.get("hDebitDateFr");
+		    	if(!session.get("hDebitDateTo").equals(""))
+		    		h_debit_date_to = session.get("hDebitDateTo");
 		    	
 		    //初回読み込み時は絞込支払日範囲は現在日付の前後日
 			} else {
@@ -222,6 +227,21 @@ public class DetailList extends Controller {
 	    	
 	    	
 		} else {
+			//引数の型等チェック
+			Common cm = new Common();
+			if(h_payment_date_fr!=null && !h_payment_date_fr.equals(""))
+				if(!cm.checkDate(h_payment_date_fr))
+					h_payment_date_fr = session.get("hPaymentDateFr");
+			if(h_payment_date_to!=null && !h_payment_date_to.equals(""))
+				if(!cm.checkDate(h_payment_date_to))
+					h_payment_date_to = session.get("hPaymentDateTo");
+			if(h_debit_date_fr!=null && !h_debit_date_fr.equals(""))
+				if(!cm.checkDate(h_debit_date_fr))
+					h_debit_date_fr = session.get("hDebitDateFr");
+			if(h_debit_date_to!=null && !h_debit_date_to.equals(""))
+				if(!cm.checkDate(h_debit_date_to))
+					h_debit_date_to = session.get("hDebitDateTo");
+			
 			//検索条件をセッションに保存
 			session.put("daBlFilExistFlg", "true");
 			session.put("hSecretRecFlg", h_secret_rec_flg==null ? "" : h_secret_rec_flg);
@@ -231,6 +251,8 @@ public class DetailList extends Controller {
 			session.put("hHandlingId", h_handling_id==null ? "" : h_handling_id);
 			session.put("hIdealDepositId", h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
 			session.put("hItemId", h_item_id==null ? "" : h_item_id);
+			session.put("hDebitDateFr", h_debit_date_fr==null ? "" : h_debit_date_fr);
+			session.put("hDebitDateTo", h_debit_date_to==null ? "" : h_debit_date_to);
 				
 			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			
@@ -279,21 +301,21 @@ public class DetailList extends Controller {
 					sqlSrchRec += " and balance_type_mst.id = " + h_balance_type_id;
 			//  取扱(実際)
 			if(h_handling_id != null)
-				if(h_handling_id != 0)
+				if(h_handling_id != 0L)
 					sqlSrchRec += " and handling_mst.id " +
 							(h_handling_id==-1 ? "is null "
 									: (h_handling_id==-2 ? "is not null "
 											: "= " + h_handling_id));
 			//  取扱(My貯金)
 			if(h_ideal_deposit_id != null)
-				if(h_ideal_deposit_id != 0)
+				if(h_ideal_deposit_id != 0L)
 					sqlSrchRec += " and ideal_deposit_mst.id " +
 							(h_ideal_deposit_id==-1 ? "is null "
 									: (h_ideal_deposit_id==-2 ? "is not null "
 											: "= " + h_ideal_deposit_id));
 			//  項目
 			if(h_item_id != null)
-				if(h_item_id != 0)
+				if(h_item_id != 0L)
 					sqlSrchRec += " and item_mst.id = " + h_item_id;
 			
 			sqlSrchRec += "" +
@@ -318,7 +340,6 @@ public class DetailList extends Controller {
     		String srch						/* 「絞込」ボタン */
     		) {
 		
-		String sqlSrchRec = "";
 		//意図的に絞り込まれていない時
 		if(srch==null) {
 			//セッションに絞込条件が入っている時はそれぞれセット
@@ -353,57 +374,126 @@ public class DetailList extends Controller {
 		int iLinage = 30;		//１ページあたりの行数
 		int nbPages = 0;		//ページ数
 		
+		//引数の型等チェック
+		Common cm = new Common();
+		if(h_debit_date_fr!=null && !h_debit_date_fr.equals(""))
+			if(!cm.checkDate(h_debit_date_fr))
+				h_debit_date_fr = session.get("daRbHdDebitDateFr");
+		if(h_debit_date_to!=null && !h_debit_date_to.equals(""))
+			if(!cm.checkDate(h_debit_date_to))
+				h_debit_date_to = session.get("daRbHdDebitDateTo");
+		
 		//検索条件をセッションに保存
 		session.put("daRbFilExistFlg", "true");
 		session.put("hSecretRecFlg", h_secret_rec_flg==null ? "" : h_secret_rec_flg);
 		session.put("daRbHdDebitDateFr", h_debit_date_fr==null ? "" : h_debit_date_fr);
 		session.put("daRbHdDebitDateTo", h_debit_date_to==null ? "" : h_debit_date_to);
 		session.put("daRbHdHandlingId", h_handling_id==null ? "" : h_handling_id);
-			
+		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		
 		// 検索処理(HandlingMst)
 		handlings = HandlingMst.find("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?) order by handling_type_mst.handling_type_order, order_seq", haUser, Messages.get("HandlingType.bank"), Messages.get("HandlingType.emoney")).fetch();
 		
-		// 検索処理(Record)
-		sqlSrchRec += "ha_user = " + haUser.id;
-		//  非公開フラグ
-		if((session.get("actionMode") != null) &&
-				(session.get("actionMode").equals("Edit")))
-			if(h_secret_rec_flg != null)
-				if(h_secret_rec_flg != 0)
-					sqlSrchRec += " and secret_rec_flg = " + (h_secret_rec_flg==2 ? "true" : "false");
 		
-		//  引落日範囲(自)
-		if(h_debit_date_fr != null && !h_debit_date_fr.equals(""))
-			sqlSrchRec += " and debit_date >= '" + h_debit_date_fr + " 00:00:00'";
-		//  引落日範囲(至)
-		if(h_debit_date_to != null && !h_debit_date_to.equals(""))
-			sqlSrchRec += " and debit_date <= '" + h_debit_date_to + " 23:59:59'";
-		
+		/* 残高明細行作成 */
+		String sql = "";
+		DetailList dl = new DetailList();
 		//  取扱(実際)
 		//意図的に絞り込まれていない時は口座・電子マネーの先頭のモノで絞り込む
 		if(srch==null && h_handling_id==null)
 			h_handling_id = handlings.get(0).id;
-		sqlSrchRec += " and " +
-				" ((    handling_mst.handling_type_mst.handling_type_name = '" + HANDLING_TYPE_CRECA + "' " +
-				"   and handling_mst.debit_bank.id = " + h_handling_id +
-				"   ) " +
-				"  or handling_mst.id = " + h_handling_id +
-				"  )"
-				;
-		
-		sqlSrchRec += "" +
-				((session.get("actionMode")).equals("View") ? " and secret_rec_flg = false " : "") +
+		// JOIN句 固定部分
+		String sqlJoinPhrase = "" +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id " +
 				"";
-		count = Record.count(sqlSrchRec);
-		nbPages = (int) (Math.ceil((double)count/iLinage));
-		sqlSrchRec += " order by debit_date, payment_date, id";
-		records = Record.find(
-				sqlSrchRec).from(0).fetch(page, 30);
-//			System.out.println(records.get(0).payment_date);
+		//  非公開フラグ
+		String sqlSecretRecFlg = "";
+		if((session.get("actionMode") != null) && (session.get("actionMode").equals("Edit")))
+			if(h_secret_rec_flg != null)
+				if(h_secret_rec_flg != 0)
+					sqlSecretRecFlg = " AND r.secret_rec_flg = " + (h_secret_rec_flg==2 ? "true" : "false");
 		
+		//残高明細行取得用SQL作成
+		sql = dl.makeSqlDlRbRec(haUser, h_debit_date_fr, h_debit_date_to, h_handling_id, sqlJoinPhrase, sqlSecretRecFlg);
+
+		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
+		
+		List<WkDlRbRec> lWDRR = new ArrayList<WkDlRbRec>();
+		
+		count = lstObjEach.size();
+		nbPages = (int) (Math.ceil((double)count/iLinage));
+		//現在ページの部分のみ取得するループ
+		for(int iCnt = (page*iLinage)-iLinage; iCnt < (count<page*iLinage ? count : page*iLinage); iCnt++) {
+			Object[] objEach = lstObjEach.get(iCnt);
+			WkDlRbRec wkDlRbRec = new WkDlRbRec();
+			wkDlRbRec.setLngId(objEach[0]==null ? 0 :  Long.parseLong(String.valueOf(objEach[0])));
+			wkDlRbRec.setBolSecretRecFlg(objEach[1]==null ? false : Boolean.valueOf(String.valueOf(objEach[1])));
+			wkDlRbRec.setStrDebitDate(String.valueOf(objEach[2]));
+			wkDlRbRec.setStrPaymentDate(objEach[3]==null ? "" : String.valueOf(objEach[3]));
+			wkDlRbRec.setStrBalanceTypeName(objEach[4]==null ? "" : String.valueOf(objEach[4]));
+			wkDlRbRec.setStrHandlingName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
+			wkDlRbRec.setStrIdealDepositName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
+			wkDlRbRec.setLngAmount(objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7])));
+			wkDlRbRec.setStrStore(objEach[8]==null ? "" : String.valueOf(objEach[8]));
+			
+			//明細表へジャンプのための引数をセット
+			wkDlRbRec.setLngBalanceTypeId(objEach[9]==null ? null : Long.parseLong(String.valueOf(objEach[9])));
+			wkDlRbRec.setLngHandlingId(objEach[10]==null ? null : Long.parseLong(String.valueOf(objEach[10])));
+			
+			lWDRR.add(wkDlRbRec);
+		}
+		
+		/* 残高明細行の残高の値設定 */
 		if(count>0) {
+			//残高基準値取得用SQL作成
+			String strDebitDateBase = String.valueOf(lstObjEach.get(0)[2]);
+			sql = dl.makeSqlDlRbBase(haUser, strDebitDateBase, h_handling_id, sqlJoinPhrase, sqlSecretRecFlg);
+			
+			BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
+			
+			Long lngRemainder = biRemainder.longValue();
+			//全行ループし、現在ページのデータにセットして抜ける
+			for(int i = 0; i < count; i++) {
+				Object[] objEach = lstObjEach.get(i);
+				Long intRemainderEach = objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7]));
+				String strBalanceTypeName = objEach[4]==null ? "" : String.valueOf(objEach[4]);
+				if(strBalanceTypeName.equals(BALANCE_TYPE_IN) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_IN))
+					lngRemainder += intRemainderEach;
+				if(strBalanceTypeName.equals(BALANCE_TYPE_OUT) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_OUT))
+					lngRemainder -= intRemainderEach;
+				if(i >= (page*iLinage)-iLinage)
+					lWDRR.get(i-((page*iLinage)-iLinage)).setLngRemainder(lngRemainder);
+				if(i == (count<page*iLinage ? count : page*iLinage)-1)
+					break;
+			}
+		}
+		
+		render(h_debit_date_fr, h_debit_date_to, handlings, records, lWDRR, h_secret_rec_flg, h_handling_id, count, nbPages, page);
+    }
+	
+	/**
+	 * 残高基準値取得用SQL作成
+	 * @param haUser
+	 * @param strDebitDateBase
+	 * @param h_handling_id
+	 * @param sqlJoinPhrase
+	 * @param sqlSecretRecFlg
+	 * @return
+	 */
+	private String makeSqlDlRbBase(
+			HaUser haUser,
+    		String strDebitDateBase,
+    		Long h_handling_id,				/* 絞込取扱(実際)ID */
+    		String sqlJoinPhrase,
+    		String sqlSecretRecFlg
+			) {
+		String sql = "";
 			// 収入：加算、支出：減算
 			String sqlSumAllCaseInOut = "" +
 					" WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount " +
@@ -415,8 +505,7 @@ public class DetailList extends Controller {
 					" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
 					"";
 			
-			String sql = "" +
-					" SELECT " +
+			sql = "   SELECT " +
 					"   COALESCE(SUM(" +
 					"     CASE " +
 					sqlSumAllCaseInOut +			//収入加算・支出減算
@@ -424,52 +513,177 @@ public class DetailList extends Controller {
 					"     END" +
 					"   ), 0) " +
 					" FROM Record r " +
+					sqlJoinPhrase +
 					" LEFT JOIN ItemMst i " +
 					"   ON r.item_mst_id = i.id " +
-					" LEFT JOIN BalanceTypeMst b " +
-					"   ON r.balance_type_mst_id = b.id " +
-					" LEFT JOIN HandlingMst h " +
-					"   ON r.handling_mst_id = h.id " +
-					" LEFT JOIN HandlingTypeMst ht " +
-					"   ON h.handling_type_mst_id = ht.id " +
 					" LEFT JOIN HandlingMst hb " +
 					"   ON h.debit_bank_id = hb.id " +
 					" WHERE r.ha_user_id = " + haUser.id +
+					"   AND cast(r.debit_date as date) < to_date('" + strDebitDateBase + "', 'YYYY/MM/DD') " +
 					"   AND (" +
 						" CASE " +
 						"   WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN hb.id " +
 						"   ELSE h.id " +
 						" END) = " + h_handling_id +
 					"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
-					"   AND (   cast(r.debit_date as timestamp) < to_timestamp('" + records.get(0).debit_date + "', 'YYYY-MM-DD HH24:MI:SS') " +
-						"    OR (    cast(r.debit_date as timestamp) = to_timestamp('" + records.get(0).debit_date + "', 'YYYY-MM-DD HH24:MI:SS') " +
-							"    AND (   cast(r.payment_date as timestamp) < to_timestamp('" + records.get(0).payment_date + "', 'YYYY-MM-DD HH24:MI:SS') " +
-									" OR (    cast(r.payment_date as timestamp) = to_timestamp('" + records.get(0).payment_date + "', 'YYYY-MM-DD HH24:MI:SS') " +
-										" AND r.id <= " + records.get(0).id +
-										" )" +
-									" )" +
-							"    ) " +
-						"    ) " +
-					"   AND r.secret_rec_flg = FALSE " +
-					"  " +
+					sqlSecretRecFlg +
 					"";
-			BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
-			
-			Integer intRemainder = biRemainder.intValue();
-			records.get(0).remainder = intRemainder;
-			for(int i = 1;i < records.size();i++) {
-				if(records.get(i).balance_type_mst.balance_type_name.equals(BALANCE_TYPE_IN) ||
-						records.get(i).balance_type_mst.balance_type_name.equals(BALANCE_TYPE_BANK_IN))
-					intRemainder += records.get(i).amount;
-				if(records.get(i).balance_type_mst.balance_type_name.equals(BALANCE_TYPE_OUT) ||
-						records.get(i).balance_type_mst.balance_type_name.equals(BALANCE_TYPE_BANK_OUT))
-					intRemainder -= records.get(i).amount;
-				records.get(i).remainder = intRemainder;
-			}
-		}
 		
-		render(h_debit_date_fr, h_debit_date_to, handlings, records, h_secret_rec_flg, h_handling_id, count, nbPages, page);
-    }
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 残高明細行取得用SQL作成
+	 * @param haUser
+	 * @param h_debit_date_fr
+	 * @param h_debit_date_to
+	 * @param h_handling_id
+	 * @param sqlJoinPhrase
+	 * @param sqlSecretRecFlg
+	 * @return
+	 */
+	private String makeSqlDlRbRec(
+			HaUser haUser,
+    		String h_debit_date_fr,			/* 絞込引落日範囲（開始） */
+    		String h_debit_date_to,			/* 絞込引落日範囲（終了） */
+    		Long h_handling_id,				/* 絞込取扱(実際)ID */
+    		String sqlJoinPhrase,
+    		String sqlSecretRecFlg
+			) {
+		String sql = "";
+		
+		// WHERE句 固定部分
+		String sqlDebitDateFr = "";
+		String sqlDebitDateTo = "";
+		//  引落日範囲(自)
+		if(h_debit_date_fr != null && !h_debit_date_fr.equals(""))
+			sqlDebitDateFr = "   AND cast(r.debit_date as date) >= to_date('" + h_debit_date_fr + "', 'YYYY/MM/DD') ";
+		//  引落日範囲(至)
+		if(h_debit_date_to != null && !h_debit_date_to.equals(""))
+			sqlDebitDateTo = "   AND cast(r.debit_date as date) <= to_date('" + h_debit_date_to + "', 'YYYY/MM/DD') ";
+		String sqlWherePhrase = "" +
+				" WHERE r.ha_user_id = " + haUser.id +
+				sqlDebitDateFr + sqlDebitDateTo +
+				"";
+		
+		//残高明細行取得用SQL作成(クレジットカード)
+		String sqlDlRbRecCreca = makeSqlDlRbRecCreca(haUser, sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, h_handling_id);
+		
+		//残高明細行取得用SQL作成(クレジットカード以外)
+		String sqlDlRbRecNotCreca = makeSqlDlRbRecNotCreca(haUser, sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, h_handling_id);
+		
+		sql = "" +
+				" ( " + sqlDlRbRecCreca + " ) " +
+				" UNION ALL " +
+				" ( " + sqlDlRbRecNotCreca + " ) " +
+				" ORDER BY rm_debit_date, rm_payment_date_order" +
+				"";
+		
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 残高明細行取得用SQL作成(クレジットカード)
+	 * @param haUser
+	 * @param sqlJoinPhrase
+	 * @param sqlWherePhrase
+	 * @param sqlSecretRecFlg
+	 * @param h_handling_id
+	 * @return
+	 */
+	private String makeSqlDlRbRecCreca(
+			HaUser haUser,
+    		String sqlJoinPhrase,
+    		String sqlWherePhrase,
+    		String sqlSecretRecFlg,
+    		Long h_handling_id				/* 絞込取扱(実際)ID */
+			) {
+		String sql = "";
+		
+		sql = "" +
+				" SELECT " +
+				"   null as rm_id " +
+				"  ,cast(null as boolean) as rm_secret_rec_flg " +
+				"  ,to_char(r.debit_date, 'YYYY/MM/DD') as rm_debit_date " +
+				"  ,cast('' as character varying(255)) as rm_payment_date " +
+				"  ,b.balance_type_name as rm_balance_type_name " +
+				"  ,h.handling_name as rm_handling_name " +
+				"  ,cast('' as character varying(255)) as rm_ideal_deposit_name " +
+				"  ,COALESCE(SUM(r.amount), 0) as rm_amount " +
+				"  ,cast('' as character varying(255)) as rm_store " +
+				"  ,b.id as rm_balance_type_id " +
+				"  ,h.id as rm_handling_id " +
+				"  ,r.debit_date as rm_payment_date_order " +
+				" FROM Record r " +
+				sqlJoinPhrase +
+				" LEFT JOIN HandlingMst hb " +
+				"   ON h.debit_bank_id = hb.id " +
+				sqlWherePhrase +
+				"   AND hb.id = " + h_handling_id +
+				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
+				"   AND ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' " +
+				sqlSecretRecFlg +
+				" GROUP BY rm_debit_date, rm_balance_type_name, rm_handling_name, rm_balance_type_id, rm_handling_id, rm_payment_date_order " +
+				"";
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 残高明細行取得用SQL作成(クレジットカード以外)
+	 * @param haUser
+	 * @param sqlJoinPhrase
+	 * @param sqlWherePhrase
+	 * @param sqlSecretRecFlg
+	 * @param h_handling_id
+	 * @return
+	 */
+	private String makeSqlDlRbRecNotCreca(
+			HaUser haUser,
+    		String sqlJoinPhrase,
+    		String sqlWherePhrase,
+    		String sqlSecretRecFlg,
+    		Long h_handling_id				/* 絞込取扱(実際)ID */
+			) {
+		String sql = "";
+		
+		sql = "" +
+				" SELECT " +
+				"   r.id as rm_id " +
+				"  ,r.secret_rec_flg as rm_secret_rec_flg " +
+				"  ,to_char(r.debit_date, 'YYYY/MM/DD') as rm_debit_date " +
+				"  ,to_char(r.payment_date, 'YYYY/MM/DD HH24:MI') as rm_payment_date " +
+				"  ,b.balance_type_name as rm_balance_type_name " +
+				"  ,h.handling_name as rm_handling_name " +
+				"  ,id.ideal_deposit_name as rm_ideal_deposit_name " +
+				"  ,r.amount as rm_amount " +
+				"  ,r.store as rm_store " +
+				"  ,null as rm_balance_type_id " +
+				"  ,null as rm_handling_id " +
+				"  ,r.payment_date as rm_payment_date_order " +
+				" FROM Record r " +
+				sqlJoinPhrase +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				sqlWherePhrase +
+				"   AND h.id = " + h_handling_id +
+				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
+				"   AND ht.handling_type_name != '" + HANDLING_TYPE_CRECA + "' " +
+				sqlSecretRecFlg +
+				"";
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
 	
 	public static class WebSocketApp extends WebSocketController {
 		public static void listen() {

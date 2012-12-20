@@ -94,7 +94,7 @@ input[type="submit"],input[type="button"] {
     width: 980px;
 	background-image: url(/public/images/brown3_90.png);
 	z-index: 99;
-	height: 40px;
+//	height: 40px;
 }
 
 #dlHeader {
@@ -102,7 +102,7 @@ input[type="submit"],input[type="button"] {
     width: 980px;
 	background-image: url(/public/images/brown3_90.png);
 	z-index: 99;
-	height: 159px;
+//	height: 159px;
 //	height: 100px;
 }
 
@@ -111,7 +111,7 @@ input[type="submit"],input[type="button"] {
     width: 980px;
 	background-image: url(/public/images/brown3_90.png);
 	z-index: 99;
-	height: 68px;
+//	height: 66px;
 }
 
 
@@ -124,7 +124,7 @@ input[type="submit"],input[type="button"] {
 }
 
 #dlMain {
-	padding-top: 146px;	
+	padding-top: 157px;	
 }
 
 #cfMain {
@@ -133,7 +133,7 @@ input[type="submit"],input[type="button"] {
 
 #logo-table {
 	display: table;
-	width: 660px;
+//	width: 660px;
 }
 
 #logo-pre {
@@ -156,7 +156,6 @@ input[type="submit"],input[type="button"] {
 	background-image: url(/public/images/logo.png);
 	width: 130px;
 	height: 30px;
-	z-index: 100;
 }
 
 #logo span {
@@ -169,7 +168,7 @@ input[type="submit"],input[type="button"] {
     margin: 0;
     padding: 0;
     position: absolute;
-    right: 0;
+//    right: 0;
     top: 10px;
     right: 20px;
 }
@@ -191,7 +190,7 @@ input[type="submit"],input[type="button"] {
 #loginMenu, #adminMenu {
     list-style: none;
     padding: 0;
-    margin: 5px 0 0px 5px;
+    margin: 5px 0px 8px 5px;
 }
 
 #loginMenu li, #adminMenu li {
@@ -624,8 +623,7 @@ a.daBtnPreNext:hover span{
 }
 
 #dl_tblFrameHd {
-	width: 100%;
-	height: 100%;
+	height: 103px;
 	overflow: hidden;
 }
 

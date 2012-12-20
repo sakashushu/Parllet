@@ -1,6 +1,8 @@
 #{extends 'login.html' /}
 #{set title:messages.get('views.detaillist.balance.title') /}
 
+<script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
+
 <script type="text/javascript">
 <!--
 //表示金額を3桁区切りに
@@ -52,7 +54,57 @@ jQuery(function(){
 
 /* 日付選択時にjumpするdatepicker(範囲指定) */
 jQuery(function() {
-	var dates = jQuery("#frJump, #toJump").datepicker({
+//	var dates = jQuery("#frJump, #toJump").datepicker({
+//		defaultDate: "+1w",
+//		changeMonth: true,
+//		numberOfMonths: 1,
+//		showOtherMonths: true,
+//		selectOtherMonths: true,
+//		showAnim: "drop",
+//		changeMonth: true,
+//		changeYear: true,
+//		yearRange: '1900:2999',
+//		dateFormat: 'yy/mm/dd',
+//		showButtonPanel: true,
+//		onSelect: function( selectedDate ) {
+//			var option = this.id == "frJump" ? "minDate" : "maxDate",
+//				instance = jQuery( this ).data( "datepicker" ),
+//				date = jQuery.datepicker.parseDate(
+//					instance.settings.dateFormat ||
+//					jQuery.datepicker._defaults.dateFormat,
+//					selectedDate, instance.settings );
+//			dates.not( this ).datepicker( "option", option, date );
+////			jQuery('#idSrch').click();
+////			jQuery('body').attr("disabled", "disabled");
+//			jQuery(this).change();
+//		}
+//	});
+//	var dates = jQuery("#frJump2, #toJump2").datepicker({
+//		defaultDate: "+1w",
+//		changeMonth: true,
+//		numberOfMonths: 1,
+//		showOtherMonths: true,
+//		selectOtherMonths: true,
+//		showAnim: "drop",
+//		changeMonth: true,
+//		changeYear: true,
+//		yearRange: '1900:2999',
+//		dateFormat: 'yy/mm/dd',
+//		onSelect: function( selectedDate ) {
+//			var option = this.id == "frJump2" ? "minDate" : "maxDate",
+//				instance = jQuery( this ).data( "datepicker" ),
+//				date = jQuery.datepicker.parseDate(
+//					instance.settings.dateFormat ||
+//					jQuery.datepicker._defaults.dateFormat,
+//					selectedDate, instance.settings );
+//			dates.not( this ).datepicker( "option", option, date );
+////			jQuery('#idSrch').click();
+////			jQuery('body').attr("disabled", "disabled");
+//			jQuery(this).change();
+//		},
+//		showButtonPanel: true
+//	});
+	jQuery("#frJump").datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -63,22 +115,13 @@ jQuery(function() {
 		changeYear: true,
 		yearRange: '1900:2999',
 		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
 		onSelect: function( selectedDate ) {
-			var option = this.id == "frJump" ? "minDate" : "maxDate",
-				instance = jQuery( this ).data( "datepicker" ),
-				date = jQuery.datepicker.parseDate(
-					instance.settings.dateFormat ||
-					jQuery.datepicker._defaults.dateFormat,
-					selectedDate, instance.settings );
-			dates.not( this ).datepicker( "option", option, date );
-			jQuery('#idSrch').click();
-			jQuery('body').attr("disabled", "disabled");
-		},
-		showButtonPanel: true
+			jQuery("#toJump").datepicker("option", "minDate", selectedDate);
+			jQuery(this).change();
+		}
 	});
-});
-jQuery(function() {
-	var dates = jQuery("#frJump2, #toJump2").datepicker({
+	jQuery("#toJump").datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
 		numberOfMonths: 1,
@@ -89,27 +132,85 @@ jQuery(function() {
 		changeYear: true,
 		yearRange: '1900:2999',
 		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
 		onSelect: function( selectedDate ) {
-			var option = this.id == "frJump2" ? "minDate" : "maxDate",
-				instance = jQuery( this ).data( "datepicker" ),
-				date = jQuery.datepicker.parseDate(
-					instance.settings.dateFormat ||
-					jQuery.datepicker._defaults.dateFormat,
-					selectedDate, instance.settings );
-			dates.not( this ).datepicker( "option", option, date );
-			jQuery('#idSrch').click();
-			jQuery('body').attr("disabled", "disabled");
-		},
-		showButtonPanel: true
+			jQuery("#frJump").datepicker("option", "maxDate", selectedDate);
+			jQuery(this).change();
+		}
 	});
+	jQuery("#frJump2").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#toJump2").datepicker("option", "minDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	jQuery("#toJump2").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#frJump2").datepicker("option", "maxDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	//起動時のdatepickerの選択可能範囲絞込
+	if(ckDate("${h_payment_date_fr}"))
+		jQuery("#toJump").datepicker("option", "minDate", "${h_payment_date_fr}");
+	if(ckDate("${h_payment_date_to}"))
+		jQuery("#frJump").datepicker("option", "maxDate", "${h_payment_date_to}");
+	if(ckDate("${h_debit_date_fr}"))
+		jQuery("#toJump2").datepicker("option", "minDate", "${h_debit_date_fr}");
+	if(ckDate("${h_debit_date_to}"))
+		jQuery("#frJump2").datepicker("option", "maxDate", "${h_debit_date_to}");
 });
 
+/* 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（My貯金）」・「項目」の変更イベント */
 jQuery(function() {
-	// 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（My貯金）」・「項目」の変更イベント
 	jQuery("#idHdSecretRecFlg, #idHdBalanceType, #idHdHandling, #idHdIdealDeposit, #idHdItem").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
+});
+
+/* 「支払日」・「引落日」の変更イベント */
+jQuery(function() {
+	jQuery("#frJump, #toJump, #frJump2, #toJump2").change(function() {
+		var sDate = jQuery(this).val().substr(0,10);
+		if(sDate=='' || ckDate(sDate)==true) {
+			jQuery('#idSrch').click();
+			jQuery('body').attr("disabled", "disabled");
+		}
+    });
+});
+
+/* Enterキーでのサブミット防止 */
+jQuery(document).ready(function() {
+	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			return false;
+		}else{
+			return true;
+		}
+	});
 });
 // -->
 </script>
@@ -117,19 +218,17 @@ jQuery(function() {
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+
 <div id="dlHeader">
 #{include 'loginBodyHeader.html' /}
 
 <!-- 家計簿編集へジャンプ用フォーム（非表示） -->
-#{form @RecordEdit.recordEdit()}
-	<input type="text" name="id" id="idRecordEdit" value="0" style="display:none;" />
-	<input type="submit" id="submitRecordEdit" style="display:none;" />
-#{/form}
+#{include 'toRecordEdit_recordEdit.html' /}
 	
 <div>
   <ul id="loginMenu">
 	<li class="selected">
-		<a href="@{DetailList.detailList()}">&{'views.detaillist.balance.title'}</a>
+		<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
 	</li>
 	<li>
 		<a href="@{DetailList.dl_remainderBank()}">&{'views.detaillist.remainderBank.title'}</a>
@@ -141,7 +240,7 @@ jQuery(function() {
 </div>
 	
 	
-#{form @DetailList.detailList()}
+#{form @DetailList.dl_balance(), id:'frmDlBalance'}
 <div id="dl_tblFrameHd">
 
 <div id="dl_tblContent">
@@ -294,7 +393,13 @@ jQuery(function() {
 		<div class="${clDlPaymenttDateHd}">
 		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
+		  #{if record.payment_date.format('HHmm')=='0000'}
 			${record.payment_date.format('yyyy/MM/dd')}
+		  #{/if}
+		  #{else}
+			${record.payment_date.format('yyyy/MM/dd')}<br>
+			　　　　　${record.payment_date.format('HH:mm')}
+		  #{/else}
 		  </span>
 		</div>
 		<!-- 収支種類 -->
@@ -377,7 +482,7 @@ jQuery(function() {
 </div>  <!-- dl_tblFrame -->
 
 <div id="configListPagination">
-	#{DetailList.pagination /}
+	#{DetailList.dl_balance.pagination /}
 </div>
 
 </div>  <!-- dlMain -->

@@ -33,8 +33,8 @@ POST    /data/myData/{id}                       RecordEdit.save_rec
 POST    /data/new                               RecordEdit.save_rec
 
 # WebSocket detailList
-POST	/detailList                             DetailList.detailList
-GET		/detailList	                            DetailList.detailList
+POST	/detailList/balance                     DetailList.dl_balance
+GET		/detailList/balance                     DetailList.dl_balance
 WS      /detailList                             DetailList.WebSocketApp.listen
 GET		/detailList/remainderBank	            DetailList.dl_remainderBank
 

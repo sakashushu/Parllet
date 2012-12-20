@@ -3,6 +3,12 @@
 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
 
+#{ifErrors}
+<p class="crudFlash flashError">
+	&{'validation.title'}
+</p>
+#{/ifErrors}
+
 <div id="crudShow">
 
 	#{ifnot itemMst?.id}
@@ -19,12 +25,6 @@
 			 @cf_item_out_save(itemMst?.id) : ''
 			)}
 	 
-	    #{ifErrors}
-	        <p class="error">
-	            &{'validation.title'}
-	        </p>
-	    #{/ifErrors}
-	    
 	    <div class="crudField">
 	        #{field 'item_name'}
 	        <label class="fieldName">&{'item_name'}:</label>

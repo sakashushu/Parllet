@@ -104,11 +104,12 @@ public class DailyAccount extends Controller {
 			) {
 		String sBasisDate = null;
 		DailyAccount da = new DailyAccount();
+		Common cm = new Common();
 		//単純に呼ばれた時の基準日のセット
 		if(intBasisDate==null) {
 			sBasisDate = da.setBasisDate();
 		} else {
-			if(da.checkIntDate(intBasisDate)) {
+			if(cm.checkIntDate(intBasisDate)) {
 				String strTmp = intBasisDate.toString();
 				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
 			} else {
@@ -145,11 +146,12 @@ public class DailyAccount extends Controller {
 			) {
 		String sBasisDate = null;
 		DailyAccount da = new DailyAccount();
+		Common cm = new Common();
 		//単純に呼ばれた時の基準日のセット(残高表)
 		if(intBasisDate==null) {
 			sBasisDate = da.setBasisDateBt();
 		} else {
-			if(da.checkIntDate(intBasisDate)) {
+			if(cm.checkIntDate(intBasisDate)) {
 				String strTmp = intBasisDate.toString();
 				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
 			} else {
@@ -2148,41 +2150,41 @@ public class DailyAccount extends Controller {
 		}
 	}
 	
-	/**
-	 * 日付数値の妥当性チェック
-	 * @param intDate
-	 * @return 存在する日付の場合true
-	 */
-	private boolean checkIntDate(Integer intDate) {
-			if(intDate<10000101 ||
-					intDate>99991231)
-				return false;
-				
-			String strTmp = intDate.toString();
-			String sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6);
-			//日付の妥当性チェック
-			return checkDate(sBasisDate);
-	}
-	
-	/**
-	 * 日付の妥当性チェックを行います。
-	 * 指定した日付文字列（yyyy/MM/dd or yyyy-MM-dd）が
-	 * カレンダーに存在するかどうかを返します。
-	 * @param strDate チェック対象の文字列
-	 * @return 存在する日付の場合true
-	 */
-	public static boolean checkDate(String strDate) {
-		if (strDate == null || strDate.length() != 10)
-			return false;
-		strDate = strDate.replace('-', '/');
-		DateFormat format = DateFormat.getDateInstance();
-		// 日付/時刻解析を厳密に行うかどうかを設定する。
-		format.setLenient(false);
-		try {
-			format.parse(strDate);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+//	/**
+//	 * 日付数値の妥当性チェック
+//	 * @param intDate
+//	 * @return 存在する日付の場合true
+//	 */
+//	private boolean checkIntDate(Integer intDate) {
+//			if(intDate<10000101 ||
+//					intDate>99991231)
+//				return false;
+//				
+//			String strTmp = intDate.toString();
+//			String sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6);
+//			//日付の妥当性チェック
+//			return checkDate(sBasisDate);
+//	}
+//	
+//	/**
+//	 * 日付の妥当性チェックを行います。
+//	 * 指定した日付文字列（yyyy/MM/dd or yyyy-MM-dd）が
+//	 * カレンダーに存在するかどうかを返します。
+//	 * @param strDate チェック対象の文字列
+//	 * @return 存在する日付の場合true
+//	 */
+//	public static boolean checkDate(String strDate) {
+//		if (strDate == null || strDate.length() != 10)
+//			return false;
+//		strDate = strDate.replace('-', '/');
+//		DateFormat format = DateFormat.getDateInstance();
+//		// 日付/時刻解析を厳密に行うかどうかを設定する。
+//		format.setLenient(false);
+//		try {
+//			format.parse(strDate);
+//			return true;
+//		} catch (Exception e) {
+//			return false;
+//		}
+//	}
 }

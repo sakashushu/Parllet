@@ -13,7 +13,6 @@
 			<td id="logo">
 			</td>
 			
-		#{secure.check 'admin'}
 			<td>
 				<ul id="loginMenu" >
 					<li class="${request.controller == 'DailyAccount' &&
@@ -28,14 +27,13 @@
 						<a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
 					</li>
 					<li class="${request.controller == 'DetailList' ? 'selected' : ''}">
-						<a href="@{DetailList.detailList()}">&{'views.detaillist.detaillist'}</a>
+						<a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a>
 					</li>
 					<li class="${request.controller == 'Config' ? 'selected' : ''}">
 						<a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
 					</li>
 				</ul>
 			</td>
-		#{/secure.check}
 		</tr>
    	</table>
 	<ul id="tools">

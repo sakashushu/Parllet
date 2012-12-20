@@ -3,6 +3,8 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import net.sf.oval.constraint.CheckWithMultiple;
+
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
 import play.data.validation.Required;
@@ -21,6 +23,7 @@ public class HandlingMst extends Model {
 	public HandlingTypeMst handling_type_mst;	//取扱種類
 
 	@Required
+	@CheckWith(HandlingNameMultipleCheck.class)
 	public String handling_name;				//取扱名
 	
 	@ManyToOne
@@ -64,6 +67,28 @@ public class HandlingMst extends Model {
 
 	public String toString() {
         return handling_name;
+	}
+
+	/**
+	 * 「取扱名」は重複登録不可
+	 * @author sakashushu
+	 *
+	 */
+	static class HandlingNameMultipleCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			HandlingMst handlingMst = (HandlingMst)validatedObject;
+			HandlingMst hmExist = null;
+			hmExist = HandlingMst.find(
+					"ha_user = ? and handling_name = ?",
+					handlingMst.ha_user,
+					handlingMst.handling_name).first();
+			if(hmExist!=null) {
+				setMessage(Messages.get("validation.multipleName"));
+				return false;
+			}
+
+			return true;
+		}
 	}
 
 	/**

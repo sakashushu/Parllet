@@ -187,7 +187,7 @@ jQuery(function(){
 							#{/else}
 							#{list items:lwda.lstWdtd, as:'wdtd'}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric">
-									<a href="@{DetailList.detailList()}" class="num3">${wdtd.lAmount}</a>
+									<a href="@{DetailList.dl_balance()}" class="num3">${wdtd.lAmount}</a>
 								</div>
 								%{leftFlg = 0}%
 							#{/list}

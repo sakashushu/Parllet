@@ -16,6 +16,7 @@
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
 <script type="text/javascript">
 <!--
@@ -70,166 +71,48 @@ var subcategoryHandling = {
     #{/if}
   #{/list}
 }
-//起動時の「項目」・「取扱(My貯金)」の入力可・不可
+//起動時の状態調整
 jQuery(document).ready(function() {
-	//「収支種類」が収入・支出の時は「項目」は選択可能
-	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
-			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") {
-//		jQuery('#item_mst_lbl').css("display","inline");
-//		jQuery('#item_mst').css("display","inline");
-		jQuery('#item_mst_lbl').removeAttr("disabled");
-		jQuery('#item_mst').removeAttr("disabled");
-	} else {
-//		jQuery('#item_mst_lbl').css("display","none");
-//		jQuery('#item_mst').css("display","none");
-		jQuery('#item_mst_lbl').attr("disabled", "disabled");
-		jQuery('#item_mst').attr("disabled", "disabled");
-		//「収支種類」が口座預入・口座引出の時は「取扱(My貯金)」は選択不可
-		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") {
-			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
-			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
-		} else {
-			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
-			jQuery('#ideal_deposit_mst').removeAttr("disabled");
-		}
-	}
+	//「取扱(実際)」の状態調整
+	conditionAdjust_Handling();
+	
+	//「取扱(My貯金)」の状態調整
+	conditionAdjust_IdealDepo();
+	
+	//「項目」の状態調整
+	conditionAdjust_Item();
+	
+	//「引落日」の状態調整
+	conditionAdjust_DebitDate();
 });
-//起動時の「取扱(実際)」・「引落日」の入力可・不可
-jQuery(document).ready(function() {
-	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」・「引落日」は選択可能
-	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
-			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
-			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
-			) {
-		jQuery('#handling_mst_lbl').removeAttr("disabled");
-		jQuery('#handling_mst').removeAttr("disabled");
-		jQuery('#debit_date_lbl').removeAttr("disabled");
-		jQuery('#debit_date').removeAttr("disabled");
-	} else {
-		jQuery('#handling_mst').empty();
-		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
-		jQuery('#handling_mst').attr("disabled", "disabled");
-		jQuery('#debit_date_lbl').attr("disabled", "disabled");
-		jQuery('#debit_date').attr("disabled", "disabled");
-		jQuery('#debit_date').val('');
-	}
+
+/* 「収支種類」の選択変更イベント */
+jQuery(document).ready(function(){
+	jQuery('#balance_type_mst').change(function(){
+		//「取扱(実際)」の状態調整
+		conditionAdjust_Handling();
+		
+		//「取扱(実際)」のリスト再作成
+		remakeList_Handling();
+		
+		//「取扱(My貯金)」の状態調整
+		conditionAdjust_IdealDepo();
+	});
 });
-//起動時の「引落日」の入力可・不可
-jQuery(document).ready(function() {
-	//「取扱(実際)」が現金以外の時は「引落日」は選択可能
-	if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
-		jQuery('#debit_date_lbl').attr("disabled", "disabled");
-		jQuery('#debit_date').attr("disabled", "disabled");
-	} else {
-		jQuery('#debit_date_lbl').removeAttr("disabled");
-		jQuery('#debit_date').removeAttr("disabled");
-	}
-});
-//「収支種類」・「取扱(My貯金)」の選択変更時の「項目」の入力可・不可と選択リストの調整
+/* 「収支種類」・「取扱(My貯金)」の選択変更イベント */
 jQuery(document).ready(function(){
 	jQuery('#balance_type_mst, #ideal_deposit_mst').change(function(){
-		jQuery('#item_mst').empty();
-		//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」は選択可能
-		if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") &&
-				jQuery('#ideal_deposit_mst').children(':selected').text()=="&{'views.common.combo.notrequired'}"
-				) {
-			jQuery('#item_mst_lbl').removeAttr("disabled");
-			jQuery('#item_mst').removeAttr("disabled");
-			jQuery.each(subcategoryItem[jQuery('#balance_type_mst').val()],function(key,value){
-				jQuery('#item_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
-			});
-		} else {
-			jQuery('#item_mst_lbl').attr("disabled", "disabled");
-			jQuery('#item_mst').attr("disabled", "disabled");
-		}
+		//「項目」の状態調整
+		conditionAdjust_Item();
+		//「項目」のリスト再作成
+		remakeList_Item();
 	});
 });
-//「収支種類」の選択変更時の「取扱(実際)」の入力可・不可と選択リストの調整
-jQuery(document).ready(function(){
-	jQuery('#balance_type_mst').change(function(){
-		jQuery('#handling_mst').empty();
-		//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
-		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
-				) {
-			jQuery('#handling_mst_lbl').removeAttr("disabled");
-			jQuery('#handling_mst').removeAttr("disabled");
-			jQuery.each(subcategoryHandling[jQuery('#balance_type_mst').val()],function(key,value){
-				jQuery('#handling_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
-			});
-		} else {
-			jQuery('#handling_mst_lbl').attr("disabled", "disabled");
-			jQuery('#handling_mst').attr("disabled", "disabled");
-		}
-	});
-});
-//「口座預入」・「口座引出」の時は「取扱(My貯金)」は入力不可
-jQuery(document).ready(function(){
-	jQuery('#balance_type_mst').change(function(){
-		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") {
-			jQuery('#ideal_deposit_mst').val('0');  // (なし) を選択
-			jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
-			jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
-		} else {
-			jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
-			jQuery('#ideal_deposit_mst').removeAttr("disabled");
-		}
-	});
-});
-//「収支種類」・「支払日」・「取扱(実際)」の選択変更時の「引落日」の入力可・不可とデフォルト日付の調整
+/* 「収支種類」・「支払日」・「取扱(実際)」の選択変更イベント */
 jQuery(document).ready(function(){
 	jQuery('#balance_type_mst, #handling_mst, #payment_date').change(function(){
-		var sDate = jQuery('#payment_date').val().substr(0,10);
-		//「取扱(実際)」が現金の時は「引落日」は「支払日」と同じ日とし、選択不可
-		if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
-			jQuery('#debit_date_lbl').attr("disabled", "disabled");
-			jQuery('#debit_date').attr("disabled", "disabled");
-			jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
-		//「取扱(実際)」が現金以外の時
-		} else {
-			//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
-			if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_in'}" ||
-					jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_out'}"
-					) {
-				jQuery('#debit_date_lbl').attr("disabled", "disabled");
-				jQuery('#debit_date').attr("disabled", "disabled");
-				jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
-				
-			//「収支種類」が上記以外の時は「引落日」は選択可能で、デフォルト日付を表示
-			} else {
-				jQuery('#debit_date_lbl').removeAttr("disabled");
-				jQuery('#debit_date').removeAttr("disabled");
-				#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
-				  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
-					//支払日が正しく入っている時
-//					var sDate = jQuery('#payment_date').val().substr(0,10);
-					if(ckDate(sDate)==true) {
-						//「取扱(実際)」がクレジットカードの場合
-						if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
-							var dateFormat = new DateFormat("yyyy/MM/dd");
-							var vYear = sDate.substr(0, 4) - 0;
-							var vMonth = sDate.substr(5, 2) - 1;
-							var vDay = sDate.substr(8, 2) - 0;
-							var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
-							var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
-							jQuery('#debit_date').val(dateFormat.format(rDate));
-							
-						//「取扱(実際)」がクレジットカード以外の場合
-						} else {
-							//引落日に支払日をセット
-							jQuery('#debit_date').val(sDate);
-						}
-					}
-				  }			
-				#{/list}
-			}
-		}
+		//「引落日」の入力可・不可とデフォルト日付の調整
+		conditionDefDateAdjust_DebitDate();
 	});
 });
 //クレジットカードの引落日算出関数
@@ -273,34 +156,6 @@ function addFigure(str) {
     return num;
 }
 
-/****************************************************************
-* 機　能： 入力された値が日付でYYYY/MM/DD形式になっているか調べる
-* 引　数： datestr　入力された値
-* 戻り値： 正：true　不正：false
-****************************************************************/
-function ckDate(datestr) {
-    // 正規表現による書式チェック
-    if(!datestr.match(/^\d{4}\/\d{2}\/\d{2}$/)){
-        return false;
-    }
-    var vYear = datestr.substr(0, 4) - 0;
-    var vMonth = datestr.substr(5, 2) - 1; // Javascriptは、0-11で表現
-    var vDay = datestr.substr(8, 2) - 0;
-    // 月,日の妥当性チェック
-    if(vMonth >= 0 && vMonth <= 11 && vDay >= 1 && vDay <= 31){
-        var vDt = new Date(vYear, vMonth, vDay);
-        if(isNaN(vDt)){
-            return false;
-        }else if(vDt.getFullYear() == vYear && vDt.getMonth() == vMonth && vDt.getDate() == vDay){
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        return false;
-    }
-}
-
 /**
  * フォームデータ送信時に、disabledを外して値を送信できるようにする
  */
@@ -311,6 +166,148 @@ jQuery(document).ready(function(){
 		jQuery('#debit_date').attr('readonly', 'readonly');
 	});
 });
+
+/* 「取扱(実際)」の状態調整 */
+function conditionAdjust_Handling() {
+	//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」は選択可能
+	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
+			) {
+		jQuery('#handling_mst_lbl').removeAttr("disabled");
+		jQuery('#handling_mst').removeAttr("disabled");
+	} else {
+		jQuery('#handling_mst').empty();
+		jQuery('#handling_mst_lbl').attr("disabled", "disabled");
+		jQuery('#handling_mst').attr("disabled", "disabled");
+	}
+}
+
+/* 「取扱(実際)」のリスト再作成 */
+function remakeList_Handling() {
+	//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」のリストを再作成
+	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
+			) {
+		jQuery('#handling_mst').empty();
+		jQuery.each(subcategoryHandling[jQuery('#balance_type_mst').val()],function(key,value){
+			jQuery('#handling_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
+		});
+	}
+}
+
+/* 「取扱(My貯金)」の状態調整 */
+function conditionAdjust_IdealDepo() {
+	if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}") {
+		jQuery('#ideal_deposit_mst').val('0');  // (なし) を選択
+		jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
+		jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
+	} else {
+		jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
+		jQuery('#ideal_deposit_mst').removeAttr("disabled");
+	}
+}
+
+/* 「項目」の状態調整 */
+function conditionAdjust_Item() {
+	//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」は選択可能
+	if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") &&
+			jQuery('#ideal_deposit_mst').children(':selected').text()=="&{'views.common.combo.notrequired'}"
+			) {
+		jQuery('#item_mst_lbl').removeAttr("disabled");
+		jQuery('#item_mst').removeAttr("disabled");
+	} else {
+		jQuery('#item_mst').empty();
+		jQuery('#item_mst_lbl').attr("disabled", "disabled");
+		jQuery('#item_mst').attr("disabled", "disabled");
+	}
+}
+
+/* 「項目」のリスト再作成 */
+function remakeList_Item() {
+	//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」のリストを再作成
+	if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}") &&
+			jQuery('#ideal_deposit_mst').children(':selected').text()=="&{'views.common.combo.notrequired'}"
+			) {
+		jQuery('#item_mst').empty();
+		jQuery.each(subcategoryItem[jQuery('#balance_type_mst').val()],function(key,value){
+			jQuery('#item_mst').append("<option value='"+value["key"]+"'>"+value["value"]+"</option>");
+		});
+	}
+}
+
+/* 「引落日」の状態調整 */
+function conditionAdjust_DebitDate() {
+	//「収支種類」が収入・支出・口座預入・口座引出で、「取扱(実際)」が現金以外の時は「引落日」は選択可能
+	if((jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.out'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_in'}" ||
+			jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.bank_out'}"
+		) &&
+			jQuery('#handling_mst').children(':selected').text()!="&{'HandlingType.cash'}"
+	) {
+		jQuery('#debit_date_lbl').removeAttr("disabled");
+		jQuery('#debit_date').removeAttr("disabled");
+	} else {
+		jQuery('#debit_date_lbl').attr("disabled", "disabled");
+		jQuery('#debit_date').attr("disabled", "disabled");
+	}
+}
+
+/* 「引落日」の入力可・不可とデフォルト日付の調整 */
+function conditionDefDateAdjust_DebitDate() {
+	var sDate = jQuery('#payment_date').val().substr(0,10);
+	//「取扱(実際)」が現金の時は「引落日」は「支払日」と同じ日とし、選択不可
+	if(jQuery('#handling_mst').children(':selected').text()=="&{'HandlingType.cash'}") {
+		jQuery('#debit_date_lbl').attr("disabled", "disabled");
+		jQuery('#debit_date').attr("disabled", "disabled");
+		jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
+	//「取扱(実際)」が現金以外の時
+	} else {
+		//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
+		if(jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_in'}" ||
+				jQuery('#balance_type_mst').children(':selected').text()=="&{'BalanceType.ideal_deposit_out'}"
+				) {
+			jQuery('#debit_date_lbl').attr("disabled", "disabled");
+			jQuery('#debit_date').attr("disabled", "disabled");
+			jQuery('#debit_date').val(ckDate(sDate)==true ? sDate : '');
+			
+		//「収支種類」が上記以外の時は「引落日」は選択可能で、デフォルト日付を表示
+		} else {
+			jQuery('#debit_date_lbl').removeAttr("disabled");
+			jQuery('#debit_date').removeAttr("disabled");
+			#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
+			  if("${handling?.handling_name}"==jQuery('#handling_mst').children(':selected').text()) {
+				//支払日が正しく入っている時
+				if(ckDate(sDate)==true) {
+					//「取扱(実際)」がクレジットカードの場合
+					if("${handling?.handling_type_mst?.handling_type_name}"=="&{'HandlingType.creca'}") {
+						var dateFormat = new DateFormat("yyyy/MM/dd");
+						var vYear = sDate.substr(0, 4) - 0;
+						var vMonth = sDate.substr(5, 2) - 1;
+						var vDay = sDate.substr(8, 2) - 0;
+						var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
+						var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
+						jQuery('#debit_date').val(dateFormat.format(rDate));
+						
+					//「取扱(実際)」がクレジットカード以外の場合
+					} else {
+						//引落日に支払日をセット
+						jQuery('#debit_date').val(sDate);
+					}
+				}
+			  }			
+			#{/list}
+		}
+	}
+}
+
 // -->
 </script>
 
@@ -335,14 +332,37 @@ jQuery(document).ready(function(){
 	<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
 #{/else}
 
+%{
+	vlPaymentDate
+	vlBalanceTypeId
+	vlIdealDepositId
+	vlItemId
+	vlDebitDate
+	if(record?.id) {
+		vlPaymentDate = record.payment_date?.format('yyyy/MM/dd HH:mm')
+		vlBalanceTypeId = record.balance_type_mst?.id
+		vlIdealDepositId = record.ideal_deposit_mst?.id
+		vlItemId = record.item_mst?.id
+		vlDebitDate = record.debit_date?.format('yyyy/MM/dd')
+	} else {
+		vlPaymentDate = df_payment_date
+		vlBalanceTypeId = df_balance_type_id
+		vlIdealDepositId = df_ideal_deposit_id
+		vlItemId = df_item_id
+		vlDebitDate = df_debit_date
+	}
+}%
 <div class="objectForm">
 #{form @save_rec(record?.id)}
- 
     <div class="crudField">
         #{field 'payment_date'}
         <label class="fieldName">&{'payment_date'}:</label>
+<!-- 
         <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
             value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
+ -->
+        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
+            value="${vlPaymentDate}" />
         <span class="error">#{error 'record.payment_date' /}</span>
         #{/field}
     </div>
@@ -353,7 +373,10 @@ jQuery(document).ready(function(){
 		<select id="${field.name}" name="${field.name}" class="re_w150">
 			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+<!-- 
 			<option value="${bType.id}"${record?.balance_type_mst?.id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
+ -->			
+			<option value="${bType.id}"${vlBalanceTypeId==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 			#{/list}
 		</select>
         <span class="error">#{error 'record.balance_type_mst' /}</span>
@@ -378,7 +401,10 @@ jQuery(document).ready(function(){
 		<select id="${field.name}" name="${field.name}" class="re_w150">
 			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
 			#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
+<!-- 
 			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
+ -->
+			<option value="${idealDeposit.id}"${vlIdealDepositId==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
 			#{/list}
 		</select>
         <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
@@ -389,12 +415,21 @@ jQuery(document).ready(function(){
         #{field 'item_mst'}
         <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
-			#{if record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.in') ||
-					record?.balance_type_mst?.balance_type_name==messages.get('BalanceType.out')}
-				<option value="0"${record?.item_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-				%{bType = models.BalanceTypeMst.find("balance_type_name = '" + record?.balance_type_mst?.balance_type_name + "'").first()}%
+			%{
+				bType
+				bTypeName
+				if(vlBalanceTypeId) {
+					bType = models.BalanceTypeMst.find("byId", vlBalanceTypeId).first()
+					bTypeName = bType.balance_type_name 
+				}
+			}%
+			#{if bTypeName==messages.get('BalanceType.in') ||
+					bTypeName==messages.get('BalanceType.out')}
 				#{list items:models.ItemMst.find("ha_user = ${haUser.id} and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+<!-- 
 				<option value="${item.id}"${record?.item_mst?.id==item.id ? ' selected' : ''}>${item.item_name}</option>
+ -->
+				<option value="${item.id}"${vlItemId==item.id ? ' selected' : ''}>${item.item_name}</option>
 				#{/list}
 			#{/if}
 		</select>
@@ -414,8 +449,12 @@ jQuery(document).ready(function(){
     <div class="crudField">
         #{field 'debit_date'}
         <label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
+<!-- 
         <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
             value="${record?.debit_date?.format('yyyy/MM/dd')}" />
+ -->
+        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
+            value="${vlDebitDate}" />
         <span class="error">#{error 'record.debit_date' /}</span>
         #{/field}
     </div>

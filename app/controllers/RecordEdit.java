@@ -29,12 +29,21 @@ public class RecordEdit extends Controller {
 		}
 	}
 	
-	public static void recordEdit(Long id) {
+	public static void recordEdit(
+			Long id,
+    		String df_payment_date,			/* 初期支払日 */
+    		Long df_balance_type_id,  		/* 初期収支種類ID */
+    		Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+    		Long df_item_id,				/* 初期項目ID */
+    		String df_debit_date
+			) {
+		//編集
 		if(id != null) {
 			Record record = Record.findById(id);
 			render(record);
 		}
-		render();
+		//追加
+		render(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
 	}
 	
 	public static void save_rec(
@@ -154,7 +163,7 @@ public class RecordEdit extends Controller {
 				h_payment_date = payment_date.substring(0, 10);
 			}
 			
-			DetailList.detailList(1, 0, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, handlingMst==null ? null : handlingMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null, "srch", null);
+			DetailList.dl_balance(1, 0, h_payment_date, h_payment_date, balanceTypeMst==null ? null : balanceTypeMst.id, handlingMst==null ? null : handlingMst.id, idealDepositMst==null ? null : idealDepositMst.id, itemMst==null ? null : itemMst.id, null, null, null, null, null, null, null, "srch", null);
 		} else {
 			callSessionDetailList();
 		}
@@ -186,6 +195,6 @@ public class RecordEdit extends Controller {
 		if(!session.get("hItemId").equals(""))
 			h_item_id = Long.parseLong(session.get("hItemId"));
 		
-		DetailList.detailList(1, 0, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null, null, null);
+		DetailList.dl_balance(1, 0, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, null, null, null, null, null, null, null, null, null);
 	}
 }

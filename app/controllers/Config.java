@@ -758,7 +758,7 @@ public class Config extends Controller {
 					null,
 					iDebitDay,
 					zero_hidden==null ? false : (zero_hidden==true ? true : false),
-					false,
+					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
 					10000
 			);
 		} else {
@@ -767,7 +767,7 @@ public class Config extends Controller {
 			// 編集
 			refHandlingMst.handlingMst.handling_name = handling_name;
 			refHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
-			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg;
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg==null ? false : (invalidity_flg==true ? true : false);
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);
@@ -818,7 +818,7 @@ public class Config extends Controller {
 					debit_month,
 					debit_day,
 					zero_hidden,
-					false,
+					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
 					10000
 			);
 		} else {
@@ -831,7 +831,7 @@ public class Config extends Controller {
 			refHandlingMst.handlingMst.debit_month = debit_month;
 			refHandlingMst.handlingMst.debit_day = debit_day;
 			refHandlingMst.handlingMst.zero_hidden = zero_hidden;
-			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg;
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg==null ? false : (invalidity_flg==true ? true : false);
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);

@@ -27,11 +27,14 @@ views.common.update.add=追加
 views.common.update.edit=編集
 views.common.move=移動
 views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
+views.common.menu.toDlBalance=収支明細へ
+views.common.menu.toRecordAdd=家計簿入力へ
+views.common.menu.toRecordEdit=このデータを編集
 
 views.application.tools.home=ホーム
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
-views.detaillist.detaillist=明細表
+views.detaillist=明細表
 views.detaillist.diff=差額
 views.detaillist.remainder=残高
 views.dailyaccount.dailyaccount=日計表
@@ -141,6 +144,7 @@ validation.required=必須
 validation.cutoff_debit=締日より未来
 validation.invalid=日付誤りで移動できませんでした
 validation.dateError=日付誤りで移動できませんでした
+validation.multipleName=この名前は既に使われています
 
 #crudを真似
 insupd.add=追加  [ &{%s} ]

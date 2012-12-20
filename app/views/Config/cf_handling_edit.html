@@ -37,6 +37,12 @@ jQuery(document).ready(function() {
 // -->
 </script>
 
+#{ifErrors}
+<p class="crudFlash flashError">
+	&{'validation.title'}
+</p>
+#{/ifErrors}
+
 <div id="crudShow">
 
 	#{ifnot handlingMst?.id}
@@ -55,12 +61,6 @@ jQuery(document).ready(function() {
 			  @cf_emoney_save(handlingMst?.id) : '')
 			)}
 	 
-	    #{ifErrors}
-	        <p class="error">
-	            &{'validation.title'}
-	        </p>
-	    #{/ifErrors}
-	    
 	    <div class="crudField">
 	        #{field 'handling_name'}
 	        <label class="fieldName">${sHandlingType}名:</label>

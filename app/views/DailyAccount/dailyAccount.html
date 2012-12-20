@@ -99,13 +99,20 @@ jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
-			//明細表へジャンプする際の絞込項目セット
+			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hPaymentDateFr').val(jQuery('.ToDlPaymentDateFr',this).val());
 			jQuery('#hPaymentDateTo').val(jQuery('.ToDlPaymentDateTo',this).val());
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
 			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
 			jQuery('#hIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
 			jQuery('#hItemId').val(jQuery('.ToDlItemId',this).val());
+			
+			//家計簿入力へジャンプする際の絞込項目セット
+			jQuery('#dfPaymentDate').val(jQuery('.ToDlPaymentDateFr',this).val()+' 00:00');
+			jQuery('#dfBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
+			jQuery('#dfIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			jQuery('#dfItemId').val(jQuery('.ToDlItemId',this).val());
+			jQuery('#dfDebitDate').val(jQuery('.ToDlPaymentDateFr',this).val());
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -117,17 +124,37 @@ jQuery(function(){
 		callback: function(key, options) {
 //			var m = "clicked: " + key;
 //			window.console && console.log(m) || alert(m);
-			jQuery('#submitDetailList').click();
+			if(key=="toDlBalance")
+				jQuery('#submitDlBalance').click();
+			if(key=="toRecordAdd")
+				jQuery('#submitRecordEdit').click();
 			jQuery('body').attr("disabled", "disabled");
 		},
 		items: {
-			"detailList": {name: "収支明細へ"},
+			"toDlBalance": {name: "&{'views.common.menu.toDlBalance'}"},
+			"toRecordAdd": {name: "&{'views.common.menu.toRecordAdd'}"},
 //			"cut": {name: "Cut", icon: "cut"},
 //			"copy": {name: "Copy", icon: "copy"},
 //			"paste": {name: "Paste", icon: "paste"},
 //			"delete": {name: "Delete", icon: "delete"},
 //			"sep1": "---------",
 //			"quit": {name: "Quit", icon: "quit"}
+		}
+	});
+});
+
+/* Enterキーでのサブミット防止 */
+jQuery(document).ready(function() {
+	jQuery('input[type!="submit"][type!="button"], a#idPreYear, a#idNextYear, a#idPreMonth, a#idNextMonth').keypress(function(e){
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			if(this.id=="idPreYear" ||
+					this.id=="idNextYear" ||
+					this.id=="idPreMonth" ||
+					this.id=="idNextMonth")
+				jQuery(this).click();	
+			return false;
+		}else{
+			return true;
 		}
 	});
 });
@@ -148,16 +175,17 @@ jQuery(function(){
 <div id="cmMain">
 
 
-<!-- 明細表へジャンプ用フォーム（非表示） -->
-#{form @DetailList.detailList()}
-	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" class="invisible" />
-	<input type="text" name="h_payment_date_fr" id="hPaymentDateFr" class="invisible" />
-	<input type="text" name="h_payment_date_to" id="hPaymentDateTo" class="invisible" />
-	<input type="text" name="h_balance_type_id" id="hBalanceTypeId" class="invisible" />
-	<input type="text" name="h_handling_id" id="hHandlingId" class="invisible" />
-	<input type="text" name="h_ideal_deposit_id" id="hIdealDepositId" class="invisible" />
-	<input type="text" name="h_item_id" id="hItemId" class="invisible" />
-	<input type="submit" name="srch" id="submitDetailList" class="invisible" />
+<!-- 収支明細へジャンプ用フォーム（非表示） -->
+#{include 'toDetailList_dl_balance.html' /}
+
+<!-- 家計簿入力へジャンプ用フォーム（非表示） -->
+#{form @RecordEdit.recordEdit()}
+	<input type="text" name="df_payment_date" id="dfPaymentDate" class="invisible" />
+	<input type="text" name="df_balance_type_id" id="dfBalanceTypeId" class="invisible" />
+	<input type="text" name="df_ideal_deposit_id" id="dfIdealDepositId" class="invisible" />
+	<input type="text" name="df_item_id" id="dfItemId" class="invisible" />
+	<input type="text" name="df_debit_date" id="dfDebitDate" class="invisible" />
+	<input type="submit" id="submitRecordEdit" class="invisible" />
 #{/form}
 
 	
@@ -201,7 +229,7 @@ jQuery(function(){
 						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
 							<!-- 予算 -->
 							月予算
-							<input type="submit" value="更新" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
+							<input type="submit" value="更新" id="idSbmtUpdBudget" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
 						  #{/if}
 					</div>
 					<div class="da_sum_month da_head">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? "月計" : ""}</div>
@@ -302,7 +330,7 @@ jQuery(function(){
 						#{list items:lwda.lstWdtd, as:'wdtd'}
 						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric menu_cell">
 							<!-- 
-							<a href="@{DetailList.detailList(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
+							<a href="@{DetailList.dl_balance(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
 							<a href="" class="num3" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
 							 -->
 							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd?.sPaymentDateFr}" />

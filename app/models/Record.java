@@ -32,6 +32,7 @@ public class Record extends Model {
 	@CheckWith(IdealDepositConditionallyRequiredCheck.class)
 	public IdealDepositMst ideal_deposit_mst;	//取扱(My貯金)
 	@ManyToOne
+	@CheckWith(ItemConditionallyRequiredCheck.class)
 	public ItemMst item_mst;					//項目
 	@MaxSize(40)
 	public String detail_mst;					//項目詳細
@@ -116,6 +117,27 @@ public class Record extends Model {
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.bank_in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.bank_out"))) &&
 						(record.handling_mst==null)) {
+					setMessage(Messages.get("validation.required"));
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * 「収支種類が」収入・支出で、取扱(My貯金)が入っていない時は「項目」は必須
+	 * @author sakashushu
+	 *
+	 */
+	static class ItemConditionallyRequiredCheck extends Check {
+		public boolean isSatisfied(Object validatedObject, Object value) {
+			Record record = (Record)validatedObject;
+			if(record.balance_type_mst!=null) {
+				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
+						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.out"))) &&
+						record.ideal_deposit_mst==null &&
+						(record.item_mst==null)) {
 					setMessage(Messages.get("validation.required"));
 					return false;
 				}

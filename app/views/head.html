@@ -1,25 +1,25 @@
-        <title>#{get 'title' /}</title>
-        <meta charset="${_response_encoding}">
-        #{get 'moreStyles' /}
-        <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-		<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
-		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-		<script type="text/javascript">google.load('jquery', '1')</script>
-		<script type="text/javascript">google.load('jqueryui', '1')</script>
-		<!-- datepicker日本語化 -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-		<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
-		<style>
-		.ui-datepicker td span, .ui-datepicker td a {
-		    text-align: center;    /* 日付をセンタリング */
-		}
-		.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
-		    width: auto;    /* そのままだと改行してしまう */
-		}
-		.ui-datepicker select.ui-datepicker-month {
-		    margin-left: 1em;    /* ちょっと離す */
-		}
-		</style>
-		<noscript>このページは javascript が有効になっている必要があります。</noscript>
-        #{get 'moreScripts' /}
+<title>#{get 'title' /}</title>
+<meta charset="${_response_encoding}">
+#{get 'moreStyles' /}
+<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+<link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+<!-- datepicker日本語化 -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
+<style>
+.ui-datepicker td span, .ui-datepicker td a {
+    text-align: center;    /* 日付をセンタリング */
+}
+.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
+    width: auto;    /* そのままだと改行してしまう */
+}
+.ui-datepicker select.ui-datepicker-month {
+    margin-left: 1em;    /* ちょっと離す */
+}
+</style>
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+#{get 'moreScripts' /}
