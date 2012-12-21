@@ -34,6 +34,7 @@ views.common.menu.toRecordEdit=このデータを編集
 views.application.tools.home=ホーム
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
+views.detaillist.remainderBank.balanceBroughtForward=繰越金
 views.detaillist=明細表
 views.detaillist.diff=差額
 views.detaillist.remainder=残高
@@ -141,7 +142,7 @@ DebitMonth.nextTwo=翌々月
 #validation
 validation.title=以下のエラーを修正して下さい
 validation.required=必須
-validation.cutoff_debit=締日より未来
+validation.cutoff_debit=締日より過去
 validation.invalid=日付誤りで移動できませんでした
 validation.dateError=日付誤りで移動できませんでした
 validation.multipleName=この名前は既に使われています

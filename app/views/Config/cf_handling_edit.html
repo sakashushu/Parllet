@@ -8,9 +8,8 @@
 //起動時に日選択コンボの選択肢を作成
 jQuery(document).ready(function() {
 	for(i = 1; i < 28; i++) {
-		#{ifnot handlingMst?.id}
+		#{ifnot handlingMst?.cutoff_day}
 			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
-			jQuery('#debit_day').append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
 		#{/ifnot}
 		#{else}
 			if(${handlingMst?.cutoff_day} == i) {
@@ -18,6 +17,11 @@ jQuery(document).ready(function() {
 			} else {
 				jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 			}
+		#{/else}
+		#{ifnot handlingMst?.debit_day}
+			jQuery('#debit_day').append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
+		#{/ifnot}
+		#{else}
 			if(${handlingMst?.debit_day} == i) {
 				jQuery('#debit_day').append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
 			} else {
@@ -25,12 +29,16 @@ jQuery(document).ready(function() {
 			}
 		#{/else}
 	};
-	#{ifnot handlingMst?.id}
+	#{ifnot handlingMst?.cutoff_day}
 		jQuery('#cutoff_day').append("<option value='99' selected>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
-		jQuery('#debit_day').append("<option value='99'>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/ifnot}
 	#{else}
 		jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{/else}
+	#{ifnot handlingMst?.debit_day}
+		jQuery('#debit_day').append("<option value='99'>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{/ifnot}
+	#{else}
 		jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/else}
 });
@@ -98,7 +106,7 @@ jQuery(document).ready(function() {
 		        <label class="fieldName">&{'debit_month'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:70px;">
 					<option value="&{'DebitMonth.this'}"${handlingMst?.debit_month==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
-					<option value="&{'DebitMonth.next'}"${handlingMst?.id==null ? ' selected' : (handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
+					<option value="&{'DebitMonth.next'}"${handlingMst?.debit_month==null ? ' selected' : (handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
 					<option value="&{'DebitMonth.nextTwo'}"${handlingMst?.debit_month==messages.get('DebitMonth.nextTwo') ? ' selected' : ''}>&{'DebitMonth.nextTwo'}</option>
 				</select>
 		        <span class="error">#{error 'handlingMst.debit_month' /}</span>

@@ -46,6 +46,26 @@ public class DetailList extends Controller {
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
 	static final String HANDLING_TYPE_CRECA = Messages.get("HandlingType.creca");
 	
+	/**
+	 * 収支明細
+	 * @param page
+	 * @param h_secret_rec_flg
+	 * @param h_payment_date_fr
+	 * @param h_payment_date_to
+	 * @param h_balance_type_id
+	 * @param h_handling_id
+	 * @param h_ideal_deposit_id
+	 * @param h_item_id
+	 * @param h_debit_date_fr
+	 * @param h_debit_date_to
+	 * @param e_id
+	 * @param e_payment_date
+	 * @param e_item_id
+	 * @param n_payment_date
+	 * @param n_item_id
+	 * @param srch
+	 * @param save
+	 */
 	public static void dl_balance(
     		int page,						/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
@@ -331,6 +351,16 @@ public class DetailList extends Controller {
 		render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_ideal_deposit_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
     }
 	
+	
+	/**
+	 * 残高明細（口座系）
+	 * @param page
+	 * @param h_secret_rec_flg
+	 * @param h_debit_date_fr
+	 * @param h_debit_date_to
+	 * @param h_handling_id
+	 * @param srch
+	 */
 	public static void dl_remainderBank(
     		int page,						/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
@@ -419,66 +449,69 @@ public class DetailList extends Controller {
 				if(h_secret_rec_flg != 0)
 					sqlSecretRecFlg = " AND r.secret_rec_flg = " + (h_secret_rec_flg==2 ? "true" : "false");
 		
+		
+		/* 繰越金作成 */
+		List<WkDlRbRec> lWDRR = new ArrayList<WkDlRbRec>();
+		
+		//  繰越金取得用SQL作成
+		sql = dl.makeSqlDlRbBalanceBroughtForward(haUser, h_debit_date_fr, h_handling_id, sqlJoinPhrase, sqlSecretRecFlg);
+		
+		BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
+		Long lngRemainder = biRemainder.longValue();
+		
+		WkDlRbRec wkDlRbRec = new WkDlRbRec();
+		wkDlRbRec.setStrPaymentDate("");
+		wkDlRbRec.setStrBalanceTypeName("繰越金");
+		wkDlRbRec.setLngRemainder(lngRemainder);
+		lWDRR.add(wkDlRbRec);
+		
+		
+		/* 残高明細行作成 */
+		
 		//残高明細行取得用SQL作成
 		sql = dl.makeSqlDlRbRec(haUser, h_debit_date_fr, h_debit_date_to, h_handling_id, sqlJoinPhrase, sqlSecretRecFlg);
 
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
 		
-		List<WkDlRbRec> lWDRR = new ArrayList<WkDlRbRec>();
-		
 		count = lstObjEach.size();
 		nbPages = (int) (Math.ceil((double)count/iLinage));
-		//現在ページの部分のみ取得するループ
-		for(int iCnt = (page*iLinage)-iLinage; iCnt < (count<page*iLinage ? count : page*iLinage); iCnt++) {
-			Object[] objEach = lstObjEach.get(iCnt);
-			WkDlRbRec wkDlRbRec = new WkDlRbRec();
-			wkDlRbRec.setLngId(objEach[0]==null ? 0 :  Long.parseLong(String.valueOf(objEach[0])));
-			wkDlRbRec.setBolSecretRecFlg(objEach[1]==null ? false : Boolean.valueOf(String.valueOf(objEach[1])));
-			wkDlRbRec.setStrDebitDate(String.valueOf(objEach[2]));
-			wkDlRbRec.setStrPaymentDate(objEach[3]==null ? "" : String.valueOf(objEach[3]));
-			wkDlRbRec.setStrBalanceTypeName(objEach[4]==null ? "" : String.valueOf(objEach[4]));
-			wkDlRbRec.setStrHandlingName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
-			wkDlRbRec.setStrIdealDepositName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
-			wkDlRbRec.setLngAmount(objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7])));
-			wkDlRbRec.setStrStore(objEach[8]==null ? "" : String.valueOf(objEach[8]));
-			
-			//明細表へジャンプのための引数をセット
-			wkDlRbRec.setLngBalanceTypeId(objEach[9]==null ? null : Long.parseLong(String.valueOf(objEach[9])));
-			wkDlRbRec.setLngHandlingId(objEach[10]==null ? null : Long.parseLong(String.valueOf(objEach[10])));
-			
-			lWDRR.add(wkDlRbRec);
-		}
-		
-		/* 残高明細行の残高の値設定 */
-		if(count>0) {
-			//残高基準値取得用SQL作成
-			String strDebitDateBase = String.valueOf(lstObjEach.get(0)[2]);
-			sql = dl.makeSqlDlRbBase(haUser, strDebitDateBase, h_handling_id, sqlJoinPhrase, sqlSecretRecFlg);
-			
-			BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
-			
-			Long lngRemainder = biRemainder.longValue();
-			//全行ループし、現在ページのデータにセットして抜ける
-			for(int i = 0; i < count; i++) {
-				Object[] objEach = lstObjEach.get(i);
-				Long intRemainderEach = objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7]));
-				String strBalanceTypeName = objEach[4]==null ? "" : String.valueOf(objEach[4]);
-				if(strBalanceTypeName.equals(BALANCE_TYPE_IN) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_IN))
-					lngRemainder += intRemainderEach;
-				if(strBalanceTypeName.equals(BALANCE_TYPE_OUT) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_OUT))
-					lngRemainder -= intRemainderEach;
-				if(i >= (page*iLinage)-iLinage)
-					lWDRR.get(i-((page*iLinage)-iLinage)).setLngRemainder(lngRemainder);
-				if(i == (count<page*iLinage ? count : page*iLinage)-1)
-					break;
+		//全行ループし、現在ページのデータにセットして抜ける
+		for(int i = 0; i < count; i++) {
+			Object[] objEach = lstObjEach.get(i);
+			Long intRemainderEach = objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7]));
+			String strBalanceTypeName = objEach[4]==null ? "" : String.valueOf(objEach[4]);
+			if(strBalanceTypeName.equals(BALANCE_TYPE_IN) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_IN))
+				lngRemainder += intRemainderEach;
+			if(strBalanceTypeName.equals(BALANCE_TYPE_OUT) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_OUT))
+				lngRemainder -= intRemainderEach;
+			if(i >= (page*iLinage)-iLinage) {
+				WkDlRbRec wkDlRbRecEach = new WkDlRbRec();
+				wkDlRbRecEach.setLngId(objEach[0]==null ? 0 :  Long.parseLong(String.valueOf(objEach[0])));
+				wkDlRbRecEach.setBolSecretRecFlg(objEach[1]==null ? false : Boolean.valueOf(String.valueOf(objEach[1])));
+				wkDlRbRecEach.setStrDebitDate(String.valueOf(objEach[2]));
+				wkDlRbRecEach.setStrPaymentDate(objEach[3]==null ? "" : String.valueOf(objEach[3]));
+				wkDlRbRecEach.setStrBalanceTypeName(objEach[4]==null ? "" : String.valueOf(objEach[4]));
+				wkDlRbRecEach.setStrHandlingName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
+				wkDlRbRecEach.setStrIdealDepositName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
+				wkDlRbRecEach.setLngAmount(objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7])));
+				wkDlRbRecEach.setStrStore(objEach[8]==null ? "" : String.valueOf(objEach[8]));
+				wkDlRbRecEach.setLngRemainder(lngRemainder);
+				
+				//明細表へジャンプのための引数をセット
+				wkDlRbRecEach.setLngBalanceTypeId(objEach[9]==null ? null : Long.parseLong(String.valueOf(objEach[9])));
+				wkDlRbRecEach.setLngHandlingId(objEach[10]==null ? null : Long.parseLong(String.valueOf(objEach[10])));
+				
+				lWDRR.add(wkDlRbRecEach);
 			}
+			if(i == (count<page*iLinage ? count : page*iLinage)-1)
+				break;
 		}
 		
 		render(h_debit_date_fr, h_debit_date_to, handlings, records, lWDRR, h_secret_rec_flg, h_handling_id, count, nbPages, page);
     }
 	
 	/**
-	 * 残高基準値取得用SQL作成
+	 * 繰越金取得用SQL作成
 	 * @param haUser
 	 * @param strDebitDateBase
 	 * @param h_handling_id
@@ -486,7 +519,7 @@ public class DetailList extends Controller {
 	 * @param sqlSecretRecFlg
 	 * @return
 	 */
-	private String makeSqlDlRbBase(
+	private String makeSqlDlRbBalanceBroughtForward(
 			HaUser haUser,
     		String strDebitDateBase,
     		Long h_handling_id,				/* 絞込取扱(実際)ID */

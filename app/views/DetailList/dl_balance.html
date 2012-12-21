@@ -33,7 +33,7 @@ jQuery(function(){
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
 			//家計簿編集へジャンプする際のIDをセット
-			jQuery('#idRecordEdit').val(jQuery('.ToReId',this).val());
+			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -47,7 +47,7 @@ jQuery(function(){
 			jQuery('body').attr("disabled", "disabled");
 		},
 		items: {
-			"dl_remainderBank": {name: "このデータを編集"},
+			"dl_remainderBank": {name: "&{'views.common.menu.toRecordEdit'}"},
 		}
 	});
 });
@@ -367,6 +367,8 @@ jQuery(document).ready(function() {
 	#{if records?.size() > 0}
 	#{list items:records, as:'record'}
 	<li>
+		<input type="hidden" class="ToReId" value="${record?.id}" />
+		
 		<!-- 編集ボタン -->
 		<div class="dl_srch_edit" style="display:none;" >
 			<!-- id -->
@@ -379,7 +381,6 @@ jQuery(document).ready(function() {
 		#{if session.get('actionMode')!='View'}
 			<!-- 非公開フラグ -->
 			<div class="dl_secret_rec_flg dl_borderLeft menu_cell">
-				<input type="hidden" class="ToReId" value="${record?.id}" />
 				${record.secret_rec_flg ? '非' : '公'}
 			</div>
 		#{/if}
@@ -391,7 +392,6 @@ jQuery(document).ready(function() {
             }
 		}%
 		<div class="${clDlPaymenttDateHd}">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 		  #{if record.payment_date.format('HHmm')=='0000'}
 			${record.payment_date.format('yyyy/MM/dd')}
@@ -404,61 +404,52 @@ jQuery(document).ready(function() {
 		</div>
 		<!-- 収支種類 -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record.balance_type_mst.balance_type_name}
 		  </span>
 		</div>
 		<!-- 取扱(実際) -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.handling_mst?.handling_name}
 		  </span>
 		</div>
 		<!-- 取扱(My貯金) -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.ideal_deposit_mst?.ideal_deposit_name}
 		  </span>
 		</div>
 		<!-- 項目 -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.item_mst?.item_name}
 		  </span>
 		</div>
 		<!-- 金額 -->
 		<div class="dl_amount menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="num3">
 			${record?.amount}
 		  </span>
 		</div>
 		<!-- 引落日 -->
 		<div class="dl_payment_date menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.debit_date?.format('yyyy/MM/dd')}
 		  </span>
 		</div>
 		<!-- 内容 -->
 		<div class="dl_content menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 			${record?.content}
 		</div>
 		<!-- お店 -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.store}
 		  </span>
 		</div>
 		<!-- 備考 -->
 		<div class="dl_balance_type menu_cell">
-		  <input type="hidden" class="ToReId" value="${record?.id}" />
 		  <span class="dl_string">
 			${record?.remarks}
 		  </span>
@@ -466,7 +457,6 @@ jQuery(document).ready(function() {
 		#{if session.get('actionMode')!='View'}
 			<!-- 備考(非公開) -->
 			<div class="dl_balance_type menu_cell">
-			  <input type="hidden" class="ToReId" value="${record?.id}" />
 			  <span class="dl_string">
 				${record?.secret_remarks}
 			  </span>

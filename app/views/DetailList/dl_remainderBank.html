@@ -237,7 +237,6 @@ jQuery(document).ready(function() {
 		<div class="dl_balance_type dl_head">
 			&{'handling_mst'}<br>
 			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
-				<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 				#{list items:handlings, as:'handling'}
 				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
@@ -274,6 +273,7 @@ jQuery(document).ready(function() {
 	<!-- 明細行 -->
 	#{if lWDRR?.size() > 0}
 	#{list items:lWDRR, as:'wdrr'}
+	%{strBbf = messages.get('views.detaillist.remainderBank.balanceBroughtForward')}%
 	<li>
 		<input type="hidden" class="ToReId" value="${wdrr?.lngId}" />
 		<input type="hidden" class="ToDlBalanceTypeId" value="${wdrr?.lngBalanceTypeId}" />
@@ -294,13 +294,14 @@ jQuery(document).ready(function() {
 		
 		#{if session.get('actionMode')!='View'}
 			<!-- 非公開フラグ -->
-			<div class="dl_secret_rec_flg dl_borderLeft menu_cell">
-				${wdrr.bolSecretRecFlg ? '非' : '公'}
+			<div class="dl_secret_rec_flg dl_borderLeft${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
+				${wdrr?.strBalanceTypeName==strBbf ? '' : (wdrr?.bolSecretRecFlg ? '非' : '公')}
 			</div>
 		#{/if}
 		<!-- 引落日 -->
 		%{
-			clDlRbDebitDate = 'dlRb_debit_date menu_cell'
+			clDlRbDebitDate = 'dlRb_debit_date'
+			clDlRbDebitDate += wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'
             if(session.get('actionMode')=='View'){
                 clDlRbDebitDate += ' dl_borderLeft'
             }
@@ -311,7 +312,7 @@ jQuery(document).ready(function() {
 		  </span>
 		</div>
 		<!-- 支払日 -->
-		<div class="dl_payment_date menu_cell">
+		<div class="dl_payment_date${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 		  #{if wdrr?.strPaymentDate!=''}
 			#{if wdrr?.strPaymentDate.getAt(11..15)=='00:00'}
@@ -325,19 +326,19 @@ jQuery(document).ready(function() {
 		  </span>
 		</div>
 		<!-- 収支種類 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_balance_type${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 			${wdrr?.strBalanceTypeName}
 		  </span>
 		</div>
 		<!-- 取扱(実際) -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_balance_type${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 			${wdrr?.strHandlingName}
 		  </span>
 		</div>
 		<!-- 取扱(My貯金) -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_balance_type${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 			${wdrr?.strIdealDepositName}
 		  </span>
@@ -351,19 +352,19 @@ jQuery(document).ready(function() {
 		</div>
 		 -->
 		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
+		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="num3">
 			${wdrr?.lngAmount}
 		  </span>
 		</div>
 		<!-- お店 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_balance_type${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 			${wdrr?.strStore}
 		  </span>
 		</div>
 		<!-- 残高 -->
-		<div class="dl_amount menu_cell">
+		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="num3">
 			${wdrr?.lngRemainder}
 		  </span>

@@ -157,7 +157,7 @@ jQuery(function(){
 								<div class="bt_cate_small_pre"></div>
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
 								#{list items:lwda.lstWdtd, as:'wdtd'}
-									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
+									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric${lwda.sItem=='現金' ? '' : ' menu_cell'}">
 										<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
 										<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
 										<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
