@@ -67,10 +67,15 @@ jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
-			//明細表へジャンプする際の絞込項目セット
+			//残高明細（口座系）へジャンプする際の絞込項目セット
 			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
 			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
 			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
+			
+			//残高明細（My貯金）へジャンプする際の絞込項目セット
+			jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
+			jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
+			jQuery('#idDlRiHdIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -79,12 +84,24 @@ jQuery(function(){
 	jQuery.contextMenu({
 		selector: '.menu_cell',
 		trigger: 'none',
-		callback: function(key, options) {
-			jQuery('#submitDlRemainderBank').click();
-			jQuery('body').attr("disabled", "disabled");
-		},
-		items: {
-			"dl_remainderBank": {name: "残高明細(口座系)へ"},
+		build: function($trigger, e) {
+			var options = {
+				callback: function(key, options) {
+					if(key=="toDlRemainderBank")
+						jQuery('#submitDlRemainderBank').click();
+					if(key=="toDlRemainderIdeal")
+						jQuery('#submitDlRemainderIdeal').click();
+					jQuery('body').attr("disabled", "disabled");
+				},
+				items: {}
+			};
+			if (jQuery('#hHandlingId').val()!='') {
+				options.items.toDlRemainderBank = {name: "&{'views.common.menu.toDlRemainderBank'}"};
+			}
+			if (jQuery('#idDlRiHdIdealDepositId').val()!='') {
+				options.items.toDlRemainderIdeal = {name: "&{'views.common.menu.toDlRemainderIdeal'}"};
+			}
+			return options;
 		}
 	});
 });
@@ -102,13 +119,22 @@ jQuery(function(){
 
 <div id="cmMain">
 
-<!-- 残高明細(口座系)へジャンプ用フォーム（非表示） -->
+<!-- 残高明細（口座系）へジャンプ用フォーム（非表示） -->
 #{form @DetailList.dl_remainderBank()}
 	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" style="display:none;" />
 	<input type="text" name="h_debit_date_fr" id="hDebitDateFr" style="display:none;" />
 	<input type="text" name="h_debit_date_to" id="hDebitDateTo" style="display:none;" />
 	<input type="text" name="h_handling_id" id="hHandlingId" style="display:none;" />
 	<input type="submit" name="srch" id="submitDlRemainderBank" style="display:none;" />
+#{/form}
+
+<!-- 残高明細（My貯金）へジャンプ用フォーム（非表示） -->
+#{form @DetailList.dl_remainderIdeal()}
+	<input type="text" name="dlRiHdSecretRecFlg" id="idDlRiHdSecretRecFlg" value="0" style="display:none;" />
+	<input type="text" name="dlRiHdDebitDateFr" id="idDlRiHdDebitDateFr" style="display:none;" />
+	<input type="text" name="dlRiHdDebitDateTo" id="idDlRiHdDebitDateTo" style="display:none;" />
+	<input type="text" name="dlRiHdIdealDepositId" id="idDlRiHdIdealDepositId" style="display:none;" />
+	<input type="submit" name="dlRiSrch" id="submitDlRemainderIdeal" style="display:none;" />
 #{/form}
 
 	
@@ -186,8 +212,11 @@ jQuery(function(){
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
 							#{/else}
 							#{list items:lwda.lstWdtd, as:'wdtd'}
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric">
-									<a href="@{DetailList.dl_balance()}" class="num3">${wdtd.lAmount}</a>
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${lwda.sItem=='' ? '' : ' menu_cell'}">
+									<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
+									<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
+									<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
+									<span class="num3">${wdtd.lAmount}</span>
 								</div>
 								%{leftFlg = 0}%
 							#{/list}

@@ -1,5 +1,5 @@
 #{extends 'login.html' /}
-#{set title:messages.get('views.detaillist.remainderBank.title') /}
+#{set title:messages.get('views.detaillist.remainderIdeal.title') /}
 
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
@@ -37,7 +37,7 @@ jQuery(function(){
 			
 			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
-			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId', jQuery(this).closest("li")).val());
+			jQuery('#hIdealDepositId').val(jQuery('.ToDlIdealDepositId', jQuery(this).closest("li")).val());
 			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).closest("li")).val());
 			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).closest("li")).val());
 			
@@ -71,31 +71,6 @@ jQuery(function(){
 
 /* 日付選択時にjumpするdatepicker(範囲指定) */
 jQuery(function() {
-//	var dates = jQuery("#frJump, #toJump").datepicker({
-//		defaultDate: "+1w",
-//		changeMonth: true,
-//		numberOfMonths: 1,
-//		showOtherMonths: true,
-//		selectOtherMonths: true,
-//		showAnim: "drop",
-//		changeMonth: true,
-//		changeYear: true,
-//		yearRange: '1900:2999',
-//		dateFormat: 'yy/mm/dd',
-//		showButtonPanel: true,
-//		onSelect: function( selectedDate ) {
-//			var option = this.id == "frJump" ? "minDate" : "maxDate",
-//				instance = jQuery( this ).data( "datepicker" ),
-//				date = jQuery.datepicker.parseDate(
-//					instance.settings.dateFormat ||
-//					jQuery.datepicker._defaults.dateFormat,
-//					selectedDate, instance.settings );
-//			dates.not( this ).datepicker( "option", option, date );
-////			jQuery('#idSrch').click();
-////			jQuery('body').attr("disabled", "disabled");
-//			jQuery(this).change();
-//		}
-//	});
 	jQuery("#frJump").datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -131,15 +106,15 @@ jQuery(function() {
 		}
 	});
 	//起動時のdatepickerの選択可能範囲絞込
-	if(ckDate("${h_debit_date_fr}"))
-		jQuery("#toJump").datepicker("option", "minDate", "${h_debit_date_fr}");
-	if(ckDate("${h_debit_date_to}"))
-		jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
+	if(ckDate("${dlRiHdDebitDateFr}"))
+		jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
+	if(ckDate("${dlRiHdDebitDateTo}"))
+		jQuery("#frJump").datepicker("option", "maxDate", "${dlRiHdDebitDateTo}");
 });
 
 jQuery(function() {
 	// 「公開フラグ」・「取扱（実際）」の変更イベント
-	jQuery("#idHdSecretRecFlg, #idHdHandling").change(function() {
+	jQuery("#idHdSecretRecFlg, #idHdIdealDeposit").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
@@ -185,10 +160,10 @@ jQuery(document).ready(function() {
 #{include 'DetailList/dl_header.html' /}
 
 
-#{form @DetailList.dl_remainderBank()}
+#{form @DetailList.dl_remainderIdeal()}
 
 <!-- 絞込のサブミット（非表示） -->
-<input type="submit" id="idSrch" name="srch" style="display:none;" />
+<input type="submit" id="idSrch" name="dlRiSrch" style="display:none;" />
 
 <div id="dl_tblFrameHd">
 
@@ -200,10 +175,10 @@ jQuery(document).ready(function() {
 			<!-- 非公開フラグ -->
 			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft" >
 				公<br>開<br>
-				<select class="dl_tbl_content" name="h_secret_rec_flg">
-					<option value="0"${h_secret_rec_flg==0 ? ' selected' : ''}>--</option>
-					<option value="1"${h_secret_rec_flg==1 ? ' selected' : ''}>公</option>
-					<option value="2"${h_secret_rec_flg==2 ? ' selected' : ''}>非</option>
+				<select class="dl_tbl_content" name="dlRiHdSecretRecFlg">
+					<option value="0"${dlRiHdSecretRecFlg==0 ? ' selected' : ''}>--</option>
+					<option value="1"${dlRiHdSecretRecFlg==1 ? ' selected' : ''}>公</option>
+					<option value="2"${dlRiHdSecretRecFlg==2 ? ' selected' : ''}>非</option>
 				</select>
 			</div>
 		#{/if}
@@ -216,9 +191,9 @@ jQuery(document).ready(function() {
 		}%
 		<div class="${clDlRbDebitDateHd}">
 			&{'debit_date'}<br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="h_debit_date_fr" value="${h_debit_date_fr}" />
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="dlRiHdDebitDateFr" value="${dlRiHdDebitDateFr}" />
 			<br><label for="to">～</label><br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="h_debit_date_to" value="${h_debit_date_to}" />
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="dlRiHdDebitDateTo" value="${dlRiHdDebitDateTo}" />
 		</div>
 		<!-- 支払日 -->
 		<div class="dl_payment_date dl_head">
@@ -228,18 +203,18 @@ jQuery(document).ready(function() {
 		<div class="dl_balance_type dl_head">
 			&{'balance_type_mst'}<br>
 		</div>
-		<!-- 取扱(実際) -->
-		<div class="dl_common_column dl_head">
-			&{'handling_mst'}<br>
-			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
-				#{list items:handlings, as:'handling'}
-				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
-				#{/list}
-			</select>
-		</div>
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column dl_head">
 			&{'ideal_deposit_mst'}<br>
+			<select id="idHdIdealDeposit" class="dl_tbl_content" name="dlRiHdIdealDepositId">
+				#{list items:iDepos, as:'iDepo'}
+				<option value="${iDepo.id}"${dlRiHdIdealDepositId==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
+				#{/list}
+			</select>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column dl_head">
+			&{'handling_mst'}<br>
 		</div>
 		<!-- 引出 -->
 		<div class="dl_amount dl_head">
@@ -275,7 +250,7 @@ jQuery(document).ready(function() {
 	<li>
 		<input type="hidden" class="ToReId" value="${wdrr?.lngId}" />
 		<input type="hidden" class="ToDlBalanceTypeId" value="${wdrr?.lngBalanceTypeId}" />
-		<input type="hidden" class="ToDlHandlingId" value="${wdrr?.lngHandlingId}" />
+		<input type="hidden" class="ToDlIdealDepositId" value="${wdrr?.lngIdealDepositId}" />
 		<input type="hidden" class="ToDlDebitDateFr" value="${wdrr?.strDebitDate}" />
 		<input type="hidden" class="ToDlDebitDateTo" value="${wdrr?.strDebitDate}" />
 		
@@ -318,36 +293,28 @@ jQuery(document).ready(function() {
 			${wdrr?.strBalanceTypeName}
 		  </span>
 		</div>
-		<!-- 取扱(実際) -->
-		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
-		  <span class="dl_string">
-			${wdrr?.strHandlingName}
-		  </span>
-		</div>
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
 			${wdrr?.strIdealDepositName}
 		  </span>
 		</div>
-		<!-- 項目 -->
-		<!-- 
-		<div class="dl_common_column">
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
-			${record?.item_mst?.item_name}
+			${wdrr?.strHandlingName}
 		  </span>
 		</div>
-		 -->
 		<!-- 引出 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="num3">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_out') ? wdrr?.lngAmount : ''}
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.ideal_deposit_out') ? wdrr?.lngAmount : ''}
 		  </span>
 		</div>
 		<!-- 預入 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="num3">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_in') ? wdrr?.lngAmount : ''}
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.ideal_deposit_in') ? wdrr?.lngAmount : ''}
 		  </span>
 		</div>
 		<!-- お店 -->
@@ -370,7 +337,7 @@ jQuery(document).ready(function() {
 </div>  <!-- dl_tblFrame -->
 
 <div id="configListPagination">
-	#{DetailList.dl_remainder_bank.pagination /}
+	#{DetailList.dl_remainder_ideal.pagination /}
 </div>
 
 </div>  <!-- dlMain -->

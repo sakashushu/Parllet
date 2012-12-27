@@ -17,6 +17,7 @@ public class WkDlRbRec {
 	private String strPaymentDateOrder;
 	private Long lngBalanceTypeId;  		/* 絞込収支種類ID */
 	private Long lngHandlingId;			/* 絞込取扱(実際)ID */
+	private Long lngIdealDepositId;		/* 絞込取扱(My貯金)ID */
 	public Long getLngId() {
 		return lngId;
 	}
@@ -94,5 +95,11 @@ public class WkDlRbRec {
 	}
 	public void setLngHandlingId(Long lngHandlingId) {
 		this.lngHandlingId = lngHandlingId;
+	}
+	public Long getLngIdealDepositId() {
+		return lngIdealDepositId;
+	}
+	public void setLngIdealDepositId(Long lngIdealDepositId) {
+		this.lngIdealDepositId = lngIdealDepositId;
 	}
 }

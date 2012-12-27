@@ -891,7 +891,7 @@ public class DailyAccount extends Controller {
 		sql += "" +
 				" WHERE hm.ha_user_id = " + haUser.id +
 				"   AND htm.handling_type_name != '" + HANDLING_TYPE_CRECA + "' " +
-				"   AND hm.zero_hidden = false " + sqlDailyZero +
+				"   AND (hm.zero_hidden = false " + sqlDailyZero + ") " +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
 			sql = sql.replaceAll("  ", " ");
@@ -1297,7 +1297,7 @@ public class DailyAccount extends Controller {
 				"   ON idm.id = rem_firstday.id_id" +
 				sqlJoinPhrase +
 				" WHERE idm.ha_user_id = " + haUser.id +
-				"   AND idm.zero_hidden = false " + sqlDailyZero +
+				"   AND (idm.zero_hidden = false " + sqlDailyZero + ") " +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
 			sql = sql.replaceAll("  ", " ");
@@ -1970,15 +1970,23 @@ public class DailyAccount extends Controller {
 			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
 			wkDaToDl.setlIdealDepositId(lngItemId);
 		}
-		// 「実残高」
-		if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
+		// 「実残高」・「My貯金」
+		if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
+				strLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 			calendar.add(Calendar.MONTH, -1);
 			String sDateFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			wkDaToDl.setsDebitDateFr(sDateFr);
 			calendar.add(Calendar.MONTH, 7);
 			String sDateTo = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			wkDaToDl.setsDebitDateTo(sDateTo);
-			wkDaToDl.setlHandlingId(lngItemId);
+			// 「実残高」
+			if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL)) {
+				wkDaToDl.setlHandlingId(lngItemId);
+			}
+			// 「My貯金」
+			if(strLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
+				wkDaToDl.setlIdealDepositId(lngItemId);
+			}
 		}
 		
 		return wkDaToDl;

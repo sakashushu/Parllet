@@ -224,21 +224,10 @@ jQuery(document).ready(function() {
 
 <!-- 家計簿編集へジャンプ用フォーム（非表示） -->
 #{include 'toRecordEdit_recordEdit.html' /}
-	
-<div>
-  <ul id="loginMenu">
-	<li class="selected">
-		<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
-	</li>
-	<li>
-		<a href="@{DetailList.dl_remainderBank()}">&{'views.detaillist.remainderBank.title'}</a>
-	</li>
-	<li>
-		<a>残高明細(My貯金)</a>
-	</li>
-  </ul>
-</div>
-	
+
+<!-- 明細表共通ヘッダー -->
+#{include 'DetailList/dl_header.html' /}
+
 	
 #{form @DetailList.dl_balance(), id:'frmDlBalance'}
 <div id="dl_tblFrameHd">
@@ -286,7 +275,7 @@ jQuery(document).ready(function() {
 			</select>
 		</div>
 		<!-- 取扱(実際) -->
-		<div class="dl_balance_type dl_head">
+		<div class="dl_common_column dl_head">
 			&{'handling_mst'}<br>
 			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
 				<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
@@ -296,7 +285,7 @@ jQuery(document).ready(function() {
 			</select>
 		</div>
 		<!-- 取扱(My貯金) -->
-		<div class="dl_balance_type dl_head">
+		<div class="dl_common_column dl_head">
 			&{'ideal_deposit_mst'}<br>
 			<select id="idHdIdealDeposit" class="dl_tbl_content" name="h_ideal_deposit_id">
 				<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
@@ -308,7 +297,7 @@ jQuery(document).ready(function() {
 			</select>
 		</div>
 		<!-- 項目 -->
-		<div id="idHdItem" class="dl_balance_type dl_head">
+		<div id="idHdItem" class="dl_common_column dl_head">
 			&{'item_mst'}<br>
 			<select class="dl_tbl_content" id="h_combo" name="h_item_id">
 				<option value="0"${h_item_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
@@ -321,7 +310,7 @@ jQuery(document).ready(function() {
 			</select>
 		</div>
 		<!-- 金額 -->
-		<div class="dl_balance_type dl_head">
+		<div class="dl_amount dl_head">
 			&{'amount'}<br>
 		</div>
 		<!-- 引落日 -->
@@ -336,16 +325,16 @@ jQuery(document).ready(function() {
 			&{'content'}<br>
 		</div>
 		<!-- お店 -->
-		<div class="dl_balance_type dl_head">
+		<div class="dl_common_column dl_head">
 			&{'store'}<br>
 		</div>
 		<!-- 備考 -->
-		<div class="dl_balance_type dl_head">
+		<div class="dl_common_column dl_head">
 			&{'remarks'}<br>
 		</div>
 		#{if session.get('actionMode')!='View'}
 			<!-- 備考(非公開) -->
-			<div class="dl_balance_type dl_head">
+			<div class="dl_common_column dl_head">
 				&{'secret_remarks'}<br>
 			</div>
 			
@@ -398,7 +387,7 @@ jQuery(document).ready(function() {
 		  #{/if}
 		  #{else}
 			${record.payment_date.format('yyyy/MM/dd')}<br>
-			　　　　　${record.payment_date.format('HH:mm')}
+			　　　　${record.payment_date.format('HH:mm')}
 		  #{/else}
 		  </span>
 		</div>
@@ -409,19 +398,19 @@ jQuery(document).ready(function() {
 		  </span>
 		</div>
 		<!-- 取扱(実際) -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.handling_mst?.handling_name}
 		  </span>
 		</div>
 		<!-- 取扱(My貯金) -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.ideal_deposit_mst?.ideal_deposit_name}
 		  </span>
 		</div>
 		<!-- 項目 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.item_mst?.item_name}
 		  </span>
@@ -443,20 +432,20 @@ jQuery(document).ready(function() {
 			${record?.content}
 		</div>
 		<!-- お店 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.store}
 		  </span>
 		</div>
 		<!-- 備考 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.remarks}
 		  </span>
 		</div>
 		#{if session.get('actionMode')!='View'}
 			<!-- 備考(非公開) -->
-			<div class="dl_balance_type menu_cell">
+			<div class="dl_common_column menu_cell">
 			  <span class="dl_string">
 				${record?.secret_remarks}
 			  </span>

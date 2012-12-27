@@ -28,16 +28,21 @@ views.common.update.edit=編集
 views.common.move=移動
 views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
 views.common.menu.toDlBalance=収支明細へ
+views.common.menu.toDlRemainderBank=残高明細（口座系）へ
+views.common.menu.toDlRemainderIdeal=残高明細（My貯金）へ
 views.common.menu.toRecordAdd=家計簿入力へ
 views.common.menu.toRecordEdit=このデータを編集
 
 views.application.tools.home=ホーム
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
+views.detaillist.remainderIdeal.title=残高明細（My貯金）
 views.detaillist.remainderBank.balanceBroughtForward=繰越金
 views.detaillist=明細表
 views.detaillist.diff=差額
 views.detaillist.remainder=残高
+views.detaillist.remainderCommon.out=引出
+views.detaillist.remainderCommon.in=預入
 views.dailyaccount.dailyaccount=日計表
 views.dailyaccount.balancetable=残高表
 views.config.config=設定
@@ -77,7 +82,7 @@ balance_type_name=収支種類名称
 
 # Recordの項目名
 ha_user=家計簿ユーザー
-payment_date=支払日
+payment_date=購入日
 balance_type_mst=収支種類
 item_mst=項目
 detail_mst=項目詳細

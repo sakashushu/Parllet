@@ -1,0 +1,66 @@
+
+<p class="configCount">
+    &{'crud.list.size', _caller.count, "データ"}
+</p>
+
+#{if _caller.nbPages > 1}
+    <p class="configPages">
+
+        %{
+            limit = (_limit != null ? _limit : 10)
+            start = _caller.page - (int)(limit/2) + (limit % 2 ? 0 : 1)
+            end = _caller.page + (int)(limit/2)
+
+            if(start < 1){
+                extra = 1 - start
+                end = (end + extra < _caller.nbPages ? end + extra : _caller.nbPages)
+                start = 1
+            }else if(end > _caller.nbPages){
+                extra = end - _caller.nbPages
+                start = (start - extra > 1 ? start - extra : 1)
+                end = _caller.nbPages
+            }
+        }%
+
+        #{if _caller.page > 1}
+            <span class="previous">
+            	<a href="dl_remainderIdeal?page=${_caller.page-1}">
+            	&{'crud.pagination.previous'}</a>
+            </span>
+        #{/if}
+
+        #{if start > 1}
+            <span class="first">
+            	<a href="dl_remainderIdeal?page=${1}">
+            	&{'crud.pagination.first'}</a>
+            </span>
+        #{/if}
+
+        %{ for (i in start..end) { }%
+            <span class="page">
+                #{if _caller.page == i}
+                    <strong>${i}</strong>
+                #{/if}
+                #{else}
+	            	<a href="dl_remainderIdeal?page=${i}">
+	            	${i}</a>
+                #{/else}
+            </span>
+        %{ } }%
+
+        #{if end < _caller.nbPages}
+            <span class="last">
+            	<a href="dl_remainderIdeal?page=${_caller.nbPages}">
+            	&{'crud.pagination.last'}</a>
+            </span>
+        #{/if}
+
+        #{if _caller.page < _caller.nbPages}
+            <span class="next">
+            	<a href="dl_remainderIdeal?page=${_caller.page+1}">
+            	&{'crud.pagination.next'}</a>
+            </span>
+        #{/if}
+
+    </p>
+#{/if}

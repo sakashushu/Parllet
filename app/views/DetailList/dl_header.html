@@ -1,0 +1,13 @@
+<div>
+  <ul id="loginMenu">
+	<li class="${request.actionMethod == 'dl_balance' ? 'selected' : ''}">
+		<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
+	</li>
+	<li class="${request.actionMethod == 'dl_remainderBank' ? 'selected' : ''}">
+		<a href="@{DetailList.dl_remainderBank()}">&{'views.detaillist.remainderBank.title'}</a>
+	</li>
+	<li class="${request.actionMethod == 'dl_remainderIdeal' ? 'selected' : ''}">
+		<a href="@{DetailList.dl_remainderIdeal()}">&{'views.detaillist.remainderIdeal.title'}</a>
+	</li>
+  </ul>
+</div>
