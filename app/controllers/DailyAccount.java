@@ -1,9 +1,6 @@
 package controllers;
 
-import java.math.BigInteger;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,10 +13,8 @@ import java.util.List;
 import models.BalanceTypeMst;
 import models.Budget;
 import models.HaUser;
-import models.HandlingMst;
 import models.IdealDepositMst;
 import models.ItemMst;
-import models.Record;
 import models.WkDaToDl;
 import models.WkDailyAccount;
 import models.WkDailyAccountRender;
@@ -320,7 +315,7 @@ public class DailyAccount extends Controller {
 		//全行取得用SQL作成
 		String sql = makeSql(year, month, dStartDay, iDaysCnt, strTableType, haUser, sFirstDay, sNextFirst);
 		
-		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
+		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();;
 		
 		long[] lAryDaysRlAll = new long[iDaysCnt];		//合計行の日毎金額
 		
@@ -405,7 +400,6 @@ public class DailyAccount extends Controller {
 		return lWDA;
 	}
 
-	
 	/**
 	 * 全行取得用SQL作成
 	 * @param year
