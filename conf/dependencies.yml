@@ -1,8 +1,12 @@
 # Application dependencies
 
 require:
-    - play
+    - play 1.2.4
+    - play -> crud
+    - play -> secure
+    - provided -> jackson-all 1.9.6
     - provided -> jsonic 1.2.10
+    - provided -> opencsv 2.3
     
 repositories: 
     - provided: 

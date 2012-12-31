@@ -1,6 +1,7 @@
 package controllers;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class Common {
 	/**
@@ -30,7 +31,8 @@ public class Common {
 		if (strDate == null || strDate.length() != 10)
 			return false;
 		strDate = strDate.replace('-', '/');
-		DateFormat format = DateFormat.getDateInstance();
+//		DateFormat format = DateFormat.getDateInstance();
+		DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 		// 日付/時刻解析を厳密に行うかどうかを設定する。
 		format.setLenient(false);
 		try {

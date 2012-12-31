@@ -32,8 +32,9 @@ jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
-			//家計簿編集へジャンプする際のIDをセット
+			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
+			jQuery('#reEdCalledFrom').val("dl_balance");
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});

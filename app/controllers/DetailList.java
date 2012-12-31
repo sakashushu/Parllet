@@ -69,7 +69,7 @@ public class DetailList extends Controller {
 	 * @param save
 	 */
 	public static void dl_balance(
-    		int page,						/* 現在ページ */
+    		Integer page,					/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
     		String h_payment_date_fr,		/* 絞込支払日範囲（開始） */
     		String h_payment_date_to,		/* 絞込支払日範囲（終了） */
@@ -126,7 +126,7 @@ public class DetailList extends Controller {
 		}
 		
 		//初回読み込み時のページは１ページとする
-		if(page == 0)
+		if(page==null || page==0)
 			page = 1;
 	
 		List<Record> records = null;
@@ -364,7 +364,7 @@ public class DetailList extends Controller {
 	 * @param srch
 	 */
 	public static void dl_remainderBank(
-    		int page,						/* 現在ページ */
+    		Integer page,					/* 現在ページ */
     		Integer h_secret_rec_flg,		/* 絞込非公開フラグ */
     		String h_debit_date_fr,			/* 絞込引落日範囲（開始） */
     		String h_debit_date_to,			/* 絞込引落日範囲（終了） */
@@ -396,7 +396,7 @@ public class DetailList extends Controller {
 		}
 		
 		//初回読み込み時のページは１ページとする
-		if(page == 0)
+		if(page==null || page==0)
 			page = 1;
 	
 		List<Record> records = null;
@@ -731,7 +731,7 @@ public class DetailList extends Controller {
 	 * @param dlRiSrch
 	 */
 	public static void dl_remainderIdeal(
-    		int page,						/* 現在ページ */
+    		Integer page,					/* 現在ページ */
     		Integer dlRiHdSecretRecFlg,		/* 絞込非公開フラグ */
     		String dlRiHdDebitDateFr,		/* 絞込引落日範囲（開始） */
     		String dlRiHdDebitDateTo,		/* 絞込引落日範囲（終了） */
@@ -763,7 +763,7 @@ public class DetailList extends Controller {
 		}
 		
 		//初回読み込み時のページは１ページとする
-		if(page == 0)
+		if(page==null || page==0)
 			page = 1;
 	
 		List<Record> records = null;

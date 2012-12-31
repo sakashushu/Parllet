@@ -32,8 +32,9 @@ jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
-			//家計簿編集へジャンプする際のIDをセット
+			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
+			jQuery('#reEdCalledFrom').val("dl_remainderBank");
 			
 			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
@@ -71,31 +72,6 @@ jQuery(function(){
 
 /* 日付選択時にjumpするdatepicker(範囲指定) */
 jQuery(function() {
-//	var dates = jQuery("#frJump, #toJump").datepicker({
-//		defaultDate: "+1w",
-//		changeMonth: true,
-//		numberOfMonths: 1,
-//		showOtherMonths: true,
-//		selectOtherMonths: true,
-//		showAnim: "drop",
-//		changeMonth: true,
-//		changeYear: true,
-//		yearRange: '1900:2999',
-//		dateFormat: 'yy/mm/dd',
-//		showButtonPanel: true,
-//		onSelect: function( selectedDate ) {
-//			var option = this.id == "frJump" ? "minDate" : "maxDate",
-//				instance = jQuery( this ).data( "datepicker" ),
-//				date = jQuery.datepicker.parseDate(
-//					instance.settings.dateFormat ||
-//					jQuery.datepicker._defaults.dateFormat,
-//					selectedDate, instance.settings );
-//			dates.not( this ).datepicker( "option", option, date );
-////			jQuery('#idSrch').click();
-////			jQuery('body').attr("disabled", "disabled");
-//			jQuery(this).change();
-//		}
-//	});
 	jQuery("#frJump").datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,

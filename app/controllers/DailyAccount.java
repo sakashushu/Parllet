@@ -202,8 +202,10 @@ public class DailyAccount extends Controller {
 		}
 		
 		Date dBasis = null;
+		DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 		try {
-			dBasis = DateFormat.getDateInstance().parse(strBasisDate);
+//			dBasis = DateFormat.getDateInstance().parse(strBasisDate);
+			dBasis = df.parse(strBasisDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

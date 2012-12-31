@@ -354,6 +354,8 @@ function conditionDefDateAdjust_DebitDate() {
 }%
 <div class="objectForm">
 #{form @save_rec(record?.id)}
+	<input type="text" name="calledFrom" value="${calledFrom}" style="display:none;" />
+
     <div class="crudField">
         #{field 'payment_date'}
         <label class="fieldName">&{'payment_date'}:</label>
@@ -511,6 +513,7 @@ function conditionDefDateAdjust_DebitDate() {
 
 #{if record?.id}
 	#{form @del_rec(record?.id)}
+		<input type="text" name="calledFrom" value="${calledFrom}" style="display:none;" />
 	    <p class="crudDelete">
         	<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
 	    </p>
