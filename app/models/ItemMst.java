@@ -51,13 +51,13 @@ public class ItemMst extends Model {
 	static class ItemNameMultipleCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			ItemMst itemMst = (ItemMst)validatedObject;
-			ItemMst hmExist = null;
-			hmExist = ItemMst.find(
+			ItemMst imExist = null;
+			imExist = ItemMst.find(
 					"ha_user = ? and balance_type_mst = ? and item_name = ?",
 					itemMst.ha_user,
 					itemMst.balance_type_mst,
 					itemMst.item_name).first();
-			if(hmExist!=null) {
+			if(imExist!=null && imExist.id!=itemMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

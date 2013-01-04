@@ -32,6 +32,7 @@ public class DailyAccount extends Controller {
 	static void setConnectedUser() {
 		if(!Security.isConnected())
 			return;
+		
 		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 		renderArgs.put("haUser", haUser);
 	}
@@ -315,7 +316,7 @@ public class DailyAccount extends Controller {
 		//全行取得用SQL作成
 		String sql = makeSql(year, month, dStartDay, iDaysCnt, strTableType, haUser, sFirstDay, sNextFirst);
 		
-		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();;
+		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
 		
 		long[] lAryDaysRlAll = new long[iDaysCnt];		//合計行の日毎金額
 		

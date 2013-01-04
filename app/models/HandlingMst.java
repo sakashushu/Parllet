@@ -78,11 +78,11 @@ public class HandlingMst extends Model {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
 			HandlingMst hmExist = null;
-			hmExist = HandlingMst.find(
+ 			hmExist = HandlingMst.find(
 					"ha_user = ? and handling_name = ?",
 					handlingMst.ha_user,
 					handlingMst.handling_name).first();
-			if(hmExist!=null) {
+			if(hmExist!=null && hmExist.id!=handlingMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

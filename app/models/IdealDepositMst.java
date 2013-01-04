@@ -50,12 +50,12 @@ public class IdealDepositMst extends Model {
 	static class IdealDepositNameMultipleCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			IdealDepositMst idealDepositMst = (IdealDepositMst)validatedObject;
-			IdealDepositMst hmExist = null;
-			hmExist = IdealDepositMst.find(
+			IdealDepositMst idmExist = null;
+			idmExist = IdealDepositMst.find(
 					"ha_user = ? and ideal_deposit_name = ?",
 					idealDepositMst.ha_user,
 					idealDepositMst.ideal_deposit_name).first();
-			if(hmExist!=null) {
+			if(idmExist!=null && idmExist.id!=idealDepositMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

@@ -647,7 +647,6 @@ public class Config extends Controller {
     		) {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
-			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			// 「取扱（実際）」データの読み出し
 			HandlingMst handlingMst = HandlingMst.findById(lngId);
 			// 編集
@@ -677,7 +676,6 @@ public class Config extends Controller {
     		) {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
-			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			// 「項目」データの読み出し
 			ItemMst itemMst = ItemMst.findById(lngId);
 			// 編集
@@ -709,7 +707,6 @@ public class Config extends Controller {
     		) {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
-			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			// 「取扱（実際）」データの読み出し
 			IdealDepositMst idealDepositMst = IdealDepositMst.findById(lngId);
 			// 編集
