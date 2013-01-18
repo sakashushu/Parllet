@@ -114,10 +114,11 @@ public class DailyAccount extends Controller {
 			}
 				
 		}
-		String strDispDate = sBasisDate;
-		if (!sBasisDate.substring(sBasisDate.length()-2).equals("01")) {
-			sBasisDate = sBasisDate.substring(0, sBasisDate.length()-2) + "01";
-		}
+//		日計表で1ヶ月分表示していた時のコード
+//		String strDispDate = sBasisDate;
+//		if (!sBasisDate.substring(sBasisDate.length()-2).equals("01")) {
+//			sBasisDate = sBasisDate.substring(0, sBasisDate.length()-2) + "01";
+//		}
 		
 		String strTableType = VIEWS_DAILY_ACCOUNT;
 
@@ -130,7 +131,8 @@ public class DailyAccount extends Controller {
 		List<WkDailyAccount> lWDA = wkDAR.getlWDA();
 		int iWidth = wkDAR.getIntWidth();
 		
-		render("@dailyAccount",  month, sBasisDate, strDispDate, strTableType, sAryDays, lWDA, iWidth);
+//		render("@dailyAccount",  month, sBasisDate, strDispDate, strTableType, sAryDays, lWDA, iWidth);
+		render("@dailyAccount",  month, sBasisDate, strTableType, sAryDays, lWDA, iWidth);
 	}
 	
 	/**
@@ -213,10 +215,10 @@ public class DailyAccount extends Controller {
 		int iDaysCnt = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
 //		日計表の表示日数を3日にしていた時のコード
-//		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-//			iDaysCnt = 3;
-//			calendar.add(Calendar.DATE, -1);
-//		}
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+			iDaysCnt = 5;
+			calendar.add(Calendar.DATE, -2);
+		}
 		if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
 			iDaysCnt = 1;
 		}
@@ -255,6 +257,8 @@ public class DailyAccount extends Controller {
 	public static void jump(
     		String e_basis_date,
     		String strTableType,
+    		String strMoveType,
+    		Integer intMoveNum,
     		String move			/* 「移動」ボタン */
 			) {
 		
@@ -262,6 +266,33 @@ public class DailyAccount extends Controller {
 		if(move==null)
 			return;
 		
+		//ジャンプ後の日付を取得
+		DailyAccount da = new DailyAccount();
+		if(e_basis_date!=null && strMoveType!=null && intMoveNum!=null )
+			e_basis_date = da.dteAfterJump(e_basis_date, strMoveType, intMoveNum);
+		
+		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+			dailyAccount(e_basis_date);
+			return;
+		} 
+		if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
+			balanceTable(e_basis_date);
+			return;
+		}
+	}
+	
+	/**
+	 * ジャンプ後の日付を取得
+	 * @param e_basis_date
+	 * @param strMoveType
+	 * @param intMoveNum
+	 * @return
+	 */
+	private String dteAfterJump(
+    		String e_basis_date,
+    		String strMoveType,
+    		Integer intMoveNum
+			) {
 		Calendar calendar = Calendar.getInstance();
 		Date dBasis = null;
 		try {
@@ -271,14 +302,18 @@ public class DailyAccount extends Controller {
 			e.printStackTrace();
 		}
 		calendar.setTime(dBasis);
-		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
-			dailyAccount(e_basis_date);
-			return;
-		} 
-		if(strTableType.equals(VIEWS_BALANCE_TABLE)) {
-			balanceTable(e_basis_date);
-			return;
+		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.year"))) {
+			calendar.add(Calendar.YEAR, intMoveNum);
 		}
+		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.month"))) {
+			calendar.add(Calendar.MONTH, intMoveNum);
+		}
+		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.days"))) {
+			calendar.add(Calendar.DATE, intMoveNum);
+		}
+		e_basis_date = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+		
+		return e_basis_date;
 	}
 	
 	/**
@@ -318,7 +353,7 @@ public class DailyAccount extends Controller {
 		
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
 		
-		long[] lAryDaysRlAll = new long[iDaysCnt];		//合計行の日毎金額
+//		long[] lAryDaysRlAll = new long[iDaysCnt];		//合計行の日毎金額
 		
 		int intCnt = 0;
 		int intLwdaCnt = lWDA.size();
@@ -365,7 +400,7 @@ public class DailyAccount extends Controller {
 			// 日毎
 			calendar.setTime(dStartDay);
 			long lngEach = 0L;
-			long lngSum = 0L;
+//			long lngSum = 0L;
 			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
 			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
 				//「実残高」・「My貯金してないお金」・「My貯金残高」の時は2日目以降は加算
@@ -373,12 +408,12 @@ public class DailyAccount extends Controller {
 						strLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) ||
 						strLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
 					lngEach += Long.parseLong(String.valueOf(objEach[iDay+7]));	//日毎金額
-					lngSum = lngEach;											//月計
+//					lngSum = lngEach;											//月計
 				} else {
 					lngEach = Long.parseLong(String.valueOf(objEach[iDay+7]));	//日毎金額
-					lngSum += lngEach;											//月計
+//					lngSum += lngEach;											//月計
 				}
-				lAryDaysRlAll[iDay] += lngEach;	//合計行の日毎金額
+//				lAryDaysRlAll[iDay] += lngEach;	//合計行の日毎金額
 				
 				//日計表から明細表へのリンクのための引数をセット
 				WkDaToDl wkDaToDl = makeWkDaToDl(
@@ -393,7 +428,14 @@ public class DailyAccount extends Controller {
 				calendar.add(Calendar.DATE, 1);
 			}
 			wDaEach.setLstWdtd(lstWdtd);
-			wDaEach.setLSumMonth(lngSum);
+//			wDaEach.setLSumMonth(lngSum);
+			//「収入」・「支出」・「My貯金預入」・「My貯金から支払」の場合、月計をセット
+			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[iDaysCnt+7])));
+			}
 			
 			lWDA.add(wDaEach);
 		}
@@ -1752,12 +1794,14 @@ public class DailyAccount extends Controller {
 				"   cate_name, " +
 				"   bg_id, " +
 				"   bg_amount " +
-   				sqlDailyAll +
+				sqlDailyAll +
+				"  ,sum_month " +
 				" FROM ( ( "
 						: "") +
    				" SELECT " +
    				sqlSelGroupby +
    				sqlDaily +
+   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
    				" FROM ItemMst i " +
 				" LEFT JOIN Record r " +
 				"   ON r.item_mst_id = i.id " +
@@ -1867,11 +1911,13 @@ public class DailyAccount extends Controller {
 				"   bg_id, " +
 				"   bg_amount " +
    				sqlDailyAll +
+				"  ,sum_month " +
 				" FROM ( ( "
 						: "") +
    				" SELECT " +
    				sqlSelGroupby +
    				sqlDaily +
+   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
    				" FROM Record r " +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON r.balance_type_mst_id = b.id " +
@@ -2000,9 +2046,11 @@ public class DailyAccount extends Controller {
 		if((session.get("daFilExistFlg") != null) &&
 				(session.get("daFilExistFlg").equals("true")))
 			return session.get("daStrBasisDate");
-   		//単純に呼ばれた時（初回等）は、今月１日をセット
    		Calendar calendar = Calendar.getInstance();
-		return  String.format("%1$tY/%1$tm/01", calendar.getTime());
+//		//単純に呼ばれた時（初回等）は、今月１日をセット
+//		return  String.format("%1$tY/%1$tm/01", calendar.getTime());
+		//単純に呼ばれた時（初回等）は、本日をセット
+		return  String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 	}
 	
 	/**

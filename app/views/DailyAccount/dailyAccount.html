@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 <!--
-//枠固定の上下の動き
+/* 枠固定の上下の動き */
 jQuery(document).ready(function() {
     jQuery('#da_tbody').scroll(function() {
     	//jQuery('#da_trow').scrollLeft(jQuery(this).scrollLeft());
@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
 //    });
 //});
 
-//枠固定の左右の動き
+/* 枠固定の左右の動き */
 jQuery(document).ready(function() {
     jQuery('#da_tbody2').scroll(function() {
     	jQuery('#da_tbody').scrollLeft(jQuery(this).scrollLeft());
@@ -31,7 +31,7 @@ jQuery(document).ready(function() {
     });
 });
 
-//起動時の日毎の部分の幅と高さを調整
+/* 起動時の日毎の部分の幅と高さを調整 */
 jQuery(document).ready(function() {
 	jQuery('#da_tcol').height(jQuery(window).innerHeight()-130);
 	jQuery('#da_tbody').height(jQuery(window).innerHeight()-130);
@@ -40,7 +40,7 @@ jQuery(document).ready(function() {
 //	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
 });
 
-//ウィンドウリサイズ時の日毎の部分の幅と高さを調整
+/* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
 		jQuery('#da_tcol').height(jQuery(this).innerHeight()-130);
@@ -51,24 +51,76 @@ jQuery(document).ready(function() {
 	});
 });
 
-//日付移動リンククリック時はjumpイベントへ
+/* 年コンボボックスのリスト作成 */
 jQuery(document).ready(function() {
-	var dateFormat = new DateFormat("yyyy/MM/dd");
-	var sDate = "${sBasisDate}";
-	var nYear = new Number(sDate.substr(0, 4)-0);
-	var nMonth = new Number(sDate.substr(5, 2)-1);
-	var nDay = new Number(sDate.substr(8, 2)-0);
-	jQuery('#idPreYear, #idPreMonth, #idNextMonth, #idNextYear').click(function() {
-		if(this.id=="idPreYear")
-			nYear -= 1;
-		if(this.id=="idPreMonth")
-			nMonth -= 1;
-		if(this.id=="idNextMonth")
-			nMonth += 1;
-		if(this.id=="idNextYear")
-			nYear += 1;
-		var dPre1 = new Date(nYear, nMonth, nDay);
-		jQuery('#idBasisDate').val(dateFormat.format(dPre1));
+	%{year = sBasisDate.substring(0,4)}%
+	var vYear = Number("${year}");
+	var vSelected;
+	for(i=1900; i<3000; i++) {
+		vSelected = "";
+		if (vYear==i) vSelected = " selected";
+		jQuery('#idYear').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+});
+
+/* 月コンボボックスのリスト作成 */
+jQuery(document).ready(function() {
+	var vMonth = Number("${month}");
+	var vSelected;
+	for(i=1; i<=12; i++) {
+		vSelected = "";
+		if (vMonth==i) vSelected = " selected";
+		jQuery('#idMonth').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+});
+
+
+/* 年月コンボボックス選択変更時はjumpイベントへ */
+jQuery(document).ready(function() {
+	jQuery('#idYear, #idMonth').change(function() {
+		jQuery('#idBasisDate').val(jQuery('#idYear').val()+"/"+("0"+jQuery('#idMonth').val()).slice(-2)+"/${sBasisDate.substring(8,10)}");
+		jQuery('#idMove').click();
+		jQuery('body').attr("disabled", "disabled");
+	});
+});
+
+/* 日付移動リンククリック時はjumpイベントへ */
+jQuery(document).ready(function() {
+//	var dateFormat = new DateFormat("yyyy/MM/dd");
+//	var sDate = "${sBasisDate}";
+//	var nYear = new Number(sDate.substr(0, 4)-0);
+//	var nMonth = new Number(sDate.substr(5, 2)-1);
+//	var nDay = new Number(sDate.substr(8, 2)-0);
+	jQuery('#idPreYear, #idPreMonth, #idPreDays, #idNextYear, #idNextMonth, #idNextDays').click(function() {
+//		if(this.id=="idPreYear")
+//			nYear -= 1;
+//		if(this.id=="idPreMonth")
+//			nMonth -= 1;
+//		if(this.id=="idNextMonth")
+//			nMonth += 1;
+//		if(this.id=="idNextYear")
+//			nYear += 1;
+//		var nDate = new Date(nYear, nMonth, nDay);
+//		jQuery('#idBasisDate').val(dateFormat.format(nDate));
+
+		//移動種別
+		if(this.id=="idPreYear" || this.id=="idNextYear")
+			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.year'}");
+		if(this.id=="idPreMonth" || this.id=="idNextMonth")
+			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.month'}");
+		if(this.id=="idPreDays" || this.id=="idNextDays")
+			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.days'}");
+		
+		//移動数
+		if(this.id=="idPreYear" || this.id=="idPreMonth")
+			jQuery('#idMoveNum').val('-1');
+		if(this.id=="idNextYear" || this.id=="idNextMonth")
+			jQuery('#idMoveNum').val('1');
+		if(this.id=="idPreDays")
+			jQuery('#idMoveNum').val('-5');
+		if(this.id=="idNextDays")
+			jQuery('#idMoveNum').val('5');
+		
 		jQuery('#idMove').click();
 		jQuery('body').attr("disabled", "disabled");
 	});
@@ -79,7 +131,7 @@ jQuery(document).ready(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
 });
 
-//表示金額を3桁区切りに
+/* 表示金額を3桁区切りに */
 jQuery(document).ready(function(){
 	jQuery('.num3').each(function(i) {
 		var numStr = addFigure(jQuery(this).html());
@@ -87,13 +139,40 @@ jQuery(document).ready(function(){
 	});
 });
 
-//文字列を3桁区切りにする関数
+/* 文字列を3桁区切りにする関数 */
 function addFigure(str) {
 	var num = new String(str).replace(/,|\n| |\t/g, "");
 //    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
 	return num;
 }
+
+/* 日付選択時にjumpするdatepicker */
+jQuery(function() {
+	jQuery(".datepickerJump").datepicker({
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		onSelect: function( e_basis_date ) {
+//			var str_tmp = new String(e_basis_date).replace(/\//g, "");
+//			var int_basis_date = Number(str_tmp);
+			jQuery('#idBasisDate').val(e_basis_date);
+			jQuery('#idMove').click();
+			jQuery('body').attr("disabled", "disabled");
+		},
+		showOn: "button",
+		buttonImage: "@{'/public/images/calendar_shu.gif'}",
+		buttonImageOnly: true,
+		buttonText: "カレンダー",
+		showButtonPanel: true
+	});
+});
 
 jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
@@ -193,8 +272,12 @@ jQuery(document).ready(function() {
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
-	<input type="text" class="datepickerJump invisible" name="e_basis_date" id="idBasisDate"
+	<input type="text" class="invisible" name="e_basis_date" id="idBasisDate"
 		value="${sBasisDate}" />
+	<!-- 移動種別 -->
+	<input type="text" class="invisible" name="strMoveType" id="idMoveType" />
+	<!-- 移動数 -->
+	<input type="text" class="invisible" name="intMoveNum" id="idMoveNum" />
 	<input type="submit" name="move" id="idMove" class="invisible" />
 #{/form}
 
@@ -215,24 +298,20 @@ jQuery(document).ready(function() {
 			<!-- 枠固定の左上 -->
 			<ul class="da_tbl_lt">
 				<li>
-					%{year = sBasisDate.substring(0,4)}%
-					<div class="da_hd_cate1_2 da_head">
-						<a id="idPreYear" class="daBtnPreNext" tabindex="0"><<<span>&{'year'}&{'views.common.move'}</span></a>
-						${year}年
-						<a id="idNextYear" class="daBtnPreNext" tabindex="0">>><span>&{'year'}&{'views.common.move'}</span></a>
-						<br>
-						<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'month'}&{'views.common.move'}</span></a>
-						&nbsp;&nbsp;${month}月&nbsp;
-						<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>&{'month'}&{'views.common.move'}</span></a>
+					<div class="da_head first">
 					</div>
-					<div class="da_budget da_head">
+				</li>
+				<li>
+					<div class="da_hd_cate1_2 da_head second">
+					</div>
+					<div class="da_budget da_head second">
 						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
 							<!-- 予算 -->
 							月予算
 							<input type="submit" value="更新" id="idSbmtUpdBudget" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
 						  #{/if}
 					</div>
-					<div class="da_sum_month da_head">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? "月計" : ""}</div>
+					<div class="da_sum_month da_head second">${strTableType== messages.get('views.dailyaccount.dailyaccount') ? "月計" : ""}</div>
 				</li>
 			</ul>
 		</div>
@@ -241,19 +320,48 @@ jQuery(document).ready(function() {
 			<div style="width:${iWidth}px;">
 				<!-- 枠固定の右上 -->
 				<ul class="da_tbl_rt">
-			        %{
-			        	leftFlg = 1
-			        	count = 0
-			        }%
 					<li>
+						<div class="da_head first">
+							<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
+<!-- 
+							<a id="idPreYear" class="daBtnPreNext" tabindex="0" ><<span>&{'views.dailyaccount.movetype.year'}</span></a>
+ -->
+							
+							<span class="daPaddingYearMonth">
+							
+								<select id="idYear">
+								</select>
+								&{'year'}
+<!-- 
+	 							<a id="idNextYear" class="daBtnPreNext" tabindex="0">><span>&{'views.dailyaccount.movetype.year'}</span></a>
+ -->
+								<select id="idMonth">
+								</select>
+								&{'month'}
+							
+							</span>
+							
+							<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
+						</div>
+					</li>
+					<li>
+						<div class="da_head second">
+							<a id="idPreDays" class="daBtnPreNext" tabindex="0"><<span>&{'views.dailyaccount.movetype.days.pre'}</span></a>
+						</div>
+				        %{count = 0}%
 						#{list items:sAryDays, as:'sAryDay'}
 							%{count++}%
-							<div class="da_hd_ary_day da_head ">
-							${count==2 ? "　" : ""}
+							<div class="${(count==1 || count==5) ? 'da_hd_ary_day_end' : 'da_hd_ary_day'} da_head second">
 							${sAryDay}
+							#{if count==3}
+								<input type="text" class="datepickerJump invisible"
+									value="${sBasisDate}" />
+							#{/if}
 							</div>
-					        %{leftFlg = 0}%
 						#{/list}
+						<div class="da_head second">
+							<a id="idNextDays" class="daBtnPreNext" tabindex="0">><span>&{'views.dailyaccount.movetype.days.next'}</span></a>
+						</div>
 					</li>
 				</ul>
 			</div>

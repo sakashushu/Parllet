@@ -261,6 +261,18 @@ public class Config extends Controller {
 			down_date_to = "2999/12/31";
 		}
 		
+		Calendar calendar = Calendar.getInstance();
+		Date dteTmp = null;
+		try {
+			dteTmp = DateFormat.getDateInstance().parse(down_date_to);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		calendar.setTime(dteTmp);
+		calendar.add(Calendar.DATE, 1);
+		down_date_to = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
+		
 		//ヘッダー行
 		Field[] fldAryHd = Record.class.getDeclaredFields();
 		for(Field fldHd : fldAryHd) {
@@ -282,7 +294,8 @@ public class Config extends Controller {
 		sOutCsv += System.getProperty("line.separator");	//改行
 		
 		//明細行
-		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+//		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+		List<Record> records = Record.find(" payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
 		for(Record rec : records) {
 			iCnt = 0;
 			
@@ -342,7 +355,7 @@ public class Config extends Controller {
 		//Shift_JISで出力
 		java.io.InputStream binaryData = new ByteArrayInputStream(sOutCsv.getBytes("Shift_JIS"));
 		
-		Calendar calendar = Calendar.getInstance();
+		calendar = Calendar.getInstance();
 		renderBinary(binaryData, String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", calendar.getTime()) + ".csv");	
 	}
 	

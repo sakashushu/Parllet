@@ -73,6 +73,11 @@ input[type="submit"],input[type="button"] {
 	display: none;	
 }
 
+.inlineVerticalMiddle {
+	display: inline-block;
+	vertical-align: middle;
+}
+
 
 /** HouseholdAccounts header **/
 
@@ -120,7 +125,7 @@ input[type="submit"],input[type="button"] {
 }
 
 #cmMain {
-	padding-top: 42px;	
+	padding-top: 30px;	
 }
 
 #dlMain {
@@ -336,7 +341,12 @@ input[type="submit"],input[type="button"] {
 	mergin: 0;
 	width: 320px;
 }
-.da_tbl_lt li div {
+.da_tbl_lt li div.first {
+	display: table-cell;
+	border-right: 1px solid transparent;
+	height: 25px;
+}
+.da_tbl_lt li div.second {
 	display: table-cell;
 	border-right: 1px solid transparent;
 	height: 30px;
@@ -348,7 +358,13 @@ input[type="submit"],input[type="button"] {
 	padding: 0;
 	mergin: 0;
 }
-.da_tbl_rt li div {
+.da_tbl_rt li div.first {
+	display: table-cell;
+	height: 25px;
+	padding-left: 150px;
+}
+
+.da_tbl_rt li div.second {
 	display: table-cell;
 	/* border-right: 1px solid #transparent; としても幅を取っていない(CSSのバグ？)ようなので、
 	 * 下記は コメントアウトし、ヘッダー部分は「.da_hd_ary_day」で対応 */
@@ -435,6 +451,9 @@ input[type="submit"],input[type="button"] {
 	width: 100px;
 }
 
+.da_hd_ary_day_end {
+	width: 84px;
+}
 
 
 .da_cate1 {
@@ -501,7 +520,7 @@ input[type="submit"],input[type="button"] {
 
 .daBtnPreNext {
 	font-size: 90%;
-	padding: 1px 2px;
+	padding: 4px 4px;
 	text-decoration: none;
 	background-color: #eee;
 	border-style: solid;
@@ -526,6 +545,12 @@ a.daBtnPreNext span {
 a.daBtnPreNext:hover span{
 	display:inline;
 	position:absolute;
+}
+
+
+.daPaddingYearMonth {
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 

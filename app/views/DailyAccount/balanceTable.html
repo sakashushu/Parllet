@@ -15,6 +15,56 @@ jQuery(document).ready(function() {
 	});
 });
 
+/* 年コンボボックスのリスト作成 */
+jQuery(document).ready(function() {
+	%{year = sBasisDate.substring(0,4)}%
+	var vYear = Number("${year}");
+	var vSelected;
+	for(i=1900; i<3000; i++) {
+		vSelected = "";
+		if (vYear==i) vSelected = " selected";
+		jQuery('#idYear').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+});
+
+/* 月コンボボックスのリスト作成 */
+jQuery(document).ready(function() {
+	var vMonth = Number("${month}");
+	var vSelected;
+	for(i=1; i<=12; i++) {
+		vSelected = "";
+		if (vMonth==i) vSelected = " selected";
+		jQuery('#idMonth').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+});
+
+/* 年月コンボボックス選択変更時はjumpイベントへ */
+jQuery(document).ready(function() {
+	jQuery('#idYear, #idMonth').change(function() {
+		jQuery('#idBasisDate').val(jQuery('#idYear').val()+"/"+("0"+jQuery('#idMonth').val()).slice(-2)+"/${sBasisDate.substring(8,10)}");
+		jQuery('#idMove').click();
+		jQuery('body').attr("disabled", "disabled");
+	});
+});
+
+/* 日付移動リンククリック時はjumpイベントへ */
+jQuery(document).ready(function() {
+	jQuery('#idPreMonth, #idNextMonth').click(function() {
+
+		//移動種別
+		jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.month'}");
+		
+		//移動数
+		if(this.id=="idPreMonth")
+			jQuery('#idMoveNum').val('-1');
+		if(this.id=="idNextMonth")
+			jQuery('#idMoveNum').val('1');
+		
+		jQuery('#idMove').click();
+		jQuery('body').attr("disabled", "disabled");
+	});
+});
+
 //3桁区切りの数値入力フィールドとして設定
 jQuery(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
@@ -146,6 +196,7 @@ jQuery(function(){
     </p>
 #{/ifErrors}
 
+<!-- 日付移動用フォーム -->
 #{form @jump(), id:'frmJump'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
 	<!-- 対象年月日 -->
@@ -154,14 +205,51 @@ jQuery(function(){
 		value="${sBasisDate}" size="13" />
 	<input type="submit" value="移動" name="move" />
  -->
+ 
+<!-- 
 	<div id="bt_basisDate">
 	${sBasisDate}
 	<input type="text" class="datepickerJump" name="e_basis_date"
 		value="${sBasisDate}" style="display:none;" />
 	</div>
+ -->
+
+	<!-- 移動種別 -->
+	<input type="text" class="invisible" name="strMoveType" id="idMoveType" />
+	<!-- 移動数 -->
+	<input type="text" class="invisible" name="intMoveNum" id="idMoveNum" />
+ 	
+	<input type="text" name="e_basis_date" id="idBasisDate"
+		value="${sBasisDate}" style="display:none;" />
+	
 	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
+<div style="font-size: 80%;font-weight: bold;padding-top: 20px;padding-left: 200px;padding-bottom: 10px;">
+	<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
+	<span class="daPaddingYearMonth">
+	
+		<select id="idYear">
+		</select>
+		&{'year'}
+		<select id="idMonth">
+		</select>
+		&{'month'}
+		
+		&nbsp;&nbsp;
+		${sBasisDate.substring(8,10)}
+		&nbsp;
+		日
+		<div class="inlineVerticalMiddle">
+			<input type="text" class="datepickerJump invisible dpClImg"
+				value="${sBasisDate}" />
+		</div>
+		
+	</span>
+	
+	<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
+</div>
+					
 <ul class="bt_tbl_all">
 	<li>
 		<div id="bt_tcol">
