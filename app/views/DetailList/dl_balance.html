@@ -5,7 +5,39 @@
 
 <script type="text/javascript">
 <!--
-//表示金額を3桁区切りに
+/* 起動時のCSS設定 */
+jQuery(document).ready(function(){
+	
+	//#dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す
+	jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
+	
+
+	if(jQuery(window).height() < document.body.offsetHeight) {
+		setCssFooter();
+	}
+});
+
+/* ウィンドウリサイズ時のCSS設定 */
+jQuery(document).ready(function() {
+	jQuery(window).resize(function() {
+		setCssFooter();
+	});
+});
+
+/* dlFooterのCSS設定切替関数 */
+function setCssFooter() {
+	if(jQuery(window).height() < document.body.offsetHeight) {
+		jQuery('#dlFooter').css('position', 'fixed');
+		jQuery('#dlFooter').css('bottom', '0');
+		jQuery('#dlMain').css('padding-bottom', '42px');
+	} else {
+		jQuery('#dlFooter').css('position', '');
+		jQuery('#dlFooter').css('bottom', '');
+		jQuery('#dlMain').css('padding-bottom', '');
+	}
+}
+
+/* 表示金額を3桁区切りに */
 jQuery(document).ready(function(){
 	jQuery('.num3').each(function(i) {
 		var numStr = addFigure(jQuery(this).html());
@@ -13,7 +45,7 @@ jQuery(document).ready(function(){
 	});
 });
 
-//文字列を3桁区切りにする関数
+/* 文字列を3桁区切りにする関数 */
 function addFigure(str) {
     var num = new String(str).replace(/,|\n| |\t/g, "");
 //    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
@@ -21,9 +53,10 @@ function addFigure(str) {
     return num;
 }
 
-//枠固定の左右の動き
+/* 枠固定の左右の動き */
 jQuery(document).ready(function() {
-    jQuery('#dl_tblFrame').scroll(function() {
+    jQuery('#dl_tblFrameFt').scroll(function() {
+    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
     	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
     });
 });
@@ -233,7 +266,7 @@ jQuery(document).ready(function() {
 #{form @DetailList.dl_balance(), id:'frmDlBalance'}
 <div id="dl_tblFrameHd">
 
-<div id="dl_tblContent">
+<div id="dl_tblContentHd">
   <ul class="dl_tbl">
 	<!-- ヘッダー行 -->
 	<li>
@@ -343,7 +376,7 @@ jQuery(document).ready(function() {
 			
 	</li>
   </ul>	
-</div>  <!-- dl_tblContent -->
+</div>  <!-- dl_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
 </div>  <!-- dlHeader -->
@@ -457,12 +490,19 @@ jQuery(document).ready(function() {
 	</li>
 	#{/list}
 	#{/if}
-  </ul>	
+  </ul>
 </div>  <!-- dl_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
+</div>  <!-- dlMain -->
+
+<div id="dlFooter">
+<div id="dl_tblFrameFt">
+<div id="dl_tblContentFt">
+　
+</div>  <!-- dl_tblContentFt -->
+</div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_balance.pagination /}
 </div>
-
-</div>  <!-- dlMain -->
+</div>

@@ -107,6 +107,7 @@ input[type="submit"],input[type="button"] {
     width: 980px;
 	background-image: url(/public/images/brown3_90.png);
 	z-index: 99;
+	top: 0;
 //	height: 159px;
 //	height: 100px;
 }
@@ -129,7 +130,7 @@ input[type="submit"],input[type="button"] {
 }
 
 #dlMain {
-	padding-top: 157px;	
+	padding-top: 157px;
 }
 
 #cfMain {
@@ -654,16 +655,34 @@ a.daBtnPreNext:hover span{
 
 #dl_tblFrame {
 	width: 100%;
-    height: 100%;
-	overflow-x: auto;
+//    height: 100%;
+//	overflow-x: auto;
+	overflow: hidden;
+}
+
+#dl_tblFrameFt {
+	overflow: auto;
+}
+
+#dl_tblContentHd {
+    width: 1220px;
 }
 
 #dl_tblContent {
     width: 1220px;
 }
 
-#dlRb_tblContent {
+#dl_tblContentFt {
+    width: 1220px;
+    height: 0;
+}
+
+#dlRb_tblContentHd {
     width: 980px;
+}
+
+#dlRb_tblContent {
+    width: 970px;
 }
 
 .dl_tbl {
@@ -843,8 +862,10 @@ label.fieldName {
 
 #configListPagination {
 	padding: 4px 5px;
-	border: 1px solid #ddd;
-	background: #efefef;
+//	border: 1px solid #ddd;
+	border: 1px solid transparent;
+//	background: #efefef;
+	background-image: url(/public/images/background_test.jpg);
 	border-top: 0;
 	font-size: 90%;
 	position: relative;
@@ -860,6 +881,11 @@ label.fieldName {
 	right: 5px;
 	top: 4px;
 }
+
+#dlFooter {
+	width: 980px;;
+}
+
 
 /** Pagination **/
 

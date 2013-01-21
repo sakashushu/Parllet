@@ -5,6 +5,39 @@
 
 <script type="text/javascript">
 <!--
+<!--
+/* 起動時のCSS設定 */
+jQuery(document).ready(function(){
+	
+	//#dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す
+	jQuery('#dl_tblFrame').height(jQuery('#dlRb_tblContent').height()+14);
+	
+
+	if(jQuery(window).height() < document.body.offsetHeight) {
+		setCssFooter();
+	}
+});
+
+/* ウィンドウリサイズ時のCSS設定 */
+jQuery(document).ready(function() {
+	jQuery(window).resize(function() {
+		setCssFooter();
+	});
+});
+
+/* dlFooterのCSS設定切替関数 */
+function setCssFooter() {
+	if(jQuery(window).height() < document.body.offsetHeight) {
+		jQuery('#dlFooter').css('position', 'fixed');
+		jQuery('#dlFooter').css('bottom', '0');
+		jQuery('#dlMain').css('padding-bottom', '24px');
+	} else {
+		jQuery('#dlFooter').css('position', '');
+		jQuery('#dlFooter').css('bottom', '');
+		jQuery('#dlMain').css('padding-bottom', '');
+	}
+}
+
 //表示金額を3桁区切りに
 jQuery(document).ready(function(){
 	jQuery('.num3').each(function(i) {
@@ -168,7 +201,7 @@ jQuery(document).ready(function() {
 
 <div id="dl_tblFrameHd">
 
-<div id="dlRb_tblContent" >
+<div id="dlRb_tblContentHd" >
   <ul class="dl_tbl">
 	<!-- ヘッダー行 -->
 	<li>
@@ -235,7 +268,7 @@ jQuery(document).ready(function() {
 		</div>
 	</li>
   </ul>
-</div>  <!-- dlRb_tblContent -->
+</div>  <!-- dlRb_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
 </div>  <!-- dlHeader -->
@@ -337,8 +370,10 @@ jQuery(document).ready(function() {
 </div>  <!-- dlRb_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
+</div>  <!-- dlMain -->
+
+<div id="dlFooter">
 <div id="configListPagination">
 	#{DetailList.dl_remainder_ideal.pagination /}
 </div>
-
-</div>  <!-- dlMain -->
+</div>
