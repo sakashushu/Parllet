@@ -325,7 +325,7 @@ input[type="submit"],input[type="button"] {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-    font-size: 80%;
+//    font-size: 80%;
 }
 .da_tbl_all li {
 	clear: both;
@@ -568,10 +568,11 @@ a.daBtnPreNext:hover span{
  * balanceTable
  */
 
-#bt_basisDate {
-	font-size:90%;
- 	font-weight:bold;
-	padding-top: 10px;	
+.bt_basisDate {
+	font-weight: bold;
+	padding-top: 20px;
+	padding-left: 200px;
+	padding-bottom: 10px;
 }
 
 /* .bt_tbl_all 残高表の大枠のテーブル */
@@ -579,7 +580,7 @@ a.daBtnPreNext:hover span{
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-    font-size: 80%;
+//    font-size: 80%;
     width: 700px;
 }
 .bt_tbl_all li {
@@ -642,11 +643,11 @@ a.daBtnPreNext:hover span{
 }
 
 /** detailList **/
-#tblDetailList {
-    font-size: 80%;
-    width: 100%;
-    overflow-y: auto;
-}
+//#tblDetailList {
+//    font-size: 80%;
+//    width: 100%;
+//    overflow-y: auto;
+//}
 
 #dl_tblFrameHd {
 	height: 103px;

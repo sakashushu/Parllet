@@ -206,14 +206,6 @@ jQuery(function(){
 	<input type="submit" value="移動" name="move" />
  -->
  
-<!-- 
-	<div id="bt_basisDate">
-	${sBasisDate}
-	<input type="text" class="datepickerJump" name="e_basis_date"
-		value="${sBasisDate}" style="display:none;" />
-	</div>
- -->
-
 	<!-- 移動種別 -->
 	<input type="text" class="invisible" name="strMoveType" id="idMoveType" />
 	<!-- 移動数 -->
@@ -225,7 +217,7 @@ jQuery(function(){
 	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
-<div style="font-size: 80%;font-weight: bold;padding-top: 20px;padding-left: 200px;padding-bottom: 10px;">
+<div class="bt_basisDate">
 	<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
 	<span class="daPaddingYearMonth">
 	
@@ -235,9 +227,10 @@ jQuery(function(){
 		<select id="idMonth">
 		</select>
 		&{'month'}
-		
 		&nbsp;&nbsp;
+		<span style="font-weight: normal;">
 		${sBasisDate.substring(8,10)}
+		</span>
 		&nbsp;
 		日
 		<div class="inlineVerticalMiddle">
