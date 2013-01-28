@@ -1,5 +1,5 @@
 html, body {
-    background: , !important;
+//    background: , !important;
     font-family: Helvetica, Arial, Sans !important;
 }
 
@@ -9,7 +9,8 @@ body {
     margin: auto;
 	font-size: 11pt;
 //	background-color: #FFFACD;
-	background-color: #f7efc6;
+//	background-color: #f7efc6;
+	background-color: #d6be9a;
 //	background-image: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
 	color: #612d00;
@@ -126,7 +127,7 @@ input[type="submit"],input[type="button"] {
 }
 
 #cmMain {
-	padding-top: 30px;	
+	padding-top: 30px;
 }
 
 #dlMain {
