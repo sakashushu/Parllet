@@ -10,7 +10,13 @@ body {
 	font-size: 11pt;
 //	background-color: #FFFACD;
 //	background-color: #f7efc6;
-	background-color: #d6be9a;
+
+//	background-color: #d6be9a;
+//	background-color: #d6c085;
+//	background: #edcc70;
+//	background: #e8c86e;
+	background: #e8cc8b;
+	
 //	background-image: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
 	color: #612d00;
@@ -867,7 +873,8 @@ label.fieldName {
 //	border: 1px solid #ddd;
 	border: 1px solid transparent;
 //	background: #efefef;
-	background-image: url(/public/images/background_test.jpg);
+//	background-image: url(/public/images/background_test.jpg);
+	background: #e8cc8b;
 	border-top: 0;
 	font-size: 90%;
 	position: relative;

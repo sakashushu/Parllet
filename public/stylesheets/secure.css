@@ -1,8 +1,9 @@
 @import url(main.css);
 
 html, body {
-    background: #F0F0F0;
-    font-family: 'Lucida grande', verdana, sans-serif;
+//	background: #F0F0F0;
+	background: #e8cc8b;
+	font-family: 'Lucida grande', verdana, sans-serif;
 }
 
 #login {

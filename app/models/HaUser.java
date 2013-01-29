@@ -10,11 +10,11 @@ import play.db.jpa.Model;
 
 @Entity
 public class HaUser extends Model {
-
+	
 	@Email
 	@Required
 	public String email;
-
+	
 	@Required
 	public String password;
 

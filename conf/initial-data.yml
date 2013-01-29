@@ -21,6 +21,12 @@ HaUser(member1):
     fullname:         会員一番
     isAdmin:          false
 
+HaUser(member2):
+    email:            guest
+    password:         guest
+    fullname:         ゲスト
+    isAdmin:          false
+
 BalanceTypeMst(in):
     balance_type_name: 収入
 
