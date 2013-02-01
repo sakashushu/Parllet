@@ -33,8 +33,8 @@ jQuery(document).ready(function() {
 
 /* 起動時の日毎の部分の幅と高さを調整 */
 jQuery(document).ready(function() {
-	jQuery('#da_tcol').height(jQuery(window).innerHeight()-130);
-	jQuery('#da_tbody').height(jQuery(window).innerHeight()-130);
+	jQuery('#da_tcol').height(jQuery(window).innerHeight()-140);
+	jQuery('#da_tbody').height(jQuery(window).innerHeight()-140);
 //	jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //	jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -43,8 +43,8 @@ jQuery(document).ready(function() {
 /* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
 jQuery(document).ready(function() {
 	jQuery(window).resize(function() {
-		jQuery('#da_tcol').height(jQuery(this).innerHeight()-130);
-		jQuery('#da_tbody').height(jQuery(this).innerHeight()-130);
+		jQuery('#da_tcol').height(jQuery(this).innerHeight()-140);
+		jQuery('#da_tbody').height(jQuery(this).innerHeight()-140);
 //		jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //		jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //		jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -289,6 +289,8 @@ jQuery(document).ready(function() {
     </p>
 #{/ifErrors}
 
+<div id="cmMainInner" class="daMainInner">
+
 <ul class="da_tbl_all">
 	#{form @updBudget()}
 	<input type="hidden" name="bg_basis_date" value="${sBasisDate}"/>
@@ -477,5 +479,7 @@ jQuery(document).ready(function() {
 	</li>
 	
 </ul>
+
+</div>  <!-- cmMainInner -->
 
 </div>  <!-- cmMain -->

@@ -84,7 +84,7 @@ jQuery(document).ready(function() {
 		        <label class="fieldName">&{'debit_bank'}:</label>
 				<select id="${field.name}" name="${field.name}" style="width:150px;">
 					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('HandlingType.bank') + "' order by handling_type_mst.handling_type_order, id").fetch(), as:'debitBank'}
+					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('HandlingType.bank') + "' order by handling_type_mst.handling_type_order, order_seq, id").fetch(), as:'debitBank'}
 					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
 					#{/list}
 				</select>
