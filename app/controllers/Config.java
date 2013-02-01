@@ -65,18 +65,18 @@ public class Config extends Controller {
 		if(csv != null) {
 			try {
 				//Shift-JISファイルを読み込む想定。（良く分かっていないが、色々試して文字化けしたが、下記のやり方なら文字化けしないようだ。）
-	            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
-	            
-	            //CSVパーサとして「OpenCSV」を使用する
-	            CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csv),"MS932"),',','"',1);
-	            
-	            String str = null;
-	            String[] strAryColumn;
-	            boolean bFst = true;	//初回フラグ
-	            
-	            int iCnt = 0;
-	            
-	            // ファイルを1行ずつ読み込む
+//				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
+				
+				//CSVパーサとして「OpenCSV」を使用する
+				CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(csv),"MS932"),',','"',1);
+				
+//				String str = null;
+				String[] strAryColumn;
+//				boolean bFst = true;	//初回フラグ
+				
+				int iCnt = 0;
+				
+				// ファイルを1行ずつ読み込む
 				while ( ( strAryColumn = reader.readNext() ) != null ) {
 					boolean bTransferFlg = false;
 					
@@ -120,7 +120,7 @@ public class Config extends Controller {
 								debit_date += " 00:00";
 							debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 						}
-						IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = ?", ideal_deposit_name).first(); 
+						IdealDepositMst idealDepositMst = IdealDepositMst.find("ha_user = ? and ideal_deposit_name = ?", haUser, ideal_deposit_name).first(); 
 						
 						// 収支データの作成
 						record = new Record(
@@ -154,7 +154,7 @@ public class Config extends Controller {
 					validation.valid(record);
 					if(validation.hasErrors()) {
 						//エラー処理が必要
-
+				
 					}
 					// 保存
 					record.save();
@@ -184,7 +184,7 @@ public class Config extends Controller {
 									debit_date += " 00:00";
 								debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 							}
-							IdealDepositMst idealDepositMst = IdealDepositMst.find("ideal_deposit_name = ?", ideal_deposit_name).first(); 
+							IdealDepositMst idealDepositMst = IdealDepositMst.find("ha_user = ? and ideal_deposit_name = ?", haUser, ideal_deposit_name).first(); 
 							
 							// 収支データの作成
 							record = new Record(
@@ -218,7 +218,7 @@ public class Config extends Controller {
 						validation.valid(record);
 						if(validation.hasErrors()) {
 							//エラー処理が必要
-	
+				
 						}
 						// 保存
 						record.save();
@@ -519,14 +519,15 @@ public class Config extends Controller {
 			Long debit_bank,
 			Integer cutoff_day,
 			String debit_month,
-			Integer debit_day
+			Integer debit_day,
+			Boolean invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.creca");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, true, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
+		Integer iRtn = cf_handling_mst_save(id, handling_name, false, invalidity_flg, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
 		HandlingMst handlingMst = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {

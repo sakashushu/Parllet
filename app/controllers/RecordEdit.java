@@ -29,6 +29,16 @@ public class RecordEdit extends Controller {
 		}
 	}
 	
+	/**
+	 * 家計簿入力
+	 * @param id
+	 * @param df_payment_date
+	 * @param df_balance_type_id
+	 * @param df_ideal_deposit_id
+	 * @param df_item_id
+	 * @param df_debit_date
+	 * @param calledFrom
+	 */
 	public static void recordEdit(
 			Long id,
     		String df_payment_date,			/* 初期支払日 */
@@ -47,6 +57,23 @@ public class RecordEdit extends Controller {
 		render(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
 	}
 	
+	/**
+	 * 収支レコードの保存
+	 * @param id
+	 * @param payment_date
+	 * @param balance_type_mst
+	 * @param handling_mst
+	 * @param ideal_deposit_mst
+	 * @param item_mst
+	 * @param amount
+	 * @param debit_date
+	 * @param content
+	 * @param store
+	 * @param remarks
+	 * @param secret_remarks
+	 * @param secret_rec_flg
+	 * @param calledFrom
+	 */
 	public static void save_rec(
 			Long id,
 			String payment_date,
@@ -65,6 +92,7 @@ public class RecordEdit extends Controller {
 			) {
 		Record record = null;
 		Date paymentDate = null;
+		boolean bolDateChange = false;		/* 日付変更フラグ */
 		if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
 				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date+":00");
@@ -137,6 +165,8 @@ public class RecordEdit extends Controller {
 		} else {
 			// 収支データの読み出し
 			record = Record.findById(id);
+			// 日付が変更されたかどうか
+			if(record.payment_date.compareTo(paymentDate)!=0) bolDateChange = true;
 			// 編集
 			record.payment_date = paymentDate;
 			record.balance_type_mst = balanceTypeMst;
@@ -159,13 +189,15 @@ public class RecordEdit extends Controller {
 		// 保存
 		record.save();
 		
-		// 明細表の絞り込み条件を、作成データにやんわり合わせる
-		Date dteFrom = paymentDate;
-		if(calledFrom.equals("dl_remainderBank") || calledFrom.equals("dl_remainderIdeal"))
-			dteFrom = debitDate;
-		
 		RecordEdit reEd = new RecordEdit();
-		reEd.setSessionDetailList(String.format("%1$tY/%1$tm/%1$td", dteFrom), calledFrom);
+		
+		// 明細表の絞り込み条件を、作成データにやんわり合わせる
+		if (bolDateChange) {
+			Date dteFrom = paymentDate;
+			if(calledFrom.equals("dl_remainderBank") || calledFrom.equals("dl_remainderIdeal"))
+				dteFrom = debitDate;
+			reEd.setSessionDetailList(String.format("%1$tY/%1$tm/%1$td", dteFrom), calledFrom);
+		}
 		
 		// 呼び出し元画面に戻る
 		reEd.returnToCelledFrom(calledFrom);
@@ -225,6 +257,7 @@ public class RecordEdit extends Controller {
 		if(calledFrom.equals("dl_remainderIdeal"))
 			strSessionDateFr = "daRiHdDebitDateFr";
 			strSessionDateTo = "daRiHdDebitDateTo";
+		//明細表の日付の絞り込み条件を、作成データにやんわり合わせる
 		setSessionDlDate(h_payment_date, strSessionDateFr, strSessionDateTo);
 	}
 	
