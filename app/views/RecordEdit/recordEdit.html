@@ -20,7 +20,15 @@
 
 <script type="text/javascript">
 <!--
-//「収支種類」ごとの「項目」のサブカテゴリー
+/* 無効化フラグが立ったデータを編集する際の条件用 */
+%{
+	invalidityRecEdit = ''
+	if(record?.id) {
+		invalidityRecEdit = ' or id = ' + record.handling_mst.id 
+	}
+}%
+
+/* 「収支種類」ごとの「項目」のサブカテゴリー */
 var subcategoryItem = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
     #{if bType.balance_type_name==messages.get('BalanceType.in') ||
@@ -36,7 +44,7 @@ var subcategoryItem = {
     #{/if}
   #{/list}
 }
-//「収支種類」ごとの「取扱(実際)」のサブカテゴリー
+/* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー */
 var subcategoryHandling = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
     #{if bType.balance_type_name==messages.get('BalanceType.in') ||
@@ -46,7 +54,7 @@ var subcategoryHandling = {
 //            "key":"0",
 //            "value":"&{'views.common.combo.required.long'}"
 //          },
-          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+          #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and (invalidity_flg = false ${invalidityRecEdit} ) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
           {
             "key":"${handling.id}",
             "value":"${handling.handling_name}"
@@ -71,7 +79,7 @@ var subcategoryHandling = {
     #{/if}
   #{/list}
 }
-//起動時の状態調整
+/* 起動時の状態調整 */
 jQuery(document).ready(function() {
 	//「取扱(実際)」の状態調整
 	conditionAdjust_Handling();
@@ -387,11 +395,11 @@ function conditionDefDateAdjust_DebitDate() {
         #{/field}
     </div>
  	
-    <div class="crudField">
-        #{field 'handling_mst'}
-        <label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
+	<div class="crudField">
+		#{field 'handling_mst'}
+		<label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
-			#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and invalidity_flg = false order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+			#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and (invalidity_flg = false ${invalidityRecEdit}) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
 			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 			#{/list}
 		</select>
