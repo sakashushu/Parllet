@@ -1,6 +1,10 @@
 html, body {
-//    background: , !important;
-    font-family: Helvetica, Arial, Sans !important;
+//	background: , !important;
+//	font-family: Helvetica, Arial, Sans !important;
+}
+
+html, body, textarea, input, select {
+	font-family: Helvetica, Arial, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
 }
 
 body {

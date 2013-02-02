@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ import models.ItemMst;
 import models.Record;
 
 import play.data.validation.Required;
+import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
@@ -386,20 +388,20 @@ public class Config extends Controller {
 	//項目(収入)編集（リスト）
 	public static void cf_item_in_list() {
 		String sBalanceType = Messages.get("BalanceType.in");
-		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq").fetch();
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq, id").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
 	//項目(支出)編集（リスト）
 	public static void cf_item_out_list() {
 		String sBalanceType = Messages.get("BalanceType.out");
-		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq").fetch();
+		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq, id").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
 	//My貯金編集（リスト）
 	public static void cf_idealdepo_list() {
-		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq").fetch();
+		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq, id").fetch();
 		render("@cf_idealdepo_list", idealDepositMsts);
 	}
 	
@@ -758,6 +760,8 @@ public class Config extends Controller {
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		Integer iCutoffDay = null;
 		Integer iDebitDay = null;
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = " + haUser.id + " AND handling_type_mst_id = " + handlingTypeMst.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
 			// 取扱データの作成
 			refHandlingMst.handlingMst = new HandlingMst(
@@ -770,7 +774,7 @@ public class Config extends Controller {
 					iDebitDay,
 					zero_hidden==null ? false : (zero_hidden==true ? true : false),
 					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
-					10000
+					intMaxOrderSeq
 			);
 		} else {
 			// 取扱データの読み出し
@@ -818,6 +822,8 @@ public class Config extends Controller {
 		if(debit_bank!=null) {
 			debitBank = HandlingMst.findById(debit_bank);
 		}
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = " + haUser.id + " AND handling_type_mst_id = " + handlingTypeMst.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
 			// 取扱データの作成
 			refHandlingMst.handlingMst = new HandlingMst(
@@ -830,7 +836,7 @@ public class Config extends Controller {
 					debit_day,
 					zero_hidden,
 					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
-					10000
+					intMaxOrderSeq
 			);
 		} else {
 			// 取扱データの読み出し
@@ -871,13 +877,15 @@ public class Config extends Controller {
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("byBalance_type_name", sBalanceType).first();
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM ItemMst WHERE ha_user_id = " + haUser.id + " AND balance_type_mst_id = " + balanceTypeMst.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
 			// 取扱データの作成
 			refItemMst.itemMst = new ItemMst(
 					haUser,
 					balanceTypeMst,
 					item_name,
-					10000
+					intMaxOrderSeq
 			);
 		} else {
 			// 取扱データの読み出し
@@ -911,13 +919,15 @@ public class Config extends Controller {
 			RefIdealDepositMst refIdealDepositMst
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM IdealDepositMst WHERE ha_user_id = " + haUser.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
 			// My貯金データの作成
 			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
 					haUser,
 					ideal_deposit_name,
 					zero_hidden==null ? false : (zero_hidden==true ? true : false),
-					10000
+					intMaxOrderSeq
 			);
 		} else {
 			// My貯金データの読み出し
@@ -943,7 +953,7 @@ public class Config extends Controller {
 	 * @return
 	 */
 	private static List<HandlingMst> get_handling_msts(String sHandlingType) {
-		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by order_seq").fetch();
+		List<HandlingMst> handlingMsts = HandlingMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and handling_type_mst.handling_type_name = '" + sHandlingType + "' order by order_seq, id").fetch();
 		return handlingMsts;
 	}
 	
