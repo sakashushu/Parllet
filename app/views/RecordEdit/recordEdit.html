@@ -23,7 +23,7 @@
 /* 無効化フラグが立ったデータを編集する際の条件用 */
 %{
 	invalidityRecEdit = ''
-	if(record?.id) {
+	if(record?.handling_mst?.id) {
 		invalidityRecEdit = ' or id = ' + record.handling_mst.id 
 	}
 }%
