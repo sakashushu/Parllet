@@ -1,33 +1,18 @@
-html, body {
-//	background: , !important;
-//	font-family: Helvetica, Arial, Sans !important;
-}
-
 html, body, textarea, input, select {
 	font-family: Helvetica, Arial, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
 }
 
 body {
-    width: 980px;
-    padding: 0 10px;
-    margin: auto;
+	margin: auto;
 	font-size: 11pt;
-//	background-color: #FFFACD;
-//	background-color: #f7efc6;
-
-//	background-color: #d6be9a;
-//	background-color: #d6c085;
-//	background: #edcc70;
-//	background: #e8c86e;
-	background: #e8cc8b;
-	
-//	background-image: url(/public/images/background_test.jpg);
+//	background: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
+	background: #e8cc8b;
 	color: #612d00;
 }
 
 #bg-img {
-  /* Set rules to fill background */
+	/* Set rules to fill background */
 	min-height: 100%;
 	min-width: 1024px;
 	/* Set up proportionate scaling */
@@ -37,34 +22,28 @@ body {
 	position: fixed;
 	/* またはabsolute; */
 	top: 0;
-    left: 0;
-}
-
-div#container {
-	position: relative;
+	left: 0;
 }
 
 h1 {
-font-size: 13pt;
-/*
-background-color: #dbb96b;
-*/
-padding: 3px;
+	font-size: 13pt;
+//background-color: #dbb96b;
+	padding: 3px;
 }
 h2 {
-font-size: 10pt;
-padding: 2px;
+	font-size: 10pt;
+	padding: 2px;
 }
 
 input[type="text"] {
-   height: 15px;
+	height: 15px;
 }
 
 input[type="submit"],input[type="button"] {
-    border-style: solid;
-    border-color: #aaa;
-    border-width: 1px;
-    cursor: pointer;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	cursor: pointer;
 }
 
 .numeric {
@@ -76,12 +55,41 @@ input[type="submit"],input[type="button"] {
 }
 
 .aBtn {
-    background-color: #dbb96b;
-    width: auto;
+	font-size: 90%;
+	padding: 4px 4px;
+	margin: 0;
+	text-decoration: none;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+}
+
+.aBtn:hover , .aBtn:focus {
+	cursor: pointer;
+}
+
+a.aBtn span {
+	display:none;
+	padding:5px;
+	margin-left:10px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+ }
+ 
+a.aBtn:hover span{
+	display:inline;
+	position:absolute;
+}
+
+.fontJura {
+	font-family: 'Jura';
 }
 
 .invisible {
-	display: none;	
+	display: none;
 }
 
 .inlineVerticalMiddle {
@@ -89,59 +97,115 @@ input[type="submit"],input[type="button"] {
 	vertical-align: middle;
 }
 
+.blCenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/** index **/
+
+#sidebar_r {
+	float: right;
+	width: 400px;
+}
+
+
+#signup-box {
+	background: url(/public/images/white40.png);
+	padding: 20px 0;
+}
+
+#sidebar_r .box {
+	border: 1px solid #aaa;
+	background: url(/public/images/white20.png);
+	padding: 10px;
+	text-align: left;
+	margin-top: 10px;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
+}
+
+#sidebar_r .box p {
+	margin: 3px;
+}
+
+#signupNormal {
+	padding-bottom: 15px;
+}
+#signupSns {
+	padding-bottom: 15px;
+}
+
+#fb-signup {
+	width: 140px;
+}
+
+.suField {
+	padding: 10px;
+	position: relative;
+}
+
+
+/** dialogForm **/
+#dlgEmailVal {
+	padding: 3px 0 15px 3px;
+}
+
+#dlgPassword {
+	padding: 3px 0 0 3px;
+}
 
 /** HouseholdAccounts header **/
 
 #header {
-//	padding: 10px 0;
-//	position: relative;
 	position: fixed;
-    width: 980px;
-//	background-image: url(/public/images/brown2_80.png);
-	background-image: url(/public/images/brown3_90.png);
-	z-index: 99;
-//	height: 193px;
-	height: 74px;
+	top:0;
+	left:0;
+	right:0;
 }
 
+#header .fill {
+	background: url(/public/images/brown3_90.png);
+	z-index: 10000;
+}
 
-#cmHeader {
-	position: fixed;
-    width: 980px;
-	background-image: url(/public/images/brown3_90.png);
-	z-index: 99;
-//	height: 40px;
+#container {
+	width: 980px;
+	height: 36px;
+	margin-left:auto;
+	margin-right:auto;
+	position: relative;
 }
 
 #dlHeader {
 	position: fixed;
-    width: 980px;
-	background-image: url(/public/images/brown3_90.png);
-	z-index: 99;
+	margin-top: 36px;
+	width: 980px;
+//	background: url(/public/images/brown3_90.png);
+	background: url(/public/images/brown7_90.png);
+	z-index: 9999;
 	top: 0;
-//	height: 159px;
-//	height: 100px;
 }
 
 #cfHeader {
 	position: fixed;
-    width: 980px;
-	background-image: url(/public/images/brown3_90.png);
-	z-index: 99;
-//	height: 66px;
+	margin-top: 36px;
+	width: 980px;
+//	background: url(/public/images/brown3_90.png);
+	background: url(/public/images/brown7_90.png);
+	z-index: 9999;
+	top:0;
 }
 
 
 #main {
-	padding-top: 70px;	
+	width: 980px;
+	margin-top: 45px;
+	margin-left:auto;
+	margin-right:auto;
 }
 
-#cmMain {
-	padding-top: 30px;
-	text-align: center;	/* IE用の中央寄せ */
-}
-
-#cmMainInner {
+#mainInner {
 	margin-left: auto;	/* IE以外用の中央寄せ */
 	margin-right: auto;	/* IE以外用の中央寄せ */
 	text-align:left;	/* IE以外用の中央寄せ */
@@ -156,16 +220,60 @@ input[type="submit"],input[type="button"] {
 }
 
 #dlMain {
-	padding-top: 157px;
+	width: 980px;
+	padding-top: 111px;
 }
 
 #cfMain {
-	padding-top: 70px;	
+	width: 980px;
+	padding-top: 15px;	
 }
 
-#logo-table {
-	display: table;
-//	width: 660px;
+#cfMain .data {
+	background: url(/public/images/white20.png);
+	padding: 4px;
+	margin: 0;
+	font-size: 90%;
+}
+
+#cfMain .data.odd {
+//	background: #C0CBE5;
+//	background: #dbb96b;
+//	background: transparent;
+	background: url(/public/images/white20.png);
+}
+
+#cfMain .data a {
+	color: #444;
+}
+
+#ltBlocks {
+	position: relative;
+//	list-style: none;
+	padding: 0;
+	margin: 0;
+	top: 2px;
+}
+
+#ltBlocks li {
+	display: inline-block;
+	*display: inline;	/*スターハックしてる*/
+	*zoom: 1;			/*ここもスターハック*/
+	vertical-align: middle;
+}
+
+#logo {
+//	list-style: none;
+//	list-style-position: outside;
+	padding: 0;
+	margin: 0;
+}
+
+#logo li {
+	display: inline-block;
+	*display: inline;	/*スターハックしてる*/
+	*zoom: 1;			/*ここもスターハック*/
+	vertical-align: middle;
 }
 
 #logo-pre {
@@ -173,147 +281,306 @@ input[type="submit"],input[type="button"] {
 	color: #ffd391;
 //	font-size: 24px;
 	font-size: 12px;
-	font-weight: bold;
+//	font-weight: bold;
 	padding-left: 4px;
 }
 
-#logo {
-//	color: #a34c00;
-	color: #ffd391;
-//	font-size: 48px;
-	font-size: 24px;
-	font-weight: bold;
-	letter-spacing: -4px;
-	text-shadow: 1px 2px 2px #000;
-	background-image: url(/public/images/logo.png);
-	width: 130px;
+#logo-img {
+	width: 180px;
 	height: 30px;
+	background: url(/public/images/logo.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
 }
 
-#logo span {
-    color: #f00;
-    font-size: 70%;
-}
 
 #tools {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-//    right: 0;
-    top: 10px;
-    right: 20px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	top: 10px;
+	right: 10px;
+	position: absolute;
+	z-index: 10001;
 }
-
 #tools a {
-//    color: #612d00;
+//	color: #612d00;
 	color: #ffd391;
-//    text-decoration: none;
-    text-decoration: underline;
+	text-decoration: none;
 }
-
 #tools li {
-    display: inline;
+	display: inline;
 	color: #ffd391;
+	background: url(/public/images/white20.png);
+	cursor: pointer;
+//	margin: 0 4px 0 0;
+	padding: 2px 4px 0 4px;
+}
+#tools li ul {
+	padding: 5px;
+	background: #eee;
+	border: solid 1px #ccc;
+	position:absolute;
+//	left:-9999px;
+	display: none;
+	width: 100px;
+}
+#tools li ul li {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+#tools li ul li a {
+	display: block;
+	height: 20px;
+	color: #633308;
+}
+#tools li ul li a:hover {
+	background: #ccc;
+	font-weight: bold;
 }
 
-/** Login , Admin **/
 
-#loginMenu, #adminMenu {
-    list-style: none;
-    padding: 0;
-    margin: 5px 0px 8px 5px;
+
+/* login */
+
+#login {
+	width: 660px;
+	margin: 50px auto;
+	text-align: center;
 }
 
-#loginMenu li, #adminMenu li {
-    display: inline;
+#login h1 {
+	font-weight: bold;
+	color: #111;
 }
 
-#loginMenu li a, #adminMenu li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 80%;
-    padding: 2px 10px;
-    -webkit-border-radius: 9px;
-    -moz-border-radius: 9px;
+#login .box {
+	border: 1px solid #aaa;
+	background: url(/public/images/white20.png);
+	padding: 10px;
+	text-align: left;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
 }
-#loginMenu li a {
-//    background: #733405;
-//    background: #755a36;
-    background: #633308;
+
+#login .box p {
+	margin: 3px;
+}
+
+#loginSns {
+	float: left;
+	width: 266px;
+}
+
+#loginOrg {
+	float: right;
+	border-left: 1px solid rgba(0, 0, 0, .2);
+	box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+	padding-left: 10px;
+	width: 360px;
+}
+
+#fb-login {
+	width: 170px;
+}
+
+.btn {
+	cursor:pointer;
+	display: block;
+	margin-top: 10px;
+//	margin-left: 50px;
+	padding: 5px 4px;
+	text-decoration: none;
+	color: #612d00;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+//	float: left;
+}
+.btn div {
+	display: table-cell;
+	vertical-align: middle;
+	margin: 0;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#username-field {
+	margin-top: 10px !important;
+}
+
+#username-field label, #password-field label {
+//	display: block;
+//	width: 120px;
+//	float: left;
+//	text-align: right;
+//	margin-right: 10px;
+//	color: #333;
+//	font-size: 15px;
+	display: block;
+	font-weight: bold;
+//	width: 30%;
+	width: 120px;
+	float: left;
+	color: #666;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#username-field input, #password-field input {
+//	width: 200px;
+	width: 170px;
+	font-size: 13px;
+}
+
+#signup-field input, #signin-field input {
+	margin-top: 20px;
+	
+	/* 以下、左右中央寄せのため */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* facebook Login */
+input.text {
+	margin-bottom:12px;
+	width:95%;
+	padding: .4em;
+	background: white;
+}
+fieldset {
+	padding:0;
+	border:0;
+	margin-top:25px;
+}
+.ui-state-error {
+	padding: .3em;
+}
+.validateTips {
+	border: 1px solid transparent;
+}
+
+
+
+/** Member , Admin **/
+
+#memberMenu, #adminMenu {
+	list-style: none;
+	padding: 0;
+	margin: 5px 0px 8px 5px;
+}
+
+#memberMenu li, #adminMenu li {
+	display: inline;
+}
+
+#memberMenu li a, #adminMenu li a {
+	color: #fff;
+	text-decoration: none;
+	font-size: 80%;
+	padding: 2px 10px;
+	-webkit-border-radius: 9px;
+	-moz-border-radius: 9px;
+}
+#memberMenu li a {
+//	background: #733405;
+//	background: #755a36;
+	background: #633308;
 }
 #adminMenu li a {
-    background: #591C64;
+	background: #591C64;
 }
 
-#loginMenu li.selected a, #adminMenu li.selected a {
-    background: #82A346;
+#memberMenu li.selected a, #adminMenu li.selected a {
+	background: #82A346;
 }
 
-
-/** views.admin.adminMenu.member **/
-
-#admin .data {
-	background-image: url(/public/images/white20.png);
-	padding: 4px;
+#member {
+	position: relative;
 	margin: 0;
-	font-size: 90%;
+	padding: 5px;
+	width: 120px;
+	height: 20px;
+	font-weight: bold;
+	
+	background: url(/public/images/white20.png);
+	z-index: 100000;
+}
+#member:hover {
+	cursor: pointer;
+}
+#member ul {
+	display: none;
+	position: absolute;
+	top: 20px;
+	left: -1px;
+	padding: 5px;
+	width: 120px;
+	background: #eee;
+	border: solid 1px #ccc;
+}
+#member ul li {
+	margin: 0;
+	padding: 0;
+	width: 120px;
+	border: none;
+}
+#member ul li a {
+	display: inline-block;
+	width: 120px;
+	height: 20px;
+}
+#member ul li a:hover {
+	background: #999;
+	color: #fff;
 }
 
-#admin .data.odd {
-/**
-	background: #C0CBE5;
 
-	background: #dbb96b;
-**/
-/**
-	background: transparent;
-**/
-	background-image: url(/public/images/white20.png);
-}
-
-#admin .data a {
-    color: #444;
-}
+/** Config **/
 
 #newData {
-    border-top: 1px dotted #C0CBE5;
-    padding-top: 15px;
+	border-top: 1px dotted #C0CBE5;
+	padding-top: 15px;
 }
 
 #newData a {
-    background: #C88116;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    padding: 5px 10px;
-    font-size: 80%;
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,.3);
+	background: #C88116;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	padding: 5px 10px;
+	font-size: 80%;
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+	-webkit-box-shadow: 1px 1px 2px rgba(0,0,0,.3);
 }
 
 #newData a span {
-    background: #7D510E;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    padding: 0 5px 2px 5px;
-    position: relative;
-    top: -1px;
-}
-
-#recordContent {
-    width: 100%;
-    height: 300px;
+	background: #7D510E;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	padding: 0 5px 2px 5px;
+	position: relative;
+	top: -1px;
 }
 
 .hasError {
-    background: pink;
+	background: pink;
 }
 
 
 /*
- * dailyAccount
+ * DailyAccount
  */
 
 /* すべての線を表示 */
@@ -339,7 +606,7 @@ input[type="submit"],input[type="button"] {
 }
 
 #tblDailyAccount {
-    font-size: 80%;
+	font-size: 80%;
 }
 
 
@@ -351,8 +618,8 @@ input[type="submit"],input[type="button"] {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-//    font-size: 80%;
-    font-size: 90%;
+//	font-size: 80%;
+	font-size: 90%;
 }
 .da_tbl_all li {
 	clear: both;
@@ -546,36 +813,6 @@ input[type="submit"],input[type="button"] {
 	text-decoration: none;
 }
 
-.daBtnPreNext {
-	font-size: 90%;
-	padding: 4px 4px;
-	text-decoration: none;
-	background-color: #eee;
-	border-style: solid;
-	border-color: #aaa;
-	border-width: 1px;
-	color: #000;
-}
-
-.daBtnPreNext:hover , .daBtnPreNext:focus {
-	cursor: pointer;
-}
-
-a.daBtnPreNext span {
-	display:none;
-	padding:5px;
-	margin-left:10px;
-	border:1px solid #cccccc;
-	color:#8c5e00;
-	background-color:#ffffff;
- }
- 
-a.daBtnPreNext:hover span{
-	display:inline;
-	position:absolute;
-}
-
-
 .daPaddingYearMonth {
 	padding-left: 20px;
 	padding-right: 20px;
@@ -583,21 +820,21 @@ a.daBtnPreNext:hover span{
 
 
 /* .menu_cell コンテキストメニューを出すセルのクリックイベント用 */
-.menu_cell {
-	background-image: url(/public/images/white20.png);
+.menu_cell, .menu_member {
+	background: url(/public/images/white20.png);
 }
-.menu_cell:hover {
+.menu_cell:hover, .menu_member:hover {
 //	background-color: #eee;
 	cursor: pointer;
 }
 
 /*
- * balanceTable
+ * BalanceTable
  */
 
 .bt_basisDate {
 	font-weight: bold;
-	padding-top: 20px;
+	padding-top: 5px;
 //	padding-left: 200px;
 	padding-bottom: 10px;
 	text-align: center;
@@ -608,9 +845,9 @@ a.daBtnPreNext:hover span{
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-//    font-size: 80%;
-    font-size: 90%;
-    width: 700px;
+//	font-size: 80%;
+	font-size: 90%;
+	width: 700px;
 }
 .bt_tbl_all li {
 	clear: both;
@@ -673,9 +910,9 @@ a.daBtnPreNext:hover span{
 
 /** detailList **/
 //#tblDetailList {
-//    font-size: 80%;
-//    width: 100%;
-//    overflow-y: auto;
+//	font-size: 80%;
+//	width: 100%;
+//	overflow-y: auto;
 //}
 
 #dl_tblFrameHd {
@@ -685,7 +922,7 @@ a.daBtnPreNext:hover span{
 
 #dl_tblFrame {
 	width: 100%;
-//    height: 100%;
+//	height: 100%;
 //	overflow-x: auto;
 	overflow: hidden;
 }
@@ -695,31 +932,31 @@ a.daBtnPreNext:hover span{
 }
 
 #dl_tblContentHd {
-    width: 1220px;
+	width: 1220px;
 }
 
 #dl_tblContent {
-    width: 1220px;
+	width: 1220px;
 }
 
 #dl_tblContentFt {
-    width: 1220px;
-    height: 0;
+	width: 1220px;
+	height: 0;
 }
 
 #dlRb_tblContentHd {
-    width: 980px;
+	width: 980px;
 }
 
 #dlRb_tblContent {
-    width: 970px;
+	width: 970px;
 }
 
 .dl_tbl {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-    font-size: 90%;
+	font-size: 90%;
 }
 
 .dl_tbl li div {
@@ -782,7 +1019,7 @@ a.daBtnPreNext:hover span{
 }
 
 .dl_payment_date_text {
-    width: 80px;
+	width: 80px;
 }
 
 .dl_balance_type {
@@ -831,8 +1068,9 @@ a.daBtnPreNext:hover span{
 	height: 80px;
 	font-weight: bold;
 	text-align: center;
-//	background-image: url(/public/images/white20.png);
-	background-image: url(/public/images/black20.png);
+//	background: url(/public/images/white20.png);
+//	background: url(/public/images/black40.png);
+	background: url(/public/images/brown4_60.png);
 	color: #e6be83;
 }
 
@@ -840,7 +1078,7 @@ a.daBtnPreNext:hover span{
 /** Form **/
 
 form .error {
-    color: red;
+	color: red;
 }
 
 .objectForm {
@@ -880,7 +1118,6 @@ label.fieldName {
 	width: 20%;
 	float: left;
 	color: #666;
-//	cursor: pointer;
 }
 
 .crudField {
@@ -890,12 +1127,20 @@ label.fieldName {
 	position: relative;
 }
 
+.crudField .right {
+	margin-left: 20%;
+}
+
+.crudField .upper {
+	margin-bottom: 10px;
+}
+
 #configListPagination {
 	padding: 4px 5px;
 //	border: 1px solid #ddd;
 	border: 1px solid transparent;
 //	background: #efefef;
-//	background-image: url(/public/images/background_test.jpg);
+//	background: url(/public/images/background_test.jpg);
 	background: #e8cc8b;
 	border-top: 0;
 	font-size: 90%;
@@ -913,6 +1158,8 @@ label.fieldName {
 	top: 4px;
 }
 
+
+
 #dlFooter {
 	width: 980px;;
 }
@@ -921,38 +1168,38 @@ label.fieldName {
 /** Pagination **/
 
 #pagination {
-    list-style: none;
-    padding: 0;
-    position: relative;
-    color: #869AB1;
-    font-size: 90%;
-    top: -20px;
-    margin-bottom: 30px;
+	list-style: none;
+	padding: 0;
+	position: relative;
+	color: #869AB1;
+	font-size: 90%;
+	top: -20px;
+	margin-bottom: 30px;
 }
 
 #pagination a {
-    color: #869AB1;
-    font-size: 90%;
+	color: #869AB1;
+	font-size: 90%;
 }
 
 #pagination #previous {
-    position: absolute;
-    top: 0;
-    left: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 #pagination #previous:before {
-    content: '<< ';
+	content: '<< ';
 }
 
 #pagination #next {
-    position: absolute;
-    top: 0;
-    right: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 #pagination #next:after {
-    content: ' >>';
+	content: ' >>';
 }
 
 /** Flash message **/
@@ -966,3 +1213,8 @@ label.fieldName {
 .flashError {
 	background: #c00;
 }
+
+
+
+
+

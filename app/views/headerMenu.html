@@ -1,0 +1,21 @@
+<li>
+	<ul id="memberMenu" >
+		<li class="${request.controller == 'DailyAccount' &&
+					strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
+			<a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
+		</li>
+		<li class="${request.controller == 'DailyAccount' &&
+					strTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
+			<a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a>
+		</li>
+		<li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
+			<a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
+		</li>
+		<li class="${request.controller == 'DetailList' ? 'selected' : ''}">
+			<a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a>
+		</li>
+		<li class="${request.controller == 'Config' ? 'selected' : ''}">
+			<a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a>
+		</li>
+	</ul>
+</li>

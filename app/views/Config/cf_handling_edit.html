@@ -2,44 +2,52 @@
 #{set title:sHandlingType+' '+messages.get('views.common.update.edit') /}
 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+<script type="text/javascript">
+<!--
+var myObj = new Object();
+myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+// -->
+</script>
 
 <script type="text/javascript">
 <!--
-//起動時に日選択コンボの選択肢を作成
-jQuery(document).ready(function() {
+jQuery(function() {
+	/* 起動時に日選択コンボの選択肢を作成 */
+	var cutOffDay = jQuery('#hM_cutoff_day'),
+		debitDay = jQuery('#hM_debit_day');
 	for(i = 1; i < 28; i++) {
-		#{ifnot handlingMst?.cutoff_day}
-			jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+		#{ifnot hM?.cutoff_day}
+			cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 		#{/ifnot}
 		#{else}
-			if(${handlingMst?.cutoff_day} == i) {
-				jQuery('#cutoff_day').append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
+			if(${hM?.cutoff_day} == i) {
+				cutOffDay.append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
 			} else {
-				jQuery('#cutoff_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+				cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 			}
 		#{/else}
-		#{ifnot handlingMst?.debit_day}
-			jQuery('#debit_day').append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
+		#{ifnot hM?.debit_day}
+			debitDay.append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
 		#{/ifnot}
 		#{else}
-			if(${handlingMst?.debit_day} == i) {
-				jQuery('#debit_day').append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
+			if(${hM?.debit_day} == i) {
+				debitDay.append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
 			} else {
-				jQuery('#debit_day').append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+				debitDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
 			}
 		#{/else}
 	};
-	#{ifnot handlingMst?.cutoff_day}
-		jQuery('#cutoff_day').append("<option value='99' selected>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{ifnot hM?.cutoff_day}
+		cutOffDay.append("<option value='99' selected>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/ifnot}
 	#{else}
-		jQuery('#cutoff_day').append("<option value='99'${handlingMst?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+		cutOffDay.append("<option value='99'${hM?.cutoff_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/else}
-	#{ifnot handlingMst?.debit_day}
-		jQuery('#debit_day').append("<option value='99'>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+	#{ifnot hM?.debit_day}
+		debitDay.append("<option value='99'>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/ifnot}
 	#{else}
-		jQuery('#debit_day').append("<option value='99'${handlingMst?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
+		debitDay.append("<option value='99'${hM?.debit_day==99 ? ' selected' : ''}>"+"&{'views.config.cf_creca.lastday'}"+"</option>");
 	#{/else}
 });
 // -->
@@ -53,7 +61,7 @@ jQuery(document).ready(function() {
 
 <div id="crudShow">
 
-	#{ifnot handlingMst?.id}
+	#{ifnot hM?.id}
 		<h3><span>&{'insupd.add', sHandlingType}</span></h3>
 	#{/ifnot}
 	#{else}
@@ -62,84 +70,84 @@ jQuery(document).ready(function() {
 
     <div class="objectForm">
 	#{form (sHandlingType==messages.get('HandlingType.bank')) ?
-			@cf_bank_save(handlingMst?.id) :
+			@cf_bank_save(hM?.id) :
 			((sHandlingType==messages.get('HandlingType.creca')) ?
-			 @cf_creca_save(handlingMst?.id) :
+			 @cf_creca_save(hM?.id) :
 			 ((sHandlingType==messages.get('HandlingType.emoney')) ?
-			  @cf_emoney_save(handlingMst?.id) : '')
+			  @cf_emoney_save(hM?.id) : '')
 			)}
 	 
 	    <div class="crudField">
-	        #{field 'handling_name'}
+	        #{field 'hM.handling_name'}
 	        <label class="fieldName">${sHandlingType}名:</label>
-	        <input type="text" name="${field.name}" 
-	            value="${handlingMst?.handling_name}" />
-	        <span class="error">#{error 'handlingMst.handling_name' /}</span>
+	        <input type="text" name="${field.id}" 
+	            value="${field.value}" />
+	        <span class="error">#{error field.name /}</span>
 	        #{/field}
 	    </div>
 		
 		#{if sHandlingType==messages.get('HandlingType.creca')}
 		    <div class="crudField">
-		        #{field 'debit_bank'}
+		        #{field 'hM.debit_bank'}
 		        <label class="fieldName">&{'debit_bank'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:150px;">
-					<option value=""${handlingMst?.debit_bank ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
-					#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and handling_type_mst.handling_type_name = '" + messages.get('HandlingType.bank') + "' order by handling_type_mst.handling_type_order, order_seq, id").fetch(), as:'debitBank'}
-					<option value="${debitBank.id}"${handlingMst?.debit_bank?.id==debitBank.id ? ' selected' : ''}>${debitBank.handling_name}</option>
+				<select id="${field.id}" name="${field.id}" style="width:150px;">
+					<option value=""${field.value ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
+					#{list items:models.HandlingMst.find("ha_user = ? and handling_type_mst.handling_type_name = ? order by handling_type_mst.handling_type_order, order_seq, id", haUser, messages.get('HandlingType.bank')).fetch(), as:'debitBank'}
+					<option value="${debitBank.id}"${field.value==debitBank ? ' selected' : ''}>${debitBank.handling_name}</option>
 					#{/list}
 				</select>
-		        <span class="error">#{error 'handlingMst.debit_bank' /}</span>
+		        <span class="error">#{error field.name /}</span>
 		        #{/field}
 		    </div>
 			
 		    <div class="crudField">
-		        #{field 'cutoff_day'}
+		        #{field 'hM.cutoff_day'}
 		        <label class="fieldName">&{'cutoff_day'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:60px;">
+				<select id="${field.id}" name="${field.id}" style="width:60px;">
 				</select>
-		        <span class="error">#{error 'handlingMst.cutoff_day' /}</span>
+		        <span class="error">#{error field.name /}</span>
 		        #{/field}
 		    </div>
 			
 		    <div class="crudField">
-		        #{field 'debit_month'}
+		        #{field 'hM.debit_month'}
 		        <label class="fieldName">&{'debit_month'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:70px;">
-					<option value="&{'DebitMonth.this'}"${handlingMst?.debit_month==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
-					<option value="&{'DebitMonth.next'}"${handlingMst?.debit_month==null ? ' selected' : (handlingMst?.debit_month==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
-					<option value="&{'DebitMonth.nextTwo'}"${handlingMst?.debit_month==messages.get('DebitMonth.nextTwo') ? ' selected' : ''}>&{'DebitMonth.nextTwo'}</option>
+				<select id="${field.id}" name="${field.id}" style="width:70px;">
+					<option value="&{'DebitMonth.this'}"${field.value==messages.get('DebitMonth.this') ? ' selected' : ''}>&{'DebitMonth.this'}</option>
+					<option value="&{'DebitMonth.next'}"${field.value==null ? ' selected' : (field.value==messages.get('DebitMonth.next') ? ' selected' : '')}>&{'DebitMonth.next'}</option>
+					<option value="&{'DebitMonth.nextTwo'}"${field.value==messages.get('DebitMonth.nextTwo') ? ' selected' : ''}>&{'DebitMonth.nextTwo'}</option>
 				</select>
-		        <span class="error">#{error 'handlingMst.debit_month' /}</span>
+		        <span class="error">#{error field.name /}</span>
 		        #{/field}
 		    </div>
 
 		    <div class="crudField">
-		        #{field 'debit_day'}
+		        #{field 'hM.debit_day'}
 		        <label class="fieldName">&{'debit_day'}:</label>
-				<select id="${field.name}" name="${field.name}" style="width:60px;">
+				<select id="${field.id}" name="${field.id}" style="width:60px;">
 				</select>
-		        <span class="error">#{error 'handlingMst.debit_day' /}</span>
+		        <span class="error">#{error field.name /}</span>
 		        #{/field}
 		    </div>
 			
 		#{/if}
 		#{else}
 		    <div class="crudField">
-		        #{field 'zero_hidden'}
+		        #{field 'hM.zero_hidden'}
 		        <label class="fieldName">&{'zero_hidden'}:</label>
-		        <input type="checkbox" name="${field.name}"
-		            ${handlingMst?.zero_hidden ? 'checked' : ''} />
-		        <span class="error">#{error 'handlingMst.zero_hidden' /}</span>
+		        <input type="checkbox" name="${field.id}"
+		            ${field.value ? 'checked' : ''} />
+		        <span class="error">#{error field.name /}</span>
 		        #{/field}
 		    </div>
 		#{/else}
 		
 	    <div class="crudField">
-	        #{field 'invalidity_flg'}
+	        #{field 'hM.invalidity_flg'}
 	        <label class="fieldName">&{'invalidity_flg'}:</label>
-	        <input type="checkbox" name="${field.name}"
-	            ${handlingMst?.invalidity_flg ? 'checked' : ''} />
-	        <span class="error">#{error 'handlingMst.invalidity_flg' /}</span>
+	        <input type="checkbox" name="${field.id}"
+	            ${field.value ? 'checked' : ''} />
+	        <span class="error">#{error field.name /}</span>
 	        #{/field}
 	    </div>
 	    
@@ -150,8 +158,8 @@ jQuery(document).ready(function() {
 	#{/form}
 	</div>
 
-	#{if handlingMst?.id}
-		#{form @cf_handling_del(handlingMst?.id, sHandlingType)}
+	#{if hM?.id}
+		#{form @cf_handling_del(hM?.id, sHandlingType)}
 		    <p class="crudDelete">
 		        <input type="submit" value="&{'insupd.delete', sHandlingType}" id="cnf_del" />
 		    </p>

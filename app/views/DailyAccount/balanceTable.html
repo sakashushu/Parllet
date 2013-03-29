@@ -1,22 +1,22 @@
-#{extends 'login.html' /}
+#{extends 'main.html' /}
 #{set title:messages.get('views.dailyaccount.balancetable') /}
 
 <script type="text/javascript">
 <!--
 //起動時の日毎の部分の幅と高さを調整
-jQuery(document).ready(function() {
-	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-110);
+jQuery(function() {
+	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-130);
 });
 
 //ウィンドウリサイズ時の日毎の部分の幅と高さを調整
-jQuery(document).ready(function() {
+jQuery(function() {
 	jQuery(window).resize(function() {
-		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-110);
+		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-130);
 	});
 });
 
 /* 年コンボボックスのリスト作成 */
-jQuery(document).ready(function() {
+jQuery(function() {
 	%{year = sBasisDate.substring(0,4)}%
 	var vYear = Number("${year}");
 	var vSelected;
@@ -28,7 +28,7 @@ jQuery(document).ready(function() {
 });
 
 /* 月コンボボックスのリスト作成 */
-jQuery(document).ready(function() {
+jQuery(function() {
 	var vMonth = Number("${month}");
 	var vSelected;
 	for(i=1; i<=12; i++) {
@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
 });
 
 /* 年月コンボボックス選択変更時はjumpイベントへ */
-jQuery(document).ready(function() {
+jQuery(function() {
 	jQuery('#idYear, #idMonth').change(function() {
 		jQuery('#idBasisDate').val(jQuery('#idYear').val()+"/"+("0"+jQuery('#idMonth').val()).slice(-2)+"/${sBasisDate.substring(8,10)}");
 		jQuery('#idMove').click();
@@ -47,8 +47,16 @@ jQuery(document).ready(function() {
 	});
 });
 
-/* 日付移動リンククリック時はjumpイベントへ */
-jQuery(document).ready(function() {
+jQuery(function() {
+	/* 日付移動リンクEnter時はクリックイベントへ */
+	jQuery('#idPreMonth, #idNextMonth').keypress(function(e) {
+		if(e.which==13) {
+			e.preventDefault();
+			jQuery(this).click();
+		}
+	});
+	
+	/* 日付移動リンククリック時はjumpイベントへ */
 	jQuery('#idPreMonth, #idNextMonth').click(function() {
 
 		//移動種別
@@ -65,13 +73,8 @@ jQuery(document).ready(function() {
 	});
 });
 
-//3桁区切りの数値入力フィールドとして設定
-jQuery(function() {
-	jQuery('input.numeric').autoNumeric({aPad: false, vMax: '999999999.99'});
-});
-
 //表示金額を3桁区切りに
-jQuery(document).ready(function(){
+jQuery(function(){
 	jQuery('.num3').each(function(i) {
 		var numStr = addFigure(jQuery(this).html());
 		jQuery(this).html(numStr);
@@ -163,11 +166,14 @@ jQuery(function(){
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
-<div id="cmHeader">
-#{include 'loginBodyHeader.html' /}
-</div>  <!-- cmHeader -->
+#{set 'moreMenu'}
+	#{include 'headerMenu.html' /}
+#{/set}
 
-<div id="cmMain">
+#{set 'headerTools'}
+	#{include 'headerTools.html' /}
+#{/set}
+
 
 <!-- 残高明細（口座系）へジャンプ用フォーム（非表示） -->
 #{form @DetailList.dl_remainderBank()}
@@ -217,10 +223,10 @@ jQuery(function(){
 	<input type="submit" value="移動" name="move" id="idMove" style="display:none;" />
 #{/form}
 
-<div id="cmMainInner" class="btMainInner">
+<div id="mainInner" class="btMainInner">
 
 <div class="bt_basisDate">
-	<a id="idPreMonth" class="daBtnPreNext" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
+	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
 	<span class="daPaddingYearMonth">
 	
 		<select id="idYear">
@@ -242,7 +248,7 @@ jQuery(function(){
 		
 	</span>
 	
-	<a id="idNextMonth" class="daBtnPreNext" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
+	<a id="idNextMonth" class="aBtn fontJura" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
 </div>
 					
 <ul class="bt_tbl_all">
@@ -313,6 +319,4 @@ jQuery(function(){
 	</li>
 </ul>
 
-</div>  <!-- cmMainInner -->
-
-</div>  <!-- cmMain -->
+</div>  <!-- mainInner -->

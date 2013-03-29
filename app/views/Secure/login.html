@@ -1,37 +1,70 @@
-#{extends 'Secure/layout.html' /}
+#{extends 'main.html' /}
+
+
+#{include 'dialogForm.html' /}
+#{include 'facebookLogin.html' /}
+
+<script type="text/javascript">
+<!-- 
+/* 「Facebookでログイン」クリック時は「login()」イベントへ */
+jQuery(function() {
+	jQuery('#fb-login').click(function() {
+		login("&{'views.login.fbLogin.dialogTitle'}");
+	});
+});
+// -->
+</script>
+
 
 <!-- 
 <img src="/public/images/background_test.jpg" alt="" id="bg-img" />
  -->
+
 <div id="container">
-	<div id="login">
+
+<div id="login">
+	
+	<h1>&{'secure.title'}</h1>
 		
-		<h1>&{'secure.title'}</h1>
-			
-		#{form @authenticate()}
-			
-			#{if flash.error}
-				<p class="error">
-					&{flash.error}
-				</p>
-			#{/if}
-			#{if flash.success}
-				<p class="success">
-					&{flash.success}
-				</p>
-			#{/if}
+	<div class="box">
+		<div id="loginSns">
+			<p>&{'views.login.sns.title'}</p>
+			<a id="fb-login" class="btn blCenter" tabindex="0">
+				<div><img src="/public/images/f_logo_18.png" border="0" /></div>
+				<div>&{'views.login.fbLogin.button.text'}</div>
+			</a>
+		</div>  <!-- loginSns -->
 		
-			<p id="username-field">
-				<label for="username">&{'secure.username'}</label>
-				<input type="text" name="username" id="username" value="${flash.username}" />
-			</p>
-			<p id="password-field">
-				<label for="password">&{'secure.password'}</label>
-				<input type="password" name="password" id="password" value="" />
-			</p>
-			<p id="signin-field">
-				<input type="submit" id="signin" value="&{'secure.signin'}" />
-			</p>
+		#{form @authenticate(), id:'fmAuthenticate'}
+			<div id="loginOrg">
+				<p>&{'views.login.normal.title'}</p>
+				#{if flash.error}
+					<p class="error">
+						&{flash.error}
+					</p>
+				#{/if}
+				#{if flash.success}
+					<p class="success">
+						&{flash.success}
+					</p>
+				#{/if}
+				
+				<p id="username-field">
+					<label for="username">&{'secure.username'}</label>
+					<input type="text" name="username" id="saUsername" value="${flash.username}" />
+					<input type="text" id="saUsername2" class="invisible" />
+				</p>
+				<p id="password-field">
+					<label for="password">&{'secure.password'}</label>
+					<input type="password" name="password" id="saPassword" value="${flash.password}" />
+					<input type="password" id="saPassword2" class="invisible" />
+				</p>
+				<p id="signin-field">
+					<input type="submit" id="signin" value="&{'secure.signin'}" name="signin" />
+				</p>
+			</div>
 		#{/form}
-	</div>
-</div>
+	</div>  <!-- box -->
+</div>  <!-- login -->
+
+</div>  <!-- container -->

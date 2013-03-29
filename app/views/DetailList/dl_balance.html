@@ -1,4 +1,4 @@
-#{extends 'login.html' /}
+#{extends 'main.html' /}
 #{set title:messages.get('views.detaillist.balance.title') /}
 
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
@@ -6,7 +6,7 @@
 <script type="text/javascript">
 <!--
 /* 起動時のCSS設定 */
-jQuery(document).ready(function(){
+jQuery(function(){
 	
 	//#dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す
 	jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
 });
 
 /* ウィンドウリサイズ時のCSS設定 */
-jQuery(document).ready(function() {
+jQuery(function() {
 	jQuery(window).resize(function() {
 		setCssFooter();
 	});
@@ -38,7 +38,7 @@ function setCssFooter() {
 }
 
 /* 表示金額を3桁区切りに */
-jQuery(document).ready(function(){
+jQuery(function(){
 	jQuery('.num3').each(function(i) {
 		var numStr = addFigure(jQuery(this).html());
 		jQuery(this).html(numStr);
@@ -54,7 +54,7 @@ function addFigure(str) {
 }
 
 /* 枠固定の左右の動き */
-jQuery(document).ready(function() {
+jQuery(function() {
     jQuery('#dl_tblFrameFt').scroll(function() {
     	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
     	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
@@ -237,7 +237,7 @@ jQuery(function() {
 });
 
 /* Enterキーでのサブミット防止 */
-jQuery(document).ready(function() {
+jQuery(function() {
 	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
 		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 			return false;
@@ -252,9 +252,16 @@ jQuery(document).ready(function() {
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+#{set 'moreMenu'}
+	#{include 'headerMenu.html' /}
+#{/set}
+
+#{set 'headerTools'}
+	#{include 'headerTools.html' /}
+#{/set}
+
 
 <div id="dlHeader">
-#{include 'loginBodyHeader.html' /}
 
 <!-- 家計簿編集へジャンプ用フォーム（非表示） -->
 #{include 'toRecordEdit_recordEdit.html' /}

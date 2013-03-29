@@ -1,10 +1,18 @@
-#{extends 'login.html' /}
+#{extends 'main.html' /}
+
+#{set 'moreMenu'}
+	#{include 'headerMenu.html' /}
+#{/set}
+
+#{set 'headerTools'}
+	#{include 'headerTools.html' /}
+#{/set}
+
 
 <div id="cfHeader">
-#{include 'loginBodyHeader.html' /}
 
 <div>
-	<ul id="loginMenu">
+	<ul id="memberMenu">
 		<li class="${(request.actionMethod == 'cf_bank_list' ||
 					request.actionMethod == 'cf_bank_edit' ||
 					request.actionMethod == 'cf_bank_save') ? 'selected' : ''}">
@@ -35,12 +43,19 @@
 					request.actionMethod == 'cf_idealdepo_save') ? 'selected' : ''}">
 			<a href="@{Config.cf_idealdepo_list()}">&{'views.config.cf_idealdepo'}</a>
 		</li>
-		<li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
-			<a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
+		<li class="${(request.actionMethod == 'cf_hauser_edit' ||
+					request.actionMethod == 'cf_hauser_pw_edit' ||
+					request.actionMethod == 'cf_hauser_pw_save') ? 'selected' : ''}">
+			<a href="@{Config.cf_hauser_edit()}">&{'views.config.cf_hauser'}</a>
 		</li>
-		<li class="${request.actionMethod == 'cf_actionMode' ? 'selected' : ''}">
-			<a href="@{Config.cf_actionMode()}">&{'views.config.cf_actionMode'}</a>
-		</li>
+		#{secure.check 'admin'}
+			<li class="${request.actionMethod == 'cf_io' ? 'selected' : ''}">
+				<a href="@{Config.cf_io()}">&{'views.config.cf_io'}</a>
+			</li>
+			<li class="${request.actionMethod == 'cf_actionMode' ? 'selected' : ''}">
+				<a href="@{Config.cf_actionMode()}">&{'views.config.cf_actionMode'}</a>
+			</li>
+		#{/secure.check}
 	</ul>
       	
 </div>

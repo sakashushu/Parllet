@@ -427,6 +427,8 @@ public class DetailList extends Controller {
 		// 検索処理(HandlingMst)
 		handlings = HandlingMst.find("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?) order by handling_type_mst.handling_type_order, order_seq", haUser, Messages.get("HandlingType.bank"), Messages.get("HandlingType.emoney")).fetch();
 		
+		if(handlings.size()==0)
+			render();
 		
 		/* 残高明細行作成 */
 		String sql = "";

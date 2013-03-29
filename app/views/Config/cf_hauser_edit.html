@@ -1,0 +1,168 @@
+#{extends 'Config/cf_main.html' /}
+#{set title:messages.get('views.config.cf_hauser')+' '+messages.get('views.common.update.edit') /}
+
+#{include 'facebookLogin.html' /}
+
+<script type="text/javascript">
+<!-- 
+/* 「Facebookでログイン」クリック時は「login()」イベントへ */
+jQuery(function() {
+	jQuery('#fb-login').click(function() {
+		login("&{'views.login.fbLogin.dialogTitle'}");
+	});
+});
+// -->
+</script>
+
+<script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+<script type="text/javascript">
+<!--
+var myObj = new Object();
+myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+
+jQuery(function() {
+	/* パスワード変更リンクEnter時はクリックイベントへ */
+	jQuery('#chgPw').keypress(function(e) {
+		if(e.which==13) {
+			e.preventDefault();
+			jQuery(this).click();
+		}
+	});
+	
+	/* パスワード変更リンククリック時はcf_hauser_pw_editイベントへ */
+	jQuery('#chgPw').click(function(e) {
+		e.preventDefault();
+	   	#{if haUser.fbId && !haUser.pwSetFlg}
+			jQuery('#firstTime').val('true');
+		#{/if}
+		jQuery('#frmSetPw').submit();
+		jQuery('body').attr("disabled", "disabled");
+	});
+	
+	jQuery('#fbLinkLink').click(function() {
+		login("", true);
+	});
+	
+	jQuery('#fbLinkBreak').click(function(e) {
+	   	#{if haUser.pwSetFlg}
+			myRet = confirm("&{'views.config.cf_hauser.fbLinkage.break.notes1'}\n"+
+					"&{'views.config.cf_hauser.fbLinkage.break.notes2'}\n"+
+					"&{'views.config.cf_hauser.fbLinkage.break.notes3'}\n"+
+					"&{'views.config.cf_hauser.fbLinkage.break.notes4'}");
+			if(myRet) {
+				jQuery.post('@{Common.breakLinkFacebook}', function(c){
+					var jsonC = JSON.parse(c);
+					switch (jsonC.intRslt) {
+						case 0:
+							window.location.reload(true);
+							break;
+						case 99:
+							alert(jsonC.strErr);
+							break;
+						default:
+							alert("case error");
+					}
+				}, 'text');
+			}
+		#{/if}
+		#{else}
+			myRet = confirm("&{'views.config.cf_hauser.fbLinkage.break.pwSet1'}\n"+
+					"&{'views.config.cf_hauser.fbLinkage.break.pwSet2'}");
+			if(myRet) {
+				e.preventDefault();
+				jQuery('#chgPw').click();
+			}
+		#{/else}
+	});
+});
+// -->
+</script>
+
+<!-- パスワード変更用フォーム -->
+#{form @cf_hauser_pw_edit(), id:'frmSetPw'}
+	<input type="text" name="firstTime" id="firstTime" class="invisible" />
+	<input type="submit" class="invisible" />
+#{/form}
+
+#{ifErrors}
+<p class="crudFlash flashError">
+	&{'validation.title'}
+</p>
+#{/ifErrors}
+
+<div id="crudShow">
+
+	<h3><span>&{'insupd.edit', messages.get('views.config.cf_hauser')}</span></h3>
+
+	<div class="objectForm">
+	#{form @cf_hauser_save()}
+	 
+		<div class="crudField">
+			#{field 'haUser.email'}
+			<label class="fieldName">&{'email'}:</label>
+			<input type="text" name="${field.id}" 
+				value="${field.value}" />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			<label class="fieldName">&{'password'}:</label>
+			<div class="right">
+				%{strPw=messages.get('views.config.cf_hauser.chgPw')}%
+				#{if haUser.fbId && !haUser.pwSetFlg}
+					<div class="upper">&{'views.config.cf_hauser.notSetPw'}</div>
+					%{strPw=messages.get('views.config.cf_hauser.setPw')}%
+				#{/if}
+				<a id="chgPw" class="aBtn" tabindex="0">${strPw}</a>
+			</div>
+		</div>
+		
+		<div class="crudField">
+			#{field 'haUser.nickname'}
+			<label class="fieldName">&{'nickname'}:</label>
+			<input type="text" name="${field.id}" 
+				value="${field.value}" />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			#{field 'haUser.fullname'}
+			<label class="fieldName">&{'fullname'}:</label>
+			<input type="text" name="${field.id}" 
+				value="${field.value}" />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			#{field 'haUser.fbId'}
+			<label class="fieldName">&{'views.config.cf_hauser.fbLinkage'}:</label>
+			<div class="right">
+				#{if field.value}
+				<div class="upper">
+					&{'views.config.cf_hauser.fbLinkage.state.link.head'}
+					<a href="${haUser.fbLink}" target="_blank">${haUser.fbName}</a>
+					&{'views.config.cf_hauser.fbLinkage.state.link.tail'}
+				</div>
+				<a class="aBtn" id="fbLinkBreak" tabindex="0">&{'views.config.cf_hauser.fbLinkage.break'}</a>
+				#{/if}
+				#{else}
+				<div class="upper">
+					&{'views.config.cf_hauser.fbLinkage.state.notLink'}
+				</div>
+				<a class="aBtn" id="fbLinkLink" tabindex="0">&{'views.config.cf_hauser.fbLinkage.link'}</a>
+				#{/else}
+			</div>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			<input type="submit" value="&{'insupd.save'}" />
+		</div>
+		
+	#{/form}
+	</div>
+
+</div>

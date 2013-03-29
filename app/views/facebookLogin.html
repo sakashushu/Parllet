@@ -1,0 +1,65 @@
+<script type="text/javascript">
+<!-- 
+function login(title, linkFlg) {
+	FB.login(function(response) {
+		if (response.authResponse) {
+			// connected
+//			testAPI();
+			FB.api('/me', function(response) {
+				var vId = response.id,
+					vName = response.name,
+					vLink = response.link;
+				jQuery.post('@{Security.checkFbUser}', {id: vId}, function(a){
+					var jsonA = JSON.parse(a);
+					if(linkFlg) {
+						if(jsonA.bolVirginFlg) {
+							jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink}, function(b){
+								var jsonB = JSON.parse(b);
+								switch (jsonB.intRslt) {
+									case 0:
+										window.location.reload(true);
+										break;
+									case 99:
+							    		alert(jsonB.strErr);
+										break;
+									default:
+							    		alert("case error");
+								}
+							}, 'text');
+						} else {
+							alert("&{'views.config.cf_hauser.fbLinkage.duplicate'}");
+							logout();
+						}
+					} else {
+						if(jsonA.bolVirginFlg) {
+							jQuery(".validateTips")
+								.css('padding', '0')
+								.text("");
+//							jQuery("#dialog-form").dialog( "open" );
+							openDialog(title, true, "", "", vId, vName, vLink);
+						} else {
+							jQuery('#saUsername').css('display', 'none');
+							jQuery('#saUsername2').css('display', 'inline');
+							jQuery('#saPassword').css('display', 'none');
+							jQuery('#saPassword2').css('display', 'inline');
+							jQuery('#saUsername').val(jsonA.strEmail);
+							jQuery('#saPassword').val(jsonA.strPassword);
+							jQuery('#signin').click();
+						}
+					}
+				}, 'text');
+			});
+		} else {
+			// cancelled
+		}
+	});
+}
+
+function testAPI() {
+	console.log('Welcome!  Fetching your information.... ');
+	FB.api('/me', function(response) {
+		console.log('Good to see you, ' + response.name + '.');
+	});
+}
+// -->
+</script>

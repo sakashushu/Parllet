@@ -41,21 +41,42 @@ public class RecordEdit extends Controller {
 	 */
 	public static void recordEdit(
 			Long id,
+    		String calledFrom,				/* 呼び出し元 */
     		String df_payment_date,			/* 初期支払日 */
     		Long df_balance_type_id,  		/* 初期収支種類ID */
     		Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
     		Long df_item_id,				/* 初期項目ID */
-    		String df_debit_date,
-    		String calledFrom				/* 呼び出し元 */
+    		String df_debit_date
 			) {
 		//編集
 		if(id != null) {
-			Record record = Record.findById(id);
-			render(record, calledFrom);
+//			Record record = Record.findById(id);
+//			render(record, calledFrom);
+			recordUpd(id, calledFrom);
 		}
 		//追加
-		render(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
+//		render(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
+		recordIns(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
 	}
+	
+	public static void recordIns(
+    		String df_payment_date,			/* 初期支払日 */
+    		Long df_balance_type_id,  		/* 初期収支種類ID */
+    		Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+    		Long df_item_id,				/* 初期項目ID */
+    		String df_debit_date
+			) {
+		render("@recordEdit", df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
+	}
+	
+	public static void recordUpd(
+			Long id,
+    		String calledFrom	/* 呼び出し元 */
+			) {
+		Record record = Record.findById(id);
+		render("@recordEdit", record, calledFrom);
+	}
+	
 	
 	/**
 	 * 収支レコードの保存
@@ -90,6 +111,8 @@ public class RecordEdit extends Controller {
 			Boolean secret_rec_flg,
     		String calledFrom				/* 呼び出し元 */
 			) {
+		checkAuthenticity();
+		
 		Record record = null;
 		Date paymentDate = null;
 		boolean bolDateChange = false;		/* 日付変更フラグ */

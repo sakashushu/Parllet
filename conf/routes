@@ -27,10 +27,12 @@ GET     /balanceTable/{intBasisDate}            DailyAccount.balanceTableDisp
 
 
 # RecordEdit new
-GET     /data/myData/{id}                       RecordEdit.recordEdit
-GET     /data/new                               RecordEdit.recordEdit
-POST    /data/myData/{id}                       RecordEdit.save_rec
-POST    /data/new                               RecordEdit.save_rec
+#GET     /data/myData/{id}                       RecordEdit.recordEdit
+#GET     /data/new                               RecordEdit.recordEdit
+GET     /data/new                               RecordEdit.recordIns
+GET     /data/edit                              RecordEdit.recordUpd
+#POST    /data/new                               RecordEdit.save_rec
+#POST    /data/myData/{id}                       RecordEdit.save_rec
 
 # WebSocket detailList
 POST	/detailList/balance                     DetailList.dl_balance
@@ -39,26 +41,31 @@ WS      /detailList                             DetailList.WebSocketApp.listen
 GET		/detailList/remainderBank	            DetailList.dl_remainderBank
 
 # Config
+POST    /config/bank/list                       Config.cf_bank_list
 GET     /config/bank/list                       Config.cf_bank_list
 GET     /config/bank/myBank/{id}                Config.cf_bank_edit
 GET     /config/bank/new                        Config.cf_bank_edit
-POST    /config/bank/myBank/{id}                Config.cf_bank_save
-POST    /config/bank/new                        Config.cf_bank_save
+#POST    /config/bank/myBank/{id}                Config.cf_bank_save
+#POST    /config/bank/new                        Config.cf_bank_save
+POST    /config/card/list                       Config.cf_creca_list
 GET     /config/card/list                       Config.cf_creca_list
 GET     /config/card/myCard/{id}                Config.cf_creca_edit
 GET     /config/card/new                        Config.cf_creca_edit
 POST    /config/card/myCard/{id}                Config.cf_creca_save
 POST    /config/card/new                        Config.cf_creca_save
+POST    /config/emoney/list                     Config.cf_emoney_list
 GET     /config/emoney/list                     Config.cf_emoney_list
 GET     /config/emoney/myEmoney/{id}            Config.cf_emoney_edit
 GET     /config/emoney/new                      Config.cf_emoney_edit
 POST    /config/emoney/myEmoney/{id}            Config.cf_emoney_save
 POST    /config/emoney/new                      Config.cf_emoney_save
+POST    /config/itemIn/list                     Config.cf_item_in_list
 GET     /config/itemIn/list                     Config.cf_item_in_list
 GET     /config/itemIn/myItem/{id}              Config.cf_item_in_edit
 GET     /config/itemIn/new                      Config.cf_item_in_edit
 POST    /config/itemIn/myItem/{id}              Config.cf_item_in_save
 POST    /config/itemIn/new                      Config.cf_item_in_save
+POST    /config/itemOut/list                    Config.cf_item_out_list
 GET     /config/itemOut/list                    Config.cf_item_out_list
 GET     /config/itemOut/myItem/{id}             Config.cf_item_out_edit
 GET     /config/itemOut/new                     Config.cf_item_out_edit

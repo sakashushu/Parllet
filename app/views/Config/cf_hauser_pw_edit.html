@@ -1,0 +1,52 @@
+#{extends 'Config/cf_main.html' /}
+#{set title:messages.get('views.config.cf_hauser')+' '+messages.get('password') /}
+
+#{ifErrors}
+<p class="crudFlash flashError">
+	&{'validation.title'}
+</p>
+#{/ifErrors}
+
+<div id="crudShow">
+	
+	<h3><span>&{'insupd.edit', messages.get('password')}</span></h3>
+	
+	<div class="objectForm">
+	#{form @cf_hauser_pw_save()}
+		<input type="text" name="firstTime" value="${firstTime=='true' ? 'true' : ''}" class="invisible" />
+		
+		#{if firstTime!='true'}
+		<div class="crudField">
+			#{field 'crt_password'}
+			<label class="fieldName">&{'views.config.cf_hauser_pw.crt'}&{'password'}:</label>
+			<input type="password" name="${field.name}" />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		#{/if}
+		
+		<div class="crudField">
+			#{field 'haUser.password'}
+			<label class="fieldName">${firstTime=='true' ? '' : messages.get('views.config.cf_hauser_pw.new')}&{'password'}:</label>
+			<input type="password" name="${field.id}"  />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			#{field 'cnf_password'}
+			<label class="fieldName">（確認）:</label>
+			<input type="password" name="${field.name}"  />
+			<span class="error">#{error field.name /}</span>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			<input type="submit" name="save" value="&{'insupd.save'}" />
+			<input type="submit" name="cancel" value="&{'insupd.cancel'}" />
+		</div>
+		
+	#{/form}
+	</div>
+	
+</div>

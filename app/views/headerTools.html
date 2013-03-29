@@ -1,0 +1,114 @@
+<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	var onMenu = 'out';
+	var tlsLi = jQuery('#tools li');
+	var tlsLiUl = jQuery('#tools li ul');
+	
+	/* 「ログアウト」クリック時は「logout()」イベントへ */
+	jQuery('#fb-logout').click(function() {
+		logout();
+	});
+	
+	
+	tlsLiUl.hide();
+	
+	/* 「#tools li ul」の位置確定 */
+	tlsLiUl.each(function() {
+		jQuery(this).css('left', jQuery(this).parent().width() - jQuery(this).width());
+	});
+	
+	tlsLiUl.mouseover(function() {
+		onMenu = 'over';
+	});
+	tlsLiUl.mouseout(function() {
+		onMenu = 'out';
+	});
+	tlsLi.mouseover(function() {
+		onMenu = 'over';
+	});
+	tlsLi.mouseout(function() {
+		onMenu = 'out';
+	});
+	
+	jQuery(window).mousedown(function(e) {
+		if(onMenu=='out' && tlsLi.hasClass("click")) {
+			e.preventDefault();
+			tlsLi.removeClass("click");
+			tlsLiUl.hide();
+			tlsLi.blur();
+		}
+	});
+	
+	tlsLi.focus(function() {
+		jQuery(this).addClass("focused");
+		if(!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(/public/images/white40.png)');
+	});
+	tlsLi.blur(function() {
+		jQuery(this).removeClass("focused");
+		jQuery(this).css('background', 'url(/public/images/white20.png)');
+	});
+	tlsLi.hover(function() {
+		if(!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(/public/images/white40.png)');
+	},function() {
+		if(!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'url(/public/images/white20.png)');
+	});
+	tlsLi.keypress(function(e) {
+		if(e.which==13) {
+			e.preventDefault();
+			jQuery(this).click();
+		}
+	});
+	tlsLi.click(function() {
+		if(jQuery(this).hasClass("open"))
+			if(jQuery(this).hasClass("click")) {
+				jQuery(this).removeClass("click");
+				jQuery(this).css('background', 'url(/public/images/white40.png)');
+				jQuery("ul", this).hide();
+			} else {
+				jQuery(this).addClass("click");
+				jQuery(this).css('background', 'url(/public/images/white20.png)');
+				jQuery("ul", this).show();
+			}
+	});
+});
+// -->
+</script>
+
+%{
+	name=models.HaUser.find("byEmail", session.username).first()?.nickname
+	if(name==null || name=='') {
+		name='id:'+models.HaUser.find("byEmail", session.username).first().id
+	} else {
+		if(name.length()>10)
+			name=name.substring(0,10)+'..'
+	}
+}%
+
+<li tabindex="0" class="open">
+	${name}
+	<ul>
+		<li>#{a @Config.cf_hauser_edit()}&{'views.config.cf_hauser'}#{/a}</li>
+		<li>#{a @Secure.logout(), id:'fb-logout'}&{'views.login.tools.logout'}#{/a}</li>
+		#{secure.check 'admin'}
+		<li>
+			#{if request.controller=='HaUsers' ||
+				request.controller=='BalanceTypeMsts' ||
+				request.controller=='HandlingTypeMsts' ||
+				request.controller=='ItemMsts' ||
+				request.controller=='HandlingMsts' ||
+				request.controller=='IdealDepositMsts' ||
+				request.controller=='Budgets' ||
+				request.controller=='Records'}
+				#{a @DailyAccount.dailyAccount()}&{'views.admin.memberMenu'}#{/a}
+			#{/if}
+			#{else}
+				#{a @HaUsers.list()}&{'views.admin.adminMenu'}#{/a}
+			#{/else}
+		</li>
+		#{/secure.check}
+	</ul>
+</li>

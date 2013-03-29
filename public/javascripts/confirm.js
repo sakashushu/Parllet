@@ -1,5 +1,5 @@
 jQuery(function(){
-	jQuery('#cnf_del').click(function(){
-	    return confirm('削除してよろしいですか？');
+	jQuery('#cnf_del').click(myObj, function(eo){
+	    return confirm(eo.data.strMsg);
 	});
 });

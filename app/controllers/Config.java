@@ -27,6 +27,8 @@ import java.util.Map;
 
 import javax.mail.internet.MimeUtility;
 
+import org.postgresql.translation.messages_bg;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 import models.BalanceTypeMst;
@@ -361,7 +363,9 @@ public class Config extends Controller {
 		renderBinary(binaryData, String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS", calendar.getTime()) + ".csv");	
 	}
 	
-	//口座編集（リスト）
+	/**
+	 * 口座編集（リスト）
+	 */
 	public static void cf_bank_list() {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
@@ -369,7 +373,9 @@ public class Config extends Controller {
 		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
-	//クレジットカード編集（リスト）
+	/**
+	 * クレジットカード編集（リスト）
+	 */
 	public static void cf_creca_list() {
 //		render();
 		String sHandlingType = Messages.get("HandlingType.creca");
@@ -377,7 +383,9 @@ public class Config extends Controller {
 		render("@cf_handling_list", sHandlingType, handlingMsts);
 	}
 	
-	//電子マネー編集（リスト）
+	/**
+	 * 電子マネー編集（リスト）
+	 */
 	public static void cf_emoney_list() {
 		String sHandlingType = Messages.get("HandlingType.emoney");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
@@ -385,232 +393,294 @@ public class Config extends Controller {
 	}
 	
 	
-	//項目(収入)編集（リスト）
+	/**
+	 * 項目(収入)編集（リスト）
+	 */
 	public static void cf_item_in_list() {
 		String sBalanceType = Messages.get("BalanceType.in");
 		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq, id").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
-	//項目(支出)編集（リスト）
+	/**
+	 * 項目(支出)編集（リスト）
+	 */
 	public static void cf_item_out_list() {
 		String sBalanceType = Messages.get("BalanceType.out");
 		List<ItemMst> itemMsts = ItemMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' and balance_type_mst.balance_type_name = '" + sBalanceType + "' order by order_seq, id").fetch();
 		render("@cf_item_list", sBalanceType, itemMsts);
 	}
 	
-	//My貯金編集（リスト）
+	/**
+	 * My貯金編集（リスト）
+	 */
 	public static void cf_idealdepo_list() {
 		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq, id").fetch();
 		render("@cf_idealdepo_list", idealDepositMsts);
 	}
 	
-	//口座編集
+	/**
+	 * 口座編集
+	 * @param id
+	 */
 	public static void cf_bank_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		if(id != null) {
-			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			HandlingMst hM = HandlingMst.findById(id);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		render("@cf_handling_edit", sHandlingType);
 	}
 	
-	//クレジットカード編集
+	/**
+	 * クレジットカード編集
+	 * @param id
+	 */
 	public static void cf_creca_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.creca");
 		if(id != null) {
-			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			HandlingMst hM = HandlingMst.findById(id);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		render("@cf_handling_edit", sHandlingType);
 	}
 	
-	//電子マネー編集
+	/**
+	 * 電子マネー編集
+	 * @param id
+	 */
 	public static void cf_emoney_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.emoney");
 		if(id != null) {
-			HandlingMst handlingMst = HandlingMst.findById(id);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			HandlingMst hM = HandlingMst.findById(id);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		render("@cf_handling_edit", sHandlingType);
 	}
 	
-	//項目(収入)編集
+	/**
+	 * 項目(収入)編集
+	 * @param id
+	 */
 	public static void cf_item_in_edit(Long id) {
 		String sBalanceType = Messages.get("BalanceType.in");
 		if(id != null) {
-			ItemMst itemMst = ItemMst.findById(id);
-			render("@cf_item_edit", itemMst, sBalanceType);
+			ItemMst iM = ItemMst.findById(id);
+			render("@cf_item_edit", iM, sBalanceType);
 		}
 		render("@cf_item_edit", sBalanceType);
 	}
 	
-	//項目(支出)編集
+	/**
+	 * 項目(支出)編集
+	 * @param id
+	 */
 	public static void cf_item_out_edit(Long id) {
 		String sBalanceType = Messages.get("BalanceType.out");
 		if(id != null) {
-			ItemMst itemMst = ItemMst.findById(id);
-			render("@cf_item_edit", itemMst, sBalanceType);
+			ItemMst iM = ItemMst.findById(id);
+			render("@cf_item_edit", iM, sBalanceType);
 		}
 		render("@cf_item_edit", sBalanceType);
 	}
 	
-	//My貯金編集
+	/**
+	 * My貯金編集
+	 * @param id
+	 */
 	public static void cf_idealdepo_edit(Long id) {
 		if(id != null) {
-			IdealDepositMst idealDepositMst = IdealDepositMst.findById(id);
-			render(idealDepositMst);
+			IdealDepositMst iDM = IdealDepositMst.findById(id);
+			render(iDM);
 		}
 		render();
 	}
 	
-	//口座保存
+	/**
+	 * 口座保存
+	 * @param id
+	 * @param handling_name
+	 * @param hM_zero_hidden
+	 * @param hM_invalidity_flg
+	 */
 	public static void cf_bank_save(
 			Long id,
-			String handling_name,
-			Boolean zero_hidden,
-			Boolean invalidity_flg
+			String hM_handling_name,
+			Boolean hM_zero_hidden,
+			Boolean hM_invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.bank");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, invalidity_flg, refHandlingMst, sHandlingType);
-		HandlingMst handlingMst = refHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, hM_handling_name, hM_zero_hidden, hM_invalidity_flg, refHandlingMst, sHandlingType);
+		HandlingMst hM = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(handlingMst);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			validation.valid(hM);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		
 		cf_bank_list();
 		
 	}
 	
-	//電子マネー保存
+	/**
+	 * 電子マネー保存
+	 * @param id
+	 * @param handling_name
+	 * @param hM_zero_hidden
+	 * @param hM_invalidity_flg
+	 */
 	public static void cf_emoney_save(
 			Long id,
-			String handling_name,
-			Boolean zero_hidden,
-			Boolean invalidity_flg
+			String hM_handling_name,
+			Boolean hM_zero_hidden,
+			Boolean hM_invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.emoney");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, zero_hidden, invalidity_flg, refHandlingMst, sHandlingType);
-		HandlingMst handlingMst = refHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, hM_handling_name, hM_zero_hidden, hM_invalidity_flg, refHandlingMst, sHandlingType);
+		HandlingMst hM = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(handlingMst);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			validation.valid(hM);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		
 		cf_emoney_list();
 		
 	}
 	
-	//クレジットカード保存
+	/**
+	 * クレジットカード保存
+	 * @param id
+	 * @param hM_handling_name
+	 * @param hM_debit_bank
+	 * @param hM_cutoff_day
+	 * @param hM_debit_month
+	 * @param hM_debit_day
+	 * @param hM_invalidity_flg
+	 */
 	public static void cf_creca_save(
 			Long id,
-			String handling_name,
-			Long debit_bank,
-			Integer cutoff_day,
-			String debit_month,
-			Integer debit_day,
-			Boolean invalidity_flg
+			String hM_handling_name,
+			Long hM_debit_bank,
+			Integer hM_cutoff_day,
+			String hM_debit_month,
+			Integer hM_debit_day,
+			Boolean hM_invalidity_flg
 			) {
 		String sHandlingType = Messages.get("HandlingType.creca");
 		
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		
 		//HandlingMst保存
-		Integer iRtn = cf_handling_mst_save(id, handling_name, false, invalidity_flg, refHandlingMst, sHandlingType, debit_bank, cutoff_day, debit_month, debit_day);
-		HandlingMst handlingMst = refHandlingMst.handlingMst;
+		Integer iRtn = cf_handling_mst_save(id, hM_handling_name, false, hM_invalidity_flg, refHandlingMst, sHandlingType, hM_debit_bank, hM_cutoff_day, hM_debit_month, hM_debit_day);
+		HandlingMst hM = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(handlingMst);
-			render("@cf_handling_edit", handlingMst, sHandlingType);
+			validation.valid(hM);
+			render("@cf_handling_edit", hM, sHandlingType);
 		}
 		
 		cf_creca_list();
 		
 	}
 	
-	//項目(収入)保存
+	/**
+	 * 項目(収入)保存
+	 * @param id
+	 * @param iM_item_name
+	 */
 	public static void cf_item_in_save(
 			Long id,
-			String item_name
+			String iM_item_name
 			) {
 		String sBalanceType = Messages.get("BalanceType.in");
 		
 		RefItemMst refItemMst = new RefItemMst();
 		
 		//ItemMst保存
-		Integer iRtn = cf_item_mst_save(id, item_name, refItemMst, sBalanceType);
-		ItemMst itemMst = refItemMst.itemMst;
+		Integer iRtn = cf_item_mst_save(id, iM_item_name, refItemMst, sBalanceType);
+		ItemMst iM = refItemMst.itemMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(itemMst);
-			render("@cf_item_edit", itemMst, sBalanceType);
+			validation.valid(iM);
+			render("@cf_item_edit", iM, sBalanceType);
 		}
 		
 		cf_item_in_list();
 		
 	}
 	
-	//項目(支出)保存
+	/**
+	 * 項目(支出)保存
+	 * @param id
+	 * @param iM_item_name
+	 */
 	public static void cf_item_out_save(
 			Long id,
-			String item_name
+			String iM_item_name
 			) {
 		String sBalanceType = Messages.get("BalanceType.out");
 		
 		RefItemMst refItemMst = new RefItemMst();
 		
 		//ItemMst保存
-		Integer iRtn = cf_item_mst_save(id, item_name, refItemMst, sBalanceType);
-		ItemMst itemMst = refItemMst.itemMst;
+		Integer iRtn = cf_item_mst_save(id, iM_item_name, refItemMst, sBalanceType);
+		ItemMst iM = refItemMst.itemMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(itemMst);
-			render("@cf_item_edit", itemMst, sBalanceType);
+			validation.valid(iM);
+			render("@cf_item_edit", iM, sBalanceType);
 		}
 		
 		cf_item_out_list();
 		
 	}
 	
-	//My貯金保存
+	/**
+	 * My貯金保存
+	 * @param id
+	 * @param iDM_ideal_deposit_name
+	 * @param iDM_zero_hidden
+	 */
 	public static void cf_idealdepo_save(
 			Long id,
-			String ideal_deposit_name,
-			Boolean zero_hidden
+			String iDM_ideal_deposit_name,
+			Boolean iDM_zero_hidden
 			) {
 		RefIdealDepositMst refItemMst = new RefIdealDepositMst();
 		
 		//IdealDepositMst保存
-		Integer iRtn = cf_ideal_deposit_mst_save(id, ideal_deposit_name, zero_hidden, refItemMst);
-		IdealDepositMst idealDepositMst = refItemMst.idealDepositMst;
+		Integer iRtn = cf_ideal_deposit_mst_save(id, iDM_ideal_deposit_name, iDM_zero_hidden, refItemMst);
+		IdealDepositMst iDM = refItemMst.idealDepositMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(idealDepositMst);
-			render("@cf_idealdepo_edit", idealDepositMst);
+			validation.valid(iDM);
+			render("@cf_idealdepo_edit", iDM);
 		}
 		
 		cf_idealdepo_list();
 		
 	}
 
-	//「取扱(実際)」削除
+	/**
+	 * 「取扱(実際)」削除
+	 * @param id
+	 * @param sHandlingType
+	 */
 	public static void cf_handling_del(Long id, String sHandlingType) {
 		// 取扱データの読み出し
 		HandlingMst handlingMst = HandlingMst.findById(id);
@@ -626,12 +696,16 @@ public class Config extends Controller {
 		}
 	}
 	
-	//「項目」削除
+	/**
+	 * 「項目」削除
+	 * @param id
+	 * @param sBalanceType
+	 */
 	public static void cf_item_del(Long id, String sBalanceType) {
 		// 項目データの読み出し
-		ItemMst itemMst = ItemMst.findById(id);
+		ItemMst iM = ItemMst.findById(id);
 		// 削除
-		itemMst.delete();
+		iM.delete();
 
 		if(sBalanceType.equals(Messages.get("BalanceType.in"))) {
 			cf_item_in_list();
@@ -640,12 +714,15 @@ public class Config extends Controller {
 		}
 	}
 	
-	//「My貯金」削除
+	/**
+	 * 「My貯金」削除
+	 * @param id
+	 */
 	public static void cf_idealdepo_del(Long id) {
 		// 項目データの読み出し
-		IdealDepositMst idealDepositMst = IdealDepositMst.findById(id);
+		IdealDepositMst iDM = IdealDepositMst.findById(id);
 		// 削除
-		idealDepositMst.delete();
+		iDM.delete();
 
 		cf_idealdepo_list();
 	}
@@ -685,6 +762,12 @@ public class Config extends Controller {
 		}
 	}
 	
+	/**
+	 * ItemMstの並べ替え
+	 * @param id
+	 * @param order
+	 * @param sBalanceType
+	 */
 	public static void cf_item_orderChange(
     		List<Long> id,
     		List<Integer> order,
@@ -740,6 +823,118 @@ public class Config extends Controller {
 	}
 	
 	/**
+	 * 会員情報編集
+	 */
+	public static void cf_hauser_edit() {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		render(haUser);
+	}
+	
+	/**
+	 * 会員情報保存
+	 * @param id
+	 * @param item_name
+	 */
+	public static void cf_hauser_save(
+			String haUser_email,
+			String haUser_nickname,
+			String haUser_fullname
+			) {
+		boolean bolEmailChg = false;
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		if(!haUser.email.equals(haUser_email))
+			bolEmailChg = true;
+		haUser.email = haUser_email;
+		haUser.nickname = haUser_nickname;
+		haUser.fullname = haUser_fullname;
+		// Validate
+		validation.valid(haUser);
+		if(validation.hasErrors()) {
+			render("@cf_hauser_edit", haUser);
+	    }
+		// 保存
+		haUser.save();
+		
+		if(bolEmailChg)
+			session.put("username", haUser.email);
+		
+		cf_hauser_edit();
+	}
+	
+	/**
+	 * 会員情パスワード編集
+	 */
+	public static void cf_hauser_pw_edit(
+			String firstTime
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		render(haUser, firstTime);
+	}
+	
+	/**
+	 * 会員情報パスワード保存
+	 * @param id
+	 * @param item_name
+	 */
+	public static void cf_hauser_pw_save(
+			String firstTime,
+			String crt_password,
+			String haUser_password,
+			String cnf_password,
+			String save,
+			String cancel
+			) {
+		/* キャンセルボタンが押されたら、前の画面に戻る */
+		if(cancel!=null) {
+			cf_hauser_edit();
+			return;
+		}
+		
+		/* 必須チェック */
+		String strReq = Messages.get("validation.required");
+		if(!firstTime.equals("true")) {
+			if(crt_password==null || crt_password.equals("")) {
+				validation.addError("crt_password", strReq);
+			}
+		}
+		if(haUser_password==null || haUser_password.equals("")) {
+			validation.addError("haUser.password", strReq);
+		}
+		if(cnf_password==null || cnf_password.equals("")) {
+			validation.addError("cnf_password", strReq);
+		}
+		if(validation.hasErrors())
+			render("@cf_hauser_pw_edit", firstTime);
+		
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		
+		/* 現在のパスワード */
+		if(!firstTime.equals("true")) {
+			if(!haUser.password.equals(crt_password)) {
+				validation.addError("crt_password", Messages.get("validation.crtPasswordError"));
+				render("@cf_hauser_pw_edit");
+			}
+		}
+		
+		/* 新しいパスワード */
+		if(!haUser_password.equals(cnf_password)) {
+			validation.addError("cnf_password", Messages.get("validation.cnfPasswordError"));
+			render("@cf_hauser_pw_edit", firstTime);
+		}
+		haUser.password = haUser_password;
+		haUser.pwSetFlg = true;
+		// Validate
+		validation.valid(haUser);
+		if(validation.hasErrors()) {
+			render("@cf_hauser_pw_edit", firstTime);
+	    }
+		// 保存
+		haUser.save();
+		
+		cf_hauser_edit();
+	}
+	
+	/**
 	 * HandlingMstの保存メソッド
 	 * @param id
 	 * @param handling_name
@@ -760,10 +955,10 @@ public class Config extends Controller {
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		Integer iCutoffDay = null;
 		Integer iDebitDay = null;
-		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = " + haUser.id + " AND handling_type_mst_id = " + handlingTypeMst.id + " ";
-		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
 			// 取扱データの作成
+			String sql = "SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = ?1 AND handling_type_mst_id = ?2";
+			Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).setParameter(1, haUser.id).setParameter(2, handlingTypeMst.id).getSingleResult() + 1;
 			refHandlingMst.handlingMst = new HandlingMst(
 					haUser,
 					handlingTypeMst,

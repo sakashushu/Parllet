@@ -2,6 +2,12 @@
 #{set title:messages.get('views.config.cf_idealdepo')+' '+messages.get('views.common.update.edit') /}
 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+<script type="text/javascript">
+<!--
+var myObj = new Object();
+myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+// -->
+</script>
 
 #{ifErrors}
 <p class="crudFlash flashError">
@@ -11,7 +17,7 @@
 
 <div id="crudShow">
 
-	#{ifnot idealDepositMst?.id}
+	#{ifnot iDM?.id}
 		<h3><span>&{'insupd.add', messages.get('views.config.cf_idealdepo')}</span></h3>
 	#{/ifnot}
 	#{else}
@@ -19,23 +25,23 @@
 	#{/else}
 
     <div class="objectForm">
-	#{form @cf_idealdepo_save(idealDepositMst?.id)}
+	#{form @cf_idealdepo_save(iDM?.id)}
 	 
 	    <div class="crudField">
-	        #{field 'ideal_deposit_name'}
+	        #{field 'iDM.ideal_deposit_name'}
 	        <label class="fieldName">&{'ideal_deposit_name'}:</label>
-	        <input type="text" name="${field.name}" 
-	            value="${idealDepositMst?.ideal_deposit_name}" />
-	        <span class="error">#{error 'idealDepositMst.ideal_deposit_name' /}</span>
+	        <input type="text" name="${field.id}" 
+	            value="${field.value}" />
+	        <span class="error">#{error field.name /}</span>
 	        #{/field}
 	    </div>
 		
 	    <div class="crudField">
-	        #{field 'zero_hidden'}
+	        #{field 'iDM.zero_hidden'}
 	        <label class="fieldName">&{'zero_hidden'}:</label>
-	        <input type="checkbox" name="${field.name}"
-	            ${idealDepositMst?.zero_hidden ? 'checked' : ''} />
-	        <span class="error">#{error 'idealDepositMst.zero_hidden' /}</span>
+	        <input type="checkbox" name="${field.id}"
+	            ${field.value ? 'checked' : ''} />
+	        <span class="error">#{error field.name /}</span>
 	        #{/field}
 	    </div>
 	    
@@ -46,8 +52,8 @@
 	#{/form}
 	</div>
 
-	#{if idealDepositMst?.id}
-		#{form @cf_idealdepo_del(idealDepositMst?.id)}
+	#{if iDM?.id}
+		#{form @cf_idealdepo_del(iDM?.id)}
 		    <p class="crudDelete">
 		        <input type="submit" value="&{'insupd.delete', messages.get('views.config.cf_idealdepo')}" id="cnf_del" />
 		    </p>

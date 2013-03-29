@@ -1,20 +1,24 @@
-secure.username=Eメール:
+secure.username=Ｅメール:
 secure.password=パスワード:
 secure.signin=ログイン
 secure.remember=次回以降IDを省略
+secure.title=ログイン
+secure.error=ログイン情報が正しくありません
+
+secure.fbAppId=487976224598644
 
 views.main.tools.login=ログイン
 views.main.tools.logo.pre=イメージで貯金できる家計簿
 views.main.tools.logo.pre1=イメージで
 views.main.tools.logo.pre2=貯金できる家計簿
-views.main.tools.logo=安心My貯金
+views.main.tools.logo=ネットでMy貯金
 
 views.login.logo=安心My貯金
 views.login.logo.span=管理
 views.login.tools.logout=ログアウト
 views.login.recordEdit=家計簿入力
 
-views.admin.adminMenu=管理者メニュー
+views.admin.adminMenu=管理者
 views.admin.memberMenu=会員メニュー
 
 views.common.combo.required.long=(値を選択して下さい)
@@ -33,6 +37,30 @@ views.common.menu.toRecordAdd=家計簿入力へ
 views.common.menu.toRecordEdit=このデータを編集
 
 views.application.tools.home=ホーム
+views.index.sinup.normal.title=新規ユーザー登録
+views.index.sinup.sns.title=SNSで登録
+views.index.sinup.dialogTitle=新規ユーザー登録
+views.index.signup.normal.button.text=ユーザー登録する
+views.index.signup.sns.button.text=Facebookで登録
+views.login.normal.title=ノーマルログイン
+views.login.sns.title=SNSでログイン
+views.login.err.duplicate=この&{%s}は既に使われています。
+views.login.fbLogin.button.text=Facebookでログイン
+views.login.fbLogin.name=ニックネーム
+views.login.fbLogin.email=Ｅメール
+views.login.fbLogin.dialogTitle=初回ユーザー登録
+views.login.fbLogin.makeAccount=アカウント作成
+views.login.fbLogin.cancel=キャンセル
+views.login.fbLogin.text1=初めてのご利用ですね？
+views.login.fbLogin.text2=ありがとうございます。
+views.login.fbLogin.text3=以下の内容で
+views.login.fbLogin.text4=facebookと連携した
+views.login.fbLogin.text5=のアカウントが作成されます。
+views.login.fbLogin.text6=よろしいですか？
+views.login.fbLogin.err.required=が入力されていません。
+views.login.fbLogin.err.length1=は
+views.login.fbLogin.err.length2=文字以上
+views.login.fbLogin.err.length3=文字以下である必要があります。
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
 views.detaillist.remainderIdeal.title=残高明細（My貯金）
@@ -42,6 +70,9 @@ views.detaillist.diff=差額
 views.detaillist.remainder=残高
 views.detaillist.remainderCommon.out=引出
 views.detaillist.remainderCommon.in=預入
+views.detaillist.remainder.err.noBank=口座か電子マネーの設定がまだ無いようです。
+views.detaillist.remainder.err.noIdeal=My貯金の設定がまだ無いようです。
+views.detaillist.remainder.err.tryLater=設定後にご利用下さい。
 views.dailyaccount.dailyaccount=日計表
 views.dailyaccount.balancetable=残高表
 views.dailyaccount.movetype.year=年移動
@@ -59,11 +90,31 @@ views.config.cf_item=項目
 views.config.cf_idealdepo=My貯金
 views.config.cf_creca.day=日
 views.config.cf_creca.lastday=末日
+views.config.cf_handling_edit.del.confirm=削除してよろしいですか？
 views.config.cf_io=データ入出力
 views.config.cf_actionMode=実行モード
 views.config.cf_actionModeEdit=編集モード
 views.config.cf_actionModeView=閲覧モード
 views.config.cf_actionMode_change=実行モードの変更
+views.config.cf_hauser=会員情報
+views.config.cf_hauser.notSetPw=パスワード未設定
+views.config.cf_hauser.setPw=パスワードを設定
+views.config.cf_hauser.chgPw=パスワードを変更
+views.config.cf_hauser.fbLinkage=Facebookと連携
+views.config.cf_hauser.fbLinkage.state.link.head=Facebook(
+views.config.cf_hauser.fbLinkage.state.link.tail=)と連携しています
+views.config.cf_hauser.fbLinkage.state.notLink=Facebookと連携していません
+views.config.cf_hauser.fbLinkage.link=Facebookと連携する
+views.config.cf_hauser.fbLinkage.break=Facebook連携を解除する
+views.config.cf_hauser.fbLinkage.duplicate=このFacebookIDは既に、別の家計簿ユーザーとの連携に使われています
+views.config.cf_hauser.fbLinkage.break.pwSet1=Facebook連携を解除するには、パスワードの設定が必要です
+views.config.cf_hauser.fbLinkage.break.pwSet2=パスワードを設定しますか？
+views.config.cf_hauser.fbLinkage.break.notes1=Facebook連携を解除すると、次回からのログイン方法は
+views.config.cf_hauser.fbLinkage.break.notes2=「Ｅメールとパスワードによるログイン」
+views.config.cf_hauser.fbLinkage.break.notes3=のみになります。
+views.config.cf_hauser.fbLinkage.break.notes4=Facebook連携を解除してよろしいですか？
+views.config.cf_hauser_pw.crt=現在の
+views.config.cf_hauser_pw.new=新しい
 
 # テーブル
 BalanceTypeMst=収支種類
@@ -72,6 +123,8 @@ HandlingTypeMst=取扱種類
 HandlingTypeMsts=取扱種類
 HaUser=家計簿ユーザー
 HaUsers=家計簿ユーザー
+FbUser=Facebookユーザー
+FbUsers=Facebookユーザー
 ItemMst=項目
 ItemMsts=項目
 HandlingMst=取扱
@@ -122,6 +175,13 @@ ideal_deposit_name=My貯金名
 year=年
 month=月
 
+# HaUserの項目名
+email=Ｅメール
+password=パスワード
+nickname=ニックネーム
+fullname=フルネーム
+fbId=FacebookID
+isAdmin=管理者権限
 
 # 収支種類(BalanceType)
 BalanceType.in=収入
@@ -150,16 +210,42 @@ DebitMonth.next=翌月
 DebitMonth.nextTwo=翌々月
 
 
+# 項目
+Item.in.salary=給与
+Item.in.other=その他収入
+Item.out.food=食費
+Item.out.dailyResidence=居住日用
+Item.out.utilities=水道光熱
+Item.out.clothing=衣類
+Item.out.health=健康
+Item.out.education=教育
+Item.out.recreation=娯楽
+Item.out.transportationAndCommunication=交通通信
+Item.out.other=その他
+
+
+
 #validation
 validation.title=以下のエラーを修正して下さい
 validation.required=必須
+validation.unique=既に使われています
 validation.cutoff_debit=締日より過去
 validation.invalid=日付誤りで移動できませんでした
 validation.dateError=日付誤りで移動できませんでした
 validation.multipleName=この名前は既に使われています
+validation.minSize=%2$d 文字以上で入力してください
+validation.maxSize=%2$d 文字以下で入力してください
+validation.email=Ｅメールアドレス形式が不正です
+validation.crtPasswordError=現在のパスワードが違います
+validation.cnfPasswordError=確認パスワードが一致していません
+
 
 #crudを真似
 insupd.add=追加  [ &{%s} ]
 insupd.edit=編集  [ &{%s} ]
 insupd.delete=削除  [ &{%s} ]
 insupd.save=保存
+insupd.cancel=キャンセル
+
+#エラー
+err.unanticipated=&{%s} で予期せぬエラーが発生しました。管理者に連絡してください。

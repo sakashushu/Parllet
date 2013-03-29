@@ -5,7 +5,7 @@
 
 <label>現在の実行モード：</label>
 <div>
-	<ul id="loginMenu">
+	<ul id="memberMenu">
 	    <li class="${session.get('actionMode')=='View' ? '' : 'selected'}">
 	        <a href="@{Config.cf_actionMode_changeToEdit()}">&{'views.config.cf_actionModeEdit'}</a>
 	    </li>
