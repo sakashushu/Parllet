@@ -1,9 +1,10 @@
 <script type="text/javascript">
 <!-- 
 jQuery(function() {
-	var onMenu = 'out';
-	var tlsLi = jQuery('#tools li');
-	var tlsLiUl = jQuery('#tools li ul');
+	var onMenu = 'out',
+		tlsLi = jQuery('#tlsLi'),
+		tlsLiUl = jQuery('#tlsLiUl'),
+		tlsLiUlLiA = jQuery('#tlsLiUl Li a');
 	
 	/* 「ログアウト」クリック時は「logout()」イベントへ */
 	jQuery('#fb-logout').click(function() {
@@ -16,19 +17,6 @@ jQuery(function() {
 	/* 「#tools li ul」の位置確定 */
 	tlsLiUl.each(function() {
 		jQuery(this).css('left', jQuery(this).parent().width() - jQuery(this).width());
-	});
-	
-	tlsLiUl.mouseover(function() {
-		onMenu = 'over';
-	});
-	tlsLiUl.mouseout(function() {
-		onMenu = 'out';
-	});
-	tlsLi.mouseover(function() {
-		onMenu = 'over';
-	});
-	tlsLi.mouseout(function() {
-		onMenu = 'out';
 	});
 	
 	jQuery(window).mousedown(function(e) {
@@ -50,29 +38,51 @@ jQuery(function() {
 		jQuery(this).css('background', 'url(/public/images/white20.png)');
 	});
 	tlsLi.hover(function() {
+		onMenu = 'over';
 		if(!jQuery(this).hasClass("click"))
 			jQuery(this).css('background', 'url(/public/images/white40.png)');
 	},function() {
+		onMenu = 'out';
 		if(!jQuery(this).hasClass("focused"))
 			jQuery(this).css('background', 'url(/public/images/white20.png)');
 	});
 	tlsLi.keypress(function(e) {
 		if(e.which==13) {
-			e.preventDefault();
-			jQuery(this).click();
+			if(jQuery(e.target).is("li")) {
+				e.preventDefault();
+				jQuery(this).click();
+			}
 		}
 	});
 	tlsLi.click(function() {
-		if(jQuery(this).hasClass("open"))
-			if(jQuery(this).hasClass("click")) {
-				jQuery(this).removeClass("click");
-				jQuery(this).css('background', 'url(/public/images/white40.png)');
-				jQuery("ul", this).hide();
-			} else {
-				jQuery(this).addClass("click");
-				jQuery(this).css('background', 'url(/public/images/white20.png)');
-				jQuery("ul", this).show();
-			}
+		if(jQuery(this).hasClass("click")) {
+			jQuery(this).removeClass("click");
+			jQuery(this).css('background', 'url(/public/images/white40.png)');
+			tlsLiUl.hide();
+		} else {
+			jQuery(this).addClass("click");
+			jQuery(this).css('background', 'url(/public/images/white20.png)');
+			jQuery("ul", this).show();
+		}
+	});
+	
+	
+	tlsLiUlLiA.focus(function() {
+		jQuery(this).addClass("focused");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	});
+	tlsLiUlLiA.blur(function() {
+		jQuery(this).removeClass("focused");
+		if(!jQuery(this).hasClass("hovered"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	tlsLiUlLiA.hover(function() {
+		jQuery(this).addClass("hovered");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	},function() {
+		jQuery(this).removeClass("hovered");
+		if(!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
 	});
 });
 // -->
@@ -88,9 +98,9 @@ jQuery(function() {
 	}
 }%
 
-<li tabindex="0" class="open">
+<li id="tlsLi" tabindex="0" class="open">
 	${name}
-	<ul>
+	<ul id="tlsLiUl">
 		<li>#{a @Config.cf_hauser_edit()}&{'views.config.cf_hauser'}#{/a}</li>
 		<li>#{a @Secure.logout(), id:'fb-logout'}&{'views.login.tools.logout'}#{/a}</li>
 		#{secure.check 'admin'}
