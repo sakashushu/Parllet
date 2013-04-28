@@ -5,68 +5,13 @@
 
 <script type="text/javascript">
 <!--
-/* 起動時のCSS設定 */
 jQuery(function(){
-	
-	//#dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す
-	jQuery('#dl_tblFrame').height(jQuery('#dlRb_tblContent').height()+14);
-	
-
-	if(jQuery(window).height() < document.body.offsetHeight) {
-		setCssFooter();
-	}
-});
-
-/* ウィンドウリサイズ時のCSS設定 */
-jQuery(function() {
-	jQuery(window).resize(function() {
-		setCssFooter();
-	});
-});
-
-/* dlFooterのCSS設定切替関数 */
-function setCssFooter() {
-	if(jQuery(window).height() < document.body.offsetHeight) {
-		jQuery('#dlFooter').css('position', 'fixed');
-		jQuery('#dlFooter').css('bottom', '0');
-		jQuery('#dlMain').css('padding-bottom', '24px');
-	} else {
-		jQuery('#dlFooter').css('position', '');
-		jQuery('#dlFooter').css('bottom', '');
-		jQuery('#dlMain').css('padding-bottom', '');
-	}
-}
-
-//表示金額を3桁区切りに
-jQuery(function(){
-	jQuery('.num3').each(function(i) {
-		var numStr = addFigure(jQuery(this).html());
-		jQuery(this).html(numStr);
-	});
-});
-
-//文字列を3桁区切りにする関数
-function addFigure(str) {
-    var num = new String(str).replace(/,|\n| |\t/g, "");
-//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
-	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
-    return num;
-}
-
-//枠固定の左右の動き
-jQuery(function() {
-    jQuery('#dl_tblFrame').scroll(function() {
-    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
-    });
-});
-
-jQuery(function(){
-	// 左クリックか右クリックでメニュー表示
+	/* 左クリックか右クリックでメニュー表示 */
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
 			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
-			jQuery('#reEdCalledFrom').val("dl_remainderBank");
+			jQuery('#reEdCalledFrom').val("${request.actionMethod}");
 			
 			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
@@ -100,61 +45,14 @@ jQuery(function(){
 			return options;
 		}
 	});
-});
-
-/* 日付選択時にjumpするdatepicker(範囲指定) */
-jQuery(function() {
-	jQuery("#frJump").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#toJump").datepicker("option", "minDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
-	jQuery("#toJump").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#frJump").datepicker("option", "maxDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
-	//起動時のdatepickerの選択可能範囲絞込
-	if(ckDate("${h_debit_date_fr}"))
-		jQuery("#toJump").datepicker("option", "minDate", "${h_debit_date_fr}");
-	if(ckDate("${h_debit_date_to}"))
-		jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
-});
-
-jQuery(function() {
-	// 「公開フラグ」・「取扱（実際）」の変更イベント
-	jQuery("#idHdSecretRecFlg, #idHdHandling").change(function() {
+	
+	/* 「公開フラグ」・「取扱（実際）」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdHandling").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
-});
-
-/* 「引落日」の変更イベント */
-jQuery(function() {
+	
+	/* 「引落日」の変更イベント */
 	jQuery("#frJump, #toJump").change(function() {
 		var sDate = jQuery(this).val().substr(0,10);
 		if(sDate=='' || ckDate(sDate)==true) {
@@ -162,17 +60,6 @@ jQuery(function() {
 			jQuery('body').attr("disabled", "disabled");
 		}
     });
-});
-
-/* Enterキーでのサブミット防止 */
-jQuery(function() {
-	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
-		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-			return false;
-		}else{
-			return true;
-		}
-	});
 });
 // -->
 </script>
@@ -246,7 +133,7 @@ jQuery(function() {
 		<!-- 取扱(実際) -->
 		<div class="dl_common_column dl_head">
 			&{'handling_mst'}<br>
-			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
+			<select id="dlCmbHdHandling" class="dl_tbl_content" name="h_handling_id">
 				#{list items:handlings, as:'handling'}
 				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
@@ -387,6 +274,11 @@ jQuery(function() {
 </div>  <!-- dlMain -->
 
 <div id="dlFooter">
+<div id="dl_tblFrameFt">
+<div id="dlRb_tblContentFt">
+　
+</div>  <!-- dlRb_tblContentFt -->
+</div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_remainder_bank.pagination /}
 </div>

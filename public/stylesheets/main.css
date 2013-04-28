@@ -1,4 +1,4 @@
-html, body, textarea, input, select {
+html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget textarea, .ui-widget select, .ui-widget button {
 	font-family: Helvetica, Arial, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
 }
 
@@ -9,8 +9,12 @@ body {
 //	background-attachment: fixed;
 	background: #e8cc8b;
 	color: #612d00;
+	overflow-y: scroll;
 }
 
+html, body{
+    height:100%;
+}
 #bg-img {
 	/* Set rules to fill background */
 	min-height: 100%;
@@ -155,7 +159,8 @@ a.aBtn:hover span{
 	padding: 3px 0 0 3px;
 }
 
-/** HouseholdAccounts header **/
+
+/** header **/
 
 #header {
 	position: fixed;
@@ -169,7 +174,7 @@ a.aBtn:hover span{
 	z-index: 10000;
 }
 
-#container {
+#hdContainer {
 	width: 980px;
 	height: 36px;
 	margin-left:auto;
@@ -198,11 +203,35 @@ a.aBtn:hover span{
 }
 
 
+/** footer **/
+
+#footer {
+	position: absolute;
+	bottom: 0px;
+	height: 30px;
+	width: 100%;
+	text-align: right;
+	background: url(/public/images/brown7_90.png)
+}
+
+#ftContents {
+	height:30px;
+	line-height: 30px;
+	width: 980px;
+	margin: auto;
+	font-size: 80%;
+}
+
+
+/** main **/
+
 #main {
 	width: 980px;
-	margin-top: 45px;
+//	margin-top: 45px;
+	padding-top: 45px;
 	margin-left:auto;
 	margin-right:auto;
+	padding-bottom: 45px;
 }
 
 #mainInner {
@@ -247,6 +276,16 @@ a.aBtn:hover span{
 	color: #444;
 }
 
+
+
+#container {
+	width: 100%;
+	position: relative;
+	min-height: 100%;
+	height: auto;
+}
+
+
 #ltBlocks {
 	position: relative;
 //	list-style: none;
@@ -285,6 +324,22 @@ a.aBtn:hover span{
 	padding-left: 4px;
 }
 
+#genLogo-img {
+	width: 180px;
+	height: 30px;
+	background: url(/public/images/genLogo.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
+}
+
 #logo-img {
 	width: 180px;
 	height: 30px;
@@ -299,6 +354,47 @@ a.aBtn:hover span{
 	*padding-top: 30px; 
 	*text-indent: 0;
 	*display: block;
+}
+
+#logo_alpha-img {
+	width: 110px;
+	height: 30px;
+	background: url(/public/images/logo_alpha.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	
+	position: absolute;
+	top: 5px;
+	left: 3px;
+	z-index: 10002;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
+}
+
+#logo_alpha-img:hover {
+	width: 240px;
+	height: 70px;;
+}
+
+#logo_alpha-img span {
+	display:none;
+	padding:5px;
+	margin-left:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+ 
+#logo_alpha-img:hover span{
+	display:block;
+	text-indent: 0;
+	white-space: normal;
 }
 
 
@@ -861,7 +957,7 @@ fieldset {
 }
 
 #bt_tcol {
-	height: 470px;
+	height: 450px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -924,7 +1020,9 @@ fieldset {
 }
 
 #dl_tblFrameFt {
-	overflow: auto;
+	background: #eee;
+	overflow-y: hidden;
+	overflow-x: scroll;
 }
 
 #dl_tblContentHd {
@@ -946,6 +1044,11 @@ fieldset {
 
 #dlRb_tblContent {
 	width: 970px;
+}
+
+#dlRb_tblContentFt {
+	width: 980px;
+	height: 0;
 }
 
 .dl_tbl {
@@ -976,6 +1079,10 @@ fieldset {
 /* 下記が無いと .dl_tbl の font-size: 90%; が効かない */
 .dl_tbl_content , .dl_edit_link {
 	font-size: 100%;
+}
+
+.dl_tbl_content {
+	width: 100%;
 }
 
 .dl_edit_link , .dl_edit_link:visited {
@@ -1069,6 +1176,7 @@ fieldset {
 	background: url(/public/images/brown4_60.png);
 	color: #e6be83;
 }
+
 
 
 /** Form **/

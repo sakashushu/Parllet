@@ -139,7 +139,7 @@ public class RecordEdit extends Controller {
 		Integer intAmount = null;
 		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
 		NumberFormat nf = NumberFormat.getInstance();
-		if(amount!=null) {
+		if(amount!=null && !amount.equals("")) {
 			//数値文字列をNumber型のオブジェクトに変換する
 			Number numAmount;
 			try {

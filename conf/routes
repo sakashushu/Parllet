@@ -3,86 +3,96 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET	/									   		Application.index
 
 # Import CRUD routes
-# GET     /admin/?                                Admin.index
-# *       /admin                                  module:crud
+# GET	/admin/?								Admin.index
+# *		/admin							  		module:crud
 
 # Import Secure routes
-*       /                                       module:secure
+*	/myDpRt									   	module:secure
 
+
+# MyDpRt
+GET		/myDpRt									MyDpRt.index
+POST	/myDpRt								 	MyDpRt.index
 
 # DailyAccount
-GET     /dailyAccount/{intBasisDate}            DailyAccount.dailyAccountDisp
-GET     /dailyAccount                           DailyAccount.dailyAccountDisp
-#POST    /dailyAccount/{intBasisDate}            DailyAccount.dailyAccountDisp
-POST    /dailyAccount                           DailyAccount.dailyAccountDisp
-#POST    /dailyAccount/{intBasisDate}            DailyAccount.jump
-#POST    /dailyAccount                           DailyAccount.jump
+GET		/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
+GET		/myDpRt/dailyAccount					ccount.dailyAccountDisp
+#POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
+POST	/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
+#POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.jump
+#POST	/myDpRt/dailyAccount					DailyAccount.jump
 
 # BalanceTable
-GET     /balanceTable/{intBasisDate}            DailyAccount.balanceTableDisp
-#GET     /balanceTable                           DailyAccount.balanceTableDisp
+GET		/myDpRt/balanceTable/{intBasisDate}		DailyAccount.balanceTableDisp
+#GET		/myDpRt/balanceTable					DailyAccount.balanceTableDisp
 
 
 # RecordEdit new
-#GET     /data/myData/{id}                       RecordEdit.recordEdit
-#GET     /data/new                               RecordEdit.recordEdit
-GET     /data/new                               RecordEdit.recordIns
-GET     /data/edit                              RecordEdit.recordUpd
-#POST    /data/new                               RecordEdit.save_rec
-#POST    /data/myData/{id}                       RecordEdit.save_rec
+#GET		/myDpRt/data/myData/{id}				RecordEdit.recordEdit
+#GET		/myDpRt/data/new						RecordEdit.recordEdit
+GET		/myDpRt/data/new						RecordEdit.recordIns
+GET		/myDpRt/data/edit						RecordEdit.recordUpd
+#POST	/myDpRt/data/new						RecordEdit.save_rec
+#POST	/myDpRt/data/myData/{id}				RecordEdit.save_rec
 
 # WebSocket detailList
-POST	/detailList/balance                     DetailList.dl_balance
-GET		/detailList/balance                     DetailList.dl_balance
-WS      /detailList                             DetailList.WebSocketApp.listen
-GET		/detailList/remainderBank	            DetailList.dl_remainderBank
+POST	/myDpRt/detailList/balance				DetailList.dl_balance
+GET		/myDpRt/detailList/balance				DetailList.dl_balance
+WS		/myDpRt/detailList						DetailList.WebSocketApp.listen
+GET		/myDpRt/detailList/remainderBank		DetailList.dl_remainderBank
 
 # Config
-POST    /config/bank/list                       Config.cf_bank_list
-GET     /config/bank/list                       Config.cf_bank_list
-GET     /config/bank/myBank/{id}                Config.cf_bank_edit
-GET     /config/bank/new                        Config.cf_bank_edit
-#POST    /config/bank/myBank/{id}                Config.cf_bank_save
-#POST    /config/bank/new                        Config.cf_bank_save
-POST    /config/card/list                       Config.cf_creca_list
-GET     /config/card/list                       Config.cf_creca_list
-GET     /config/card/myCard/{id}                Config.cf_creca_edit
-GET     /config/card/new                        Config.cf_creca_edit
-POST    /config/card/myCard/{id}                Config.cf_creca_save
-POST    /config/card/new                        Config.cf_creca_save
-POST    /config/emoney/list                     Config.cf_emoney_list
-GET     /config/emoney/list                     Config.cf_emoney_list
-GET     /config/emoney/myEmoney/{id}            Config.cf_emoney_edit
-GET     /config/emoney/new                      Config.cf_emoney_edit
-POST    /config/emoney/myEmoney/{id}            Config.cf_emoney_save
-POST    /config/emoney/new                      Config.cf_emoney_save
-POST    /config/itemIn/list                     Config.cf_item_in_list
-GET     /config/itemIn/list                     Config.cf_item_in_list
-GET     /config/itemIn/myItem/{id}              Config.cf_item_in_edit
-GET     /config/itemIn/new                      Config.cf_item_in_edit
-POST    /config/itemIn/myItem/{id}              Config.cf_item_in_save
-POST    /config/itemIn/new                      Config.cf_item_in_save
-POST    /config/itemOut/list                    Config.cf_item_out_list
-GET     /config/itemOut/list                    Config.cf_item_out_list
-GET     /config/itemOut/myItem/{id}             Config.cf_item_out_edit
-GET     /config/itemOut/new                     Config.cf_item_out_edit
-POST    /config/itemOut/myItem/{id}             Config.cf_item_out_save
-POST    /config/itemOut/new                     Config.cf_item_out_save
-GET     /config/ioData                          Config.cf_io
+POST	/myDpRt/config/bank/list				Config.cf_bank_list
+GET		/myDpRt/config/bank/list				Config.cf_bank_list
+GET		/myDpRt/config/bank/myBank/{id}			Config.cf_bank_edit
+GET		/myDpRt/config/bank/new					Config.cf_bank_edit
+#POST	/myDpRt/config/bank/myBank/{id}			Config.cf_bank_save
+#POST	/myDpRt/config/bank/new					Config.cf_bank_save
+POST	/myDpRt/config/card/list				Config.cf_creca_list
+GET		/myDpRt/config/card/list				Config.cf_creca_list
+GET		/myDpRt/config/card/myCard/{id}			Config.cf_creca_edit
+GET		/myDpRt/config/card/new					Config.cf_creca_edit
+POST	/myDpRt/config/card/myCard/{id}			Config.cf_creca_save
+POST	/myDpRt/config/card/new					Config.cf_creca_save
+POST	/myDpRt/config/emoney/list				Config.cf_emoney_list
+GET		/myDpRt/config/emoney/list				Config.cf_emoney_list
+GET		/myDpRt/config/emoney/myEmoney/{id}		Config.cf_emoney_edit
+GET		/myDpRt/config/emoney/new				Config.cf_emoney_edit
+POST	/myDpRt/config/emoney/myEmoney/{id}		Config.cf_emoney_save
+POST	/myDpRt/config/emoney/new				Config.cf_emoney_save
+POST	/myDpRt/config/itemIn/list				Config.cf_item_in_list
+GET		/myDpRt/config/itemIn/list				Config.cf_item_in_list
+GET		/myDpRt/config/itemIn/myItem/{id}		Config.cf_item_in_edit
+GET		/myDpRt/config/itemIn/new				Config.cf_item_in_edit
+POST	/myDpRt/config/itemIn/myItem/{id}		Config.cf_item_in_save
+POST	/myDpRt/config/itemIn/new				Config.cf_item_in_save
+POST	/myDpRt/config/itemOut/list				Config.cf_item_out_list
+GET		/myDpRt/config/itemOut/list				Config.cf_item_out_list
+GET		/myDpRt/config/itemOut/myItem/{id}		Config.cf_item_out_edit
+GET		/myDpRt/config/itemOut/new				Config.cf_item_out_edit
+POST	/myDpRt/config/itemOut/myItem/{id}		Config.cf_item_out_save
+POST	/myDpRt/config/itemOut/new				Config.cf_item_out_save
+GET		/myDpRt/config/ioData					Config.cf_io
+GET		/myDpRt/config/hauser/edit				Config.cf_hauser_edit
+POST	/myDpRt/config/hauser/edit				Config.cf_hauser_save
+POST	/myDpRt/config/hauser_pw/edit			Config.cf_hauser_pw_edit
+GET		/myDpRt/config/hauser_pw/edit			Config.cf_hauser_pw_edit
+POST	/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
+GET		/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
 
 # WebSocket Demo
-GET     /smplecho                               SmplEcho.demo
-WS      /smplecho                               SmplEcho.WebSocketEcho.listen
+GET 	/smplecho								SmplEcho.demo
+WS		/smplecho								SmplEcho.WebSocketEcho.listen
 
 
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET		/myDpRt/favicon.ico						404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/                                staticDir:public
+GET		/public/								staticDir:public
 
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
+*		/{controller}/{action}					{controller}.{action}

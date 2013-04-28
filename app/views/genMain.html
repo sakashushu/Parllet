@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+		#{include 'head.html' /}
+    </head>
+    <body>
+		#{get 'fbScript' /}
+		<div id="container">
+	    	<div id="header">
+	    		<div class="fill">
+			    	<div id="hdContainer">
+			    		<ul id="ltBlocks">
+			    			<li>
+								<ul id="logo">
+									<li id="logo-pre">
+										#{get 'logoPre' /}
+									</li>
+									<li>
+										#{get 'logoMain' /}
+									</li>
+								</ul>
+							</li>
+							#{get 'moreMenu' /}
+			    		</ul>
+						<ul id="tools">
+							#{get 'headerTools' /}
+						</ul>
+			    	</div>
+	    		</div>
+			</div>
+			<div id="main">
+				#{doLayout /}
+			</div>
+			<div id="footer">
+				<div id="ftContents">
+					#{a @Application.index()}
+						${play.configuration.getProperty("fb.site_url.short")}
+					#{/a}
+				</div>
+			</div>	<!-- footer -->
+		</div>
+    </body>
+</html>

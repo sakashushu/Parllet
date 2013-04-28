@@ -9,12 +9,18 @@ function login(title, linkFlg) {
 				var vId = response.id,
 					vName = response.name,
 					vLink = response.link;
-				jQuery.post('@{Security.checkFbUser}', {id: vId}, function(a){
-					var jsonA = JSON.parse(a);
+//				jQuery.post('@{Security.checkFbUser}', {id: vId}, function(a){
+				var jqxhr_sCrty_cFbUsr = jQuery.post('@{Security.checkFbUser}', {id: vId});
+				jqxhr_sCrty_cFbUsr
+				.done(function(jsonA) {
+//					var jsonA = JSON.parse(a);
 					if(linkFlg) {
 						if(jsonA.bolVirginFlg) {
-							jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink}, function(b){
-								var jsonB = JSON.parse(b);
+//							jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink}, function(b){
+							var jqxhr_cMn_lnkFb = jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink});
+							jqxhr_cMn_lnkFb
+							.done(function(jsonB) {
+//								var jsonB = JSON.parse(b);
 								switch (jsonB.intRslt) {
 									case 0:
 										window.location.reload(true);
@@ -25,7 +31,11 @@ function login(title, linkFlg) {
 									default:
 							    		alert("case error");
 								}
-							}, 'text');
+							})
+							.fail(function() {
+								alert("Common.linkFacebook Error");
+							});
+//							}, 'text');
 						} else {
 							alert("&{'views.config.cf_hauser.fbLinkage.duplicate'}");
 							logout();
@@ -36,7 +46,7 @@ function login(title, linkFlg) {
 								.css('padding', '0')
 								.text("");
 //							jQuery("#dialog-form").dialog( "open" );
-							openDialog(title, true, "", "", vId, vName, vLink);
+							openDialogForm(title, true, "", "", vId, vName, vLink);
 						} else {
 							jQuery('#saUsername').css('display', 'none');
 							jQuery('#saUsername2').css('display', 'inline');
@@ -47,7 +57,11 @@ function login(title, linkFlg) {
 							jQuery('#signin').click();
 						}
 					}
-				}, 'text');
+				})
+				.fail(function() {
+					alert("Security.checkFbUser Error");
+				});
+//				}, 'text');
 			});
 		} else {
 			// cancelled

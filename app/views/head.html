@@ -1,15 +1,16 @@
 <title>#{get 'title' /}</title>
 <meta charset="${_response_encoding}">
 #{get 'moreStyles' /}
+<!-- jQuery(GoogleAPIs経由) -->
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
-<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-<link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
 <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">google.load('jquery', '1')</script>
 <script type="text/javascript">google.load('jqueryui', '1')</script>
 <!-- datepicker日本語化 -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+<link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
 <!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
 <style>
 .ui-datepicker td span, .ui-datepicker td a {

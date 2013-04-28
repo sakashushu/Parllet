@@ -1,0 +1,153 @@
+#{extends 'main.html' /}
+#{set title:messages.get('views.main.tools.logo') /}
+
+#{set 'headerTools'}
+	<li>
+		<a href="@{DailyAccount.dailyAccount()}">&{'views.main.tools.login'}</a>
+	</li>
+#{/set}
+
+#{include 'dialogForm.html' /}
+#{include 'facebookLogin.html' /}
+
+<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	/* 「Facebookで登録」クリック時は「login()」イベントへ */
+	jQuery('#fb-signup').click(function() {
+		login("&{'views.index.sinup.dialogTitle'}");
+	});
+	
+	var email = jQuery("#email"),
+		password = jQuery("#password"),
+		allFields = jQuery([]).add(email).add(password),
+		tips = jQuery(".validateTips");
+	function updateTips(t) {
+		tips
+			.css('padding', '0.3em')
+			.css('margin-bottom', '1em')
+			.text(t)
+			.addClass("ui-state-highlight");
+		setTimeout(function() {
+			tips.removeClass("ui-state-highlight", 1500);
+		}, 500);
+	}
+	function checkRequired(o, n) {
+		if(o.val()=="") {
+			o.addClass("ui-state-error");
+			updateTips(n + " &{'views.login.fbLogin.err.required'}");
+			return false;
+		} else {
+			return true;
+		}
+	}
+	function checkLength(o, n, min, max) {
+		if(o.val().length>max || o.val().length<min) {
+			o.addClass("ui-state-error");
+			updateTips(n + " &{'views.login.fbLogin.err.length1'} " +
+			min + " &{'views.login.fbLogin.err.length2'} " + max + " &{'views.login.fbLogin.err.length3'}" );
+			return false;
+		} else {
+			return true;
+		}
+	}
+	function checkRegexp(o, regexp, n) {
+		if(!(regexp.test(o.val()))) {
+			o.addClass("ui-state-error");
+			updateTips(n);
+			return false;
+		} else {
+			return true;
+		}
+	}
+	function errValidateHaUser(o, s) {
+		o.addClass("ui-state-error");
+		updateTips(s);
+	}
+	
+	jQuery('#signup').click(function() {
+		var bValid = true;
+		allFields.removeClass("ui-state-error");
+		bValid = bValid && checkRequired(email, "&{'email'}");
+		bValid = bValid && checkLength(email, "&{'email'}", 6, 80);
+		// From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+		bValid = bValid && checkRegexp(email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "&{'validation.email'}");
+		bValid = bValid && checkRequired(password, "&{'password'}");
+		bValid = bValid && checkLength(password, "&{'password'}", 6, 20);
+		bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "パスワードは半角英数です。");
+		if(bValid) {
+//			jQuery.post('@{validateHaUser}', {email: email.val(), password: password.val()}, function(a){
+			var jqxhr_mDR_vHU = jQuery.post('@{validateHaUser}', {email: email.val(), password: password.val()});
+			jqxhr_mDR_vHU
+			.done(function(jsonA) {
+//				var jsonA = JSON.parse(a);
+				switch (jsonA.intRslt) {
+					case 0:
+						jQuery(".validateTips")
+							.css('padding', '0')
+							.text("");
+						openDialogForm("&{'views.index.sinup.dialogTitle'}", false, email.val(), password.val());
+						break;
+					case 1:
+						errValidateHaUser(email, jsonA.strErr);
+						break;
+					case 2:
+						errValidateHaUser(password, jsonA.strErr);
+						break;
+					case 99:
+			    		alert(jsonA.strErr);
+						break;
+					default:
+			    		alert("case error");
+				}
+			})
+			.fail(function() {
+				alert("MyDpRt.validateHaUser Error");
+			});
+//			}, 'text');
+		}
+	});
+});
+// -->
+</script>
+
+
+#{form @Secure.authenticate(), id:'fmAuthenticate'}
+	<input type="text" name="username" id="saUsername" class="invisible" />
+	<input type="password" name="password" id="saPassword" class="invisible" />
+	<input type="submit" id="signin" name="signin" class="invisible" />
+#{/form}
+
+<div id="sidebar_r">
+	<div class="box">
+		<div id="signupNormal">
+			&{'views.index.sinup.normal.title'}
+			<div class="validateTips"></div>
+		    <p id="username-field">
+				<label for="email">&{'email'}:</label>
+				<input type="text" id="email" value="${haUser?.email}" />
+			</p>
+			
+		    <p id="password-field">
+				<label for="password">&{'password'}:</label>
+				<input type="password" id="password" value="${haUser?.password}" />
+			</p>
+	
+			<p id="signup-field">
+				<input type="submit" id="signup" value="&{'views.index.signup.normal.button.text'}" />
+			</p>
+		</div>  <!-- signupNormal -->
+		
+		<hr>
+		
+		<div id="signupSns">
+			&{'views.index.sinup.sns.title'}
+			<a id="fb-signup" class="btn blCenter" tabindex="0">
+				<div><img src="/public/images/f_logo_18.png" border="0" /></div>
+				<div>&{'views.index.signup.sns.button.text'}</div>
+			</a>
+		</div>  <!-- signupSns -->
+	</div>
+</div>
+
+ホーム画面

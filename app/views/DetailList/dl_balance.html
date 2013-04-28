@@ -5,69 +5,13 @@
 
 <script type="text/javascript">
 <!--
-/* 起動時のCSS設定 */
 jQuery(function(){
-	
-	//#dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す
-	jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
-	
-
-	if(jQuery(window).height() < document.body.offsetHeight) {
-		setCssFooter();
-	}
-});
-
-/* ウィンドウリサイズ時のCSS設定 */
-jQuery(function() {
-	jQuery(window).resize(function() {
-		setCssFooter();
-	});
-});
-
-/* dlFooterのCSS設定切替関数 */
-function setCssFooter() {
-	if(jQuery(window).height() < document.body.offsetHeight) {
-		jQuery('#dlFooter').css('position', 'fixed');
-		jQuery('#dlFooter').css('bottom', '0');
-		jQuery('#dlMain').css('padding-bottom', '42px');
-	} else {
-		jQuery('#dlFooter').css('position', '');
-		jQuery('#dlFooter').css('bottom', '');
-		jQuery('#dlMain').css('padding-bottom', '');
-	}
-}
-
-/* 表示金額を3桁区切りに */
-jQuery(function(){
-	jQuery('.num3').each(function(i) {
-		var numStr = addFigure(jQuery(this).html());
-		jQuery(this).html(numStr);
-	});
-});
-
-/* 文字列を3桁区切りにする関数 */
-function addFigure(str) {
-    var num = new String(str).replace(/,|\n| |\t/g, "");
-//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
-	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
-    return num;
-}
-
-/* 枠固定の左右の動き */
-jQuery(function() {
-    jQuery('#dl_tblFrameFt').scroll(function() {
-    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
-    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
-    });
-});
-
-jQuery(function(){
-	// 左クリックか右クリックでメニュー表示
+	/* 左クリックか右クリックでメニュー表示 */
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
 			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
-			jQuery('#reEdCalledFrom').val("dl_balance");
+			jQuery('#reEdCalledFrom').val("${request.actionMethod}");
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -84,94 +28,8 @@ jQuery(function(){
 			"dl_remainderBank": {name: "&{'views.common.menu.toRecordEdit'}"},
 		}
 	});
-});
-
-/* 日付選択時にjumpするdatepicker(範囲指定) */
-jQuery(function() {
-//	var dates = jQuery("#frJump, #toJump").datepicker({
-//		defaultDate: "+1w",
-//		changeMonth: true,
-//		numberOfMonths: 1,
-//		showOtherMonths: true,
-//		selectOtherMonths: true,
-//		showAnim: "drop",
-//		changeMonth: true,
-//		changeYear: true,
-//		yearRange: '1900:2999',
-//		dateFormat: 'yy/mm/dd',
-//		showButtonPanel: true,
-//		onSelect: function( selectedDate ) {
-//			var option = this.id == "frJump" ? "minDate" : "maxDate",
-//				instance = jQuery( this ).data( "datepicker" ),
-//				date = jQuery.datepicker.parseDate(
-//					instance.settings.dateFormat ||
-//					jQuery.datepicker._defaults.dateFormat,
-//					selectedDate, instance.settings );
-//			dates.not( this ).datepicker( "option", option, date );
-////			jQuery('#idSrch').click();
-////			jQuery('body').attr("disabled", "disabled");
-//			jQuery(this).change();
-//		}
-//	});
-//	var dates = jQuery("#frJump2, #toJump2").datepicker({
-//		defaultDate: "+1w",
-//		changeMonth: true,
-//		numberOfMonths: 1,
-//		showOtherMonths: true,
-//		selectOtherMonths: true,
-//		showAnim: "drop",
-//		changeMonth: true,
-//		changeYear: true,
-//		yearRange: '1900:2999',
-//		dateFormat: 'yy/mm/dd',
-//		onSelect: function( selectedDate ) {
-//			var option = this.id == "frJump2" ? "minDate" : "maxDate",
-//				instance = jQuery( this ).data( "datepicker" ),
-//				date = jQuery.datepicker.parseDate(
-//					instance.settings.dateFormat ||
-//					jQuery.datepicker._defaults.dateFormat,
-//					selectedDate, instance.settings );
-//			dates.not( this ).datepicker( "option", option, date );
-////			jQuery('#idSrch').click();
-////			jQuery('body').attr("disabled", "disabled");
-//			jQuery(this).change();
-//		},
-//		showButtonPanel: true
-//	});
-	jQuery("#frJump").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#toJump").datepicker("option", "minDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
-	jQuery("#toJump").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#frJump").datepicker("option", "maxDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
+	
+	/* 日付選択時にjumpするdatepicker(範囲指定) */
 	jQuery("#frJump2").datepicker({
 		defaultDate: "+1w",
 		changeMonth: true,
@@ -206,27 +64,19 @@ jQuery(function() {
 			jQuery(this).change();
 		}
 	});
-	//起動時のdatepickerの選択可能範囲絞込
-	if(ckDate("${h_payment_date_fr}"))
-		jQuery("#toJump").datepicker("option", "minDate", "${h_payment_date_fr}");
-	if(ckDate("${h_payment_date_to}"))
-		jQuery("#frJump").datepicker("option", "maxDate", "${h_payment_date_to}");
+	/* 起動時のdatepickerの選択可能範囲絞込 */
 	if(ckDate("${h_debit_date_fr}"))
 		jQuery("#toJump2").datepicker("option", "minDate", "${h_debit_date_fr}");
 	if(ckDate("${h_debit_date_to}"))
 		jQuery("#frJump2").datepicker("option", "maxDate", "${h_debit_date_to}");
-});
-
-/* 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（My貯金）」・「項目」の変更イベント */
-jQuery(function() {
-	jQuery("#idHdSecretRecFlg, #idHdBalanceType, #idHdHandling, #idHdIdealDeposit, #idHdItem").change(function() {
+	
+	/* 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（My貯金）」・「項目」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdBalanceType, #dlCmbHdHandling, #dlCmbHdIdealDeposit, #idHdItem").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
-});
-
-/* 「支払日」・「引落日」の変更イベント */
-jQuery(function() {
+	
+	/* 「支払日」・「引落日」の変更イベント */
 	jQuery("#frJump, #toJump, #frJump2, #toJump2").change(function() {
 		var sDate = jQuery(this).val().substr(0,10);
 		if(sDate=='' || ckDate(sDate)==true) {
@@ -234,17 +84,6 @@ jQuery(function() {
 			jQuery('body').attr("disabled", "disabled");
 		}
     });
-});
-
-/* Enterキーでのサブミット防止 */
-jQuery(function() {
-	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
-		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-			return false;
-		}else{
-			return true;
-		}
-	});
 });
 // -->
 </script>
@@ -308,7 +147,7 @@ jQuery(function() {
 		<!-- 収支種類 -->
 		<div class="dl_balance_type dl_head">
 			&{'balance_type_mst'}<br>
-			<select id="idHdBalanceType" class="dl_tbl_content" name="h_balance_type_id">
+			<select id="dlCmbHdBalanceType" class="dl_tbl_content" name="h_balance_type_id">
 				<option value="0"${h_balance_type_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 				#{list items:bTypes, as:'bType'}
 				<option value="${bType.id}"${h_balance_type_id==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
@@ -318,7 +157,7 @@ jQuery(function() {
 		<!-- 取扱(実際) -->
 		<div class="dl_common_column dl_head">
 			&{'handling_mst'}<br>
-			<select id="idHdHandling" class="dl_tbl_content" name="h_handling_id">
+			<select id="dlCmbHdHandling" class="dl_tbl_content" name="h_handling_id">
 				<option value="0"${h_handling_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 				#{list items:handlings, as:'handling'}
 				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
@@ -328,7 +167,7 @@ jQuery(function() {
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column dl_head">
 			&{'ideal_deposit_mst'}<br>
-			<select id="idHdIdealDeposit" class="dl_tbl_content" name="h_ideal_deposit_id">
+			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="h_ideal_deposit_id">
 				<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 				#{list items:iDepos, as:'iDepo'}
 				<option value="${iDepo.id}"${h_ideal_deposit_id==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
@@ -511,5 +350,5 @@ jQuery(function() {
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_balance.pagination /}
-</div>
-</div>
+</div>  <!-- configListPagination -->
+</div>  <!-- dlFooter -->

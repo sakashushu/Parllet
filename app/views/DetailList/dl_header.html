@@ -1,14 +1,17 @@
 <script type="text/javascript">
 <!--
-/* リンクのクリックイベント */
 jQuery(function() {
+	/* リンクのクリックイベント */
 	%{hu = models.HaUser.find("byEmail", session.username).first()}%
 	jQuery("#aDlRemainderBank").click(function(event) {
 		%{
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
 		}%
 		if(${hdlgCnt}==0) {
-			alert("&{'views.detaillist.remainder.err.noBank'}\n&{'views.detaillist.remainder.err.tryLater'}");
+//			alert("&{'views.detaillist.remainder.err.noBank'}\n&{'views.detaillist.remainder.err.tryLater'}");
+			//口座・電子マネー作成用ダイアログ
+			openDialogConfirm("#dialog-cfm-bkem");
+			
 			event.preventDefault();
 		}
     });
@@ -17,25 +20,261 @@ jQuery(function() {
 			idpCnt = models.IdealDepositMst.count("byHa_user", hu);
 		}%
 		if(${idpCnt}==0) {
-			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
+//			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
+			//My貯金作成用ダイアログ
+			openDialogConfirm("#dialog-cfm-ideal");
+			
 			event.preventDefault();
 		}
     });
+	
+	
+	/* 起動時のCSS設定 */
+	
+	#{if request.actionMethod == 'dl_balance'}
+		/* #dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す */
+		jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
+		
+		/* 枠固定の左右の動き */
+	    jQuery('#dl_tblFrameFt').scroll(function() {
+	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+	    });
+	#{/if}
+	#{else}
+		/* #dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す */
+		jQuery('#dl_tblFrame').height(jQuery('#dlRb_tblContent').height()+14);
+		
+		/* 枠固定の左右の動き */
+	    jQuery('#dl_tblFrame').scroll(function() {
+	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+	    });
+	#{/else}
+	
+	jQuery('#main').css('padding-bottom', '30px');
+
+	/* dlFooterのCSS設定切替 */
+	setCssFooter();
+	
+	/* ウィンドウリサイズ時のCSS設定 */
+	jQuery(window).resize(function() {
+		setCssFooter();
+	});
+	
+	/* windowスクロール時のCSS設定 */
+    jQuery(window).scroll(function() {
+		setCssFooter();
+    });
+	
+	/* 表示金額を3桁区切りに */
+	jQuery('.num3').each(function(i) {
+		var numStr = addFigure(jQuery(this).html());
+		jQuery(this).html(numStr);
+	});
+	
+	/* 日付選択時にjumpするdatepicker(範囲指定) */
+	jQuery("#frJump").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#toJump").datepicker("option", "minDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	jQuery("#toJump").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#frJump").datepicker("option", "maxDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	/* 起動時のdatepickerの選択可能範囲絞込 */
+	#{if request.actionMethod == 'dl_balance'}
+		if(ckDate("${h_payment_date_fr}"))
+			jQuery("#toJump").datepicker("option", "minDate", "${h_payment_date_fr}");
+		if(ckDate("${h_payment_date_to}"))
+			jQuery("#frJump").datepicker("option", "maxDate", "${h_payment_date_to}");
+	#{/if}
+	#{if request.actionMethod == 'dl_remainderBank'}
+		if(ckDate("${h_debit_date_fr}"))
+			jQuery("#toJump").datepicker("option", "minDate", "${h_debit_date_fr}");
+		if(ckDate("${h_debit_date_to}"))
+			jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
+	#{/if}
+	#{if request.actionMethod == 'dl_remainderIdeal'}
+		if(ckDate("${dlRiHdDebitDateFr}"))
+			jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
+		if(ckDate("${dlRiHdDebitDateTo}"))
+			jQuery("#frJump").datepicker("option", "maxDate", "${dlRiHdDebitDateTo}");
+	#{/if}
+	
+	/* Enterキーでのサブミット防止 */
+	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			return false;
+		}else{
+			return true;
+		}
+	});
 });
 
+/* dlFooterのCSS設定切替関数 */
+function setCssFooter() {
+	var dlFtr = jQuery('#dlFooter'),
+		dlMn = jQuery('#dlMain'),
+		ctnHt  = jQuery('#container').height(),
+		winInHt = jQuery(window).innerHeight(),
+		winSrTp = jQuery(window).scrollTop(),
+		ftrHt = jQuery('#footer').height(),
+		winSrBtm = ctnHt - winSrTp - winInHt;
+	if(winInHt < ctnHt) {
+		dlFtr.css('position', 'fixed');
+		dlMn.css('padding-bottom', '41px');
+		dlFtr.css('bottom', '0');
+		if(winSrBtm < ftrHt) {
+			dlFtr.css('bottom', ftrHt - winSrBtm + 'px');
+		}
+	} else {
+		dlFtr.css('position', '');
+		dlFtr.css('bottom', '');
+		dlMn.css('padding-bottom', '');
+	}
+}
+
+/* 文字列を3桁区切りにする関数 */
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
 // -->
 </script>
 
+#{include 'dialogConfirm.html' /}
+<script type="text/javascript">
+<!--
+/* dialogConfirmを閉じた時の動作は呼び出し元で行う */
+function whenDialogConfirmClosed(intRslt) {
+	switch (intRslt) {
+		case 0:
+			break;
+		case 1:
+			//口座作成フォームを開く
+			openDialogFrmMkMst("&{'views.config.cf_bank'}");
+			break;
+		case 2:
+			//電子マネー作成フォームを開く
+			openDialogFrmMkMst("&{'views.config.cf_emoney'}");
+			break;
+		case 3:
+			//My貯金作成フォームを開く
+			openDialogFrmMkMst("&{'views.config.cf_idealdepo'}");
+			break;
+		default:
+    		alert("dialogConfirm return value error");
+	}
+}
+// -->
+</script>
+
+#{include 'dialogFrmMkMst.html' /}
+<script type="text/javascript">
+<!--
+/* dialogFrmMkMstを閉じた時の動作は呼び出し元で行う */
+function whenDialogFrmMkMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
+	switch (intRslt) {
+		case 0:
+			whenDialogConfirmClosed(0);
+			break;
+		case 1:
+			var jqxhrMkMst;
+			if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+				jqxhrMkMst = jQuery.post('@{Common.makeHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
+			}
+			if(strType=="&{'views.config.cf_idealdepo'}") {
+				jqxhrMkMst = jQuery.post('@{Common.makeIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
+			}
+			jqxhrMkMst
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+							//収支明細（口座系）へジャンプ
+							jQuery('#frmDlRemainderBank').submit();
+						}
+						if(strType=="&{'views.config.cf_idealdepo'}") {
+							//収支明細（My貯金）へジャンプ
+							jQuery('#frmDlRemainderIdeal').submit();
+						}
+						break;
+					case 99:
+			    		alert(z.strErr);
+						break;
+					default:
+						if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+							alert("Common.makeHdlg result Error");
+						}
+						if(strType=="&{'views.config.cf_idealdepo'}") {
+							alert("Common.makeIdepo result Error");
+						}
+				}
+			})
+			.fail(function() {
+				if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+					alert("Common.makeHdlg Failed");
+				}
+				if(strType=="&{'views.config.cf_idealdepo'}") {
+					alert("Common.makeIdepo Failed");
+				}
+			});
+			break;
+		default:
+    		alert("dialogFrmMkMst return value error");
+	}
+}
+// -->
+</script>
+
+<!-- 残高明細（口座系）へジャンプ用フォーム（非表示） -->
+#{form @DetailList.dl_remainderBank(), id:'frmDlRemainderBank'}
+	<input type="submit" class="invisible" />
+#{/form}
+
+<!-- 残高明細（My貯金）へジャンプ用フォーム（非表示） -->
+#{form @DetailList.dl_remainderIdeal(), id:'frmDlRemainderIdeal'}
+	<input type="submit" class="invisible" />
+#{/form}
+
 <div>
-  <ul id="memberMenu">
-	<li class="${request.actionMethod == 'dl_balance' ? 'selected' : ''}">
-		<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
-	</li>
-	<li class="${request.actionMethod == 'dl_remainderBank' ? 'selected' : ''}">
-		#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}
-	</li>
-	<li class="${request.actionMethod == 'dl_remainderIdeal' ? 'selected' : ''}">
-		#{a @DetailList.dl_remainderIdeal(), id:'aDlRemainderIdeal'}&{'views.detaillist.remainderIdeal.title'}#{/a}
-	</li>
-  </ul>
+	<ul id="memberMenu">
+		<li class="${request.actionMethod == 'dl_balance' ? 'selected' : ''}">
+			<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
+		</li>
+		<li class="${request.actionMethod == 'dl_remainderBank' ? 'selected' : ''}">
+			#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}
+		</li>
+		<li class="${request.actionMethod == 'dl_remainderIdeal' ? 'selected' : ''}">
+			#{a @DetailList.dl_remainderIdeal(), id:'aDlRemainderIdeal'}&{'views.detaillist.remainderIdeal.title'}#{/a}
+		</li>
+	</ul>
 </div>

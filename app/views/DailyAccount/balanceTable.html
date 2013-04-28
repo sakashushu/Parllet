@@ -3,32 +3,25 @@
 
 <script type="text/javascript">
 <!--
-//起動時の日毎の部分の幅と高さを調整
 jQuery(function() {
-	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-130);
-});
-
-//ウィンドウリサイズ時の日毎の部分の幅と高さを調整
-jQuery(function() {
+	/* 起動時の日毎の部分の幅と高さを調整 */
+	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-160);
+	
+	/* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
 	jQuery(window).resize(function() {
-		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-130);
+		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-160);
 	});
-});
-
-/* 年コンボボックスのリスト作成 */
-jQuery(function() {
+	
+	/* 年コンボボックスのリスト作成 */
 	%{year = sBasisDate.substring(0,4)}%
-	var vYear = Number("${year}");
-	var vSelected;
+	var vYear = Number("${year}"), vSelected;
 	for(i=1900; i<3000; i++) {
 		vSelected = "";
 		if (vYear==i) vSelected = " selected";
 		jQuery('#idYear').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
 	}
-});
-
-/* 月コンボボックスのリスト作成 */
-jQuery(function() {
+	
+	/* 月コンボボックスのリスト作成 */
 	var vMonth = Number("${month}");
 	var vSelected;
 	for(i=1; i<=12; i++) {
@@ -36,18 +29,14 @@ jQuery(function() {
 		if (vMonth==i) vSelected = " selected";
 		jQuery('#idMonth').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
 	}
-});
-
-/* 年月コンボボックス選択変更時はjumpイベントへ */
-jQuery(function() {
+	
+	/* 年月コンボボックス選択変更時はjumpイベントへ */
 	jQuery('#idYear, #idMonth').change(function() {
 		jQuery('#idBasisDate').val(jQuery('#idYear').val()+"/"+("0"+jQuery('#idMonth').val()).slice(-2)+"/${sBasisDate.substring(8,10)}");
 		jQuery('#idMove').click();
 		jQuery('body').attr("disabled", "disabled");
 	});
-});
-
-jQuery(function() {
+	
 	/* 日付移動リンクEnter時はクリックイベントへ */
 	jQuery('#idPreMonth, #idNextMonth').keypress(function(e) {
 		if(e.which==13) {

@@ -1,30 +1,22 @@
 <script type="text/javascript">
 <!-- 
-jQuery(function() {
-	jQuery("#dialog-form").dialog({
-		autoOpen: false
-	});
-});
-
-function openDialog(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
+function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 	jQuery(function() {
 		var email = jQuery("#dlgEmail"),
 			emailVal = jQuery("#dlgEmailVal"),
 			password = jQuery("#dlgPassword"),
-			allFields = jQuery([]).add(name).add(email),
+			allFields = jQuery([]).add(email),
 			tips = jQuery(".validateTips");
    		email.val(pEmail);
 		emailVal.text(pEmail);
    		password.text(pPassword);
 		if(typeFb) {
-//			title = "&{'views.login.fbLogin.dialogTitle'}"
 			jQuery("#connectFb").removeClass("invisible");
 			email.removeClass("invisible");
 			emailVal.addClass("invisible");
 			jQuery("#lblPassword").addClass("invisible");
 			password.addClass("invisible");
 		} else {
-//			title = "&{'views.index.sinup.dialogTitle'}"
 			jQuery("#connectFb").addClass("invisible");
 			email.addClass("invisible");
 			emailVal.removeClass("invisible");
@@ -74,7 +66,8 @@ function openDialog(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 			updateTips(s);
 		}
 		function switchRslt(o) {
-	    	var jsonO = JSON.parse(o);
+	    	//var jsonO = JSON.parse(o);
+	    	var jsonO = o;
 			switch (jsonO.intRslt) {
 				case 0:
 		    		jQuery('#saUsername').css('display', 'none');
@@ -84,7 +77,7 @@ function openDialog(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 					jQuery('#saUsername').val(jsonO.strEmail);
 					jQuery('#saPassword').val(jsonO.strPassword);
 					jQuery('#fmAuthenticate').submit();
-					jQuery("#dialog-form").dialog( "close" );
+					jQuery("#dialog-form").dialog("close");
 					break;
 				case 1:
 					errValidateHaUser(email, jsonO.strErr);
@@ -110,39 +103,52 @@ function openDialog(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 					bValid = bValid && checkLength(email, "&{'views.login.fbLogin.email'}", 6, 80);
 					bValid = bValid && checkRegexp(email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "&{'validation.email'}");
 					if(bValid) {
+						var jqxhr;
 						if(typeFb) {
-						    jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()}, function(z){
-						    	switchRslt(z);
-						    }, 'text');
+//						    jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()}, function(z){
+//						    	switchRslt(z);
+							jqxhr = jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()});
 						} else {
-							jQuery.post('@{Application.signup}', {email: emailVal.text(), password: password.text()}, function(y){
-						    	switchRslt(y);
-							}, 'text');
+//							jQuery.post('@{Application.signup}', {email: emailVal.text(), password: password.text()}, function(y){
+//						    	switchRslt(y);
+//							}, 'text');
+							jqxhr = jQuery.post('@{Application.signup}', {email: emailVal.text(), password: password.text()});
 						}
+						jqxhr
+						.done(function(z) {
+							switchRslt(z);
+						})
+						.fail(function() {
+							if(typeFb) {
+								alert("Security.ensureFbUser Error");
+							} else {
+								alert("Application.signup Error");
+							}
+						});
 					}
 				},
-				"&{'views.login.fbLogin.cancel'}": function() {
-					jQuery( this ).dialog( "close" );
+				"&{'views.common.btn.cancel'}": function() {
+					jQuery(this).dialog("close");
 				}
 			},
 			close: function() {
-				allFields.val("").removeClass( "ui-state-error" );
+				allFields.val("").removeClass("ui-state-error");
 			}
 		});
-		jQuery("#dialog-form").dialog( "open" );
+		jQuery("#dialog-form").dialog("open");
 	});
 }
 // -->
 </script>
 
-<div id="dialog-form">
+<div id="dialog-form" class="invisible">
 	<p>
 	<div class="validateTips"></div>
 	<span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 5px 0;"></span>
-	&{'views.login.fbLogin.text1'}<br>
+	<div>&{'views.login.fbLogin.text1'}</div>
 	<br>
-	&{'views.login.fbLogin.text2'}<br>
-	&{'views.login.fbLogin.text3'}
+	<div>&{'views.login.fbLogin.text2'}</div>
+	<div>&{'views.login.fbLogin.text3'}</div>
 	<span id="connectFb" class="invisible">&{'views.login.fbLogin.text4'}</span>
 	<h4>&{'views.main.tools.logo'}</h4>
 	<div>&{'views.login.fbLogin.text5'}</div>
@@ -151,7 +157,10 @@ function openDialog(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 	<form>
 	<fieldset>
 		<label for="email" id="lblEmail">&{'email'}:</label>
-		<input type="text" name="email" id="dlgEmail" value="" class="text ui-widget-content ui-corner-all invisible" />
+<!-- 
+		<input type="text" id="dlgEmail" class="text ui-widget-content ui-corner-all invisible" />
+ -->
+		<input type="text" id="dlgEmail" class="text ui-widget-content invisible" />
 		<div id="dlgEmailVal"></div>
 		<label for="password" id="lblPassword">&{'secure.password'}</label>
 		<div id="dlgPassword"></div>

@@ -3,14 +3,19 @@ package controllers;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 
+import play.db.jpa.JPA;
 import play.i18n.Messages;
+import play.mvc.Before;
 import play.mvc.Controller;
 
 import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
 import models.HandlingTypeMst;
+import models.IdealDepositMst;
 import models.ItemMst;
+import models.WkCmMkHdlgRslt;
+import models.WkCmMkIdepoRslt;
 import models.WkSyEsFbUsRslt;
 
 public class Common extends Controller {
@@ -41,6 +46,14 @@ public class Common extends Controller {
 	static final String ITEM_OUT_OTHER = Messages.get("Item.out.other");
 	static final String VIEWS_DAILY_ACCOUNT = Messages.get("views.dailyaccount.dailyaccount");
 	static final String VIEWS_BALANCE_TABLE = Messages.get("views.dailyaccount.balancetable");
+	
+	@Before
+	static void setConnectedUser() {
+		if(Security.isConnected()) {
+			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			renderArgs.put("haUser", haUser);
+		}
+	}
 	
 	/**
 	 * 日付数値の妥当性チェック
@@ -81,6 +94,246 @@ public class Common extends Controller {
 		}
 	}
 	
+	/**
+	 * HandlingMstの保存メソッド
+	 * @param id
+	 * @param handling_name
+	 * @param zero_hidden
+	 * @param refHandlingMst
+	 * @param sHandlingType
+	 * @return
+	 */
+	public static Integer handling_mst_save(
+			Long id,
+			String handling_name,
+			Boolean zero_hidden,
+			Boolean invalidity_flg,
+			RefHandlingMst refHandlingMst,
+			String sHandlingType
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
+		Integer iCutoffDay = null;
+		Integer iDebitDay = null;
+		if(id == null) {
+			// 取扱データの作成
+			String sql = "SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = ?1 AND handling_type_mst_id = ?2";
+			Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).setParameter(1, haUser.id).setParameter(2, handlingTypeMst.id).getSingleResult() + 1;
+			refHandlingMst.handlingMst = new HandlingMst(
+					haUser,
+					handlingTypeMst,
+					handling_name,
+					null,
+					iCutoffDay,
+					null,
+					iDebitDay,
+					zero_hidden==null ? false : (zero_hidden==true ? true : false),
+					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
+					intMaxOrderSeq
+			);
+		} else {
+			// 取扱データの読み出し
+			refHandlingMst.handlingMst = HandlingMst.findById(id);
+			// 編集
+			refHandlingMst.handlingMst.handling_name = handling_name;
+			refHandlingMst.handlingMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg==null ? false : (invalidity_flg==true ? true : false);
+		}
+		// Validate
+		validation.valid(refHandlingMst.handlingMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		refHandlingMst.handlingMst.save();
+		
+		return 0;
+	}
+	
+	/**
+	 * HandlingMstの保存メソッド（クレジットカード用）
+	 * @param id
+	 * @param handling_name
+	 * @param zero_hidden
+	 * @param refHandlingMst
+	 * @param sHandlingType
+	 * @return
+	 */
+	public static Integer handling_mst_save(
+			Long id,
+			String handling_name,
+			Boolean zero_hidden,
+			Boolean invalidity_flg,
+			RefHandlingMst refHandlingMst,
+			String sHandlingType,
+			Long debit_bank,
+			Integer cutoff_day,
+			String debit_month,
+			Integer debit_day
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
+		HandlingMst debitBank = null;
+		if(debit_bank!=null) {
+			debitBank = HandlingMst.findById(debit_bank);
+		}
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = " + haUser.id + " AND handling_type_mst_id = " + handlingTypeMst.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
+		if(id == null) {
+			// 取扱データの作成
+			refHandlingMst.handlingMst = new HandlingMst(
+					haUser,
+					handlingTypeMst,
+					handling_name,
+					debitBank,
+					cutoff_day,
+					debit_month,
+					debit_day,
+					zero_hidden,
+					invalidity_flg==null ? false : (invalidity_flg==true ? true : false),
+					intMaxOrderSeq
+			);
+		} else {
+			// 取扱データの読み出し
+			refHandlingMst.handlingMst = HandlingMst.findById(id);
+			// 編集
+			refHandlingMst.handlingMst.handling_name = handling_name;
+			refHandlingMst.handlingMst.debit_bank = debitBank;
+			refHandlingMst.handlingMst.cutoff_day = cutoff_day;
+			refHandlingMst.handlingMst.debit_month = debit_month;
+			refHandlingMst.handlingMst.debit_day = debit_day;
+			refHandlingMst.handlingMst.zero_hidden = zero_hidden;
+			refHandlingMst.handlingMst.invalidity_flg = invalidity_flg==null ? false : (invalidity_flg==true ? true : false);
+		}
+		// Validate
+		validation.valid(refHandlingMst.handlingMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		refHandlingMst.handlingMst.save();
+		
+		return 0;
+	}
+	
+	/**
+	 * ItemMstの保存メソッド
+	 * @param id
+	 * @param item_name
+	 * @param refItemMst
+	 * @param sBalanceType
+	 * @return
+	 */
+	public static Integer item_mst_save(
+			Long id,
+			String item_name,
+			RefItemMst refItemMst,
+			String sBalanceType
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("byBalance_type_name", sBalanceType).first();
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM ItemMst WHERE ha_user_id = " + haUser.id + " AND balance_type_mst_id = " + balanceTypeMst.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
+		if(id == null) {
+			// 取扱データの作成
+			refItemMst.itemMst = new ItemMst(
+					haUser,
+					balanceTypeMst,
+					item_name,
+					intMaxOrderSeq
+			);
+		} else {
+			// 取扱データの読み出し
+			refItemMst.itemMst = ItemMst.findById(id);
+			// 編集
+			refItemMst.itemMst.item_name = item_name;
+		}
+		// Validate
+		validation.valid(refItemMst.itemMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		refItemMst.itemMst.save();
+		
+		return 0;
+	}
+	
+	/**
+	 * IdealDepositMstの保存メソッド
+	 * @param id
+	 * @param ideal_deposit_name
+	 * @param zero_hidden
+	 * @param refIdealDepositMst
+	 * @return
+	 */
+	public static Integer ideal_deposit_mst_save(
+			Long id,
+			String ideal_deposit_name,
+			Boolean zero_hidden,
+			RefIdealDepositMst refIdealDepositMst
+			) {
+		HaUser haUser = (HaUser)renderArgs.get("haUser");
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM IdealDepositMst WHERE ha_user_id = " + haUser.id + " ";
+		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
+		if(id == null) {
+			// My貯金データの作成
+			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
+					haUser,
+					ideal_deposit_name,
+					zero_hidden==null ? false : (zero_hidden==true ? true : false),
+					intMaxOrderSeq
+			);
+		} else {
+			// My貯金データの読み出し
+			refIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
+			// 編集
+			refIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
+			refIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
+		}
+		// Validate
+		validation.valid(refIdealDepositMst.idealDepositMst);
+		if(validation.hasErrors()) {
+			return 1;
+	    }
+		// 保存
+		refIdealDepositMst.idealDepositMst.save();
+		
+		return 0;
+	}
+	
+	/**
+	 * HandlingMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	public static class RefHandlingMst {
+		HandlingMst handlingMst;
+	}
+
+	/**
+	 * ItemMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	public static class RefItemMst {
+		ItemMst itemMst;
+	}
+	
+	/**
+	 * IdealDepositMst の参照渡し用クラス
+	 * @author sakashushu
+	 *
+	 */
+	public static class RefIdealDepositMst {
+		IdealDepositMst idealDepositMst;
+	}
+	
+	/**
+	 * ユーザー設定初期化
+	 * @param hu
+	 * @throws Exception
+	 */
 	public void initUserConf(HaUser hu) throws Exception {
 		HandlingMst hm;
 		BalanceTypeMst bm;
@@ -179,4 +432,60 @@ public class Common extends Controller {
 		renderJSON(wr);
 	}
 	
+	/**
+	 * ダイアログフォームからHandlingMstの作成
+	 * @param strType
+	 * @param strName
+	 * @param bolZeroHddn
+	 */
+	public static void makeHdlg(String strType, String strName, boolean bolZeroHddn) {
+		WkCmMkHdlgRslt wr = new WkCmMkHdlgRslt();
+		String strHandlingType = "";
+		if(strType.equals(Messages.get("views.config.cf_bank"))) {
+			strHandlingType = HANDLING_TYPE_BANK;
+		}
+		if(strType.equals(Messages.get("views.config.cf_emoney"))) {
+			strHandlingType = HANDLING_TYPE_EMONEY;
+		}
+		RefHandlingMst refHandlingMst = new RefHandlingMst();
+		Common cmn = new Common();
+		Integer iRtn = cmn.handling_mst_save(null, strName, bolZeroHddn, false, refHandlingMst, strHandlingType);
+		HandlingMst hM = refHandlingMst.handlingMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(hM);
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+		} else {
+			wr.setIntRslt(0);
+		}
+		wr.setHlMst(hM);
+		renderJSON(wr);
+	}
+	
+	/**
+	 * ダイアログフォームからIdealDepositMstの作成
+	 * @param strType
+	 * @param strName
+	 * @param bolZeroHddn
+	 */
+	public static void makeIdepo(String strName, boolean bolZeroHddn) {
+		WkCmMkIdepoRslt wr = new WkCmMkIdepoRslt();
+		RefIdealDepositMst refIdealDepositMst = new RefIdealDepositMst();
+		Common cmn = new Common();
+		Integer iRtn = cmn.ideal_deposit_mst_save(null, strName, bolZeroHddn, refIdealDepositMst);
+		IdealDepositMst iM = refIdealDepositMst.idealDepositMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(iM);
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+		} else {
+			wr.setIntRslt(0);
+		}
+		wr.setIdMst(iM);
+		renderJSON(wr);
+	}
 }

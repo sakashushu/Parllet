@@ -1,0 +1,106 @@
+<script type="text/javascript">
+<!-- 
+function openDialogConfirm(strSelector) {
+	jQuery(function() {
+		var buttons = {},
+			inTime = new Date(),
+			intRslt = 0;
+		
+		// 親画面でEnterが押された時はそれを無効に
+		jQuery(window).keypress(function(ek){
+			if ((ek.which && ek.which == 13) || (ek.keyCode && ek.keyCode == 13)) {
+				pressTime = new Date();
+				if(pressTime.getTime()-inTime.getTime() < 300) {
+					return false;
+				} else {
+					return true;
+				}
+			}else{
+				return true;
+			}
+		});
+			
+		if(strSelector=="#dialog-cfm-bkem") {
+			buttons["&{'views.redordEdit.dialog.bkem.btn.makeBank'}"] = function() {
+//				if(reqCtrlr=="RecordEdit")
+//					preBtype = jQuery('#balance_type_mst').val();
+//				jQuery('#frmBankEdit').submit();
+				intRslt = 1;
+				jQuery(this).dialog("close");
+			}
+			buttons["&{'views.redordEdit.dialog.bkem.btn.makeEmoney'}"] = function() {
+//				if(reqCtrlr=="RecordEdit")
+//					preBtype = jQuery('#balance_type_mst').val();
+//				jQuery('#frmEmoneyEdit').submit();
+				intRslt = 2;
+				jQuery(this).dialog("close");
+			}
+		}
+		if(strSelector=="#dialog-cfm-ideal") {
+			buttons["&{'views.redordEdit.dialog.ideal.btn.makeBank'}"] = function() {
+//				if(reqCtrlr=="RecordEdit")
+//					preBtype = jQuery('#balance_type_mst').val();
+//				jQuery('#frmIdealEdit').submit();
+				intRslt = 3;
+				jQuery(this).dialog("close");
+			}
+		}
+		buttons["&{'views.common.btn.cancel'}"] = function() {
+			jQuery(this).dialog("close");
+		}
+		
+		jQuery(strSelector).dialog({
+			autoOpen: false,
+			resizable: false,
+			width:460,
+			modal: true,
+			buttons: buttons,
+			close: function() {
+				//ダイアログクローズ時の処理は呼び出し元で行う
+				whenDialogConfirmClosed(intRslt);
+			}
+		});
+		jQuery(strSelector).dialog("open");
+	});
+}
+// -->
+</script>
+
+<!-- 口座入力へジャンプ用フォーム（非表示） -->
+#{form @Config.cf_bank_edit(), id:'frmBankEdit'}
+	<input type="submit" class="invisible" />
+#{/form}
+
+<!-- 電子マネー入力へジャンプ用フォーム（非表示） -->
+#{form @Config.cf_emoney_edit(), id:'frmEmoneyEdit'}
+	<input type="submit" class="invisible" />
+#{/form}
+
+<!-- My貯金入力へジャンプ用フォーム（非表示） -->
+#{form @Config.cf_idealdepo_edit(), id:'frmIdealEdit'}
+	<input type="submit" class="invisible" />
+#{/form}
+
+<!-- 口座・電子マネー未作成ダイアログ（非表示） -->
+<div id="dialog-cfm-bkem" title="&{'views.redordEdit.dialog.bkem.title'}" class="invisible">
+<p>
+	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+	<div>&{'views.redordEdit.dialog.bkem.text1'}</div>
+	<div>&{'views.redordEdit.dialog.bkem.text2'}</div>
+	<br>
+	<br>
+	<div>&{'views.redordEdit.dialog.bkem.text3'}</div>
+</p>
+</div>
+
+<!-- My貯金未作成ダイアログ（非表示） -->
+<div id="dialog-cfm-ideal" title="&{'views.redordEdit.dialog.ideal.title'}" class="invisible">
+<p>
+	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+	<div>&{'views.redordEdit.dialog.ideal.text1'}</div>
+	<div>&{'views.redordEdit.dialog.ideal.text2'}</div>
+	<br>
+	<br>
+	<div>&{'views.redordEdit.dialog.ideal.text3'}</div>
+</p>
+</div>
