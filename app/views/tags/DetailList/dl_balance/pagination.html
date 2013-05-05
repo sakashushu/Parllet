@@ -1,6 +1,6 @@
 
 <p class="configCount">
-    &{'crud.list.size', _caller.count, "収支データ"}
+    &{'crud.list.size', _caller.count, messages.get('Record')}
 </p>
 
 #{if _caller.nbPages > 1}
@@ -24,14 +24,14 @@
 
         #{if _caller.page > 1}
             <span class="previous">
-            	<a href="dl_balance?page=${_caller.page-1}">
+            	<a href="/myDpRt/detailList/balance/${_caller.page-1}">
             	&{'crud.pagination.previous'}</a>
             </span>
         #{/if}
 
         #{if start > 1}
             <span class="first">
-            	<a href="dl_balance?page=${1}">
+            	<a href="/myDpRt/detailList/balance/${1}">
             	&{'crud.pagination.first'}</a>
             </span>
         #{/if}
@@ -42,7 +42,7 @@
                     <strong>${i}</strong>
                 #{/if}
                 #{else}
-	            	<a href="dl_balance?page=${i}">
+	            	<a href="/myDpRt/detailList/balance/${i}">
 	            	${i}</a>
                 #{/else}
             </span>
@@ -50,14 +50,14 @@
 
         #{if end < _caller.nbPages}
             <span class="last">
-            	<a href="dl_balance?page=${_caller.nbPages}">
+            	<a href="/myDpRt/detailList/balance/${_caller.nbPages}">
             	&{'crud.pagination.last'}</a>
             </span>
         #{/if}
 
         #{if _caller.page < _caller.nbPages}
             <span class="next">
-            	<a href="dl_balance?page=${_caller.page+1}">
+            	<a href="/myDpRt/detailList/balance/${_caller.page+1}">
             	&{'crud.pagination.next'}</a>
             </span>
         #{/if}

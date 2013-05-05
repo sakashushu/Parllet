@@ -1,17 +1,41 @@
 #{extends 'Config/cf_main.html' /}
 #{set title:sHandlingType+' '+messages.get('views.common.update.edit') /}
 
+<!-- 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+ -->
 <script type="text/javascript">
 <!--
-var myObj = new Object();
-myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+//var myObj = new Object();
+//myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
 // -->
 </script>
 
 <script type="text/javascript">
 <!--
 jQuery(function() {
+	%{
+		crecaCnt = 0
+		recCnt = 0
+		if(hM?.id) {
+			crecaCnt = models.HandlingMst.count("ha_user = ? and debit_bank.handling_name = ?", haUser, hM.handling_name)
+			recCnt = models.Record.count("ha_user = ? and handling_mst.handling_name = ?", haUser, hM.handling_name)
+		}
+	}%
+	jQuery('#cnf_del').click(function(e){
+		if(${crecaCnt}>0) {
+			alert("&{'views.config.cf_handling_edit.del.alert', sHandlingType, messages.get('HandlingType.creca')}");
+			e.preventDefault();
+			return;
+		}
+		if(${recCnt}>0) {
+			alert("&{'views.config.cf_handling_edit.del.alert', sHandlingType, messages.get('Record')}");
+			e.preventDefault();
+			return;
+		}
+		return confirm("&{'views.config.cf_handling_edit.del.confirm'}");
+	});
+	
 	/* 起動時に日選択コンボの選択肢を作成 */
 	var cutOffDay = jQuery('#hM_cutoff_day'),
 		debitDay = jQuery('#hM_debit_day');

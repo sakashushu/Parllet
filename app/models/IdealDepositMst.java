@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.i18n.Messages;
@@ -19,6 +20,7 @@ public class IdealDepositMst extends Model {
 	public HaUser ha_user;						//家計簿ユーザー
 	
 	@Required
+	@MaxSize(value=80)
 	@CheckWith(IdealDepositNameMultipleCheck.class)
 	public String ideal_deposit_name;
 	

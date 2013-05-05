@@ -1,11 +1,29 @@
 #{extends 'Config/cf_main.html' /}
 #{set title:messages.get('views.config.cf_item')+'('+sBalanceType+') '+messages.get('views.common.update.edit') /}
 
+<!-- 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+ -->
 <script type="text/javascript">
 <!--
-var myObj = new Object();
-myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+//var myObj = new Object();
+//myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+jQuery(function() {
+	%{
+		recCnt = 0
+		if(iM?.id) {
+			recCnt = models.Record.count("ha_user = ? and item_mst.item_name = ?", haUser, iM.item_name)
+		}
+	}%
+	jQuery('#cnf_del').click(function(e){
+		if(${recCnt}>0) {
+			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_item'), messages.get('Record')}");
+			e.preventDefault();
+			return;
+		}
+		return confirm("&{'views.config.cf_handling_edit.del.confirm'}");
+	});
+});
 // -->
 </script>
 

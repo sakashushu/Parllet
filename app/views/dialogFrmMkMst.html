@@ -16,6 +16,11 @@ function openDialogFrmMkMst(strType) {
 		lblName.text(lblNameTxt);
 		name.val("");
 		zeroHddn.attr("checked", false);
+		if(strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
+			jQuery('#dspZeroHddn').addClass("invisible");
+		} else {
+			jQuery('#dspZeroHddn').removeClass("invisible");
+		}
 		function updateTips(t) {
 			tips
 				.css('padding', '0.3em')
@@ -79,7 +84,7 @@ function openDialogFrmMkMst(strType) {
 		<input type="text" id="dlgName" class="text ui-widget-content ui-corner-all" />
  -->
 		<input type="text" id="dlgName" class="text ui-widget-content" />
-		<div>
+		<div id="dspZeroHddn">
 			<input type="checkbox" id="dlgZeroHddn" />
 			<label for="zeroHddn" id="lblZeroHddn">&{'zero_hidden'}</label>
 		</div>

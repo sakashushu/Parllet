@@ -1,11 +1,29 @@
 #{extends 'Config/cf_main.html' /}
 #{set title:messages.get('views.config.cf_idealdepo')+' '+messages.get('views.common.update.edit') /}
 
+<!-- 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
+ -->
 <script type="text/javascript">
 <!--
-var myObj = new Object();
-myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+//var myObj = new Object();
+//myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+jQuery(function() {
+	%{
+		recCnt = 0
+		if(iDM?.id) {
+			recCnt = models.Record.count("ha_user = ? and ideal_deposit_mst.ideal_deposit_name = ?", haUser, iDM.ideal_deposit_name)
+		}
+	}%
+	jQuery('#cnf_del').click(function(e){
+		if(${recCnt}>0) {
+			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_idealdepo'), messages.get('Record')}");
+			e.preventDefault();
+			return;
+		}
+		return confirm("&{'views.config.cf_handling_edit.del.confirm'}");
+	});
+});
 // -->
 </script>
 

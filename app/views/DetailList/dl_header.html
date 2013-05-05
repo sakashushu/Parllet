@@ -3,28 +3,30 @@
 jQuery(function() {
 	/* リンクのクリックイベント */
 	%{hu = models.HaUser.find("byEmail", session.username).first()}%
-	jQuery("#aDlRemainderBank").click(function(event) {
+	jQuery("#aDlRemainderBank").click(function(e) {
+		var jText = jQuery(this).text();
 		%{
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
 		}%
 		if(${hdlgCnt}==0) {
 //			alert("&{'views.detaillist.remainder.err.noBank'}\n&{'views.detaillist.remainder.err.tryLater'}");
 			//口座・電子マネー作成用ダイアログ
-			openDialogConfirm("#dialog-cfm-bkem");
+			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
 			
-			event.preventDefault();
+			e.preventDefault();
 		}
     });
-	jQuery("#aDlRemainderIdeal").click(function(event) {
+	jQuery("#aDlRemainderIdeal").click(function(e) {
+		var jText = jQuery(this).text();
 		%{
 			idpCnt = models.IdealDepositMst.count("byHa_user", hu);
 		}%
 		if(${idpCnt}==0) {
 //			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
 			//My貯金作成用ダイアログ
-			openDialogConfirm("#dialog-cfm-ideal");
+			openDialogConfirm("&{'views.dialogConfirm.case.ideal'}", jText);
 			
-			event.preventDefault();
+			e.preventDefault();
 		}
     });
 	
@@ -278,3 +280,13 @@ function whenDialogFrmMkMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 		</li>
 	</ul>
 </div>
+
+#{ifErrors}
+    <p class="crudFlash flashError ptAbsolute">
+		#{errors}
+			${error}
+		#{/errors}
+    </p>
+#{/ifErrors}
+
+	

@@ -7,6 +7,7 @@ import net.sf.oval.constraint.CheckWithMultiple;
 
 import play.data.validation.Check;
 import play.data.validation.CheckWith;
+import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.i18n.Messages;
@@ -23,6 +24,7 @@ public class HandlingMst extends Model {
 	public HandlingTypeMst handling_type_mst;	//取扱種類
 
 	@Required
+	@MaxSize(value=80)
 	@CheckWith(HandlingNameMultipleCheck.class)
 	public String handling_name;				//取扱名
 	

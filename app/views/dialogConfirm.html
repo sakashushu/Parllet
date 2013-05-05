@@ -1,8 +1,10 @@
 <script type="text/javascript">
 <!-- 
-function openDialogConfirm(strSelector) {
+function openDialogConfirm(strCase, strUnableItem) {
 	jQuery(function() {
-		var buttons = {},
+		var title,
+			buttons = {},
+			btn1Title,
 			inTime = new Date(),
 			intRslt = 0;
 		
@@ -19,29 +21,37 @@ function openDialogConfirm(strSelector) {
 				return true;
 			}
 		});
-			
-		if(strSelector=="#dialog-cfm-bkem") {
-			buttons["&{'views.redordEdit.dialog.bkem.btn.makeBank'}"] = function() {
-//				if(reqCtrlr=="RecordEdit")
-//					preBtype = jQuery('#balance_type_mst').val();
-//				jQuery('#frmBankEdit').submit();
+		
+		title = strCase+"&{'views.dialogConfirm.suffix.title'}";
+		jQuery("#text1").text(strCase+"&{'views.dialogConfirm.suffix.text1'}");
+		jQuery("#text2").text("&{'views.dialogConfirm.preffix.text2'}"+strUnableItem+"&{'views.dialogConfirm.suffix.text2'}");
+		jQuery("#text3").text(strCase+"&{'views.dialogConfirm.suffix.text3'}");
+		btn1Title = strCase+"&{'views.dialogConfirm.suffix.btn'}";
+		if(strCase=="&{'views.dialogConfirm.case.bkem'}") {
+			buttons["&{'views.dialogConfirm.bkem.btn.makeBank'}"] = function() {
 				intRslt = 1;
 				jQuery(this).dialog("close");
 			}
-			buttons["&{'views.redordEdit.dialog.bkem.btn.makeEmoney'}"] = function() {
-//				if(reqCtrlr=="RecordEdit")
-//					preBtype = jQuery('#balance_type_mst').val();
-//				jQuery('#frmEmoneyEdit').submit();
+			buttons["&{'views.dialogConfirm.bkem.btn.makeEmoney'}"] = function() {
 				intRslt = 2;
 				jQuery(this).dialog("close");
 			}
 		}
-		if(strSelector=="#dialog-cfm-ideal") {
-			buttons["&{'views.redordEdit.dialog.ideal.btn.makeBank'}"] = function() {
-//				if(reqCtrlr=="RecordEdit")
-//					preBtype = jQuery('#balance_type_mst').val();
-//				jQuery('#frmIdealEdit').submit();
+		if(strCase=="&{'views.dialogConfirm.case.ideal'}") {
+			buttons[btn1Title] = function() {
 				intRslt = 3;
+				jQuery(this).dialog("close");
+			}
+		}
+		if(strCase=="&{'views.dialogConfirm.case.itemIn'}") {
+			buttons[btn1Title] = function() {
+				intRslt = 4;
+				jQuery(this).dialog("close");
+			}
+		}
+		if(strCase=="&{'views.dialogConfirm.case.itemOut'}") {
+			buttons[btn1Title] = function() {
+				intRslt = 5;
 				jQuery(this).dialog("close");
 			}
 		}
@@ -49,58 +59,32 @@ function openDialogConfirm(strSelector) {
 			jQuery(this).dialog("close");
 		}
 		
-		jQuery(strSelector).dialog({
+		jQuery("#dialog-confirm").dialog({
 			autoOpen: false,
 			resizable: false,
 			width:460,
 			modal: true,
+			title: title,
 			buttons: buttons,
 			close: function() {
 				//ダイアログクローズ時の処理は呼び出し元で行う
 				whenDialogConfirmClosed(intRslt);
 			}
 		});
-		jQuery(strSelector).dialog("open");
+		jQuery("#dialog-confirm").dialog("open");
 	});
 }
 // -->
 </script>
 
-<!-- 口座入力へジャンプ用フォーム（非表示） -->
-#{form @Config.cf_bank_edit(), id:'frmBankEdit'}
-	<input type="submit" class="invisible" />
-#{/form}
-
-<!-- 電子マネー入力へジャンプ用フォーム（非表示） -->
-#{form @Config.cf_emoney_edit(), id:'frmEmoneyEdit'}
-	<input type="submit" class="invisible" />
-#{/form}
-
-<!-- My貯金入力へジャンプ用フォーム（非表示） -->
-#{form @Config.cf_idealdepo_edit(), id:'frmIdealEdit'}
-	<input type="submit" class="invisible" />
-#{/form}
-
-<!-- 口座・電子マネー未作成ダイアログ（非表示） -->
-<div id="dialog-cfm-bkem" title="&{'views.redordEdit.dialog.bkem.title'}" class="invisible">
+<!-- マスター未作成ダイアログ（非表示） -->
+<div id="dialog-confirm" class="invisible">
 <p>
 	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-	<div>&{'views.redordEdit.dialog.bkem.text1'}</div>
-	<div>&{'views.redordEdit.dialog.bkem.text2'}</div>
+	<div id="text1"></div>
+	<div id="text2"></div>
 	<br>
 	<br>
-	<div>&{'views.redordEdit.dialog.bkem.text3'}</div>
-</p>
-</div>
-
-<!-- My貯金未作成ダイアログ（非表示） -->
-<div id="dialog-cfm-ideal" title="&{'views.redordEdit.dialog.ideal.title'}" class="invisible">
-<p>
-	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-	<div>&{'views.redordEdit.dialog.ideal.text1'}</div>
-	<div>&{'views.redordEdit.dialog.ideal.text2'}</div>
-	<br>
-	<br>
-	<div>&{'views.redordEdit.dialog.ideal.text3'}</div>
+	<div id="text3"></div>
 </p>
 </div>

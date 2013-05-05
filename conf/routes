@@ -39,10 +39,19 @@ GET		/myDpRt/data/edit						RecordEdit.recordUpd
 #POST	/myDpRt/data/myData/{id}				RecordEdit.save_rec
 
 # WebSocket detailList
+POST	/myDpRt/detailList/balance/{page}		DetailList.dl_balance
+GET		/myDpRt/detailList/balance/{page}		DetailList.dl_balance
 POST	/myDpRt/detailList/balance				DetailList.dl_balance
 GET		/myDpRt/detailList/balance				DetailList.dl_balance
 WS		/myDpRt/detailList						DetailList.WebSocketApp.listen
+POST	/myDpRt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
+GET		/myDpRt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
+POST	/myDpRt/detailList/remainderBank		DetailList.dl_remainderBank
 GET		/myDpRt/detailList/remainderBank		DetailList.dl_remainderBank
+POST	/myDpRt/detailList/remainderIdeal/{page}	DetailList.dl_remainderIdeal
+GET		/myDpRt/detailList/remainderIdeal/{page}	DetailList.dl_remainderIdeal
+POST	/myDpRt/detailList/remainderIdeal		DetailList.dl_remainderIdeal
+GET		/myDpRt/detailList/remainderIdeal		DetailList.dl_remainderIdeal
 
 # Config
 POST	/myDpRt/config/bank/list				Config.cf_bank_list

@@ -16,6 +16,7 @@ import models.IdealDepositMst;
 import models.ItemMst;
 import models.WkCmMkHdlgRslt;
 import models.WkCmMkIdepoRslt;
+import models.WkCmMkItemRslt;
 import models.WkSyEsFbUsRslt;
 
 public class Common extends Controller {
@@ -475,7 +476,26 @@ public class Common extends Controller {
 		RefIdealDepositMst refIdealDepositMst = new RefIdealDepositMst();
 		Common cmn = new Common();
 		Integer iRtn = cmn.ideal_deposit_mst_save(null, strName, bolZeroHddn, refIdealDepositMst);
-		IdealDepositMst iM = refIdealDepositMst.idealDepositMst;
+		IdealDepositMst iDM = refIdealDepositMst.idealDepositMst;
+		
+		if(iRtn == 1) {
+			validation.clear();
+			validation.valid(iDM);
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+		} else {
+			wr.setIntRslt(0);
+		}
+		wr.setIdMst(iDM);
+		renderJSON(wr);
+	}
+	
+	public static void makeItem(String strBalanceType, String strName) {
+		WkCmMkItemRslt wr = new WkCmMkItemRslt();
+		RefItemMst refItemMst = new RefItemMst();
+		Common cmn = new Common();
+		Integer iRtn = cmn.item_mst_save(null, strName, refItemMst, strBalanceType);
+		ItemMst iM = refItemMst.itemMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -485,7 +505,7 @@ public class Common extends Controller {
 		} else {
 			wr.setIntRslt(0);
 		}
-		wr.setIdMst(iM);
+		wr.setItMst(iM);
 		renderJSON(wr);
 	}
 }

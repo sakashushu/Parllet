@@ -345,6 +345,10 @@ public class DetailList extends Controller {
 					"";
 			count = Record.count(sqlSrchRec);
 			nbPages = (int) (Math.ceil((double)count/iLinage));
+			if(!(count==0 && page==1) && (page<1 || page>nbPages)) {
+				validation.addError("pageError", Messages.get("validation.pageError"));
+				page = 1;
+			}
 			sqlSrchRec += " order by payment_date, id";
 			records = Record.find(
 					sqlSrchRec).from(0).fetch(page, 30);
@@ -463,13 +467,6 @@ public class DetailList extends Controller {
 		BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
 		Long lngRemainder = biRemainder.longValue();
 		
-		if(page==1) {
-			WkDlRbRec wkDlRbRec = new WkDlRbRec();
-			wkDlRbRec.setStrPaymentDate("");
-			wkDlRbRec.setStrBalanceTypeName("繰越金");
-			wkDlRbRec.setLngRemainder(lngRemainder);
-			lWDRR.add(wkDlRbRec);
-		}
 		
 		/* 残高明細行作成 */
 		
@@ -480,6 +477,17 @@ public class DetailList extends Controller {
 		
 		count = lstObjEach.size();
 		nbPages = (int) (Math.ceil((double)count/iLinage));
+		if(!(count==0 && page==1) && (page<1 || page>nbPages)) {
+			validation.addError("pageError", Messages.get("validation.pageError"));
+			page = 1;
+		}
+		if(page==1) {
+			WkDlRbRec wkDlRbRec = new WkDlRbRec();
+			wkDlRbRec.setStrPaymentDate("");
+			wkDlRbRec.setStrBalanceTypeName(Messages.get("views.detaillist.remainderBank.balanceBroughtForward"));
+			wkDlRbRec.setLngRemainder(lngRemainder);
+			lWDRR.add(wkDlRbRec);
+		}
 		//全行ループし、現在ページのデータにセットして抜ける
 		for(int i = 0; i < count; i++) {
 			Object[] objEach = lstObjEach.get(i);
@@ -834,14 +842,6 @@ public class DetailList extends Controller {
 		BigInteger biRemainder = (BigInteger)JPA.em().createNativeQuery(sql).getSingleResult();
 		Long lngRemainder = biRemainder.longValue();
 		
-		if(page==1) {
-			WkDlRbRec wkDlRbRec = new WkDlRbRec();
-			wkDlRbRec.setStrPaymentDate("");
-			wkDlRbRec.setStrBalanceTypeName("繰越金");
-			wkDlRbRec.setLngRemainder(lngRemainder);
-			lWDRR.add(wkDlRbRec);
-		}
-		
 		
 		/* 残高明細行作成 */
 		
@@ -852,6 +852,17 @@ public class DetailList extends Controller {
 		
 		count = lstObjEach.size();
 		nbPages = (int) (Math.ceil((double)count/iLinage));
+		if(!(count==0 && page==1) && (page<1 || page>nbPages)) {
+			validation.addError("pageError", Messages.get("validation.pageError"));
+			page = 1;
+		}
+		if(page==1) {
+			WkDlRbRec wkDlRbRec = new WkDlRbRec();
+			wkDlRbRec.setStrPaymentDate("");
+			wkDlRbRec.setStrBalanceTypeName(Messages.get("views.detaillist.remainderBank.balanceBroughtForward"));
+			wkDlRbRec.setLngRemainder(lngRemainder);
+			lWDRR.add(wkDlRbRec);
+		}
 		//全行ループし、現在ページのデータにセットして抜ける
 		for(int i = 0; i < count; i++) {
 			Object[] objEach = lstObjEach.get(i);

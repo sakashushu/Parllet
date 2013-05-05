@@ -81,12 +81,13 @@ a.aBtn span {
 	border:1px solid #cccccc;
 	color:#8c5e00;
 	background-color:#ffffff;
- }
+}
  
 a.aBtn:hover span{
 	display:inline;
 	position:absolute;
 }
+
 
 .fontJura {
 	font-family: 'Jura';
@@ -105,6 +106,10 @@ a.aBtn:hover span{
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.ptAbsolute {
+	position: absolute;
 }
 
 /** index **/
@@ -241,7 +246,8 @@ a.aBtn:hover span{
 }
 
 .daMainInner {
-	width: 860px;
+//	width: 860px;
+	width: 960px;
 }
 
 .btMainInner {
@@ -726,7 +732,8 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-	width: 320px;
+//	width: 320px;
+	width: 420px;
 }
 .da_tbl_lt li div.first {
 	display: table-cell;
@@ -767,7 +774,8 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	mergin: 0;
-	width: 320px;
+//	width: 320px;
+	width: 420px;
 }
 .da_tbl_lb li div {
 	display: table-cell;
@@ -796,7 +804,7 @@ fieldset {
 }
 
 #da_tcol {
-	width: 320px;
+//	width: 320px;
 	height: 470px;
 	overflow: hidden;
 }
@@ -861,7 +869,20 @@ fieldset {
 
 .da_cate2 {
 	width: 90px;
+	max-width: 90px;
 	border-bottom: 1px solid #aaa;
+	white-space: nowrap;
+}
+.da_cate2 span {
+	display:none;
+	padding:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+.da_cate2:hover span{
+	display:inline;
+	position:absolute;
 }
 
 .da_budget {
@@ -877,7 +898,20 @@ fieldset {
 
 .da_cate2_budget {
 	width: 187px; /* 90(cate2)+1(border)+96(budget) */
+	max-width: 187px;
 	border-bottom: 1px solid #aaa;
+	white-space: nowrap;
+}
+.da_cate2_budget span {
+	display:none;
+	padding:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+.da_cate2_budget:hover span{
+	display:inline;
+	position:absolute;
 }
 
 .da_cate1_2_budget {
@@ -976,6 +1010,7 @@ fieldset {
 	display: table-cell;
 	height: 26px;
 	vertical-align: middle;
+	white-space: nowrap;
 }
 
 .bt_cate_large {
@@ -988,6 +1023,18 @@ fieldset {
 
 .bt_cate_small {
 	width: 150px;
+	max-width: 150px;
+}
+.bt_cate_small span {
+	display:none;
+	padding:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+.bt_cate_small:hover span{
+	display:inline;
+	position:absolute;
 }
 
 .bt_ary_day {
