@@ -338,7 +338,10 @@ public class DetailList extends Controller {
 			//  項目
 			if(h_item_id != null)
 				if(h_item_id != 0L)
-					sqlSrchRec += " and item_mst.id = " + h_item_id;
+					sqlSrchRec += " and item_mst.id " +
+							(h_item_id==-1 ? "is null "
+									: (h_item_id==-2 ? "is not null "
+											: "= " + h_item_id));
 			
 			sqlSrchRec += "" +
 					((session.get("actionMode")).equals("View") ? " and secret_rec_flg = false " : "") +

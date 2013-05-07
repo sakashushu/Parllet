@@ -161,6 +161,8 @@ jQuery(function(){
 				#{list items:handlings, as:'handling'}
 				<option value="${handling.id}"${h_handling_id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 				#{/list}
+				<option value="-1"${h_handling_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
+				<option value="-2"${h_handling_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
 			</select>
 		</div>
 		<!-- 取扱(My貯金) -->
@@ -186,6 +188,8 @@ jQuery(function(){
 				#{list items:itemsOut, as:'itemOut'}
 				<option value="${itemOut.id}"${h_item_id==itemOut.id ? ' selected' : ''}>${itemOut.item_name}</option>
 				#{/list}
+				<option value="-1"${h_item_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
+				<option value="-2"${h_item_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
 			</select>
 		</div>
 		<!-- 金額 -->

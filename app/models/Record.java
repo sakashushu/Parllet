@@ -126,7 +126,7 @@ public class Record extends Model {
 	}
 	
 	/**
-	 * 「収支種類が」収入・支出で、取扱(My貯金)が入っていない時は「項目」は必須
+	 * 「収支種類が」収入・支出の時は「項目」は必須
 	 * @author sakashushu
 	 *
 	 */
@@ -136,7 +136,6 @@ public class Record extends Model {
 			if(record.balance_type_mst!=null) {
 				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.out"))) &&
-						record.ideal_deposit_mst==null &&
 						(record.item_mst==null)) {
 					setMessage(Messages.get("validation.required"));
 					return false;
