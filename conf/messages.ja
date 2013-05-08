@@ -9,22 +9,20 @@ secure.remember=次回以降IDを省略
 secure.title=ログイン
 secure.error=ログイン情報が正しくありません
 
-secure.fbAppId=487976224598644
-
 views.main.tools.login=ログイン
 views.main.tools.logo.pre=イメージで貯金できる家計簿
 views.main.tools.logo.pre1=イメージで
 views.main.tools.logo.pre2=貯金できる家計簿
 views.main.tools.logo=ネットでMy貯金
 views.main.tools.logo.alpha=α(ｱﾙﾌｧ)版
+views.main.tools.logo.alpha.caution1=ネットでMy貯金はアルファ版です。
+views.main.tools.logo.alpha.caution2=ご承知おきください。
 
-views.login.logo=安心My貯金
-views.login.logo.span=管理
 views.login.tools.logout=ログアウト
 views.login.recordEdit=家計簿入力
 
-views.admin.adminMenu=管理者
-views.admin.memberMenu=会員メニュー
+views.headerTools.adminMenu=管理者
+views.headerTools.memberMenu=会員メニュー
 
 views.common.combo.required.long=(値を選択して下さい)
 views.common.combo.notrequired=(なし)
@@ -93,6 +91,9 @@ views.dailyaccount.movetype.days.pre=前の5日
 views.dailyaccount.movetype.days.next=次の5日
 views.dailyaccount.lbl.monthBudget=月予算
 views.dailyaccount.lbl.monthSum=月計
+views.dailyaccount.lbl.idepoLink=My貯金連結
+views.dailyaccount.lbl.budget.subject=予算対象
+views.dailyaccount.lbl.budget.notSubject=予算対象外
 views.config.config=設定
 views.config.cf_bank=口座
 views.config.cf_creca=クレジットカード
@@ -216,6 +217,7 @@ BalanceType.bank_in=口座預入
 BalanceType.bank_out=口座引出
 BalanceType.ideal_deposit_in=My貯金預入
 BalanceType.ideal_deposit_out=My貯金引出
+BalanceType.ideal_deposit_inOut=My貯金預入・引出
 BalanceType.out_ideal_deposit=My貯金から支払
 
 # 取扱(実際)種類(HandlingType)

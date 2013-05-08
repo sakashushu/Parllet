@@ -111,8 +111,8 @@ public class Security extends Secure.Security {
 		Security sec = new Security();
 		sec.initializeSessionValue();
 		
-		//初期画面は日計表
-		DailyAccount.dailyAccount(null);
+		//初期画面は残高表
+		DailyAccount.balanceTable(null);
 	}
 	
 	static boolean check(String profile) {

@@ -43,6 +43,7 @@ public class DailyAccount extends Controller {
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
 	static final String BALANCE_TYPE_IDEAL_DEPOSIT_IN = Messages.get("BalanceType.ideal_deposit_in");
 	static final String BALANCE_TYPE_IDEAL_DEPOSIT_OUT = Messages.get("BalanceType.ideal_deposit_out");
+	static final String BALANCE_TYPE_IDEAL_DEPOSIT_INOUT = Messages.get("BalanceType.ideal_deposit_inOut");
 	static final String BALANCE_TYPE_OUT_IDEAL_DEPOSIT = Messages.get("BalanceType.out_ideal_deposit");
 	static final String REMAINDER_TYPE_REAL = Messages.get("RemainderType.real");
 	static final String REMAINDER_TYPE_IDEAL_DEPOSIT = Messages.get("RemainderType.ideal_deposit");
@@ -57,37 +58,37 @@ public class DailyAccount extends Controller {
 	
 	/**
 	 * 日計表
-	 * @param sBasisDate
+	 * @param strBasisDate
 	 */
 	public static void dailyAccount(
-			String sBasisDate
+			String strBasisDate
 			) {
 		DailyAccount da = new DailyAccount();
 		//単純に呼ばれた時の基準日のセット
-		if(sBasisDate==null)
-			sBasisDate = da.setBasisDate();
+		if(strBasisDate==null)
+			strBasisDate = da.setBasisDate();
 		
 		Integer intBasisDate = null; 
-		if(sBasisDate!=null)
-			intBasisDate = Integer.parseInt(sBasisDate.replace("/", ""));
+		if(strBasisDate!=null)
+			intBasisDate = Integer.parseInt(strBasisDate.replace("/", ""));
 		dailyAccountDisp(intBasisDate);
 	}
 	
 	/**
 	 * 残高表
-	 * @param sBasisDate
+	 * @param strBasisDate
 	 */
 	public static void balanceTable(
-			String sBasisDate
+			String strBasisDate
 			) {
 		DailyAccount da = new DailyAccount();
    		//単純に呼ばれた時の基準日のセット(残高表)
-		if(sBasisDate==null)
-			sBasisDate = da.setBasisDateBt();
+		if(strBasisDate==null)
+			strBasisDate = da.setBasisDateBt();
 
 		Integer intBasisDate = null;
-		if(sBasisDate!=null)
-			intBasisDate = Integer.parseInt(sBasisDate.replace("/", ""));
+		if(strBasisDate!=null)
+			intBasisDate = Integer.parseInt(strBasisDate.replace("/", ""));
 		balanceTableDisp(intBasisDate);
 	}
 	
@@ -202,7 +203,6 @@ public class DailyAccount extends Controller {
 		Date dBasis = null;
 		DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 		try {
-//			dBasis = DateFormat.getDateInstance().parse(strBasisDate);
 			dBasis = df.parse(strBasisDate);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -214,8 +214,8 @@ public class DailyAccount extends Controller {
 
 		int iDaysCnt = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
-//		日計表の表示日数を3日にしていた時のコード
 		if(strTableType.equals(VIEWS_DAILY_ACCOUNT)) {
+			//日計表の表示日数
 			iDaysCnt = 5;
 			calendar.add(Calendar.DATE, -2);
 		}
@@ -255,11 +255,11 @@ public class DailyAccount extends Controller {
 	 * @param move
 	 */
 	public static void jump(
-    		String e_basis_date,
-    		String strTableType,
-    		String strMoveType,
-    		Integer intMoveNum,
-    		String move			/* 「移動」ボタン */
+			String e_basis_date,
+			String strTableType,
+			String strMoveType,
+			Integer intMoveNum,
+			String move			/* 「移動」ボタン */
 			) {
 		
 		// 「移動」ボタンが押されていない時は処理を抜ける
@@ -289,9 +289,9 @@ public class DailyAccount extends Controller {
 	 * @return
 	 */
 	private String dteAfterJump(
-    		String e_basis_date,
-    		String strMoveType,
-    		Integer intMoveNum
+			String e_basis_date,
+			String strMoveType,
+			Integer intMoveNum
 			) {
 		Calendar calendar = Calendar.getInstance();
 		Date dBasis = null;
@@ -320,16 +320,16 @@ public class DailyAccount extends Controller {
 	 * 日計表・残高表の行に相当するリストの作成
 	 * @param year
 	 * @param month
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param strTableType
 	 * @return
 	 */
 	private List<WkDailyAccount> makeWorkList(
 			Integer year,
 			Integer month,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			String strTableType
 			) {
 		
@@ -346,10 +346,10 @@ public class DailyAccount extends Controller {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 
 		if(strTableType.equals(VIEWS_BALANCE_TABLE))
-			sFirstDay =  String.format("%1$tY%1$tm%1$td", dStartDay);
+			sFirstDay =  String.format("%1$tY%1$tm%1$td", dteStartDay);
 		
 		//全行取得用SQL作成
-		String sql = makeSql(year, month, dStartDay, iDaysCnt, strTableType, haUser, sFirstDay, sNextFirst);
+		String sql = makeSql(year, month, dteStartDay, intDaysCnt, strTableType, haUser, sFirstDay, sNextFirst);
 		
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
 		
@@ -378,10 +378,11 @@ public class DailyAccount extends Controller {
 			wDaEach.setsItem(String.valueOf(objEach[2]));
 			wDaEach.setbBudgetFlg(false);
 	
-			//「収入」・「支出」・「My貯金預入」の場合、予算有無フラグを立てる
+			//「収入」・「支出」・「My貯金預入・引出」の場合、予算有無フラグを立てる
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
 				wDaEach.setbBudgetFlg(true);
 			}
 			
@@ -398,11 +399,11 @@ public class DailyAccount extends Controller {
 			}
 			
 			// 日毎
-			calendar.setTime(dStartDay);
+			calendar.setTime(dteStartDay);
 			long lngEach = 0L;
 //			long lngSum = 0L;
 			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
-			for(int iDay = 0; iDay < iDaysCnt; iDay++) {
+			for(int iDay = 0; iDay < intDaysCnt; iDay++) {
 				//「実残高」・「My貯金してないお金」・「My貯金残高」の時は2日目以降は加算
 				if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
 						strLargeCategoryName.equals(REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) ||
@@ -429,12 +430,20 @@ public class DailyAccount extends Controller {
 			}
 			wDaEach.setLstWdtd(lstWdtd);
 //			wDaEach.setLSumMonth(lngSum);
-			//「収入」・「支出」・「My貯金預入」・「My貯金から支払」の場合、月計をセット
+//			//「収入」・「支出」・「My貯金預入」・「My貯金から支払」の場合、月計をセット
+			//「収入」・「支出」・「My貯金預入・引出」の場合、月計をセット
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
-					strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[iDaysCnt+7])));
+//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
+//					strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
+				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[intDaysCnt+7])));
+			}
+			//「収入」・「支出」の場合、My貯金連結をセット
+			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
+				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[intDaysCnt+7])));
+				wDaEach.setlIdepoLink(Long.parseLong(String.valueOf(objEach[intDaysCnt+8])));
 			}
 			
 			lWDA.add(wDaEach);
@@ -447,23 +456,23 @@ public class DailyAccount extends Controller {
 	 * 全行取得用SQL作成
 	 * @param year
 	 * @param month
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param strTableType
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @return
 	 */
 	private String makeSql(
 			Integer year,
 			Integer month,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			String strTableType,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
 		String sql = "";
@@ -472,49 +481,54 @@ public class DailyAccount extends Controller {
 			String sqlBalInAll = makeSqlBalInOut(
 					false,
 					BALANCE_TYPE_IN,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
 			//収支取得用SQL作成(収入)(項目毎)
 			String sqlBalIn = makeSqlBalInOut(
 					true,
 					BALANCE_TYPE_IN,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
 			//収支取得用SQL作成(支出)(合計)
 			String sqlBalOutAll = makeSqlBalInOut(
 					false,
 					BALANCE_TYPE_OUT,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
 			//収支取得用SQL作成(支出)(項目毎)
 			String sqlBalOut = makeSqlBalInOut(
 					true,
 					BALANCE_TYPE_OUT,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
-			//収支取得用SQL作成(My貯金預入)(合計)
-			String sqlBalIdealInAll = makeSqlBalIdeal(
+			//収支取得用SQL作成(My貯金預入・引出)(合計)
+			String sqlBalIdealInOutAll = makeSqlBalIdeal(
 					false,
-					BALANCE_TYPE_IDEAL_DEPOSIT_IN,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+//					BALANCE_TYPE_IDEAL_DEPOSIT_IN,
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
-			//収支取得用SQL作成(My貯金預入)(項目毎)
-			String sqlBalIdealIn = makeSqlBalIdeal(
+			//収支取得用SQL作成(My貯金預入・引出)(項目毎)
+			String sqlBalIdealInOut = makeSqlBalIdeal(
 					true,
-					BALANCE_TYPE_IDEAL_DEPOSIT_IN,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+//					BALANCE_TYPE_IDEAL_DEPOSIT_IN,
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
-			//収支取得用SQL作成(My貯金から支払)(合計)
-			String sqlBalOutIdealAll = makeSqlBalIdeal(
+//			//収支取得用SQL作成(My貯金から支払)(合計)
+//			String sqlBalOutIdealAll = makeSqlBalIdeal(
+//					false,
+//					BALANCE_TYPE_OUT_IDEAL_DEPOSIT,
+//					year, month, dStartDay, iDaysCnt, haUser, strFirstDay, strNextFirst
+//					);
+//			//収支取得用SQL作成(My貯金から支払)(項目毎)
+//			String sqlBalOutIdeal = makeSqlBalIdeal(
+//					true,
+//					BALANCE_TYPE_OUT_IDEAL_DEPOSIT,
+//					year, month, dStartDay, iDaysCnt, haUser, strFirstDay, strNextFirst
+//					);
+			//収支取得用SQL作成(My貯金預入・引出)(合計)
+			String sqlBalBankInOutAll = makeSqlBalBank(
 					false,
-					BALANCE_TYPE_OUT_IDEAL_DEPOSIT,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
-					);
-			//収支取得用SQL作成(My貯金から支払)(項目毎)
-			String sqlBalOutIdeal = makeSqlBalIdeal(
-					true,
-					BALANCE_TYPE_OUT_IDEAL_DEPOSIT,
-					year, month, dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
 			
 			sql = "" +
@@ -526,14 +540,13 @@ public class DailyAccount extends Controller {
 					" UNION ALL " +
 					" ( " + sqlBalOut + " ) " +
 					" UNION ALL " +
-					" ( " + sqlBalIdealInAll + " ) " +
+					" ( " + sqlBalIdealInOutAll + " ) " +
 					" UNION ALL " +
-					" ( " + sqlBalIdealIn + " ) " +
-					" UNION ALL " +
-					" ( " + sqlBalOutIdealAll + " ) " +
-					" UNION ALL " +
-					" ( " + sqlBalOutIdeal + " ) " +
+					" ( " + sqlBalIdealInOut + " ) " +
 //					" UNION ALL " +
+//					" ( " + sqlBalOutIdealAll + " ) " +
+//					" UNION ALL " +
+//					" ( " + sqlBalOutIdeal + " ) " +
 					" ORDER BY cate_order, item_order " +
 					"";
 			
@@ -546,26 +559,26 @@ public class DailyAccount extends Controller {
 		//残高取得用SQL作成(実残高)(合計)
 		String sqlRemRealAll = makeSqlRemReal(
 						false,
-						dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
 		//残高取得用SQL作成(実残高)(取扱毎)
 		String sqlRemReal = makeSqlRemReal(
 						true,
-						dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
 		//残高取得用SQL作成(My貯金してないお金)
 		String sqlRemNotIdealDeposit = makeSqlRemNotIdealDeposit(
-						dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
 		//残高取得用SQL作成(My貯金残高)(合計)
 		String sqlRemIdealDepositAll = makeSqlRemIdealDeposit(
 						false,
-						dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
 		//残高取得用SQL作成(My貯金残高)(取扱毎)
 		String sqlRemIdealDeposit = makeSqlRemIdealDeposit(
 						true,
-						dStartDay, iDaysCnt, haUser, sFirstDay, sNextFirst
+						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
 		
 		sql += "" +
@@ -590,20 +603,20 @@ public class DailyAccount extends Controller {
 	/**
 	 * 残高取得用SQL作成(実残高)
 	 * @param bolEach
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @return
 	 */
 	private String makeSqlRemReal(
 			boolean bolEach,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
 		String sql = "";
@@ -649,11 +662,11 @@ public class DailyAccount extends Controller {
 		if(!bolEach) {
 			//残高取得用SQL作成(実残高)(取扱合計)
 			sql = makeSqlRemRealAll(
-					dStartDay,
-					iDaysCnt,
+					dteStartDay,
+					intDaysCnt,
 					haUser,
-					sFirstDay,
-					sNextFirst,
+					strFirstDay,
+					strNextFirst,
 					sqlFromPhrase,
 					sqlSumAllCaseInOut
 					);
@@ -665,8 +678,8 @@ public class DailyAccount extends Controller {
 		String sqlDailyLater = "";
 		String sqlDailyZero = "";
    		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dStartDay);
-		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 1; iDay <= intDaysCnt; iDay++) {
 			sqlDailyZero += "" +
 					" OR  sum_day_" + iDay + " <> 0 ";
 			calendar.add(Calendar.DATE, 1);
@@ -678,11 +691,11 @@ public class DailyAccount extends Controller {
 		
 		//残高取得用SQL作成(実残高)(取扱毎)
 		sql = makeSqlRemRealEach(
-				dStartDay,
-				iDaysCnt,
+				dteStartDay,
+				intDaysCnt,
 				haUser,
-				sFirstDay,
-				sNextFirst,
+				strFirstDay,
+				strNextFirst,
 				sqlFromPhrase,
 				sqlSumAllCaseInOut,
 				sqlSumCashCaseBankInOut,
@@ -695,21 +708,21 @@ public class DailyAccount extends Controller {
 				
 	/**
 	 * 残高取得用SQL作成(実残高)(取扱合計)
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @return
 	 */
 	private String makeSqlRemRealAll(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut
 			) {
@@ -719,7 +732,7 @@ public class DailyAccount extends Controller {
 		//初日の残高取得用SQL作成（取扱合計）
 		String sqlAllFirstDay = makeSqlRemRealAllFirstDay(
 				haUser,
-				sFirstDay,
+				strFirstDay,
 				sqlFromPhrase,
 				sqlSumAllCaseInOut
 				);
@@ -734,13 +747,13 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 				"";
 		//2日目以降の残高取得用SQL作成（取扱合計）
-		if(iDaysCnt>=2) {
+		if(intDaysCnt>=2) {
 			String sqlAllLater = makeSqlRemRealAllLater(
-					dStartDay,
-					iDaysCnt,
+					dteStartDay,
+					intDaysCnt,
 					haUser,
-					sFirstDay,
-					sNextFirst,
+					strFirstDay,
+					strNextFirst,
 					sqlFromPhrase,
 					sqlSumAllCaseInOut
 					);
@@ -757,14 +770,14 @@ public class DailyAccount extends Controller {
 	/**
 	 * 初日の残高取得用SQL作成(実残高)(取扱合計)
 	 * @param haUser
-	 * @param sFirstDay
+	 * @param strFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @return
 	 */
 	private String makeSqlRemRealAllFirstDay(
 			HaUser haUser,
-			String sFirstDay,
+			String strFirstDay,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut
 			) {
@@ -785,7 +798,7 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"";
    		
@@ -797,21 +810,21 @@ public class DailyAccount extends Controller {
 	
 	/**
 	 * 2日目以降の残高取得用SQL作成(実残高)(取扱合計)
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @return
 	 */
 	private String makeSqlRemRealAllLater(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut
 			) {
@@ -820,21 +833,21 @@ public class DailyAccount extends Controller {
    		
    		Calendar calendar = Calendar.getInstance();
 
-   		calendar.setTime(dStartDay);
+   		calendar.setTime(dteStartDay);
    		
 		//日付毎の合計取得部分のSQL(現金)
-		calendar.setTime(dStartDay);
-		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
 			calendar.add(Calendar.DATE, 1);
 			sqlDaily += "" +
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-					"       CASE " +
+						" WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
 					sqlSumAllCaseInOut +	//収入加算・支出減算
-					"       END " +
-					"     ELSE 0 " +
+						"   END " +
+						" ELSE 0 " +
 					"   END" +
 					" ), 0) as sum_day_" + iDay + " ";
 		}
@@ -845,8 +858,8 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"";
    		
@@ -861,7 +874,7 @@ public class DailyAccount extends Controller {
 	 * 残高取得用SQL作成(実残高)(取扱毎)
 	 * @param bolEach
 	 * @param haUser
-	 * @param sFirstDay
+	 * @param strFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @param sqlSumCashCaseBankInOut
@@ -869,11 +882,11 @@ public class DailyAccount extends Controller {
 	 * @return
 	 */
 	private String makeSqlRemRealEach(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut,
 			String sqlSumCashCaseBankInOut,
@@ -887,7 +900,7 @@ public class DailyAccount extends Controller {
 		//初日の残高取得用SQL作成（取扱(実際)毎）
 		String sqlEachFirstDay = makeSqlRemRealEachFirstDay(
 				haUser,
-				sFirstDay,
+				strFirstDay,
 				sqlFromPhrase,
 				sqlSumAllCaseInOut,
 				sqlSumCashCaseBankInOut,
@@ -910,13 +923,13 @@ public class DailyAccount extends Controller {
 				"   ON hm.id = rem_firstday.hd_id " +
 				"";
 		//2日目以降の残高取得用SQL作成（取扱(実際)毎）
-		if(iDaysCnt>=2) {
+		if(intDaysCnt>=2) {
 			String sqlEachLater = makeSqlRemRealEachLater(
-					dStartDay,
-					iDaysCnt,
+					dteStartDay,
+					intDaysCnt,
 					haUser,
-					sFirstDay,
-					sNextFirst,
+					strFirstDay,
+					strNextFirst,
 					sqlFromPhrase,
 					sqlSumAllCaseInOut,
 					sqlSumCashCaseBankInOut,
@@ -942,7 +955,7 @@ public class DailyAccount extends Controller {
 	 * 初日の残高取得用SQL作成(実残高)(取扱毎)
 	 * @param bolEach
 	 * @param haUser
-	 * @param sFirstDay
+	 * @param strFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @param sqlSumCashCaseBankInOut
@@ -951,7 +964,7 @@ public class DailyAccount extends Controller {
 	 */
 	private String makeSqlRemRealEachFirstDay(
 			HaUser haUser,
-			String sFirstDay,
+			String strFirstDay,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut,
 			String sqlSumCashCaseBankInOut,
@@ -991,13 +1004,13 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN HandlingMst hcash " +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    ht.handling_type_name = '" + HANDLING_TYPE_CASH + "' " +
-				"            AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            ) " +
-				"        OR (    ht.handling_type_name in('" + HANDLING_TYPE_BANK + "','" + HANDLING_TYPE_EMONEY + "') " +
-				"            AND b.balance_type_name in('" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
-				"            ) " +
-				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+							"AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
+							") " +
+						"OR (    ht.handling_type_name in('" + HANDLING_TYPE_BANK + "','" + HANDLING_TYPE_EMONEY + "') " +
+							"AND b.balance_type_name in('" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
+							") " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"   AND hcash.handling_name = '" + HANDLING_TYPE_CASH + "' " +
 				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
@@ -1008,28 +1021,28 @@ public class DailyAccount extends Controller {
 				" SELECT " +
 				sqlNotCashDaily +		//日付毎の合計取得部分(現金以外)
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.handling_name " +
-				"     ELSE " +
-				"       h.handling_name " +
-				"     END as hd_handling_name " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.handling_name " +
+					" ELSE " +
+					"   h.handling_name " +
+					" END as hd_handling_name " +
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.id " +
-				"     ELSE " +
-				"       h.id " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.id " +
+					" ELSE " +
+					"   h.id " +
 				"   END as hd_id " +
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.zero_hidden " +
-				"     ELSE " +
-				"       h.zero_hidden " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.zero_hidden " +
+					" ELSE " +
+					"   h.zero_hidden " +
 				"   END as hd_zero_hidden " +
 				sqlFromPhrase +			//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
 				"   AND h.handling_name <> '" + HANDLING_TYPE_CASH + "' " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
 				"";
@@ -1051,11 +1064,11 @@ public class DailyAccount extends Controller {
 	/**
 	 * 2日目以降の残高取得用SQL作成(実残高)(取扱毎)
 	 * @param bolEach
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumAllCaseInOut
 	 * @param sqlSumCashCaseBankInOut
@@ -1063,11 +1076,11 @@ public class DailyAccount extends Controller {
 	 * @return
 	 */
 	private String makeSqlRemRealEachLater(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumAllCaseInOut,
 			String sqlSumCashCaseBankInOut,
@@ -1080,37 +1093,37 @@ public class DailyAccount extends Controller {
 		String sqlNotCashDaily = "";
 		
 		//日付毎の合計取得部分のSQL(現金)
-		calendar.setTime(dStartDay);
-		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
 			calendar.add(Calendar.DATE, 1);
 			sqlCashDaily += "" +
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-					"       CASE " +
+						" WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
 					sqlSumAllCaseInOut +		//収入加算・支出減算
 					sqlSumCashCaseBankInOut +	//口座引出加算・口座預入減算
-					"       END " +
-					"     ELSE 0 " +
+						"   END " +
+						" ELSE 0 " +
 					"   END" +
 					" ), 0) as sum_day_" + iDay + " ";
 		}
 		
 		//日付毎の合計取得部分のSQL(現金以外)
-		calendar.setTime(dStartDay);
-		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
 			calendar.add(Calendar.DATE, 1);
 			sqlNotCashDaily += "" +
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-					"       CASE " +
+						" WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
 					sqlSumAllCaseInOut +			//収入加算・支出減算
 					sqlSumNotCashCaseBankInOut +	//口座引出減算・口座預入加算
-					"       END " +
-					"     ELSE 0 " +
+						"   END " +
+						" ELSE 0 " +
 					"   END" +
 					" ), 0) as sum_day_" + iDay + " ";
 		}
@@ -1127,14 +1140,14 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN HandlingMst hcash " +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    ht.handling_type_name = '" + HANDLING_TYPE_CASH + "' " +
-				"            AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            ) " +
-				"        OR (    ht.handling_type_name in('" + HANDLING_TYPE_BANK + "','" + HANDLING_TYPE_EMONEY + "') " +
-				"            AND b.balance_type_name in('" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
-				"            ) " +
-				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+							"AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
+							") " +
+						"OR (    ht.handling_type_name in('" + HANDLING_TYPE_BANK + "','" + HANDLING_TYPE_EMONEY + "') " +
+							"AND b.balance_type_name in('" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
+							") " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"   AND hcash.handling_name = '" + HANDLING_TYPE_CASH + "' " +
 				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
@@ -1145,28 +1158,28 @@ public class DailyAccount extends Controller {
 				" SELECT " +
 				sqlNotCashDaily +		//日付毎の合計取得部分(現金以外)
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.handling_name " +
-				"     ELSE " +
-				"       h.handling_name " +
-				"     END as hd_handling_name " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.handling_name " +
+					"  ELSE " +
+					"   h.handling_name " +
+					" END as hd_handling_name " +
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.id " +
-				"     ELSE " +
-				"       h.id " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.id " +
+					" ELSE " +
+					"   h.id " +
 				"   END as hd_id " +
 				"  ,CASE " +
-				"     WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
-				"       hb.zero_hidden " +
-				"     ELSE " +
-				"       h.zero_hidden " +
+					" WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN " +
+					"   hb.zero_hidden " +
+					" ELSE " +
+					"   h.zero_hidden " +
 				"   END as hd_zero_hidden " +
 				sqlFromPhrase +			//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
 				"   AND h.handling_name <> '" + HANDLING_TYPE_CASH + "' " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				" GROUP BY hd_id, hd_handling_name, hd_zero_hidden " +
 				"";
@@ -1187,22 +1200,22 @@ public class DailyAccount extends Controller {
 	/**
 	 * 残高取得用SQL作成(My貯金残高)
 	 * @param bolEach
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseIdealDepoInOut
 	 * @return
 	 */
 	private String makeSqlRemIdealDeposit(
 			boolean bolEach,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
 		String sql = "";
@@ -1230,11 +1243,11 @@ public class DailyAccount extends Controller {
 		// My貯金から直接支払：減算、My貯金に直接入金：加算、My貯金預入：加算、My貯金引出：減算
 		String sqlSumCaseIdealDepoInOut = "" +
    				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
-   				"       AND r.ideal_deposit_mst_id IS NOT NULL " +
-   				"       ) THEN -r.amount " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN -r.amount " +
    				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_IN + "' " +
-   				"       AND r.ideal_deposit_mst_id IS NOT NULL " +
-   				"       ) THEN r.amount " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN r.amount " +
    				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
    				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
 				"";
@@ -1244,7 +1257,7 @@ public class DailyAccount extends Controller {
 			String sqlAllFirstDay = makeSqlRemIdealFirstDay(
 					false,
 					haUser,
-					sFirstDay,
+					strFirstDay,
 					sqlFromPhrase,
 					sqlSumCaseIdealDepoInOut
 					);
@@ -1259,14 +1272,14 @@ public class DailyAccount extends Controller {
 					" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 					"";
 			//2日目以降の残高取得用SQL作成（My貯金合計）
-			if(iDaysCnt>=2) {
+			if(intDaysCnt>=2) {
 				String sqlAllLater = makeSqlRemIdealLater(
 						false,
-						dStartDay,
-						iDaysCnt,
+						dteStartDay,
+						intDaysCnt,
 						haUser,
-						sFirstDay,
-						sNextFirst,
+						strFirstDay,
+						strNextFirst,
 						sqlFromPhrase,
 						sqlSumCaseIdealDepoInOut
 						);
@@ -1284,8 +1297,8 @@ public class DailyAccount extends Controller {
 		String sqlDailyLater = "";
 		String sqlDailyZero = "";
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(dStartDay);
-		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 1; iDay <= intDaysCnt; iDay++) {
 			sqlDailyZero += "" +
 					" OR  sum_day_" + iDay + " <> 0 ";
 			calendar.add(Calendar.DATE, 1);
@@ -1298,21 +1311,21 @@ public class DailyAccount extends Controller {
 		String sqlEachFirstDay = makeSqlRemIdealFirstDay(
 				true,
 				haUser,
-				sFirstDay,
+				strFirstDay,
 				sqlFromPhrase,
 				sqlSumCaseIdealDepoInOut
 				);
 		//2日目以降の残高取得用SQL作成（取扱(My貯金)毎）
 		String sqlJoinPhrase = "";
 		String sqlEachLater = "";
-		if(iDaysCnt>=2) {
+		if(intDaysCnt>=2) {
 			sqlEachLater = makeSqlRemIdealLater(
 					true,
-					dStartDay,
-					iDaysCnt,
+					dteStartDay,
+					intDaysCnt,
 					haUser,
-					sFirstDay,
-					sNextFirst,
+					strFirstDay,
+					strNextFirst,
 					sqlFromPhrase,
 					sqlSumCaseIdealDepoInOut
 					);
@@ -1348,7 +1361,7 @@ public class DailyAccount extends Controller {
 	 * 初日の残高取得用SQL作成(My貯金残高)
 	 * @param bolEach
 	 * @param haUser
-	 * @param sFirstDay
+	 * @param strFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseIdealDepoInOut
 	 * @return
@@ -1356,7 +1369,7 @@ public class DailyAccount extends Controller {
 	private String makeSqlRemIdealFirstDay(
 			boolean bolEach,
 			HaUser haUser,
-			String sFirstDay,
+			String strFirstDay,
 			String sqlFromPhrase,
 			String sqlSumCaseIdealDepoInOut
 			) {
@@ -1381,11 +1394,11 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +	//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            AND r.ideal_deposit_mst_id IS NOT NULL " +
-				"            ) " +
-   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-   				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+							"AND r.ideal_deposit_mst_id IS NOT NULL " +
+							") " +
+						"OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
    				(bolEach ?
 				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
@@ -1401,22 +1414,22 @@ public class DailyAccount extends Controller {
 	/**
 	 * 2日目以降の残高取得用SQL作成(My貯金残高)
 	 * @param bolEach
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseIdealDepoInOut
 	 * @return
 	 */
 	private String makeSqlRemIdealLater(
 			boolean bolEach,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumCaseIdealDepoInOut
 			) {
@@ -1426,18 +1439,18 @@ public class DailyAccount extends Controller {
 		String sqlDaily = "";
 		
 		//日付毎の合計取得部分のSQL
-		calendar.setTime(dStartDay);
-		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
 			calendar.add(Calendar.DATE, 1);
 			sqlDaily += "" +
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-					"       CASE " +
+						" WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
 					sqlSumCaseIdealDepoInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
-					"       END " +
-					"     ELSE 0 " +
+						"   END " +
+						" ELSE 0 " +
 					"   END" +
 					" ), 0) as sum_day_" + iDay + " ";
 		}
@@ -1454,12 +1467,12 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            AND r.ideal_deposit_mst_id IS NOT NULL " +
-				"            ) " +
-   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-   				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+							"AND r.ideal_deposit_mst_id IS NOT NULL " +
+							") " +
+						"OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
    				(bolEach ?
 				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
@@ -1474,21 +1487,21 @@ public class DailyAccount extends Controller {
 	
 	/**
 	 * 残高取得用SQL作成(My貯金してないお金)
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseNotIdealInOut
 	 * @return
 	 */
 	private String makeSqlRemNotIdealDeposit(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
 		String sql = "";
@@ -1516,11 +1529,11 @@ public class DailyAccount extends Controller {
 		// 収入でMy貯金未選択：加算、支出でMy貯金未選択：減算、My貯金引出：加算、My貯金預入：減算
 		String sqlSumCaseNotIdealInOut = "" +
 				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_IN + "' " +
-				"       AND r.ideal_deposit_mst_id IS NULL " +
-				"       ) THEN r.amount " +
+					"   AND r.ideal_deposit_mst_id IS NULL " +
+					"   ) THEN r.amount " +
 				" WHEN (    b.balance_type_name = '" + BALANCE_TYPE_OUT + "' " +
-				"       AND r.ideal_deposit_mst_id IS NULL " +
-				"       ) THEN -r.amount " +
+					"   AND r.ideal_deposit_mst_id IS NULL " +
+					"   ) THEN -r.amount " +
 				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN r.amount" +
 				" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN -r.amount" +
 				"";
@@ -1528,7 +1541,7 @@ public class DailyAccount extends Controller {
 		//初日の残高取得用SQL作成（My貯金してないお金合計）
 		String sqlAllFirstDay = makeSqlRemNotIdealFirstDay(
 				haUser,
-				sFirstDay,
+				strFirstDay,
 				sqlFromPhrase,
 				sqlSumCaseNotIdealInOut
 				);
@@ -1543,13 +1556,13 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 				"";
 		//2日目以降の残高取得用SQL作成（My貯金してないお金合計）
-		if(iDaysCnt>=2) {
+		if(intDaysCnt>=2) {
 			String sqlAllLater = makeSqlRemNotIdealLater(
-					dStartDay,
-					iDaysCnt,
+					dteStartDay,
+					intDaysCnt,
 					haUser,
-					sFirstDay,
-					sNextFirst,
+					strFirstDay,
+					strNextFirst,
 					sqlFromPhrase,
 					sqlSumCaseNotIdealInOut
 					);
@@ -1564,14 +1577,14 @@ public class DailyAccount extends Controller {
 	/**
 	 * 初日の残高取得用SQL作成(My貯金してないお金)
 	 * @param haUser
-	 * @param sFirstDay
+	 * @param strFirstDay
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseNotIdealInOut
 	 * @return
 	 */
 	private String makeSqlRemNotIdealFirstDay(
 			HaUser haUser,
-			String sFirstDay,
+			String strFirstDay,
 			String sqlFromPhrase,
 			String sqlSumCaseNotIdealInOut
 			) {
@@ -1591,11 +1604,11 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +	//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            AND r.ideal_deposit_mst_id IS NULL " +
-				"            ) " +
-   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-   				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
+							"AND r.ideal_deposit_mst_id IS NULL " +
+							") " +
+						"OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"";
 
@@ -1607,21 +1620,21 @@ public class DailyAccount extends Controller {
 	
 	/**
 	 * 2日目以降の残高取得用SQL作成(My貯金残高)
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @param sqlFromPhrase
 	 * @param sqlSumCaseNotIdealInOut
 	 * @return
 	 */
 	private String makeSqlRemNotIdealLater(
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst,
+			String strFirstDay,
+			String strNextFirst,
 			String sqlFromPhrase,
 			String sqlSumCaseNotIdealInOut
 			) {
@@ -1631,18 +1644,18 @@ public class DailyAccount extends Controller {
 		String sqlDaily = "";
 		
 		//日付毎の合計取得部分のSQL
-		calendar.setTime(dStartDay);
-		for(int iDay = 2; iDay <= iDaysCnt; iDay++) {
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
 			calendar.add(Calendar.DATE, 1);
 			sqlDaily += "" +
 					(iDay==2 ? " " : ",") +
 					" COALESCE(SUM(" +
 					"   CASE " +
-					"     WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
-					"       CASE " +
+						" WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
 					sqlSumCaseNotIdealInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
-					"       END " +
-					"     ELSE 0 " +
+						"   END " +
+						" ELSE 0 " +
 					"   END" +
 					" ), 0) as sum_day_" + iDay + " ";
 		}
@@ -1654,12 +1667,12 @@ public class DailyAccount extends Controller {
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"            AND r.ideal_deposit_mst_id IS NULL " +
-				"            ) " +
-   				"        OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-   				"        ) " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD') " +
-				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + sNextFirst + "', 'YYYYMMDD') " +
+							"AND r.ideal_deposit_mst_id IS NULL " +
+							") " +
+						"OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				"";
 		
@@ -1677,18 +1690,25 @@ public class DailyAccount extends Controller {
 	 */
 	private String makeSqlBalDaily(
 			Date dStartDay,
-			int iDaysCnt
+			int iDaysCnt,
+			String strLargeCategoryName
 			) {
    		String sqlDaily = "";
    		
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dStartDay);
+		String strAmount = "";
+		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
+			strAmount = " CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount ELSE -r.amount END ";
+		} else {
+			strAmount = " r.amount ";
+		}
 		for(int iDay = 1; iDay <= iDaysCnt; iDay++) {
 			sqlDaily += "" +
 					",COALESCE(SUM(" +
 					"  CASE " +
-					"    WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN r.amount " +
-					"    ELSE 0 " +
+						"WHEN cast(r.payment_date as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " + strAmount +
+						"ELSE 0 " +
 					"  END" +
 					"  ), 0) as sum_day_" + iDay + "";
 			calendar.add(Calendar.DATE, 1);
@@ -1720,36 +1740,36 @@ public class DailyAccount extends Controller {
 	/**
 	 * 収支取得用SQL作成(収入・支出)
 	 * @param bolEach
-	 * @param sLargeCategoryName
+	 * @param strLargeCategoryName
 	 * @param year
 	 * @param month
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @return
 	 */
 	private String makeSqlBalInOut(
 			boolean bolEach,
-			String sLargeCategoryName,	// 大分類行の名称「収入」・「支出」
+			String strLargeCategoryName,	// 大分類行の名称「収入」・「支出」
 			Integer year,
 			Integer month,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
-		String sqlDaily = makeSqlBalDaily(dStartDay, iDaysCnt);
-		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
+		String sqlDaily = makeSqlBalDaily(dteStartDay, intDaysCnt, strLargeCategoryName);
+		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dteStartDay, intDaysCnt);
 		
 		String sqlSelGroupby = "" +
    				"   0 as item_id, 0 as item_order" +
    				"  ,cast('' as character varying(255)) as item_name" +
-   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
-				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+   				"  ," + (strLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
+				"  ,cast('" + strLargeCategoryName + "' as character varying(255)) as cate_name " +
    				"  ,0 as bg_id " +
 				"";
 		String sqlGroupby = "" +
@@ -1763,7 +1783,7 @@ public class DailyAccount extends Controller {
 				"   ON i.id = bg.item_mst_id" +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON i.balance_type_mst_id = b.id " +
-				" WHERE b.balance_type_name = '" + sLargeCategoryName + "' " +
+				" WHERE b.balance_type_name = '" + strLargeCategoryName + "' " +
 				"   AND bg.ha_user_id = " + haUser.id +
 				"   AND bg.year = " + year +
 				"   AND bg.month = " + month +
@@ -1774,8 +1794,8 @@ public class DailyAccount extends Controller {
 	   				"   i.id as item_id " +
 	   				"  ,i.order_seq as item_order" +
 	   				"  ,i.item_name as item_name" +
-	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
-					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+	   				"  ," + (strLargeCategoryName.equals(BALANCE_TYPE_IN) ? 10 : 20) + " as cate_order " +
+					"  ,cast('" + strLargeCategoryName + "' as character varying(255)) as cate_name " +
 	   				"  ,bg.id as bg_id " +
 	   				"  ,bg.amount as bg_amount " +
 					"";
@@ -1796,20 +1816,21 @@ public class DailyAccount extends Controller {
 				"   bg_amount " +
 				sqlDailyAll +
 				"  ,sum_month " +
+				"  ,idepo_link " +
 				" FROM ( ( "
 						: "") +
    				" SELECT " +
    				sqlSelGroupby +
    				sqlDaily +
-   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
+				"  ,COALESCE(SUM(CASE WHEN (r.ideal_deposit_mst_id IS NULL) THEN r.amount ELSE 0 END), 0) as sum_month " +
+				"  ,COALESCE(SUM(CASE WHEN (r.ideal_deposit_mst_id IS NOT NULL) THEN r.amount ELSE 0 END), 0) as idepo_link " +
    				" FROM ItemMst i " +
 				" LEFT JOIN Record r " +
 				"   ON r.item_mst_id = i.id " +
 				"   AND r.ha_user_id = " + haUser.id +
-				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
-				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')" +
-				"   AND r.ideal_deposit_mst_id IS NULL "
-				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"   AND cast(r.payment_date as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD')" +
+				"   AND cast(r.payment_date as date) < to_date('" + strNextFirst + "', 'YYYYMMDD')" +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON i.balance_type_mst_id = b.id " +
 				" LEFT JOIN IdealDepositMst id " +
@@ -1822,7 +1843,7 @@ public class DailyAccount extends Controller {
 				"   AND bg.month = " + month 
 				: "") +
 				" WHERE i.ha_user_id = " + haUser.id +
-				"   AND b.balance_type_name = '" + sLargeCategoryName + "' " +
+				"   AND b.balance_type_name = '" + strLargeCategoryName + "' " +
 				sqlGroupby +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -1832,38 +1853,40 @@ public class DailyAccount extends Controller {
 	}
 	
 	/**
-	 * 収支取得用SQL作成(My貯金預入・My貯金から支払)
+	 * 収支取得用SQL作成(My貯金預入・引出)
 	 * @param bolEach
 	 * @param sLargeCategoryName
 	 * @param year
 	 * @param month
-	 * @param dStartDay
-	 * @param iDaysCnt
+	 * @param dteStartDay
+	 * @param intDaysCnt
 	 * @param haUser
-	 * @param sFirstDay
-	 * @param sNextFirst
+	 * @param strFirstDay
+	 * @param strNextFirst
 	 * @return
 	 */
 	private String makeSqlBalIdeal(
 			boolean bolEach,
-			String sLargeCategoryName,	// 大分類行の名称「My貯金預入」・「My貯金から支払」
+//			String sLargeCategoryName,	// 大分類行の名称「My貯金預入・引出」
 			Integer year,
 			Integer month,
-			Date dStartDay,
-			int iDaysCnt,
+			Date dteStartDay,
+			int intDaysCnt,
 			HaUser haUser,
-			String sFirstDay,
-			String sNextFirst
+			String strFirstDay,
+			String strNextFirst
 			) {
 		
-		String sqlDaily = makeSqlBalDaily(dStartDay, iDaysCnt);
-		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
+		String sqlDaily = makeSqlBalDaily(dteStartDay, intDaysCnt, BALANCE_TYPE_IDEAL_DEPOSIT_INOUT);
+		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dteStartDay, intDaysCnt);
 		
 		String sqlSelGroupby = "" +
    				"   0 as item_id, 0 as item_order " +
    				"  ,cast('' as character varying(255)) as item_name" +
-   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+//   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
+//				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+   				"  ," + 30 + " as cate_order " +
+				"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
    				"  ,0 as bg_id " +
 				"";
 		String sqlGroupby = "" +
@@ -1884,8 +1907,10 @@ public class DailyAccount extends Controller {
 	   				"   id.id as item_id " +
 	   				"  ,id.order_seq as item_order" +
 	   				"  ,id.ideal_deposit_name as item_name" +
-	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+//	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
+//					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+	   				"  ," + 30 + " as cate_order " +
+					"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
 	   				"  ,bg.id as bg_id " +
 	   				"  ,bg.amount as bg_amount " +
 					"";
@@ -1894,11 +1919,11 @@ public class DailyAccount extends Controller {
 					"";
 		}
 		
-		String sqlBalanceTypeName = "";
-		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
-			sqlBalanceTypeName = BALANCE_TYPE_IDEAL_DEPOSIT_IN;
-		if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
-			sqlBalanceTypeName = BALANCE_TYPE_OUT;
+//		String sqlBalanceTypeName = "";
+//		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
+//			sqlBalanceTypeName = BALANCE_TYPE_IDEAL_DEPOSIT_IN;
+//		if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
+//			sqlBalanceTypeName = BALANCE_TYPE_OUT;
 		
 		String sql = "" +
 				(!bolEach ? 
@@ -1912,12 +1937,121 @@ public class DailyAccount extends Controller {
 				"   bg_amount " +
    				sqlDailyAll +
 				"  ,sum_month " +
+				"  ,idepo_link " +
 				" FROM ( ( "
 						: "") +
    				" SELECT " +
    				sqlSelGroupby +
    				sqlDaily +
-   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
+//   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
+   				"  ,COALESCE(SUM(CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount ELSE -r.amount END), 0) as sum_month" +
+   				"  ,0 as idepo_link " +
+   				" FROM Record r " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN Budget bg " +
+				"   ON id.id = bg.ideal_deposit_mst_id" +
+				"   AND bg.ha_user_id = " + haUser.id +
+				"   AND bg.year = " + year +
+				"   AND bg.month = " + month +
+				" WHERE r.ha_user_id = " + haUser.id +
+				"   AND cast(r.payment_date as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD')" +
+				"   AND cast(r.payment_date as date) < to_date('" + strNextFirst + "', 'YYYYMMDD')" +
+//				"   AND b.balance_type_name = '" + sqlBalanceTypeName + "' " +
+//				"   AND b.balance_type_name IN('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+				"   AND (b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' OR b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+				"   AND r.ideal_deposit_mst_id IS NOT NULL "
+				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				sqlGroupby +
+				"";
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	private String makeSqlBalBank(
+			boolean bolEach,
+			Integer year,
+			Integer month,
+			Date dStartDay,
+			int iDaysCnt,
+			HaUser haUser,
+			String sFirstDay,
+			String sNextFirst
+			) {
+		
+		String sqlDaily = makeSqlBalDaily(dStartDay, iDaysCnt, BALANCE_TYPE_IDEAL_DEPOSIT_INOUT);
+		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
+		
+		String sqlSelGroupby = "" +
+   				"   0 as item_id, 0 as item_order " +
+   				"  ,cast('' as character varying(255)) as item_name" +
+//   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
+//				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+   				"  ," + 30 + " as cate_order " +
+				"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
+   				"  ,0 as bg_id " +
+				"";
+		String sqlGroupby = "" +
+				" ) a " +
+				" CROSS JOIN " +
+				" (" +
+				" SELECT " +
+				"   COALESCE(SUM(bg.amount), NULL) as bg_amount " +
+				" FROM Budget bg " +
+				" WHERE bg.ideal_deposit_mst_id IS NOT NULL " +
+				"   AND bg.ha_user_id = " + haUser.id +
+				"   AND bg.year = " + year +
+				"   AND bg.month = " + month +
+				" ) b ) " +
+				"";
+		if(bolEach) {
+			sqlSelGroupby = "" +
+	   				"   id.id as item_id " +
+	   				"  ,id.order_seq as item_order" +
+	   				"  ,id.ideal_deposit_name as item_name" +
+//	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
+//					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
+	   				"  ," + 30 + " as cate_order " +
+					"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
+	   				"  ,bg.id as bg_id " +
+	   				"  ,bg.amount as bg_amount " +
+					"";
+			sqlGroupby = "" +
+					" GROUP BY item_id, item_order, item_name, bg_id, bg_amount " +
+					"";
+		}
+		
+//		String sqlBalanceTypeName = "";
+//		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
+//			sqlBalanceTypeName = BALANCE_TYPE_IDEAL_DEPOSIT_IN;
+//		if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
+//			sqlBalanceTypeName = BALANCE_TYPE_OUT;
+		
+		String sql = "" +
+				(!bolEach ? 
+				" SELECT " +
+				"   item_id, " +
+				"   item_order, " +
+				"   item_name, " +
+				"   cate_order, " +
+				"   cate_name, " +
+				"   bg_id, " +
+				"   bg_amount " +
+   				sqlDailyAll +
+				"  ,sum_month " +
+				"  ,idepo_link " +
+				" FROM ( ( "
+						: "") +
+   				" SELECT " +
+   				sqlSelGroupby +
+   				sqlDaily +
+//   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
+   				"  ,COALESCE(SUM(CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount ELSE -r.amount END), 0) as sum_month" +
+   				"  ,0 as idepo_link " +
    				" FROM Record r " +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON r.balance_type_mst_id = b.id " +
@@ -1931,7 +2065,9 @@ public class DailyAccount extends Controller {
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')" +
-				"   AND b.balance_type_name = '" + sqlBalanceTypeName + "' " +
+//				"   AND b.balance_type_name = '" + sqlBalanceTypeName + "' " +
+//				"   AND b.balance_type_name IN('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+				"   AND (b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' OR b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 				"   AND r.ideal_deposit_mst_id IS NOT NULL "
 				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				sqlGroupby +
@@ -1966,27 +2102,31 @@ public class DailyAccount extends Controller {
 		
 		/** 合計行の場合 **/
 		if(lngItemId==0) {
-			// 「収入」・「支出」・「My貯金預入」
+//			// 「収入」・「支出」・「My貯金預入」
+			// 「収入」・「支出」
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
-					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
-			}
-			//「収入」・「支出」の時は、My貯金＝NULL
-			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+//					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
+//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
-				wkDaToDl.setlIdealDepositId((long) -1);
-			}
-			// 「My貯金預入」
-			if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
+			}
+//			//「収入」・「支出」の時は、My貯金＝NULL
+//			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
+//					strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
+//				wkDaToDl.setlIdealDepositId((long) -1);
+//			}
+//			// 「My貯金預入」
+//			if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+			// 「My貯金預入・引出」
+			if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
+//				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
 				wkDaToDl.setlIdealDepositId((long) -2);		//My貯金＝NULLでない
 			}
-			// 「My貯金から支払」
-			if(strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
-				wkDaToDl.setlIdealDepositId((long) -2);		//My貯金＝NULLでない
-			}
+//			// 「My貯金から支払」
+//			if(strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+//				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+//				wkDaToDl.setlIdealDepositId((long) -2);		//My貯金＝NULLでない
+//			}
 			
 			return wkDaToDl;
 		}
@@ -1998,21 +2138,23 @@ public class DailyAccount extends Controller {
 		if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 				strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
-			//取扱(My貯金)＝NULL
-			wkDaToDl.setlIdealDepositId((long) -1);
-//			workDaToDl.setiItemId(((ItemMst)(ItemMst.find("byItem_name", itemMst.item_name)).first()).id);
+//			//取扱(My貯金)＝NULL
+//			wkDaToDl.setlIdealDepositId((long) -1);
 			wkDaToDl.setiItemId(lngItemId);
 		}
-		// 「My貯金預入」
-		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
+//		// 「My貯金預入」
+//		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
+//			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
+//			wkDaToDl.setlIdealDepositId(lngItemId);
+//		}
+		// 「My貯金預入・引出」
+		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT))
 			wkDaToDl.setlIdealDepositId(lngItemId);
-		}
-		// 「My貯金から支払」
-		if(strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
-			wkDaToDl.setlIdealDepositId(lngItemId);
-		}
+//		// 「My貯金から支払」
+//		if(strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
+//			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
+//			wkDaToDl.setlIdealDepositId(lngItemId);
+//		}
 		// 「実残高」・「My貯金」
 		if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL) ||
 				strLargeCategoryName.equals(REMAINDER_TYPE_IDEAL_DEPOSIT)) {
@@ -2076,10 +2218,10 @@ public class DailyAccount extends Controller {
 	 */
 	public static void updBudget(
 			String bg_basis_date,
-    		List<Long> e_budget_id,			/* 変更行のID */
-    		List<String> e_large_category,	/* 変更行の大分類行の名称「収入」・「支出」・「My貯金預入」 */
-    		List<String> e_item,			/* 変更行の項目 */
-    		List<String> e_budget_amount	/* 変更行の金額 */
+			List<Long> e_budget_id,			/* 変更行のID */
+			List<String> e_large_category,	/* 変更行の大分類行の名称「収入」・「支出」・「My貯金預入」 */
+			List<String> e_item,			/* 変更行の項目 */
+			List<String> e_budget_amount	/* 変更行の金額 */
 			) {
 		
 		Iterator<String> sELargeCategory = e_large_category.iterator();
@@ -2112,7 +2254,7 @@ public class DailyAccount extends Controller {
 					);
 		}
 		
-    	dailyAccount(bg_basis_date);
+		dailyAccount(bg_basis_date);
 	}
 	
 	/**
@@ -2153,16 +2295,16 @@ public class DailyAccount extends Controller {
 						);
 				
 				// Validate
-			    validation.valid(eBudget);
-			    if(validation.hasErrors()) {
-			    	dailyAccount(bg_basis_date);
-			    }
+				validation.valid(eBudget);
+				if(validation.hasErrors()) {
+					dailyAccount(bg_basis_date);
+				}
 				// 項目が変更されていた行だけ更新
 				if (budget.amount != eBudget.amount) {
 					budget.amount = eBudget.amount;
-				    
-				    // 保存
-				    budget.save();
+					
+					// 保存
+					budget.save();
 				}
 				
 				return;
@@ -2190,12 +2332,12 @@ public class DailyAccount extends Controller {
 					);
 			
 			// Validate
-		    validation.valid(budget);
-		    if(validation.hasErrors()) {
-		    	dailyAccount(bg_basis_date);
-		    }
-		    // 保存
-		    budget.save();
+			validation.valid(budget);
+			if(validation.hasErrors()) {
+				dailyAccount(bg_basis_date);
+			}
+			// 保存
+			budget.save();
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

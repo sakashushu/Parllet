@@ -7,7 +7,7 @@ jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
 	var daCate2MaxWidth;
 	if(jQuery('.da_cate2').length > 0)
-		daCate2MaxWidth = jQuery('.da_cate2').css('max-width').replace("px", "")-0;
+		daCate2MaxWidth = parseInt(jQuery('.da_cate2').css('max-width').replace("px", ""));
 	jQuery('.da_cate2').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
@@ -336,19 +336,17 @@ function addFigure(str) {
 					<div class="da_hd_cate1_2 da_head second">
 					</div>
 					<div class="da_budget da_head second">
-						  #{if strTableType== messages.get('views.dailyaccount.dailyaccount')}
-							<!-- 予算 -->
-							&{'views.dailyaccount.lbl.monthBudget'}
-							<input type="submit" value="&{'views.common.update'}" id="idSbmtUpdBudget" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
-						  #{/if}
+						<!-- 予算 -->
+						&{'views.dailyaccount.lbl.monthBudget'}
+						<input type="submit" value="&{'views.common.update'}" id="idSbmtUpdBudget" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
 					</div>
 					<div class="da_sum_month da_head second">
-						${strTableType== messages.get('views.dailyaccount.dailyaccount') ? messages.get('views.dailyaccount.lbl.monthSum') : ""}
-						<div style="font-size: 90%; font-weight: normal;">(予算対象)</div>
+						&{'views.dailyaccount.lbl.monthSum'}
+						<div class="da_budget_subject">(&{'views.dailyaccount.lbl.budget.subject'})</div>
 					</div>
-					<div class="da_sum_month da_head second">
-						My貯金連結
-						<div style="font-size: 90%; font-weight: normal;">(予算対象外)</div>
+					<div class="da_idepo_link da_head second">
+						&{'views.dailyaccount.lbl.idepoLink'}
+						<div class="da_budget_subject">(&{'views.dailyaccount.lbl.budget.notSubject'})</div>
 					</div>
 				</li>
 			</ul>
@@ -459,8 +457,14 @@ function addFigure(str) {
 								</span>
 							</div>
 							<div class="da_sum_month numeric">
-								<span class="num3">
-									
+								<span class="num3">	
+									#{if lwda.sLargeCategory==messages.get('BalanceType.in') ||
+											lwda.sLargeCategory==messages.get('BalanceType.out')}
+										${lwda.lIdepoLink}
+									#{/if}
+									#{else}
+										-
+									#{/else}
 								</span>
 							</div>
 						</li>

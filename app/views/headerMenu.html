@@ -1,12 +1,12 @@
 <li>
 	<ul id="memberMenu" >
 		<li class="${request.controller == 'DailyAccount' &&
-					strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
-			<a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
-		</li>
-		<li class="${request.controller == 'DailyAccount' &&
 					strTableType == messages.get('views.dailyaccount.balancetable') ? 'selected' : ''}">
 			<a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a>
+		</li>
+		<li class="${request.controller == 'DailyAccount' &&
+					strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
+			<a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
 		</li>
 		<li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
 			<a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>

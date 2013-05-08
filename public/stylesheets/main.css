@@ -385,7 +385,7 @@ a.aBtn:hover span{
 
 #logo_alpha-img:hover {
 	width: 240px;
-	height: 70px;;
+	height: 60px;;
 }
 
 #logo_alpha-img span {
@@ -395,6 +395,7 @@ a.aBtn:hover span{
 	border:1px solid #cccccc;
 	color:#8c5e00;
 	background-color:#ffffff;
+	font-size: 11pt;
 }
  
 #logo_alpha-img:hover span{
@@ -920,9 +921,14 @@ fieldset {
 	border-bottom: 1px solid #aaa;
 }
 
-.da_sum_month {
+.da_sum_month , .da_idepo_link {
 	width: 96px;
 	border-bottom: 1px solid #aaa;
+}
+
+.da_budget_subject {
+	font-size: 90%;
+	font-weight: normal;
 }
 
 .da_left_cell {
@@ -1026,15 +1032,15 @@ fieldset {
 	max-width: 150px;
 }
 .bt_cate_small span {
-	display:none;
-	padding:5px;
-	border:1px solid #cccccc;
-	color:#8c5e00;
-	background-color:#ffffff;
+	display: none;
+	padding: 5px;
+	border: 1px solid #cccccc;
+	color: #8c5e00;
+	background-color: #ffffff;
 }
 .bt_cate_small:hover span{
-	display:inline;
-	position:absolute;
+	display: inline;
+	position: absolute;
 }
 
 .bt_ary_day {

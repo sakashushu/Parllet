@@ -113,10 +113,10 @@ jQuery(function() {
 				request.controller=='IdealDepositMsts' ||
 				request.controller=='Budgets' ||
 				request.controller=='Records'}
-				#{a @DailyAccount.dailyAccount()}&{'views.admin.memberMenu'}#{/a}
+				#{a @DailyAccount.balanceTable()}&{'views.headerTools.memberMenu'}#{/a}
 			#{/if}
 			#{else}
-				#{a @HaUsers.list()}&{'views.admin.adminMenu'}#{/a}
+				#{a @HaUsers.list()}&{'views.headerTools.adminMenu'}#{/a}
 			#{/else}
 		</li>
 		#{/secure.check}

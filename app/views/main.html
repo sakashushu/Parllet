@@ -52,10 +52,17 @@
 
 #{set 'logoPre'}
 	<div style="width: 100px;">
-	&{'views.main.tools.logo.pre1'}
-	<br>
-	&{'views.main.tools.logo.pre2'}
+		&{'views.main.tools.logo.pre1'}
+		<br>
+		&{'views.main.tools.logo.pre2'}
 	</div>
+	<span id="logo_alpha-img">
+		&{'views.main.tools.logo'}
+		<span>
+			&{'views.main.tools.logo.alpha.caution1'}
+			&{'views.main.tools.logo.alpha.caution2'}
+		</span>
+	</span>
 #{/set}
 
 
@@ -63,9 +70,6 @@
 	#{a @MyDpRt.index()}
 		<span id="logo-img">&{'views.main.tools.logo'}</span>
 	#{/a}
-		<span id="logo_alpha-img">&{'views.main.tools.logo'}
-			<span>ネットでMy貯金はアルファ版です。<br>ご承知おきください。</span>
-		</span>
 #{/set}
 
 #{doLayout /}

@@ -4,9 +4,8 @@
 <script type="text/javascript">
 <!--
 jQuery(function() {
-	
 	/* table-cell内の文字列が入りきらない場合の調整 */
-	var btCateSmallMaxWidth = jQuery('.bt_cate_small').css('max-width').replace("px", "")-1; // lrb_Lineの1pxを引く
+	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", ""));
 	jQuery('.bt_cate_small').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
