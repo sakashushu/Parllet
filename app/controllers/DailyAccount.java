@@ -378,10 +378,9 @@ public class DailyAccount extends Controller {
 			wDaEach.setsItem(String.valueOf(objEach[2]));
 			wDaEach.setbBudgetFlg(false);
 	
-			//「収入」・「支出」・「My貯金預入・引出」の場合、予算有無フラグを立てる
+			//「収入」・「支出」・「My貯金預入・引出」の場合、予算有フラグを立てる
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
 				wDaEach.setbBudgetFlg(true);
 			}
@@ -431,12 +430,14 @@ public class DailyAccount extends Controller {
 			wDaEach.setLstWdtd(lstWdtd);
 //			wDaEach.setLSumMonth(lngSum);
 //			//「収入」・「支出」・「My貯金預入」・「My貯金から支払」の場合、月計をセット
-			//「収入」・「支出」・「My貯金預入・引出」の場合、月計をセット
+			//「収入」・「支出」・「My貯金預入・引出」・「口座預入」・「口座引出」の場合、月計をセット
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
 //					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
 //					strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
-					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
+					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_BANK_IN) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_BANK_OUT)) {
 				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[intDaysCnt+7])));
 			}
 			//「収入」・「支出」の場合、My貯金連結をセット
@@ -525,9 +526,14 @@ public class DailyAccount extends Controller {
 //					BALANCE_TYPE_OUT_IDEAL_DEPOSIT,
 //					year, month, dStartDay, iDaysCnt, haUser, strFirstDay, strNextFirst
 //					);
-			//収支取得用SQL作成(My貯金預入・引出)(合計)
-			String sqlBalBankInOutAll = makeSqlBalBank(
-					false,
+			//収支取得用SQL作成(口座預入)(合計)
+			String sqlBalBankInAll = makeSqlBalBank(
+					BALANCE_TYPE_BANK_IN,
+					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
+					);
+			//収支取得用SQL作成(口座引出)(合計)
+			String sqlBalBankOutAll = makeSqlBalBank(
+					BALANCE_TYPE_BANK_OUT,
 					year, month, dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 					);
 			
@@ -547,6 +553,10 @@ public class DailyAccount extends Controller {
 //					" ( " + sqlBalOutIdealAll + " ) " +
 //					" UNION ALL " +
 //					" ( " + sqlBalOutIdeal + " ) " +
+					" UNION ALL " +
+					" ( " + sqlBalBankInAll + " ) " +
+					" UNION ALL " +
+					" ( " + sqlBalBankOutAll + " ) " +
 					" ORDER BY cate_order, item_order " +
 					"";
 			
@@ -1855,7 +1865,7 @@ public class DailyAccount extends Controller {
 	/**
 	 * 収支取得用SQL作成(My貯金預入・引出)
 	 * @param bolEach
-	 * @param sLargeCategoryName
+	 * @param strLargeCategoryName
 	 * @param year
 	 * @param month
 	 * @param dteStartDay
@@ -1867,7 +1877,7 @@ public class DailyAccount extends Controller {
 	 */
 	private String makeSqlBalIdeal(
 			boolean bolEach,
-//			String sLargeCategoryName,	// 大分類行の名称「My貯金預入・引出」
+//			String strLargeCategoryName,	// 大分類行の名称「My貯金預入・引出」
 			Integer year,
 			Integer month,
 			Date dteStartDay,
@@ -1972,8 +1982,20 @@ public class DailyAccount extends Controller {
 		return sql;
 	}
 	
+	/**
+	 * 収支取得用SQL作成(口座預入・口座引出)
+	 * @param sLargeCategoryName
+	 * @param year
+	 * @param month
+	 * @param dStartDay
+	 * @param iDaysCnt
+	 * @param haUser
+	 * @param sFirstDay
+	 * @param sNextFirst
+	 * @return
+	 */
 	private String makeSqlBalBank(
-			boolean bolEach,
+			String strLargeCategoryName,	// 大分類行の名称「口座預入・口座引出」
 			Integer year,
 			Integer month,
 			Date dStartDay,
@@ -1983,93 +2005,33 @@ public class DailyAccount extends Controller {
 			String sNextFirst
 			) {
 		
-		String sqlDaily = makeSqlBalDaily(dStartDay, iDaysCnt, BALANCE_TYPE_IDEAL_DEPOSIT_INOUT);
-		String sqlDailyAll = bolEach ? "" : makeSqlBalDailyAll(dStartDay, iDaysCnt);
+		String sqlDaily = makeSqlBalDaily(dStartDay, iDaysCnt, strLargeCategoryName);
 		
 		String sqlSelGroupby = "" +
    				"   0 as item_id, 0 as item_order " +
    				"  ,cast('' as character varying(255)) as item_name" +
-//   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-//				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
-   				"  ," + 30 + " as cate_order " +
-				"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
+   				"  ," + (strLargeCategoryName.equals(BALANCE_TYPE_BANK_IN) ? 50 : 60) + " as cate_order " +
+				"  ,cast('" + strLargeCategoryName + "' as character varying(255)) as cate_name " +
    				"  ,0 as bg_id " +
 				"";
-		String sqlGroupby = "" +
-				" ) a " +
-				" CROSS JOIN " +
-				" (" +
-				" SELECT " +
-				"   COALESCE(SUM(bg.amount), NULL) as bg_amount " +
-				" FROM Budget bg " +
-				" WHERE bg.ideal_deposit_mst_id IS NOT NULL " +
-				"   AND bg.ha_user_id = " + haUser.id +
-				"   AND bg.year = " + year +
-				"   AND bg.month = " + month +
-				" ) b ) " +
-				"";
-		if(bolEach) {
-			sqlSelGroupby = "" +
-	   				"   id.id as item_id " +
-	   				"  ,id.order_seq as item_order" +
-	   				"  ,id.ideal_deposit_name as item_name" +
-//	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-//					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
-	   				"  ," + 30 + " as cate_order " +
-					"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
-	   				"  ,bg.id as bg_id " +
-	   				"  ,bg.amount as bg_amount " +
-					"";
-			sqlGroupby = "" +
-					" GROUP BY item_id, item_order, item_name, bg_id, bg_amount " +
-					"";
-		}
-		
-//		String sqlBalanceTypeName = "";
-//		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
-//			sqlBalanceTypeName = BALANCE_TYPE_IDEAL_DEPOSIT_IN;
-//		if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
-//			sqlBalanceTypeName = BALANCE_TYPE_OUT;
+		String sqlGroupby = "";
 		
 		String sql = "" +
-				(!bolEach ? 
 				" SELECT " +
-				"   item_id, " +
-				"   item_order, " +
-				"   item_name, " +
-				"   cate_order, " +
-				"   cate_name, " +
-				"   bg_id, " +
-				"   bg_amount " +
-   				sqlDailyAll +
-				"  ,sum_month " +
-				"  ,idepo_link " +
-				" FROM ( ( "
-						: "") +
-   				" SELECT " +
-   				sqlSelGroupby +
-   				sqlDaily +
-//   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
-   				"  ,COALESCE(SUM(CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount ELSE -r.amount END), 0) as sum_month" +
+				sqlSelGroupby +
+				"  ,NULL as bg_amount " +
+				sqlDaily +
+//				"  ,COALESCE(SUM(CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount ELSE -r.amount END), 0) as sum_month" +
+				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
    				"  ,0 as idepo_link " +
    				" FROM Record r " +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN IdealDepositMst id " +
-				"   ON r.ideal_deposit_mst_id = id.id " +
-				" LEFT JOIN Budget bg " +
-				"   ON id.id = bg.ideal_deposit_mst_id" +
-				"   AND bg.ha_user_id = " + haUser.id +
-				"   AND bg.year = " + year +
-				"   AND bg.month = " + month +
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND cast(r.payment_date as date) >= to_date('" + sFirstDay + "', 'YYYYMMDD')" +
 				"   AND cast(r.payment_date as date) < to_date('" + sNextFirst + "', 'YYYYMMDD')" +
-//				"   AND b.balance_type_name = '" + sqlBalanceTypeName + "' " +
-//				"   AND b.balance_type_name IN('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-				"   AND (b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' OR b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
-				"   AND r.ideal_deposit_mst_id IS NOT NULL "
-				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"   AND (b.balance_type_name = '" + strLargeCategoryName + "') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
 				sqlGroupby +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -2102,24 +2064,15 @@ public class DailyAccount extends Controller {
 		
 		/** 合計行の場合 **/
 		if(lngItemId==0) {
-//			// 「収入」・「支出」・「My貯金預入」
-			// 「収入」・「支出」
+			// 「収入」・「支出」・「口座預入」・「口座引出」
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-					strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
+					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_BANK_IN) ||
+					strLargeCategoryName.equals(BALANCE_TYPE_BANK_OUT)) {
 				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
 			}
-//			//「収入」・「支出」の時は、My貯金＝NULL
-//			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
-//				wkDaToDl.setlIdealDepositId((long) -1);
-//			}
-//			// 「My貯金預入」
-//			if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
 			// 「My貯金預入・引出」
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
-//				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
 				wkDaToDl.setlIdealDepositId((long) -2);		//My貯金＝NULLでない
 			}
 //			// 「My貯金から支払」
@@ -2138,15 +2091,8 @@ public class DailyAccount extends Controller {
 		if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 				strLargeCategoryName.equals(BALANCE_TYPE_OUT)) {
 			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
-//			//取扱(My貯金)＝NULL
-//			wkDaToDl.setlIdealDepositId((long) -1);
 			wkDaToDl.setiItemId(lngItemId);
 		}
-//		// 「My貯金預入」
-//		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-//			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
-//			wkDaToDl.setlIdealDepositId(lngItemId);
-//		}
 		// 「My貯金預入・引出」
 		if(strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT))
 			wkDaToDl.setlIdealDepositId(lngItemId);

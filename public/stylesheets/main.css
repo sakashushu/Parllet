@@ -951,6 +951,15 @@ fieldset {
 }
 
 
+.daBudgetSubject {
+	background: rgb(230,232,125);
+}
+.daBudgetNotSubject {
+	background: rgb(242,255,168);
+}
+
+
+
 /* .menu_cell コンテキストメニューを出すセルのクリックイベント用 */
 .menu_cell, .menu_member {
 	background: url(/public/images/white20.png);

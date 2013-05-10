@@ -419,7 +419,7 @@ function addFigure(str) {
 								#{if lwda.sItem != ''}
 									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
 									<div class="da_cate2">${lwda.sItem}</div>
-									<div class="da_budget">
+									<div class="da_budget daBudgetSubject">
 										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" />
 										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
 										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
@@ -429,7 +429,7 @@ function addFigure(str) {
 								<!-- 大分類毎 -->
 								#{else}
 									<div class="da_cate1_2">${lwda.sLargeCategory}</div>
-									<div class="da_budget numeric">
+									<div class="da_budget numeric daBudgetSubject">
 										<span class="num3">
 											<!-- 
 											${lwda.sBudgetAmount}
@@ -451,12 +451,17 @@ function addFigure(str) {
 									<div class="da_cate1_2_budget">${lwda.sLargeCategory}</div>
 								#{/else}
 							#{/else}
-							<div class="da_sum_month numeric">
+							<div class="da_sum_month numeric 
+										${lwda.sLargeCategory==messages.get('BalanceType.in') ||
+										lwda.sLargeCategory==messages.get('BalanceType.out') ||
+										lwda.sLargeCategory==messages.get('BalanceType.ideal_deposit_inOut') ? 'daBudgetSubject' : ''}">
 								<span class="num3">
 									${lwda.lSumMonth}
 								</span>
 							</div>
-							<div class="da_sum_month numeric">
+							<div class="da_sum_month numeric 
+										${lwda.sLargeCategory==messages.get('BalanceType.in') ||
+										lwda.sLargeCategory==messages.get('BalanceType.out') ? 'daBudgetNotSubject' : ''}">
 								<span class="num3">	
 									#{if lwda.sLargeCategory==messages.get('BalanceType.in') ||
 											lwda.sLargeCategory==messages.get('BalanceType.out')}
