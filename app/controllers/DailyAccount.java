@@ -1865,7 +1865,6 @@ public class DailyAccount extends Controller {
 	/**
 	 * 収支取得用SQL作成(My貯金預入・引出)
 	 * @param bolEach
-	 * @param strLargeCategoryName
 	 * @param year
 	 * @param month
 	 * @param dteStartDay
@@ -1877,7 +1876,6 @@ public class DailyAccount extends Controller {
 	 */
 	private String makeSqlBalIdeal(
 			boolean bolEach,
-//			String strLargeCategoryName,	// 大分類行の名称「My貯金預入・引出」
 			Integer year,
 			Integer month,
 			Date dteStartDay,
@@ -1893,8 +1891,6 @@ public class DailyAccount extends Controller {
 		String sqlSelGroupby = "" +
    				"   0 as item_id, 0 as item_order " +
    				"  ,cast('' as character varying(255)) as item_name" +
-//   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-//				"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
    				"  ," + 30 + " as cate_order " +
 				"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
    				"  ,0 as bg_id " +
@@ -1917,8 +1913,6 @@ public class DailyAccount extends Controller {
 	   				"   id.id as item_id " +
 	   				"  ,id.order_seq as item_order" +
 	   				"  ,id.ideal_deposit_name as item_name" +
-//	   				"  ," + (sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ? 30 : 40) + " as cate_order " +
-//					"  ,cast('" + sLargeCategoryName + "' as character varying(255)) as cate_name " +
 	   				"  ," + 30 + " as cate_order " +
 					"  ,cast('" + BALANCE_TYPE_IDEAL_DEPOSIT_INOUT + "' as character varying(255)) as cate_name " +
 	   				"  ,bg.id as bg_id " +
@@ -1928,12 +1922,6 @@ public class DailyAccount extends Controller {
 					" GROUP BY item_id, item_order, item_name, bg_id, bg_amount " +
 					"";
 		}
-		
-//		String sqlBalanceTypeName = "";
-//		if(sLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
-//			sqlBalanceTypeName = BALANCE_TYPE_IDEAL_DEPOSIT_IN;
-//		if(sLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT))
-//			sqlBalanceTypeName = BALANCE_TYPE_OUT;
 		
 		String sql = "" +
 				(!bolEach ? 
@@ -1953,7 +1941,6 @@ public class DailyAccount extends Controller {
    				" SELECT " +
    				sqlSelGroupby +
    				sqlDaily +
-//   				"  ,COALESCE(SUM(r.amount), 0) as sum_month" +
    				"  ,COALESCE(SUM(CASE WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount ELSE -r.amount END), 0) as sum_month" +
    				"  ,0 as idepo_link " +
    				" FROM Record r " +
@@ -1969,8 +1956,6 @@ public class DailyAccount extends Controller {
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND cast(r.payment_date as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD')" +
 				"   AND cast(r.payment_date as date) < to_date('" + strNextFirst + "', 'YYYYMMDD')" +
-//				"   AND b.balance_type_name = '" + sqlBalanceTypeName + "' " +
-//				"   AND b.balance_type_name IN('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 				"   AND (b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' OR b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 				"   AND r.ideal_deposit_mst_id IS NOT NULL "
 				 + ((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
@@ -2174,12 +2159,12 @@ public class DailyAccount extends Controller {
 		Iterator<String> sEItem = e_item.iterator();
    		Iterator<String> sEBudgetAmount = e_budget_amount.iterator();
 		for (Long lngId : e_budget_id) {
-			String sEBudgetAmountVal = sEBudgetAmount.next(); 
-			String sELargeCategoryVal = sELargeCategory.next();
-			String sEItemVal = sEItem.next();
+			String strEBudgetAmountVal = sEBudgetAmount.next(); 
+			String strELargeCategoryVal = sELargeCategory.next();
+			String strEItemVal = sEItem.next();
 
 			//予算が空白にされた時
-			if(sEBudgetAmountVal.equals("")) {
+			if(strEBudgetAmountVal.equals("")) {
 				//既存レコードが無ければなにもしない
 				if(lngId==0L)
 					continue;
@@ -2194,9 +2179,9 @@ public class DailyAccount extends Controller {
 			actUpdBudget(
 					bg_basis_date,
 					lngId,
-					sELargeCategoryVal,
-					sEItemVal,
-					sEBudgetAmountVal
+					strELargeCategoryVal,
+					strEItemVal,
+					strEBudgetAmountVal
 					);
 		}
 		
@@ -2207,23 +2192,23 @@ public class DailyAccount extends Controller {
 	 * 予算更新実処理
 	 * @param bg_basis_date
 	 * @param lngId
-	 * @param sELargeCategoryVal
-	 * @param sEItemVal
-	 * @param sEBudgetAmountVal
+	 * @param strELargeCategoryVal
+	 * @param strEItemVal
+	 * @param strEBudgetAmountVal
 	 */
 	private static void actUpdBudget(
 			String bg_basis_date,
 			Long lngId,
-			String sELargeCategoryVal,
-			String sEItemVal,
-			String sEBudgetAmountVal
+			String strELargeCategoryVal,
+			String strEItemVal,
+			String strEBudgetAmountVal
 			) {
 		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
 		NumberFormat nf = NumberFormat.getInstance();
 
 		try {
 			//数値文字列をNumber型のオブジェクトに変換する
-			Number nEBudgetAmount = nf.parse(sEBudgetAmountVal);
+			Number nEBudgetAmount = nf.parse(strEBudgetAmountVal);
 			//Number型のオブジェクトからInteger値を取得する
 			Integer iEBudgetAmount = nEBudgetAmount.intValue();
 			
@@ -2261,12 +2246,12 @@ public class DailyAccount extends Controller {
 			calendar.setTime(DateFormat.getDateInstance().parse(bg_basis_date));
 			ItemMst itemMst = null;
 			IdealDepositMst idealDepositMst = null;
-			//大分類が「My貯金預入」の場合は「取扱(My貯金)」ごとの登録
-			if(sELargeCategoryVal.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN)) {
-				idealDepositMst = IdealDepositMst.find("ha_user = " + haUser.id + " and ideal_deposit_name = '" + sEItemVal + "'").first();
-			//大分類が「My貯金預入」でない場合は「項目」ごとの登録
+			//大分類が「My貯金預入・引出」の場合は「取扱(My貯金)」ごとの登録
+			if(strELargeCategoryVal.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT)) {
+				idealDepositMst = IdealDepositMst.find("ha_user = " + haUser.id + " and ideal_deposit_name = '" + strEItemVal + "'").first();
+			//大分類が「My貯金預入・引出」でない場合は「項目」ごとの登録
 			} else {
-				itemMst = ItemMst.find("ha_user = " + haUser.id + " and item_name = '" + sEItemVal + "'").first();
+				itemMst = ItemMst.find("ha_user = " + haUser.id + " and item_name = '" + strEItemVal + "'").first();
 			}
 			Budget budget = new Budget(
 					haUser,
@@ -2290,42 +2275,4 @@ public class DailyAccount extends Controller {
 			e.printStackTrace();
 		}
 	}
-	
-//	/**
-//	 * 日付数値の妥当性チェック
-//	 * @param intDate
-//	 * @return 存在する日付の場合true
-//	 */
-//	private boolean checkIntDate(Integer intDate) {
-//			if(intDate<10000101 ||
-//					intDate>99991231)
-//				return false;
-//				
-//			String strTmp = intDate.toString();
-//			String sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6);
-//			//日付の妥当性チェック
-//			return checkDate(sBasisDate);
-//	}
-//	
-//	/**
-//	 * 日付の妥当性チェックを行います。
-//	 * 指定した日付文字列（yyyy/MM/dd or yyyy-MM-dd）が
-//	 * カレンダーに存在するかどうかを返します。
-//	 * @param strDate チェック対象の文字列
-//	 * @return 存在する日付の場合true
-//	 */
-//	public static boolean checkDate(String strDate) {
-//		if (strDate == null || strDate.length() != 10)
-//			return false;
-//		strDate = strDate.replace('-', '/');
-//		DateFormat format = DateFormat.getDateInstance();
-//		// 日付/時刻解析を厳密に行うかどうかを設定する。
-//		format.setLenient(false);
-//		try {
-//			format.parse(strDate);
-//			return true;
-//		} catch (Exception e) {
-//			return false;
-//		}
-//	}
 }
