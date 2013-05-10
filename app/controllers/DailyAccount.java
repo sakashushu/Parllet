@@ -2275,4 +2275,5 @@ public class DailyAccount extends Controller {
 			e.printStackTrace();
 		}
 	}
+	
 }
