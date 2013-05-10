@@ -95,10 +95,10 @@ jQuery(function(){
 
 //文字列を3桁区切りにする関数
 function addFigure(str) {
-    var num = new String(str).replace(/,|\n| |\t/g, "");
-//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	var num = new String(str).replace(/,|\n| |\t/g, "");
+//	while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
-    return num;
+	return num;
 }
 
 /* 日付選択時にjumpするdatepicker */
@@ -132,15 +132,18 @@ jQuery(function(){
 	// 左クリックか右クリックでメニュー表示
 	jQuery('.menu_cell').mousedown(function(e) {
 		if(e.which==1 || e.which==3) {
-			//残高明細（口座系）へジャンプする際の絞込項目セット
-			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
-			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
-			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
-			
-			//残高明細（My貯金）へジャンプする際の絞込項目セット
-			jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
-			jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
-			jQuery('#idDlRiHdIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			if(jQuery('.ToDlHandlingId',this).val()!=undefined) {
+				//残高明細（口座系）へジャンプする際の絞込項目セット
+				jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
+				jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
+				jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
+			}
+			if(jQuery('.ToDlIdealDepositId',this).val()!=undefined) {
+				//残高明細（My貯金）へジャンプする際の絞込項目セット
+				jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
+				jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
+				jQuery('#idDlRiHdIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			}
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -160,12 +163,10 @@ jQuery(function(){
 				},
 				items: {}
 			};
-			if (jQuery('#hHandlingId').val()!='') {
+			if(jQuery('#hHandlingId').val()!='')
 				options.items.toDlRemainderBank = {name: "&{'views.common.menu.toDlRemainderBank'}"};
-			}
-			if (jQuery('#idDlRiHdIdealDepositId').val()!='') {
+			if (jQuery('#idDlRiHdIdealDepositId').val()!='')
 				options.items.toDlRemainderIdeal = {name: "&{'views.common.menu.toDlRemainderIdeal'}"};
-			}
 			return options;
 		}
 	});
@@ -207,11 +208,11 @@ jQuery(function(){
 
 	
 #{ifErrors}
-    <p class="crudFlash flashError">
+	<p class="crudFlash flashError">
 		#{errors}
 			${error}
 		#{/errors}
-    </p>
+	</p>
 #{/ifErrors}
 
 <!-- 日付移動用フォーム -->
@@ -268,12 +269,14 @@ jQuery(function(){
 		<div id="bt_tcol">
 			<div class="bt_tbl_all_l">
 				<ul class="bt_tbl_each">
-			        %{topFlg = 1}%
+					%{topFlg = 1}%
 					#{list items:lWDA, as:'lwda'}
 					  #{if lwda.sLargeCategory == messages.get('RemainderType.real')}
 						<li>
 							#{if lwda.sItem == ''}
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">${lwda.sLargeCategory}</div>
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large">
+									${lwda.sLargeCategory}
+								</div>
 								#{list items:lwda.lstWdtd, as:'wdtd'}
 									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
 										<span class="num3">${wdtd.lAmount}</span>
@@ -284,7 +287,7 @@ jQuery(function(){
 								<div class="bt_cate_small_pre"></div>
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small">${lwda.sItem}</div>
 								#{list items:lwda.lstWdtd, as:'wdtd'}
-									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric${lwda.sItem=='現金' ? '' : ' menu_cell'}">
+									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric${lwda.sItem==messages.get('HandlingType.cash') ? '' : ' menu_cell'}">
 										<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
 										<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
 										<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
@@ -293,7 +296,7 @@ jQuery(function(){
 								#{/list}
 							#{/else}
 						</li>
-				        %{topFlg = 0}%
+						%{topFlg = 0}%
 					  #{/if}
 					#{/list}
 				</ul>
@@ -301,7 +304,7 @@ jQuery(function(){
 	
 			<div class="bt_tbl_all_r">
 				<ul class="bt_tbl_each">
-			        %{topFlg = 1}%
+					%{topFlg = 1}%
 					#{list items:lWDA, as:'lwda'}
 					  #{if lwda.sLargeCategory != messages.get('RemainderType.real')}
 						<li>
@@ -322,7 +325,7 @@ jQuery(function(){
 								%{leftFlg = 0}%
 							#{/list}
 						</li>
-				        %{topFlg = 0}%
+						%{topFlg = 0}%
 					  #{/if}
 					#{/list}
 				</ul>
