@@ -1,0 +1,138 @@
+<script type="text/javascript">
+<!-- 
+/**
+ * マスター作成用ダイアログ
+ */
+function openDialogFrmUpdMst(strType, lngId) {
+	jQuery(function() {
+		var name = jQuery("#dlgName"),
+			lblName = jQuery("#lblName"),
+			lblNameTxt = strType+"&{'views.common.lbl.name'}",
+			zeroHddn = jQuery("#dlgZeroHddn"),
+			invFlg = jQuery("#dlgInvFlg"),
+			title = lngId==null ? strType+"&{'views.common.lbl.make'}" : strType+"&{'views.common.lbl.edit'}",
+			buttons = {},
+			btnMakeUpd = lngId==null ? "&{'views.common.lbl.make'}" : "&{'views.common.update'}",
+			allFields = jQuery([]).add(name),
+			tips = jQuery(".validateTips"),
+			intRslt = 0;
+		lblName.text(lblNameTxt);
+		name.val("");
+		zeroHddn.attr("checked", false);
+		invFlg.attr("checked", false);
+		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
+			jQuery('#dspZeroHddn').addClass("invisible");
+		} else {
+			jQuery('#dspZeroHddn').removeClass("invisible");
+		}
+		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}" ||
+				strType=="&{'views.config.cf_idealdepo'}" ||
+				lngId==null) {
+			jQuery('#dspInvFlg').addClass("invisible");
+		} else {
+			jQuery('#dspInvFlg').removeClass("invisible");
+		}
+		if (lngId!=null) {
+			var strErrMsg;
+			var jqxhrGetClms;
+			if (strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+				strErrMsg = "Common.getClmsHdlg";
+				jqxhrGetClms = jQuery.post('@{Common.getClmsHdlg}', {lngId: lngId});
+				jqxhrGetClms
+				.done(function(z) {
+					name.val(z.hlMst.handling_name);
+					zeroHddn.val(z.hlMst.zero_hidden);
+					invFlg.val(z.hlMst.invalidity_flg);
+				})
+				.fail(function() {
+					strErrMsg += " Failed";
+					alert(strErrMsg);
+				});
+			}
+			if (strType=="&{'views.config.cf_idealdepo'}") {
+				strErrMsg = "Common.getClmsIdepo";
+				jqxhrGetClms = jQuery.post('@{Common.getClmsIdepo}', {lngId: lngId});
+				jqxhrGetClms
+				.done(function(z) {
+					name.val(z.idMst.ideal_deposit_name);
+					zeroHddn.val(z.idMst.zero_hidden);
+				})
+				.fail(function() {
+					strErrMsg += " Failed";
+					alert(strErrMsg);
+				});
+			}
+		}
+		buttons[btnMakeUpd] = function() {
+			var bValid = true;
+			allFields.removeClass("ui-state-error");
+			bValid = bValid && checkRequired(name, lblNameTxt);
+			if (bValid) {
+				intRslt = 1;
+				jQuery(this).dialog("close");
+			}
+		}
+		buttons["&{'views.common.btn.cancel'}"] = function() {
+			jQuery(this).dialog("close");
+		}
+		function updateTips(t) {
+			tips
+				.css('padding', '0.3em')
+				.css('margin-bottom', '1em')
+				.text(t)
+				.addClass("ui-state-highlight");
+			setTimeout(function() {
+				tips.removeClass("ui-state-highlight", 1500);
+			}, 500);
+		}
+		function checkRequired(o, n) {
+			if (o.val()=="") {
+				o.addClass("ui-state-error");
+				updateTips(n + " &{'views.login.fbLogin.err.required'}");
+				return false;
+			} else {
+				return true;
+			}
+		}
+		function errValidateTable(o, s) {
+			o.addClass("ui-state-error");
+			updateTips(s);
+		}
+		jQuery("#dialog-makeMaster").dialog({
+			autoOpen: false,
+			resizable: false,
+			width:460,
+			modal: true,
+			title: title,
+			buttons: buttons,
+			close: function() {
+				//ダイアログクローズ時の処理は呼び出し元で行う
+				whenDialogFrmUpdMstClosed(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+			}
+		});
+		jQuery("#dialog-makeMaster").dialog("open");
+	});
+}
+// -->
+</script>
+
+<div id="dialog-makeMaster" class="invisible">
+	<div class="validateTips"></div>
+	<form>
+	<fieldset style="margin-top: 15px;">
+		<label for="name" id="lblName"></label>
+<!-- 
+		<input type="text" id="dlgName" class="text ui-widget-content ui-corner-all" />
+ -->
+		<input type="text" id="dlgName" class="text ui-widget-content" />
+		<div id="dspZeroHddn">
+			<input type="checkbox" id="dlgZeroHddn" />
+			<label for="zeroHddn" id="lblZeroHddn">&{'zero_hidden'}</label>
+		</div>
+		<div id="dspInvFlg">
+			<input type="checkbox" id="dlgInvFlg" />
+			<label for="InvFlg" id="lblInvFlg">&{'invalidity_flg'}</label>
+		</div>
+	</fieldset>
+	</form>
+</div>  <!-- dialog-makeMaster -->

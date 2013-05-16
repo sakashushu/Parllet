@@ -41,6 +41,7 @@ views.common.menu.toRecordEdit=このデータを編集
 views.common.btn.cancel=キャンセル
 views.common.lbl.name=名
 views.common.lbl.make=作成
+views.common.lbl.edit=編集
 views.common.data=データ
 views.common.update=更新
 
@@ -141,6 +142,9 @@ views.dialogConfirm.suffix.text3=を作成しますか？
 views.dialogConfirm.suffix.btn=を作成
 views.dialogConfirm.bkem.btn.makeBank=口座を作成
 views.dialogConfirm.bkem.btn.makeEmoney=電子マネーを作成
+
+views.contextMenu.add=&{%s}を追加
+views.contextMenu.upd=&{%s}を編集
 
 
 # テーブル

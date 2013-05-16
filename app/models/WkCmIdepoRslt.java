@@ -1,6 +1,6 @@
 package models;
 
-public class WkCmMkIdepoRslt {
+public class WkCmIdepoRslt {
 	private int intRslt;
 	private String strErr;
 	private IdealDepositMst idMst;

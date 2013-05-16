@@ -33,17 +33,8 @@ myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
 	}
 }%
 
-/* 収支種類名からidを逆引き */
-var bankInOutIds ={
-  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-	#{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
-		bType.balance_type_name==messages.get('BalanceType.bank_out')}
-      "${bType.balance_type_name}":"${bType.id}",
-	#{/if}
-  #{/list}
-},
 /* 「収支種類」ごとの「項目」のサブカテゴリー */
-subCatItem = {
+var subCatItem = {
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
 		bType.balance_type_name==messages.get('BalanceType.out')}
@@ -127,7 +118,6 @@ jQuery(function() {
 			jText=="&{'BalanceType.out'}") &&
 				jQuery(subCatItem[jVal]).length==0) {
 			e.preventDefault();
-			//口座・電子マネー作成用ダイアログ
 			if(jText=="&{'BalanceType.in'}")
 				//項目（収入）作成用ダイアログ
 				openDialogConfirm("&{'views.dialogConfirm.case.itemIn'}", jText);
@@ -385,24 +375,24 @@ function whenDialogConfirmClosed(intRslt) {
 			jQuery('#balance_type_mst').focus();
 			break;
 		case 1:
-			//口座作成フォームを開く
-			openDialogFrmMkMst("&{'views.config.cf_bank'}");
+			//口座更新フォームを開く
+			openDialogFrmUpdMst("&{'views.config.cf_bank'}");
 			break;
 		case 2:
-			//電子マネー作成フォームを開く
-			openDialogFrmMkMst("&{'views.config.cf_emoney'}");
+			//電子マネー更新フォームを開く
+			openDialogFrmUpdMst("&{'views.config.cf_emoney'}");
 			break;
 		case 3:
-			//My貯金作成フォームを開く
-			openDialogFrmMkMst("&{'views.config.cf_idealdepo'}");
+			//My貯金更新フォームを開く
+			openDialogFrmUpdMst("&{'views.config.cf_idealdepo'}");
 			break;
 		case 4:
-			//項目（収入）作成フォームを開く
-			openDialogFrmMkMst("&{'views.dialogConfirm.case.itemIn'}");
+			//項目（収入）更新フォームを開く
+			openDialogFrmUpdMst("&{'views.dialogConfirm.case.itemIn'}");
 			break;
 		case 5:
-			//項目（支出）作成フォームを開く
-			openDialogFrmMkMst("&{'views.dialogConfirm.case.itemOut'}");
+			//項目（支出）更新フォームを開く
+			openDialogFrmUpdMst("&{'views.dialogConfirm.case.itemOut'}");
 			break;
 		default:
     		alert("dialogConfirm return value error");
@@ -411,16 +401,16 @@ function whenDialogConfirmClosed(intRslt) {
 // -->
 </script>
 
-#{include 'dialogFrmMkMst.html' /}
+#{include 'dialogFrmUpdMst.html' /}
 <script type="text/javascript">
 <!--
-/* dialogFrmMkMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmMkMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
+/* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
+function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}")
-		strErrMsg = "Common.makeHdlg";
+		strErrMsg = "Common.updateHdlg";
 	if(strType=="&{'views.config.cf_idealdepo'}")
-		strErrMsg = "Common.makeIdepo";
+		strErrMsg = "Common.updateIdepo";
 	if(strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}")
 		strErrMsg = "Common.makeItem";
 	switch (intRslt) {
@@ -430,10 +420,10 @@ function whenDialogFrmMkMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 		case 1:
 			var jqxhrMkMst;
 			if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
-				jqxhrMkMst = jQuery.post('@{Common.makeHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
+				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType=="&{'views.config.cf_idealdepo'}") {
-				jqxhrMkMst = jQuery.post('@{Common.makeIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
+				jqxhrMkMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
 				var strBalanceType;
@@ -483,7 +473,7 @@ function whenDialogFrmMkMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			});
 			break;
 		default:
-    		alert("dialogFrmMkMst return value error");
+    		alert("dialogFrmUpdMst return value error");
 	}
 }
 // -->

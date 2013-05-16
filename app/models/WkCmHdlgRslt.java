@@ -1,6 +1,6 @@
 package models;
 
-public class WkCmMkHdlgRslt {
+public class WkCmHdlgRslt {
 	private int intRslt;
 	private String strErr;
 	private HandlingMst hlMst;

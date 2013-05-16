@@ -397,6 +397,11 @@ public class DailyAccount extends Controller {
 				wDaEach.setsBudgetAmount(sBudgetAmount);
 			}
 			
+			// 「実残高」の時は種類名に取扱種類名をｾｯﾄ
+			if(strLargeCategoryName.equals(REMAINDER_TYPE_REAL))
+				wDaEach.setStrTypeNm(String.valueOf(objEach[intDaysCnt+7]));
+			
+			
 			// 日毎
 			calendar.setTime(dteStartDay);
 			long lngEach = 0L;
@@ -805,6 +810,7 @@ public class DailyAccount extends Controller {
 		String sqlFirstDay = "" +
    				" SELECT " +
    				sqlDaily +
+				"  ,cast('' as character varying(255)) as item_type_name " +
 				sqlFromPhrase +		//FROM句
 				" WHERE r.ha_user_id = " + haUser.id +
 				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
@@ -926,6 +932,7 @@ public class DailyAccount extends Controller {
 				"  ,0 as bg_id " +
 				"  ,0 as bg_amount " +
 				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " +
+				"  ,cast(htm.handling_type_name as character varying(255)) as item_type_name " +
 				" FROM HandlingMst hm " +
 				" LEFT JOIN HandlingTypeMst htm " +
 				"   ON hm.handling_type_mst_id = htm.id " +
@@ -1295,6 +1302,12 @@ public class DailyAccount extends Controller {
 						);
 				sql += " CROSS JOIN (" + sqlAllLater + " ) rem_later ";
 			}
+			sql += "" +
+					" CROSS JOIN ( " +
+					" SELECT " +
+					"   cast('' as character varying(255)) as item_type_name " +
+					" ) sel_item_type_name " +
+					"";
 			while(!(sql.equals(sql.replaceAll("  ", " "))))
 				sql = sql.replaceAll("  ", " ");
 			
@@ -1354,6 +1367,7 @@ public class DailyAccount extends Controller {
 				"  ,0 as bg_id " +
 				"  ,0 as bg_amount " +
 				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " + sqlDailyLater +
+				"  ,cast('' as character varying(255)) as item_type_name " +
 				" FROM IdealDepositMst idm " +
 				" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
 				"   ON idm.id = rem_firstday.id_id" +
@@ -1578,6 +1592,12 @@ public class DailyAccount extends Controller {
 					);
 			sql += " CROSS JOIN (" + sqlAllLater + " ) rem_later ";
 		}
+		sql += "" +
+				" CROSS JOIN ( " +
+				" SELECT " +
+				"   cast('' as character varying(255)) as item_type_name " +
+				" ) sel_item_type_name " +
+				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
 			sql = sql.replaceAll("  ", " ");
 		

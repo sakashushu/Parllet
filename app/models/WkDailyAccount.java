@@ -15,6 +15,7 @@ public class WkDailyAccount {
 	private long lIdepoLink;			/* My貯金連結 */
 	private long[] lAryDays;			/* 日付毎 */
 	private List<WkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
+	private String strTypeNm;			/* 種類名 */
 	public String getsLargeCategory() {
 		return sLargeCategory;
 	}
@@ -92,5 +93,11 @@ public class WkDailyAccount {
 	}
 	public void setLstWdtd(List<WkDaToDl> lstWdtd) {
 		this.lstWdtd = lstWdtd;
+	}
+	public String getStrTypeNm() {
+		return strTypeNm;
+	}
+	public void setStrTypeNm(String strTypeNm) {
+		this.strTypeNm = strTypeNm;
 	}
 }

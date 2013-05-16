@@ -14,8 +14,8 @@ import models.HandlingMst;
 import models.HandlingTypeMst;
 import models.IdealDepositMst;
 import models.ItemMst;
-import models.WkCmMkHdlgRslt;
-import models.WkCmMkIdepoRslt;
+import models.WkCmHdlgRslt;
+import models.WkCmIdepoRslt;
 import models.WkCmMkItemRslt;
 import models.WkSyEsFbUsRslt;
 
@@ -434,13 +434,31 @@ public class Common extends Controller {
 	}
 	
 	/**
-	 * ダイアログフォームからHandlingMstの作成
+	 * HandlingMstのIDから各項目を取得
+	 * @param lngId
+	 */
+	public static void getClmsHdlg(Long lngId) {
+		WkCmHdlgRslt wr = new WkCmHdlgRslt();
+		HandlingMst hM = HandlingMst.findById(lngId);
+		wr.setHlMst(hM);
+		renderJSON(wr);
+	}
+	
+	public static void getClmsIdepo(Long lngId) {
+		WkCmIdepoRslt wr = new WkCmIdepoRslt();
+		IdealDepositMst iM = IdealDepositMst.findById(lngId);
+		wr.setIdMst(iM);
+		renderJSON(wr);
+	}
+	
+	/**
+	 * ダイアログフォームからHandlingMstの更新
 	 * @param strType
 	 * @param strName
 	 * @param bolZeroHddn
 	 */
-	public static void makeHdlg(String strType, String strName, boolean bolZeroHddn) {
-		WkCmMkHdlgRslt wr = new WkCmMkHdlgRslt();
+	public static void updateHdlg(String strType, String strName, Boolean bolZeroHddn, Boolean bolInvFlg, Long lngId) {
+		WkCmHdlgRslt wr = new WkCmHdlgRslt();
 		String strHandlingType = "";
 		if(strType.equals(Messages.get("views.config.cf_bank"))) {
 			strHandlingType = HANDLING_TYPE_BANK;
@@ -450,7 +468,7 @@ public class Common extends Controller {
 		}
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.handling_mst_save(null, strName, bolZeroHddn, false, refHandlingMst, strHandlingType);
+		Integer iRtn = cmn.handling_mst_save(lngId, strName, bolZeroHddn, bolInvFlg, refHandlingMst, strHandlingType);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
 		if(iRtn == 1) {
@@ -466,16 +484,16 @@ public class Common extends Controller {
 	}
 	
 	/**
-	 * ダイアログフォームからIdealDepositMstの作成
+	 * ダイアログフォームからIdealDepositMstの更新
 	 * @param strType
 	 * @param strName
 	 * @param bolZeroHddn
 	 */
-	public static void makeIdepo(String strName, boolean bolZeroHddn) {
-		WkCmMkIdepoRslt wr = new WkCmMkIdepoRslt();
+	public static void updateIdepo(String strName, boolean bolZeroHddn, Long lngId) {
+		WkCmIdepoRslt wr = new WkCmIdepoRslt();
 		RefIdealDepositMst refIdealDepositMst = new RefIdealDepositMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.ideal_deposit_mst_save(null, strName, bolZeroHddn, refIdealDepositMst);
+		Integer iRtn = cmn.ideal_deposit_mst_save(lngId, strName, bolZeroHddn, refIdealDepositMst);
 		IdealDepositMst iDM = refIdealDepositMst.idealDepositMst;
 		
 		if(iRtn == 1) {
@@ -490,6 +508,11 @@ public class Common extends Controller {
 		renderJSON(wr);
 	}
 	
+	/**
+	 * ダイアログフォームからItemMstの作成
+	 * @param strBalanceType
+	 * @param strName
+	 */
 	public static void makeItem(String strBalanceType, String strName) {
 		WkCmMkItemRslt wr = new WkCmMkItemRslt();
 		RefItemMst refItemMst = new RefItemMst();
