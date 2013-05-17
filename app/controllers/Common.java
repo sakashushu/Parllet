@@ -14,6 +14,7 @@ import models.HandlingMst;
 import models.HandlingTypeMst;
 import models.IdealDepositMst;
 import models.ItemMst;
+import models.WkAjaxRsltMin;
 import models.WkCmHdlgRslt;
 import models.WkCmIdepoRslt;
 import models.WkCmMkItemRslt;
@@ -396,7 +397,7 @@ public class Common extends Controller {
 	 * @param id
 	 */
 	public static void linkFacebook(Long id, String name, String link) {
-		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
+		WkAjaxRsltMin wr = new WkAjaxRsltMin();
 		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
 		hU.fbId = id;
 		hU.fbName = name;
@@ -417,7 +418,7 @@ public class Common extends Controller {
 	 * @param id
 	 */
 	public static void breakLinkFacebook() {
-		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
+		WkAjaxRsltMin wr = new WkAjaxRsltMin();
 		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
 		hU.fbId = null;
 		hU.fbName = null;
@@ -529,6 +530,31 @@ public class Common extends Controller {
 			wr.setIntRslt(0);
 		}
 		wr.setItMst(iM);
+		renderJSON(wr);
+	}
+	
+	/**
+	 * ユーザの保持フラグの変更
+	 * @param strClm
+	 * @param bolFlg
+	 */
+	public static void updateHaUserFlg(String strClm, boolean bolFlg) {
+		WkAjaxRsltMin wr = new WkAjaxRsltMin();
+		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
+		if (strClm.equals("zero_hidden_bkem"))
+			hU.zero_hidden_bkem = bolFlg;
+		if (strClm.equals("zero_hidden_idepo"))
+			hU.zero_hidden_idepo = bolFlg;
+		if (strClm.equals("inv_hidden_bkem"))
+			hU.inv_hidden_bkem = bolFlg;
+		validation.valid(hU);
+		if(validation.hasErrors()) {
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+			renderJSON(wr);
+		}
+		hU.save();
+		wr.setIntRslt(0);
 		renderJSON(wr);
 	}
 }
