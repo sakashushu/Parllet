@@ -437,13 +437,9 @@ public class DailyAccount extends Controller {
 				calendar.add(Calendar.DATE, 1);
 			}
 			wDaEach.setLstWdtd(lstWdtd);
-//			wDaEach.setLSumMonth(lngSum);
-//			//「収入」・「支出」・「My貯金預入」・「My貯金から支払」の場合、月計をセット
 			//「収入」・「支出」・「My貯金預入・引出」・「口座預入」・「口座引出」の場合、月計をセット
 			if(strLargeCategoryName.equals(BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_OUT) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN) ||
-//					strLargeCategoryName.equals(BALANCE_TYPE_OUT_IDEAL_DEPOSIT)) {
 					strLargeCategoryName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_INOUT) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_BANK_IN) ||
 					strLargeCategoryName.equals(BALANCE_TYPE_BANK_OUT)) {
