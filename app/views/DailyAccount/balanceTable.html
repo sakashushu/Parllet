@@ -501,7 +501,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 					%{topFlg = 1}%
 					#{list items:lWDA, as:'lwda'}
 					  #{if lwda.sLargeCategory!=messages.get('RemainderType.real')}
-						<li class="${(lwda.sItem!='' && lwda.lstWdtd[0].lAmount==0) ? 'remIdepoZero' : ''} 
+						<li class="${(lwda.sItem!='' && lwda.lstWdtd[0].lAmount==0) ? 'remIdepoZero' : ''}
 									${(hU?.zero_hidden_idepo && lwda.lstWdtd[0].lAmount==0) ? 'invisible' : ''}">
 							#{if lwda.sItem==''}
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large 
