@@ -96,6 +96,9 @@ a.aBtn:hover span{
 .invisible {
 	display: none;
 }
+.invisible2 {
+	display: none;
+}
 
 .inlineVerticalMiddle {
 	display: inline-block;
@@ -252,6 +255,7 @@ a.aBtn:hover span{
 
 .btMainInner {
 	width: 680px;
+//	width: 880px;
 }
 
 #dlMain {
@@ -1040,7 +1044,7 @@ fieldset {
 	font-weight: bold;
 	padding-top: 5px;
 //	padding-left: 200px;
-	padding-bottom: 10px;
+//	padding-bottom: 10px;
 	text-align: center;
 }
 

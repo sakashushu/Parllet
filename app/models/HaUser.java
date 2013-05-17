@@ -38,6 +38,10 @@ public class HaUser extends Model {
 	
 	public boolean isAdmin;
 	
+	public Boolean zero_hidden_bkem;
+	public Boolean zero_hidden_idepo;
+	public Boolean inv_hidden_bkem;
+	
 	public HaUser(
 			String email,
 			String password,

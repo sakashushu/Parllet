@@ -20,11 +20,11 @@ function openDialogFrmUpdMst(strType, lngId) {
 		name.val("");
 		zeroHddn.attr("checked", false);
 		invFlg.attr("checked", false);
-		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
-			jQuery('#dspZeroHddn').addClass("invisible");
-		} else {
-			jQuery('#dspZeroHddn').removeClass("invisible");
-		}
+//		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
+//			jQuery('#dspZeroHddn').addClass("invisible");
+//		} else {
+//			jQuery('#dspZeroHddn').removeClass("invisible");
+//		}
 		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}" ||
 				strType=="&{'views.config.cf_idealdepo'}" ||
 				lngId==null) {
@@ -125,7 +125,7 @@ function openDialogFrmUpdMst(strType, lngId) {
 		<input type="text" id="dlgName" class="text ui-widget-content ui-corner-all" />
  -->
 		<input type="text" id="dlgName" class="text ui-widget-content" />
-		<div id="dspZeroHddn">
+		<div id="dspZeroHddn" class="invisible">
 			<input type="checkbox" id="dlgZeroHddn" />
 			<label for="zeroHddn" id="lblZeroHddn">&{'zero_hidden'}</label>
 		</div>

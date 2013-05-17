@@ -16,6 +16,7 @@ public class WkDailyAccount {
 	private long[] lAryDays;			/* 日付毎 */
 	private List<WkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
 	private String strTypeNm;			/* 種類名 */
+	private Boolean bolInvFlg;			/* 無効フラグ */
 	public String getsLargeCategory() {
 		return sLargeCategory;
 	}
@@ -99,5 +100,11 @@ public class WkDailyAccount {
 	}
 	public void setStrTypeNm(String strTypeNm) {
 		this.strTypeNm = strTypeNm;
+	}
+	public Boolean getBolInvFlg() {
+		return bolInvFlg;
+	}
+	public void setBolInvFlg(Boolean bolInvFlg) {
+		this.bolInvFlg = bolInvFlg;
 	}
 }
