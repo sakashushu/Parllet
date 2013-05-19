@@ -329,8 +329,8 @@ public class DetailList extends Controller {
 									: (h_handling_id==-2 ? "is not null "
 											: "= " + h_handling_id));
 			//  取扱(My貯金)
-			if(h_ideal_deposit_id != null)
-				if(h_ideal_deposit_id != 0L)
+			if(h_ideal_deposit_id!=null)
+				if(h_ideal_deposit_id!=0L)
 					sqlSrchRec += " and ideal_deposit_mst.id " +
 							(h_ideal_deposit_id==-1 ? "is null "
 									: (h_ideal_deposit_id==-2 ? "is not null "

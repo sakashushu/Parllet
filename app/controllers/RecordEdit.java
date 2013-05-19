@@ -23,7 +23,7 @@ public class RecordEdit extends Controller {
 	
 	@Before
 	static void setConnectedUser() {
-		if(Security.isConnected()) {
+		if (Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 			renderArgs.put("haUser", haUser);
 		}
@@ -41,15 +41,15 @@ public class RecordEdit extends Controller {
 	 */
 	public static void recordEdit(
 			Long id,
-    		String calledFrom,				/* 呼び出し元 */
-    		String df_payment_date,			/* 初期支払日 */
-    		Long df_balance_type_id,  		/* 初期収支種類ID */
-    		Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
-    		Long df_item_id,				/* 初期項目ID */
-    		String df_debit_date
+			String calledFrom,				/* 呼び出し元 */
+			String df_payment_date,			/* 初期支払日 */
+			Long df_balance_type_id,  		/* 初期収支種類ID */
+			Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+			Long df_item_id,				/* 初期項目ID */
+			String df_debit_date
 			) {
 		//編集
-		if(id != null) {
+		if (id != null) {
 //			Record record = Record.findById(id);
 //			render(record, calledFrom);
 			recordUpd(id, calledFrom);
@@ -60,18 +60,18 @@ public class RecordEdit extends Controller {
 	}
 	
 	public static void recordIns(
-    		String df_payment_date,			/* 初期支払日 */
-    		Long df_balance_type_id,  		/* 初期収支種類ID */
-    		Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
-    		Long df_item_id,				/* 初期項目ID */
-    		String df_debit_date
+			String df_payment_date,			/* 初期支払日 */
+			Long df_balance_type_id,  		/* 初期収支種類ID */
+			Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+			Long df_item_id,				/* 初期項目ID */
+			String df_debit_date
 			) {
 		render("@recordEdit", df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
 	}
 	
 	public static void recordUpd(
 			Long id,
-    		String calledFrom	/* 呼び出し元 */
+			String calledFrom	/* 呼び出し元 */
 			) {
 		Record record = Record.findById(id);
 		render("@recordEdit", record, calledFrom);
@@ -109,14 +109,13 @@ public class RecordEdit extends Controller {
 			String remarks,
 			String secret_remarks,
 			Boolean secret_rec_flg,
-    		String calledFrom				/* 呼び出し元 */
+			String calledFrom				/* 呼び出し元 */
 			) {
 		checkAuthenticity();
 		
-		Record record = null;
+		Record rec = null;
 		Date paymentDate = null;
-		boolean bolDateChange = false;		/* 日付変更フラグ */
-		if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+		if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
 				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date+":00");
 			} catch (ParseException e) {
@@ -129,17 +128,17 @@ public class RecordEdit extends Controller {
 		HaUser haUser  = (HaUser)renderArgs.get("haUser");
 		BalanceTypeMst balanceTypeMst = BalanceTypeMst.findById(balance_type_mst);
 		ItemMst itemMst = null;
-		if(item_mst!=null) {
+		if (item_mst!=null) {
 			itemMst = ItemMst.findById(item_mst); 
 		}
 		HandlingMst handlingMst = null;
-		if(handling_mst!=null) {
+		if (handling_mst!=null) {
 			handlingMst = HandlingMst.findById(handling_mst);
 		}
 		Integer intAmount = null;
 		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
 		NumberFormat nf = NumberFormat.getInstance();
-		if(amount!=null && !amount.equals("")) {
+		if (amount!=null && !amount.equals("")) {
 			//数値文字列をNumber型のオブジェクトに変換する
 			Number numAmount;
 			try {
@@ -152,7 +151,7 @@ public class RecordEdit extends Controller {
 			}
 		}
 		Date debitDate = null;
-		if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+		if (debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
 				debitDate = DateFormat.getDateInstance().parse(debit_date);
 			} catch (ParseException e) {
@@ -161,12 +160,12 @@ public class RecordEdit extends Controller {
 			}
 		}
 		IdealDepositMst idealDepositMst = null;
-		if(ideal_deposit_mst!=null) {
+		if (ideal_deposit_mst!=null) {
 			idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst);
 		}
-		if(id==null) {
+		if (id==null) {
 			// 収支データの作成
-			record = new Record(
+			rec = new Record(
 					haUser,
 					paymentDate,
 					balanceTypeMst,
@@ -187,40 +186,33 @@ public class RecordEdit extends Controller {
 			);
 		} else {
 			// 収支データの読み出し
-			record = Record.findById(id);
-			// 日付が変更されたかどうか
-			if(record.payment_date.compareTo(paymentDate)!=0) bolDateChange = true;
+			rec = Record.findById(id);
 			// 編集
-			record.payment_date = paymentDate;
-			record.balance_type_mst = balanceTypeMst;
-			record.handling_mst = handlingMst;
-			record.ideal_deposit_mst = idealDepositMst;
-			record.item_mst = itemMst;
-			record.amount = intAmount;
-			record.debit_date = debitDate;
-			record.content = content;
-			record.store = store;
-			record.remarks = remarks;
-			record.secret_remarks = secret_remarks;
-			record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
+			rec.payment_date = paymentDate;
+			rec.balance_type_mst = balanceTypeMst;
+			rec.handling_mst = handlingMst;
+			rec.ideal_deposit_mst = idealDepositMst;
+			rec.item_mst = itemMst;
+			rec.amount = intAmount;
+			rec.debit_date = debitDate;
+			rec.content = content;
+			rec.store = store;
+			rec.remarks = remarks;
+			rec.secret_remarks = secret_remarks;
+			rec.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
 		}
 		// Validate
-		validation.valid(record);
-		if(validation.hasErrors()) {
-	        render("@recordEdit", record);
-	    }
+		validation.valid(rec);
+		if (validation.hasErrors()) {
+			render("@recordEdit", rec);
+		}
 		// 保存
-		record.save();
+		rec.save();
 		
 		RecordEdit reEd = new RecordEdit();
 		
 		// 明細表の絞り込み条件を、作成データにやんわり合わせる
-		if (bolDateChange) {
-			Date dteFrom = paymentDate;
-			if(calledFrom.equals("dl_remainderBank") || calledFrom.equals("dl_remainderIdeal"))
-				dteFrom = debitDate;
-			reEd.setSessionDetailList(String.format("%1$tY/%1$tm/%1$td", dteFrom), calledFrom);
-		}
+		reEd.setSessionDetailList(rec, calledFrom);
 		
 		// 呼び出し元画面に戻る
 		reEd.returnToCelledFrom(calledFrom);
@@ -233,7 +225,7 @@ public class RecordEdit extends Controller {
 	 */
 	public static void del_rec(
 			Long id,
-    		String calledFrom				/* 呼び出し元 */
+			String calledFrom				/* 呼び出し元 */
 			) {
 		// 取扱データの読み出し
 		Record record = Record.findById(id);
@@ -249,13 +241,13 @@ public class RecordEdit extends Controller {
 	 * @param calledFrom
 	 */
 	private void returnToCelledFrom(
-    		String calledFrom				/* 呼び出し元 */
+			String calledFrom				/* 呼び出し元 */
 			) {
-		if(calledFrom==null || calledFrom.equals("") || calledFrom.equals("dl_balance"))
+		if (calledFrom==null || calledFrom.equals("") || calledFrom.equals("dl_balance"))
 			DetailList.dl_balance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-		if(calledFrom.equals("dl_remainderBank"))
+		if (calledFrom.equals("dl_remainderBank"))
 			DetailList.dl_remainderBank(null, null, null, null, null, null);
-		if(calledFrom.equals("dl_remainderIdeal"))
+		if (calledFrom.equals("dl_remainderIdeal"))
 			DetailList.dl_remainderIdeal(null, null, null, null, null, null);
 		
 		DetailList.dl_balance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -266,52 +258,183 @@ public class RecordEdit extends Controller {
 	 * @param h_payment_date
 	 */
 	private void setSessionDetailList(
-			String h_payment_date,
-    		String calledFrom				/* 呼び出し元 */
+			Record rec,
+			String calledFrom				/* 呼び出し元 */
 			) {
-		String strSessionDateFr = "";
-		String strSessionDateTo = "";
-		if(calledFrom==null || calledFrom.equals("") || calledFrom.equals("dl_balance"))
-			strSessionDateFr = "hPaymentDateFr";
-			strSessionDateTo = "hPaymentDateTo";
-		if(calledFrom.equals("dl_remainderBank"))
-			strSessionDateFr = "daRbHdDebitDateFr";
-			strSessionDateTo = "daRbHdDebitDateFr";
-		if(calledFrom.equals("dl_remainderIdeal"))
-			strSessionDateFr = "daRiHdDebitDateFr";
-			strSessionDateTo = "daRiHdDebitDateTo";
-		//明細表の日付の絞り込み条件を、作成データにやんわり合わせる
-		setSessionDlDate(h_payment_date, strSessionDateFr, strSessionDateTo);
+		//収支明細に戻す場合
+		if (calledFrom==null || calledFrom.equals("") || calledFrom.equals("dl_balance"))
+			setSessionDlRtnBal(rec);
+		
+		//残高明細（口座系）に戻す場合
+		if (calledFrom.equals("dl_remainderBank"))
+			setSessionDlRtnRemBk(rec);
+		
+		//残高明細（My貯金）に戻す場合
+		if (calledFrom.equals("dl_remainderIdeal"))
+			setSessionDlRtnRemId(rec);
+	}
+	
+	/**
+	 * 明細表の絞り込み条件を、作成データにやんわり合わせる（収支明細に戻す場合）
+	 * @param rec
+	 */
+	private void setSessionDlRtnBal(
+			Record rec
+			) {
+		//セッションに絞込条件が入っている時
+		if ((session.get("daBlFilExistFlg") != null) &&
+				(session.get("daBlFilExistFlg").equals("true"))) {
+			String strBalanceTypeId = session.get("hBalanceTypeId");
+			String strHandlingId = session.get("hHandlingId");
+			String strIdealDepositId = session.get("hIdealDepositId");
+			String strItemId = session.get("hItemId");
+
+			//購入日
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.payment_date), "hPaymentDateFr", "hPaymentDateTo");
+			
+			//収支種類
+			if (!strBalanceTypeId.equals("") &&
+					rec.balance_type_mst.id!=Long.parseLong(strBalanceTypeId))
+				session.put("hBalanceTypeId", "");
+			
+			//取扱(実際)
+			if (!strHandlingId.equals("")) {
+				boolean bolClear = false;
+				if (Long.parseLong(strHandlingId)==-2) {
+					if (rec.handling_mst==null)
+						bolClear = true;
+				} else if (Long.parseLong(strHandlingId)==-1) {
+					if (rec.handling_mst!=null)
+						bolClear = true;
+				} else {
+					if (rec.handling_mst==null) {
+						bolClear = true;
+					} else {
+						if (rec.handling_mst.id!=Long.parseLong(strHandlingId))
+							bolClear = true;
+					}
+				}
+				if (bolClear) session.put("hHandlingId", "");
+			}
+			
+			//取扱(My貯金)
+			if (!strIdealDepositId.equals("")) {
+				boolean bolClear = false;
+				if (Long.parseLong(strIdealDepositId)==-2) {
+					if (rec.ideal_deposit_mst==null)
+						bolClear = true;
+				} else if (Long.parseLong(strIdealDepositId)==-1) {
+					if (rec.ideal_deposit_mst!=null)
+						bolClear = true;
+				} else {
+					if (rec.ideal_deposit_mst==null) {
+						bolClear = true;
+					} else {
+						if (rec.ideal_deposit_mst.id!=Long.parseLong(strIdealDepositId))
+							bolClear = true;
+					}
+				}
+				if (bolClear) session.put("hIdealDepositId", "");
+			}
+			
+			//項目
+			if (!strItemId.equals("")) {
+				boolean bolClear = false;
+				if (Long.parseLong(strItemId)==-2) {
+					if (rec.item_mst==null)
+						bolClear = true;
+				} else if (Long.parseLong(strItemId)==-1) {
+					if (rec.item_mst!=null)
+						bolClear = true;
+				} else {
+					if (rec.item_mst==null) {
+						bolClear = true;
+					} else {
+						if (rec.item_mst.id!=Long.parseLong(strItemId))
+							bolClear = true;
+					}
+				}
+				if (bolClear) session.put("hItemId", "");
+			}
+			
+			//引落日
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "hDebitDateFr", "hDebitDateTo");
+		}
+	}
+	
+	/**
+	 * 明細表の絞り込み条件を、作成データにやんわり合わせる（残高明細（口座系）に戻す場合）
+	 * @param rec
+	 */
+	private void setSessionDlRtnRemBk(
+			Record rec
+			) {
+		//セッションに絞込条件が入っている時
+		if ((session.get("daRbFilExistFlg") != null) &&
+				(session.get("daRbFilExistFlg").equals("true"))) {
+			String strHandlingId = session.get("daRbHdHandlingId");
+			
+			//引落日
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "daRbHdDebitDateFr", "daRbHdDebitDateTo");
+			
+			//取扱(実際)
+			if (!strHandlingId.equals("") &&
+					rec.handling_mst!=null &&
+					rec.handling_mst.id!=Long.parseLong(strHandlingId))
+				session.put("hHandlingId", "");
+		}
+	}
+	
+	/**
+	 * 明細表の絞り込み条件を、作成データにやんわり合わせる（残高明細（My貯金）に戻す場合）
+	 * @param rec
+	 */
+	private void setSessionDlRtnRemId(
+			Record rec
+			) {
+		//セッションに絞込条件が入っている時
+		if ((session.get("daRiFilExistFlg") != null) &&
+				(session.get("daRiFilExistFlg").equals("true"))) {
+			String strIdealDepositId = session.get("hIdealDepositId");
+			
+			//引落日
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "daRiHdDebitDateFr", "daRiHdDebitDateTo");
+			
+			//取扱(My貯金)
+			if (!strIdealDepositId.equals("") &&
+					rec.ideal_deposit_mst!=null &&
+					rec.ideal_deposit_mst.id!=Long.parseLong(strIdealDepositId))
+				session.put("hHandlingId", "");
+		}
 	}
 	
 	/**
 	 * 明細表の日付の絞り込み条件を、作成データにやんわり合わせる
-	 * @param h_payment_date
+	 * （既存の日付の絞り込み条件からはみ出ていたら、その分だけ広げる）
+	 * @param strDate
 	 */
 	private void setSessionDlDate(
-			String h_payment_date,
+			String strDate,
 			String strSessionDateFr,
 			String strSessionDateTo
 			) {
-    	String h_payment_date_fr = session.get(strSessionDateFr);
-    	String h_payment_date_to = session.get(strSessionDateTo);
-    	
-   		Date dteHdPaymentDate;
+		String h_date_fr = session.get(strSessionDateFr);
+		String h_date_to = session.get(strSessionDateTo);
+		
+   		Date dteHdDate;
 		try {
-			dteHdPaymentDate = DateFormat.getDateInstance().parse(h_payment_date);
-	    	if(h_payment_date_fr!=null && !h_payment_date_fr.equals("")) {
-	    		Date dteHdPaymentDateFr;
-				dteHdPaymentDateFr = DateFormat.getDateInstance().parse(h_payment_date_fr);
-	    		if(dteHdPaymentDate.compareTo(dteHdPaymentDateFr) != 0)
-	    			session.put(strSessionDateFr, h_payment_date);
-	    	}
-	    	
-	    	if(h_payment_date_to!=null && !h_payment_date_to.equals("")) {
-	    		Date dteHdPaymentDateTo;
-				dteHdPaymentDateTo = DateFormat.getDateInstance().parse(h_payment_date_to);
-	    		if(dteHdPaymentDate.compareTo(dteHdPaymentDateTo) >	 0)
-	    			session.put(strSessionDateTo, h_payment_date);
-	    	}
+			dteHdDate = DateFormat.getDateInstance().parse(strDate);
+			if (h_date_fr!=null && !h_date_fr.equals("")) {
+				Date dteHdDateFr = DateFormat.getDateInstance().parse(h_date_fr);
+				if (dteHdDate.compareTo(dteHdDateFr) != 0)
+					session.put(strSessionDateFr, strDate);
+			}
+			
+			if (h_date_to!=null && !h_date_to.equals("")) {
+				Date dteHdDateTo = DateFormat.getDateInstance().parse(h_date_to);
+				if (dteHdDate.compareTo(dteHdDateTo) > 0)
+					session.put(strSessionDateTo, strDate);
+			}
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

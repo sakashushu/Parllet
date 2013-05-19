@@ -8,7 +8,7 @@ jQuery(function() {
 		%{
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
 		}%
-		if(${hdlgCnt}==0) {
+		if(${hdlgCnt}===0) {
 //			alert("&{'views.detaillist.remainder.err.noBank'}\n&{'views.detaillist.remainder.err.tryLater'}");
 			//口座・電子マネー作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
@@ -21,7 +21,7 @@ jQuery(function() {
 		%{
 			idpCnt = models.IdealDepositMst.count("byHa_user", hu);
 		}%
-		if(${idpCnt}==0) {
+		if(${idpCnt}===0) {
 //			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
 			//My貯金作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.ideal'}", jText);
@@ -33,7 +33,7 @@ jQuery(function() {
 	
 	/* 起動時のCSS設定 */
 	
-	#{if request.actionMethod == 'dl_balance'}
+	#{if request.actionMethod=='dl_balance'}
 		/* #dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す */
 		jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
 		
@@ -110,19 +110,19 @@ jQuery(function() {
 		}
 	});
 	/* 起動時のdatepickerの選択可能範囲絞込 */
-	#{if request.actionMethod == 'dl_balance'}
+	#{if request.actionMethod=='dl_balance'}
 		if(ckDate("${h_payment_date_fr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${h_payment_date_fr}");
 		if(ckDate("${h_payment_date_to}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_payment_date_to}");
 	#{/if}
-	#{if request.actionMethod == 'dl_remainderBank'}
+	#{if request.actionMethod=='dl_remainderBank'}
 		if(ckDate("${h_debit_date_fr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${h_debit_date_fr}");
 		if(ckDate("${h_debit_date_to}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
 	#{/if}
-	#{if request.actionMethod == 'dl_remainderIdeal'}
+	#{if request.actionMethod=='dl_remainderIdeal'}
 		if(ckDate("${dlRiHdDebitDateFr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
 		if(ckDate("${dlRiHdDebitDateTo}"))
@@ -131,7 +131,7 @@ jQuery(function() {
 	
 	/* Enterキーでのサブミット防止 */
 	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
-		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+		if ((e.which && e.which===13) || (e.keyCode && e.keyCode===13)) {
 			return false;
 		}else{
 			return true;
@@ -205,9 +205,9 @@ function whenDialogConfirmClosed(intRslt) {
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
 function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
-	if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}")
+	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
 		strErrMsg = "Common.updateHdlg";
-	if(strType=="&{'views.config.cf_idealdepo'}")
+	if(strType==="&{'views.config.cf_idealdepo'}")
 		strErrMsg = "Common.updateIdepo";
 	switch (intRslt) {
 		case 0:
@@ -215,21 +215,21 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			break;
 		case 1:
 			var jqxhrMkMst;
-			if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+			if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
-			if(strType=="&{'views.config.cf_idealdepo'}") {
+			if(strType==="&{'views.config.cf_idealdepo'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			jqxhrMkMst
 			.done(function(z) {
 				switch (z.intRslt) {
 					case 0:
-						if(strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+						if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
 							//収支明細（口座系）へジャンプ
 							jQuery('#frmDlRemainderBank').submit();
 						}
-						if(strType=="&{'views.config.cf_idealdepo'}") {
+						if(strType==="&{'views.config.cf_idealdepo'}") {
 							//収支明細（My貯金）へジャンプ
 							jQuery('#frmDlRemainderIdeal').submit();
 						}
@@ -266,13 +266,13 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 
 <div>
 	<ul id="memberMenu">
-		<li class="${request.actionMethod == 'dl_balance' ? 'selected' : ''}">
+		<li class="${request.actionMethod=='dl_balance' ? 'selected' : ''}">
 			<a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a>
 		</li>
-		<li class="${request.actionMethod == 'dl_remainderBank' ? 'selected' : ''}">
+		<li class="${request.actionMethod=='dl_remainderBank' ? 'selected' : ''}">
 			#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}
 		</li>
-		<li class="${request.actionMethod == 'dl_remainderIdeal' ? 'selected' : ''}">
+		<li class="${request.actionMethod=='dl_remainderIdeal' ? 'selected' : ''}">
 			#{a @DetailList.dl_remainderIdeal(), id:'aDlRemainderIdeal'}&{'views.detaillist.remainderIdeal.title'}#{/a}
 		</li>
 	</ul>
