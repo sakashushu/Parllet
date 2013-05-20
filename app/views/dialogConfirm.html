@@ -12,7 +12,7 @@ function openDialogConfirm(strCase, strUnableItem) {
 		jQuery(window).keypress(function(ek){
 			if ((ek.which && ek.which == 13) || (ek.keyCode && ek.keyCode == 13)) {
 				pressTime = new Date();
-				if(pressTime.getTime()-inTime.getTime() < 300) {
+				if (pressTime.getTime()-inTime.getTime() < 300) {
 					return false;
 				} else {
 					return true;
@@ -27,7 +27,7 @@ function openDialogConfirm(strCase, strUnableItem) {
 		jQuery("#text2").text("&{'views.dialogConfirm.preffix.text2'}"+strUnableItem+"&{'views.dialogConfirm.suffix.text2'}");
 		jQuery("#text3").text(strCase+"&{'views.dialogConfirm.suffix.text3'}");
 		btn1Title = strCase+"&{'views.dialogConfirm.suffix.btn'}";
-		if(strCase=="&{'views.dialogConfirm.case.bkem'}") {
+		if (strCase=="&{'views.dialogConfirm.case.bkem'}") {
 			buttons["&{'views.dialogConfirm.bkem.btn.makeBank'}"] = function() {
 				intRslt = 1;
 				jQuery(this).dialog("close");
@@ -37,19 +37,19 @@ function openDialogConfirm(strCase, strUnableItem) {
 				jQuery(this).dialog("close");
 			}
 		}
-		if(strCase=="&{'views.dialogConfirm.case.ideal'}") {
+		if (strCase=="&{'views.dialogConfirm.case.ideal'}") {
 			buttons[btn1Title] = function() {
 				intRslt = 3;
 				jQuery(this).dialog("close");
 			}
 		}
-		if(strCase=="&{'views.dialogConfirm.case.itemIn'}") {
+		if (strCase=="&{'views.dialogConfirm.case.itemIn'}") {
 			buttons[btn1Title] = function() {
 				intRslt = 4;
 				jQuery(this).dialog("close");
 			}
 		}
-		if(strCase=="&{'views.dialogConfirm.case.itemOut'}") {
+		if (strCase=="&{'views.dialogConfirm.case.itemOut'}") {
 			buttons[btn1Title] = function() {
 				intRslt = 5;
 				jQuery(this).dialog("close");

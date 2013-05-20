@@ -36,7 +36,7 @@ public class HaUser extends Model {
 	
 	public Boolean pwSetFlg;
 	
-	public boolean isAdmin;
+	public Boolean isAdmin;
 	
 	public Boolean zero_hidden_bkem;
 	public Boolean zero_hidden_idepo;
@@ -50,8 +50,11 @@ public class HaUser extends Model {
 			Long fbId,
 			String fbName,
 			String fbLink,
-			boolean pwSetFlg,
-			Boolean isAdmin
+			Boolean pwSetFlg,
+			Boolean isAdmin,
+			Boolean zero_hidden_bkem,
+			Boolean zero_hidden_idepo,
+			Boolean inv_hidden_bkem
 			) {
 		this.email = email;
 		this.password = password;
@@ -62,6 +65,9 @@ public class HaUser extends Model {
 		this.fbLink = fbLink;
 		this.pwSetFlg = pwSetFlg;
 		this.isAdmin = isAdmin;
+		this.zero_hidden_bkem = zero_hidden_bkem;
+		this.zero_hidden_idepo = zero_hidden_idepo;
+		this.inv_hidden_bkem = inv_hidden_bkem;
 	}
 
     public static HaUser connect(String email, String password) {

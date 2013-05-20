@@ -422,6 +422,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 					}%
 					#{list items:lWDA, as:'lwda'}
 					  #{if lwda.sLargeCategory==messages.get('RemainderType.real') &&
+					  		lwda.sItem!='' &&
 					  		lwda.sItem!=messages.get('HandlingType.cash') &&
 					  		lwda.lstWdtd[0].lAmount==0}
 						%{intHdlgZeroExist = true}%

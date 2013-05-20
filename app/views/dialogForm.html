@@ -105,14 +105,9 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 					if(bValid) {
 						var jqxhr;
 						if(typeFb) {
-//						    jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()}, function(z){
-//						    	switchRslt(z);
 							jqxhr = jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()});
 						} else {
-//							jQuery.post('@{Application.signup}', {email: emailVal.text(), password: password.text()}, function(y){
-//						    	switchRslt(y);
-//							}, 'text');
-							jqxhr = jQuery.post('@{Application.signup}', {email: emailVal.text(), password: password.text()});
+							jqxhr = jQuery.post('@{MyDpRt.signup}', {email: emailVal.text(), password: password.text()});
 						}
 						jqxhr
 						.done(function(z) {
@@ -122,7 +117,7 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 							if(typeFb) {
 								alert("Security.ensureFbUser Error");
 							} else {
-								alert("Application.signup Error");
+								alert("MyDpRt.signup Error");
 							}
 						});
 					}

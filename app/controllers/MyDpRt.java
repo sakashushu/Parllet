@@ -16,7 +16,7 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false);
+		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
@@ -38,7 +38,7 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false);
+		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
@@ -63,11 +63,6 @@ public class MyDpRt extends Controller {
 		wr.setStrEmail(haUser.email);
 		wr.setStrPassword(haUser.password);
 		renderJSON(wr);
-	}
-	
-	
-	public static void test() {
-		render();
 	}
 	
 }

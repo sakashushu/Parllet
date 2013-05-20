@@ -390,28 +390,28 @@ public class Common extends Controller {
 		im = new ItemMst(hu, bm, ITEM_OUT_FOOD, 1);
 		im.save();
 		//居住日用
-		im = new ItemMst(hu, bm, ITEM_OUT_DAILYRESIDENCE, 3);
+		im = new ItemMst(hu, bm, ITEM_OUT_DAILYRESIDENCE, 2);
 		im.save();
 		//水道光熱
-		im = new ItemMst(hu, bm, ITEM_OUT_UTILITIES, 4);
+		im = new ItemMst(hu, bm, ITEM_OUT_UTILITIES, 3);
 		im.save();
 		//衣類
-		im = new ItemMst(hu, bm, ITEM_OUT_CLOTHING, 5);
+		im = new ItemMst(hu, bm, ITEM_OUT_CLOTHING, 4);
 		im.save();
 		//健康
-		im = new ItemMst(hu, bm, ITEM_OUT_HEALTH, 6);
+		im = new ItemMst(hu, bm, ITEM_OUT_HEALTH, 5);
 		im.save();
 		//教育
-		im = new ItemMst(hu, bm, ITEM_OUT_EDUCATION, 7);
+		im = new ItemMst(hu, bm, ITEM_OUT_EDUCATION, 6);
 		im.save();
 		//娯楽
-		im = new ItemMst(hu, bm, ITEM_OUT_RECREATION, 8);
+		im = new ItemMst(hu, bm, ITEM_OUT_RECREATION, 7);
 		im.save();
 		//交通通信
-		im = new ItemMst(hu, bm, ITEM_OUT_TRANSPORTATIONANDCOMMUNICATION, 9);
+		im = new ItemMst(hu, bm, ITEM_OUT_TRANSPORTATIONANDCOMMUNICATION, 8);
 		im.save();
 		//その他
-		im = new ItemMst(hu, bm, ITEM_OUT_OTHER, 10);
+		im = new ItemMst(hu, bm, ITEM_OUT_OTHER, 9);
 		im.save();
 	}
 	

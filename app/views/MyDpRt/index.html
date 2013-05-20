@@ -76,11 +76,9 @@ jQuery(function() {
 		bValid = bValid && checkLength(password, "&{'password'}", 6, 20);
 		bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "パスワードは半角英数です。");
 		if(bValid) {
-//			jQuery.post('@{validateHaUser}', {email: email.val(), password: password.val()}, function(a){
 			var jqxhr_mDR_vHU = jQuery.post('@{validateHaUser}', {email: email.val(), password: password.val()});
 			jqxhr_mDR_vHU
 			.done(function(jsonA) {
-//				var jsonA = JSON.parse(a);
 				switch (jsonA.intRslt) {
 					case 0:
 						jQuery(".validateTips")

@@ -66,7 +66,7 @@ public class Security extends Secure.Security {
 		String strPass = String.valueOf(id);
 		StringBuffer sb = new StringBuffer(strPass);
 		strPass = String.valueOf(sb.reverse());
-		HaUser haUser = new HaUser(email, strPass, null, null, id, name, link, false, false);
+		HaUser haUser = new HaUser(email, strPass, null, null, id, name, link, false, false, false, false, false);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
