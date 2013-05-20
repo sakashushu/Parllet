@@ -27,6 +27,7 @@ public class Common extends Controller {
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
 	static final String BALANCE_TYPE_IDEAL_DEPOSIT_IN = Messages.get("BalanceType.ideal_deposit_in");
 	static final String BALANCE_TYPE_IDEAL_DEPOSIT_OUT = Messages.get("BalanceType.ideal_deposit_out");
+	static final String BALANCE_TYPE_IDEAL_DEPOSIT_INOUT = Messages.get("BalanceType.ideal_deposit_inOut");
 	static final String BALANCE_TYPE_OUT_IDEAL_DEPOSIT = Messages.get("BalanceType.out_ideal_deposit");
 	static final String REMAINDER_TYPE_REAL = Messages.get("RemainderType.real");
 	static final String REMAINDER_TYPE_IDEAL_DEPOSIT = Messages.get("RemainderType.ideal_deposit");
@@ -48,6 +49,28 @@ public class Common extends Controller {
 	static final String ITEM_OUT_OTHER = Messages.get("Item.out.other");
 	static final String VIEWS_DAILY_ACCOUNT = Messages.get("views.dailyaccount.dailyaccount");
 	static final String VIEWS_BALANCE_TABLE = Messages.get("views.dailyaccount.balancetable");
+	static final String FLTR_DL_BAL_EXST_FLG = "FLTR_DL_BAL_EXST_FLG";
+	static final String FLTR_DL_BAL_SCRT_REC_FLG = "FLTR_DL_BAL_SCRT_REC_FLG";
+	static final String FLTR_DL_BAL_BTYPE_ID = "FLTR_DL_BAL_BTYPE_ID";
+	static final String FLTR_DL_BAL_PDTE_FR = "FLTR_DL_BAL_PDTE_FR";
+	static final String FLTR_DL_BAL_PDTE_TO = "FLTR_DL_BAL_PDTE_TO";
+	static final String FLTR_DL_BAL_HDLG_ID = "FLTR_DL_BAL_HDLG_ID";
+	static final String FLTR_DL_BAL_IDEPO_ID = "FLTR_DL_BAL_IDEPO_ID";
+	static final String FLTR_DL_BAL_ITEM_ID = "FLTR_DL_BAL_ITEM_ID";
+	static final String FLTR_DL_BAL_DDTE_FR = "FLTR_DL_BAL_DDTE_FR";
+	static final String FLTR_DL_BAL_DDTE_TO = "FLTR_DL_BAL_DDTE_TO";
+	static final String FLTR_DL_RB_EXST_FLG = "FLTR_DL_RB_EXST_FLG";
+	static final String FLTR_DL_RB_SCRT_REC_FLG = "FLTR_DL_RB_SCRT_REC_FLG";
+	static final String FLTR_DL_RB_DDTE_FR = "FLTR_DL_RB_DDTE_FR";
+	static final String FLTR_DL_RB_DDTE_TO = "FLTR_DL_RB_DDTE_TO";
+	static final String FLTR_DL_RB_HDLG_ID = "FLTR_DL_RB_HDLG_ID";
+	static final String FLTR_DL_RI_EXST_FLG = "FLTR_DL_RI_EXST_FLG";
+	static final String FLTR_DL_RI_SCRT_REC_FLG = "FLTR_DL_RI_SCRT_REC_FLG";
+	static final String FLTR_DL_RI_DDTE_FR = "FLTR_DL_RI_DDTE_FR";
+	static final String FLTR_DL_RI_DDTE_TO = "FLTR_DL_RI_DDTE_TO";
+	static final String FLTR_DL_RI_IDEPO_ID = "FLTR_DL_RI_IDEPO_ID";
+//	daRiHdIdealDepositId
+	
 	
 	@Before
 	static void setConnectedUser() {

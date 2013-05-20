@@ -40,13 +40,6 @@ public class DetailList extends Controller {
 		}
 	}
 	
-	static final String BALANCE_TYPE_IN = Messages.get("BalanceType.in");
-	static final String BALANCE_TYPE_OUT = Messages.get("BalanceType.out");
-	static final String BALANCE_TYPE_BANK_IN = Messages.get("BalanceType.bank_in");
-	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
-	static final String BALANCE_TYPE_IDEAL_DEPOSIT_IN = Messages.get("BalanceType.ideal_deposit_in");
-	static final String BALANCE_TYPE_IDEAL_DEPOSIT_OUT = Messages.get("BalanceType.ideal_deposit_out");
-	static final String HANDLING_TYPE_CRECA = Messages.get("HandlingType.creca");
 	
 	/**
 	 * 収支明細
@@ -92,28 +85,28 @@ public class DetailList extends Controller {
 		//意図的に絞り込まれていない時
 		if(srch==null) {
 			//セッションに絞込条件が入っている時はそれぞれセット
-			if((session.get("daBlFilExistFlg") != null) &&
-					(session.get("daBlFilExistFlg").equals("true"))) {
-		    	if(!session.get("hSecretRecFlg").equals(""))
-		    		h_secret_rec_flg = Integer.parseInt(session.get("hSecretRecFlg"));
-				h_payment_date_fr = session.get("hPaymentDateFr");
-				h_payment_date_to = session.get("hPaymentDateTo");
+			if((session.get(Common.FLTR_DL_BAL_EXST_FLG) != null) &&
+					(session.get(Common.FLTR_DL_BAL_EXST_FLG).equals("true"))) {
+		    	if(!session.get(Common.FLTR_DL_BAL_SCRT_REC_FLG).equals(""))
+		    		h_secret_rec_flg = Integer.parseInt(session.get(Common.FLTR_DL_BAL_SCRT_REC_FLG));
+				h_payment_date_fr = session.get(Common.FLTR_DL_BAL_PDTE_FR);
+				h_payment_date_to = session.get(Common.FLTR_DL_BAL_PDTE_TO);
 		    	h_balance_type_id = null;
-				if(!session.get("hBalanceTypeId").equals(""))
-					h_balance_type_id = Long.parseLong(session.get("hBalanceTypeId"));
+				if(!session.get(Common.FLTR_DL_BAL_BTYPE_ID).equals(""))
+					h_balance_type_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_BTYPE_ID));
 		    	h_handling_id = null;
-				if(!session.get("hHandlingId").equals(""))
-					h_handling_id = Long.parseLong(session.get("hHandlingId"));
+				if(!session.get(Common.FLTR_DL_BAL_HDLG_ID).equals(""))
+					h_handling_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_HDLG_ID));
 				h_ideal_deposit_id = null;
-				if(!session.get("hIdealDepositId").equals(""))
-					h_ideal_deposit_id = Long.parseLong(session.get("hIdealDepositId"));
+				if(!session.get(Common.FLTR_DL_BAL_IDEPO_ID).equals(""))
+					h_ideal_deposit_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_IDEPO_ID));
 		    	h_item_id = null;
-		    	if(!session.get("hItemId").equals(""))
-		    		h_item_id = Long.parseLong(session.get("hItemId"));
-		    	if(!session.get("hDebitDateFr").equals(""))
-		    		h_debit_date_fr = session.get("hDebitDateFr");
-		    	if(!session.get("hDebitDateTo").equals(""))
-		    		h_debit_date_to = session.get("hDebitDateTo");
+		    	if(!session.get(Common.FLTR_DL_BAL_ITEM_ID).equals(""))
+		    		h_item_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_ITEM_ID));
+		    	if(!session.get(Common.FLTR_DL_BAL_DDTE_FR).equals(""))
+		    		h_debit_date_fr = session.get(Common.FLTR_DL_BAL_DDTE_FR);
+		    	if(!session.get(Common.FLTR_DL_BAL_DDTE_TO).equals(""))
+		    		h_debit_date_to = session.get(Common.FLTR_DL_BAL_DDTE_TO);
 		    	
 		    //初回読み込み時は絞込支払日範囲は現在日付の前後日
 			} else {
@@ -253,29 +246,29 @@ public class DetailList extends Controller {
 			Common cm = new Common();
 			if(h_payment_date_fr!=null && !h_payment_date_fr.equals(""))
 				if(!cm.checkDate(h_payment_date_fr))
-					h_payment_date_fr = session.get("hPaymentDateFr");
+					h_payment_date_fr = session.get(Common.FLTR_DL_BAL_PDTE_FR);
 			if(h_payment_date_to!=null && !h_payment_date_to.equals(""))
 				if(!cm.checkDate(h_payment_date_to))
-					h_payment_date_to = session.get("hPaymentDateTo");
+					h_payment_date_to = session.get(Common.FLTR_DL_BAL_PDTE_TO);
 			if(h_debit_date_fr!=null && !h_debit_date_fr.equals(""))
 				if(!cm.checkDate(h_debit_date_fr))
-					h_debit_date_fr = session.get("hDebitDateFr");
+					h_debit_date_fr = session.get(Common.FLTR_DL_BAL_DDTE_FR);
 			if(h_debit_date_to!=null && !h_debit_date_to.equals(""))
 				if(!cm.checkDate(h_debit_date_to))
-					h_debit_date_to = session.get("hDebitDateTo");
+					h_debit_date_to = session.get(Common.FLTR_DL_BAL_DDTE_TO);
 			
 			//検索条件をセッションに保存
-			session.put("daBlFilExistFlg", "true");
-			session.put("hSecretRecFlg", h_secret_rec_flg==null ? "" : h_secret_rec_flg);
-			session.put("hPaymentDateFr", h_payment_date_fr==null ? "" : h_payment_date_fr);
-			session.put("hPaymentDateTo", h_payment_date_to==null ? "" : h_payment_date_to);
-			session.put("hBalanceTypeId", h_balance_type_id==null ? "" : h_balance_type_id);
-			session.put("hHandlingId", h_handling_id==null ? "" : h_handling_id);
-			session.put("hIdealDepositId", h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
-			session.put("hItemId", h_item_id==null ? "" : h_item_id);
-			session.put("hDebitDateFr", h_debit_date_fr==null ? "" : h_debit_date_fr);
-			session.put("hDebitDateTo", h_debit_date_to==null ? "" : h_debit_date_to);
-				
+			session.put(Common.FLTR_DL_BAL_EXST_FLG, "true");
+			session.put(Common.FLTR_DL_BAL_SCRT_REC_FLG, h_secret_rec_flg==null ? "" : h_secret_rec_flg);
+			session.put(Common.FLTR_DL_BAL_PDTE_FR, h_payment_date_fr==null ? "" : h_payment_date_fr);
+			session.put(Common.FLTR_DL_BAL_PDTE_TO, h_payment_date_to==null ? "" : h_payment_date_to);
+			session.put(Common.FLTR_DL_BAL_BTYPE_ID, h_balance_type_id==null ? "" : h_balance_type_id);
+			session.put(Common.FLTR_DL_BAL_HDLG_ID, h_handling_id==null ? "" : h_handling_id);
+			session.put(Common.FLTR_DL_BAL_IDEPO_ID, h_ideal_deposit_id==null ? "" : h_ideal_deposit_id);
+			session.put(Common.FLTR_DL_BAL_ITEM_ID, h_item_id==null ? "" : h_item_id);
+			session.put(Common.FLTR_DL_BAL_DDTE_FR, h_debit_date_fr==null ? "" : h_debit_date_fr);
+			session.put(Common.FLTR_DL_BAL_DDTE_TO, h_debit_date_to==null ? "" : h_debit_date_to);
+			
 			HaUser haUser = (HaUser)renderArgs.get("haUser");
 			
 			// 検索処理(BalanceTypeMst)
@@ -382,15 +375,15 @@ public class DetailList extends Controller {
 		//意図的に絞り込まれていない時
 		if(srch==null) {
 			//セッションに絞込条件が入っている時はそれぞれセット
-			if((session.get("daRbFilExistFlg") != null) &&
-					(session.get("daRbFilExistFlg").equals("true"))) {
-		    	if(!session.get("hSecretRecFlg").equals(""))
-		    		h_secret_rec_flg = Integer.parseInt(session.get("hSecretRecFlg"));
-				h_debit_date_fr = session.get("daRbHdDebitDateFr");
-				h_debit_date_to = session.get("daRbHdDebitDateTo");
+			if((session.get(Common.FLTR_DL_RB_EXST_FLG) != null) &&
+					(session.get(Common.FLTR_DL_RB_EXST_FLG).equals("true"))) {
+		    	if(!session.get(Common.FLTR_DL_RB_SCRT_REC_FLG).equals(""))
+		    		h_secret_rec_flg = Integer.parseInt(session.get(Common.FLTR_DL_RB_SCRT_REC_FLG));
+				h_debit_date_fr = session.get(Common.FLTR_DL_RB_DDTE_FR);
+				h_debit_date_to = session.get(Common.FLTR_DL_RB_DDTE_TO);
 		    	h_handling_id = null;
-				if(!session.get("daRbHdHandlingId").equals(""))
-					h_handling_id = Long.parseLong(session.get("daRbHdHandlingId"));
+				if(!session.get(Common.FLTR_DL_RB_HDLG_ID).equals(""))
+					h_handling_id = Long.parseLong(session.get(Common.FLTR_DL_RB_HDLG_ID));
 		    	
 		    //初回読み込み時は絞込引落日範囲は1か月前から半年後
 			} else {
@@ -417,17 +410,17 @@ public class DetailList extends Controller {
 		Common cm = new Common();
 		if(h_debit_date_fr!=null && !h_debit_date_fr.equals(""))
 			if(!cm.checkDate(h_debit_date_fr))
-				h_debit_date_fr = session.get("daRbHdDebitDateFr");
+				h_debit_date_fr = session.get(Common.FLTR_DL_RB_DDTE_FR);
 		if(h_debit_date_to!=null && !h_debit_date_to.equals(""))
 			if(!cm.checkDate(h_debit_date_to))
-				h_debit_date_to = session.get("daRbHdDebitDateTo");
+				h_debit_date_to = session.get(Common.FLTR_DL_RB_DDTE_TO);
 		
 		//検索条件をセッションに保存
-		session.put("daRbFilExistFlg", "true");
-		session.put("hSecretRecFlg", h_secret_rec_flg==null ? "" : h_secret_rec_flg);
-		session.put("daRbHdDebitDateFr", h_debit_date_fr==null ? "" : h_debit_date_fr);
-		session.put("daRbHdDebitDateTo", h_debit_date_to==null ? "" : h_debit_date_to);
-		session.put("daRbHdHandlingId", h_handling_id==null ? "" : h_handling_id);
+		session.put(Common.FLTR_DL_RB_EXST_FLG, "true");
+		session.put(Common.FLTR_DL_RB_SCRT_REC_FLG, h_secret_rec_flg==null ? "" : h_secret_rec_flg);
+		session.put(Common.FLTR_DL_RB_DDTE_FR, h_debit_date_fr==null ? "" : h_debit_date_fr);
+		session.put(Common.FLTR_DL_RB_DDTE_TO, h_debit_date_to==null ? "" : h_debit_date_to);
+		session.put(Common.FLTR_DL_RB_HDLG_ID, h_handling_id==null ? "" : h_handling_id);
 		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		
@@ -496,9 +489,9 @@ public class DetailList extends Controller {
 			Object[] objEach = lstObjEach.get(i);
 			Long intRemainderEach = objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7]));
 			String strBalanceTypeName = objEach[4]==null ? "" : String.valueOf(objEach[4]);
-			if(strBalanceTypeName.equals(BALANCE_TYPE_IN) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_IN))
+			if(strBalanceTypeName.equals(Common.BALANCE_TYPE_IN) || strBalanceTypeName.equals(Common.BALANCE_TYPE_BANK_IN))
 				lngRemainder += intRemainderEach;
-			if(strBalanceTypeName.equals(BALANCE_TYPE_OUT) || strBalanceTypeName.equals(BALANCE_TYPE_BANK_OUT))
+			if(strBalanceTypeName.equals(Common.BALANCE_TYPE_OUT) || strBalanceTypeName.equals(Common.BALANCE_TYPE_BANK_OUT))
 				lngRemainder -= intRemainderEach;
 			if(i >= (page*iLinage)-iLinage) {
 				WkDlRbRec wkDlRbRecEach = new WkDlRbRec();
@@ -545,13 +538,13 @@ public class DetailList extends Controller {
 		String sql = "";
 			// 収入：加算、支出：減算
 			String sqlSumBalanceInOut = "" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount " +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount " +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IN + "' THEN r.amount " +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_OUT + "' THEN -r.amount " +
 					"";
 			// 口座引出：減算、口座預入：加算
 			String sqlSumBalanceBankInOut = "" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_OUT + "' THEN -r.amount" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_BANK_OUT + "' THEN -r.amount" +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
 					"";
 			
 			sql = "   SELECT " +
@@ -571,10 +564,10 @@ public class DetailList extends Controller {
 					"   AND cast(r.debit_date as date) < to_date('" + h_debit_date_fr + "', 'YYYY/MM/DD') " +
 					"   AND (" +
 						" CASE " +
-						"   WHEN ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' THEN hb.id " +
+						"   WHEN ht.handling_type_name = '" + Common.HANDLING_TYPE_CRECA + "' THEN hb.id " +
 						"   ELSE h.id " +
 						" END) = " + h_handling_id +
-					"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
+					"   AND b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "','" + Common.BALANCE_TYPE_BANK_OUT + "','" + Common.BALANCE_TYPE_BANK_IN + "') " +
 					sqlSecretRecFlg +
 					"";
 		
@@ -675,8 +668,8 @@ public class DetailList extends Controller {
 				"   ON h.debit_bank_id = hb.id " +
 				sqlWherePhrase +
 				"   AND hb.id = " + h_handling_id +
-				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "') " +
-				"   AND ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' " +
+				"   AND b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "') " +
+				"   AND ht.handling_type_name = '" + Common.HANDLING_TYPE_CRECA + "' " +
 				sqlSecretRecFlg +
 				" GROUP BY rm_debit_date, rm_balance_type_name, rm_handling_name, rm_balance_type_id, rm_handling_id, rm_payment_date_order " +
 				"";
@@ -724,8 +717,8 @@ public class DetailList extends Controller {
 				"   ON r.ideal_deposit_mst_id = id.id " +
 				sqlWherePhrase +
 				"   AND h.id = " + h_handling_id +
-				"   AND b.balance_type_name in('" + BALANCE_TYPE_OUT + "','" + BALANCE_TYPE_IN + "','" + BALANCE_TYPE_BANK_OUT + "','" + BALANCE_TYPE_BANK_IN + "') " +
-				"   AND ht.handling_type_name != '" + HANDLING_TYPE_CRECA + "' " +
+				"   AND b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "','" + Common.BALANCE_TYPE_BANK_OUT + "','" + Common.BALANCE_TYPE_BANK_IN + "') " +
+				"   AND ht.handling_type_name != '" + Common.HANDLING_TYPE_CRECA + "' " +
 				sqlSecretRecFlg +
 				"";
 		while(!(sql.equals(sql.replaceAll("  ", " "))))
@@ -755,15 +748,15 @@ public class DetailList extends Controller {
 		//意図的に絞り込まれていない時
 		if(dlRiSrch==null) {
 			//セッションに絞込条件が入っている時はそれぞれセット
-			if((session.get("daRiFilExistFlg") != null) &&
-					(session.get("daRiFilExistFlg").equals("true"))) {
-		    	if(!session.get("hSecretRecFlg").equals(""))
-		    		dlRiHdSecretRecFlg = Integer.parseInt(session.get("hSecretRecFlg"));
-				dlRiHdDebitDateFr = session.get("daRiHdDebitDateFr");
-				dlRiHdDebitDateTo = session.get("daRiHdDebitDateTo");
+			if((session.get(Common.FLTR_DL_RI_EXST_FLG) != null) &&
+					(session.get(Common.FLTR_DL_RI_EXST_FLG).equals("true"))) {
+		    	if(!session.get(Common.FLTR_DL_RI_SCRT_REC_FLG).equals(""))
+		    		dlRiHdSecretRecFlg = Integer.parseInt(session.get(Common.FLTR_DL_RI_SCRT_REC_FLG));
+				dlRiHdDebitDateFr = session.get(Common.FLTR_DL_RI_DDTE_FR);
+				dlRiHdDebitDateTo = session.get(Common.FLTR_DL_RI_DDTE_TO);
 		    	dlRiHdIdealDepositId = null;
-				if(!session.get("daRiHdIdealDepositId").equals(""))
-					dlRiHdIdealDepositId = Long.parseLong(session.get("daRiHdIdealDepositId"));
+				if(!session.get(Common.FLTR_DL_RI_IDEPO_ID).equals(""))
+					dlRiHdIdealDepositId = Long.parseLong(session.get(Common.FLTR_DL_RI_IDEPO_ID));
 		    	
 		    //初回読み込み時は絞込引落日範囲は1か月前から半年後
 			} else {
@@ -791,17 +784,17 @@ public class DetailList extends Controller {
 		Common cm = new Common();
 		if(dlRiHdDebitDateFr!=null && !dlRiHdDebitDateFr.equals(""))
 			if(!cm.checkDate(dlRiHdDebitDateFr))
-				dlRiHdDebitDateFr = session.get("daRiHdDebitDateFr");
+				dlRiHdDebitDateFr = session.get(Common.FLTR_DL_RI_DDTE_FR);
 		if(dlRiHdDebitDateTo!=null && !dlRiHdDebitDateTo.equals(""))
 			if(!cm.checkDate(dlRiHdDebitDateTo))
-				dlRiHdDebitDateTo = session.get("daRiHdDebitDateTo");
+				dlRiHdDebitDateTo = session.get(Common.FLTR_DL_RI_DDTE_TO);
 		
 		//検索条件をセッションに保存
-		session.put("daRiFilExistFlg", "true");
-		session.put("hSecretRecFlg", dlRiHdSecretRecFlg==null ? "" : dlRiHdSecretRecFlg);
-		session.put("daRiHdDebitDateFr", dlRiHdDebitDateFr==null ? "" : dlRiHdDebitDateFr);
-		session.put("daRiHdDebitDateTo", dlRiHdDebitDateTo==null ? "" : dlRiHdDebitDateTo);
-		session.put("daRiHdIdealDepositId", dlRiHdIdealDepositId==null ? "" : dlRiHdIdealDepositId);
+		session.put(Common.FLTR_DL_RI_EXST_FLG, "true");
+		session.put(Common.FLTR_DL_RI_SCRT_REC_FLG, dlRiHdSecretRecFlg==null ? "" : dlRiHdSecretRecFlg);
+		session.put(Common.FLTR_DL_RI_DDTE_FR, dlRiHdDebitDateFr==null ? "" : dlRiHdDebitDateFr);
+		session.put(Common.FLTR_DL_RI_DDTE_TO, dlRiHdDebitDateTo==null ? "" : dlRiHdDebitDateTo);
+		session.put(Common.FLTR_DL_RI_IDEPO_ID, dlRiHdIdealDepositId==null ? "" : dlRiHdIdealDepositId);
 		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		
@@ -871,9 +864,9 @@ public class DetailList extends Controller {
 			Object[] objEach = lstObjEach.get(i);
 			Long intRemainderEach = objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7]));
 			String strBalanceTypeName = objEach[4]==null ? "" : String.valueOf(objEach[4]);
-			if(strBalanceTypeName.equals(BALANCE_TYPE_IN) || strBalanceTypeName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_IN))
+			if(strBalanceTypeName.equals(Common.BALANCE_TYPE_IN) || strBalanceTypeName.equals(Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN))
 				lngRemainder += intRemainderEach;
-			if(strBalanceTypeName.equals(BALANCE_TYPE_OUT) || strBalanceTypeName.equals(BALANCE_TYPE_IDEAL_DEPOSIT_OUT))
+			if(strBalanceTypeName.equals(Common.BALANCE_TYPE_OUT) || strBalanceTypeName.equals(Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT))
 				lngRemainder -= intRemainderEach;
 			if(i >= (page*iLinage)-iLinage) {
 				WkDlRbRec wkDlRbRecEach = new WkDlRbRec();
@@ -918,13 +911,13 @@ public class DetailList extends Controller {
 		String sql = "";
 			// 収入：加算、支出：減算
 			String sqlSumBalanceInOut = "" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_IN + "' THEN r.amount " +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_OUT + "' THEN -r.amount " +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IN + "' THEN r.amount " +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_OUT + "' THEN -r.amount " +
 					"";
 			// My貯金引出：減算、My貯金預入：加算
 			String sqlSumIdealDepositInOut = "" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
-					" WHEN b.balance_type_name = '" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
+					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
 					"";
 			
 			sql = "   SELECT " +
@@ -938,10 +931,10 @@ public class DetailList extends Controller {
 					sqlJoinPhrase +
 					sqlWherePhrase +
 					"   AND cast(r.debit_date as date) < to_date('" + dlRiHdDebitDateFr + "', 'YYYY/MM/DD') " +
-					"   AND (   (    b.balance_type_name in('" + BALANCE_TYPE_OUT + "', '" + BALANCE_TYPE_IN + "') " +
+					"   AND (   (    b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "', '" + Common.BALANCE_TYPE_IN + "') " +
 								"AND r.ideal_deposit_mst_id IS NOT NULL " +
 								") " +
-							"OR b.balance_type_name in('" + BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+							"OR b.balance_type_name in('" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "', '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
 							") " +
 					"" +
 					sqlSecretRecFlg +
@@ -1039,7 +1032,7 @@ public class DetailList extends Controller {
 				" LEFT JOIN HandlingTypeMst ht " +
 				"   ON h.handling_type_mst_id = ht.id " +
 				sqlWherePhrase +
-				"   AND ht.handling_type_name = '" + HANDLING_TYPE_CRECA + "' " +
+				"   AND ht.handling_type_name = '" + Common.HANDLING_TYPE_CRECA + "' " +
 				sqlSecretRecFlg +
 				" GROUP BY rm_debit_date, rm_balance_type_name, rm_ideal_deposit_name, rm_handling_name, rm_balance_type_id, rm_ideal_deposit_id, rm_payment_date_order " +
 				"";
@@ -1087,7 +1080,7 @@ public class DetailList extends Controller {
 				"   ON h.handling_type_mst_id = ht.id " +
 				sqlWherePhrase +
 				"   AND (   r.handling_mst_id IS NULL " +
-						"OR ht.handling_type_name != '" + HANDLING_TYPE_CRECA + "' " +
+						"OR ht.handling_type_name != '" + Common.HANDLING_TYPE_CRECA + "' " +
 						") " +
 				sqlSecretRecFlg +
 				"";

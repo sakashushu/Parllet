@@ -282,20 +282,20 @@ public class RecordEdit extends Controller {
 			Record rec
 			) {
 		//セッションに絞込条件が入っている時
-		if ((session.get("daBlFilExistFlg") != null) &&
-				(session.get("daBlFilExistFlg").equals("true"))) {
-			String strBalanceTypeId = session.get("hBalanceTypeId");
-			String strHandlingId = session.get("hHandlingId");
-			String strIdealDepositId = session.get("hIdealDepositId");
-			String strItemId = session.get("hItemId");
+		if ((session.get(Common.FLTR_DL_BAL_EXST_FLG) != null) &&
+				(session.get(Common.FLTR_DL_BAL_EXST_FLG).equals("true"))) {
+			String strBalanceTypeId = session.get(Common.FLTR_DL_BAL_BTYPE_ID);
+			String strHandlingId = session.get(Common.FLTR_DL_BAL_HDLG_ID);
+			String strIdealDepositId = session.get(Common.FLTR_DL_BAL_IDEPO_ID);
+			String strItemId = session.get(Common.FLTR_DL_BAL_ITEM_ID);
 
 			//購入日
-			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.payment_date), "hPaymentDateFr", "hPaymentDateTo");
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.payment_date), Common.FLTR_DL_BAL_PDTE_FR, Common.FLTR_DL_BAL_PDTE_TO);
 			
 			//収支種類
 			if (!strBalanceTypeId.equals("") &&
 					rec.balance_type_mst.id!=Long.parseLong(strBalanceTypeId))
-				session.put("hBalanceTypeId", "");
+				session.put(Common.FLTR_DL_BAL_BTYPE_ID, "");
 			
 			//取扱(実際)
 			if (!strHandlingId.equals("")) {
@@ -314,7 +314,7 @@ public class RecordEdit extends Controller {
 							bolClear = true;
 					}
 				}
-				if (bolClear) session.put("hHandlingId", "");
+				if (bolClear) session.put(Common.FLTR_DL_BAL_HDLG_ID, "");
 			}
 			
 			//取扱(My貯金)
@@ -334,7 +334,7 @@ public class RecordEdit extends Controller {
 							bolClear = true;
 					}
 				}
-				if (bolClear) session.put("hIdealDepositId", "");
+				if (bolClear) session.put(Common.FLTR_DL_BAL_IDEPO_ID, "");
 			}
 			
 			//項目
@@ -354,11 +354,11 @@ public class RecordEdit extends Controller {
 							bolClear = true;
 					}
 				}
-				if (bolClear) session.put("hItemId", "");
+				if (bolClear) session.put(Common.FLTR_DL_BAL_ITEM_ID, "");
 			}
 			
 			//引落日
-			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "hDebitDateFr", "hDebitDateTo");
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), Common.FLTR_DL_BAL_DDTE_FR, Common.FLTR_DL_BAL_DDTE_TO);
 		}
 	}
 	
@@ -370,18 +370,18 @@ public class RecordEdit extends Controller {
 			Record rec
 			) {
 		//セッションに絞込条件が入っている時
-		if ((session.get("daRbFilExistFlg") != null) &&
-				(session.get("daRbFilExistFlg").equals("true"))) {
-			String strHandlingId = session.get("daRbHdHandlingId");
+		if ((session.get(Common.FLTR_DL_RB_EXST_FLG) != null) &&
+				(session.get(Common.FLTR_DL_RB_EXST_FLG).equals("true"))) {
+			String strHandlingId = session.get(Common.FLTR_DL_RB_HDLG_ID);
 			
 			//引落日
-			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "daRbHdDebitDateFr", "daRbHdDebitDateTo");
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), Common.FLTR_DL_RB_DDTE_FR, Common.FLTR_DL_RB_DDTE_TO);
 			
 			//取扱(実際)
 			if (!strHandlingId.equals("") &&
 					rec.handling_mst!=null &&
 					rec.handling_mst.id!=Long.parseLong(strHandlingId))
-				session.put("hHandlingId", "");
+				session.put(Common.FLTR_DL_RB_HDLG_ID, "");
 		}
 	}
 	
@@ -393,18 +393,18 @@ public class RecordEdit extends Controller {
 			Record rec
 			) {
 		//セッションに絞込条件が入っている時
-		if ((session.get("daRiFilExistFlg") != null) &&
-				(session.get("daRiFilExistFlg").equals("true"))) {
-			String strIdealDepositId = session.get("hIdealDepositId");
+		if ((session.get(Common.FLTR_DL_RI_EXST_FLG) != null) &&
+				(session.get(Common.FLTR_DL_RI_EXST_FLG).equals("true"))) {
+			String strIdealDepositId = session.get(Common.FLTR_DL_RI_IDEPO_ID);
 			
 			//引落日
-			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), "daRiHdDebitDateFr", "daRiHdDebitDateTo");
+			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), Common.FLTR_DL_RI_DDTE_FR, Common.FLTR_DL_RI_DDTE_TO);
 			
 			//取扱(My貯金)
 			if (!strIdealDepositId.equals("") &&
 					rec.ideal_deposit_mst!=null &&
 					rec.ideal_deposit_mst.id!=Long.parseLong(strIdealDepositId))
-				session.put("hHandlingId", "");
+				session.put(Common.FLTR_DL_RI_IDEPO_ID, "");
 		}
 	}
 	
@@ -426,7 +426,7 @@ public class RecordEdit extends Controller {
 			dteHdDate = DateFormat.getDateInstance().parse(strDate);
 			if (h_date_fr!=null && !h_date_fr.equals("")) {
 				Date dteHdDateFr = DateFormat.getDateInstance().parse(h_date_fr);
-				if (dteHdDate.compareTo(dteHdDateFr) != 0)
+				if (dteHdDate.compareTo(dteHdDateFr) < 0)
 					session.put(strSessionDateFr, strDate);
 			}
 			

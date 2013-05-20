@@ -115,7 +115,7 @@ jQuery(function() {
 		
 		//「収支種類」が収入・支出で、「項目」のリストがゼロの時
 		if((jText==="&{'BalanceType.in'}" ||
-			jText="&{'BalanceType.out'}") &&
+			jText==="&{'BalanceType.out'}") &&
 				jQuery(subCatItem[jVal]).length===0) {
 			e.preventDefault();
 			if(jText==="&{'BalanceType.in'}")
