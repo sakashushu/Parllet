@@ -54,7 +54,11 @@ input[type="submit"],input[type="button"] {
 	text-align: right;
 }
 
-.num3 {
+//.num3 {
+//	padding-right: 4px;
+//}
+
+.padR4 {
 	padding-right: 4px;
 }
 
@@ -91,13 +95,6 @@ a.aBtn:hover span{
 
 .fontJura {
 	font-family: 'Jura';
-}
-
-.invisible {
-	display: none;
-}
-.invisible2 {
-	display: none;
 }
 
 .inlineVerticalMiddle {
@@ -175,11 +172,12 @@ a.aBtn:hover span{
 	top:0;
 	left:0;
 	right:0;
+	z-index: 10000;
 }
 
 #header .fill {
 	background: url(/public/images/brown3_90.png);
-	z-index: 10000;
+	z-index: 9999;
 }
 
 #hdContainer {
@@ -196,7 +194,7 @@ a.aBtn:hover span{
 	width: 980px;
 //	background: url(/public/images/brown3_90.png);
 	background: url(/public/images/brown7_90.png);
-	z-index: 9999;
+	z-index: 9998;
 	top: 0;
 }
 
@@ -206,7 +204,7 @@ a.aBtn:hover span{
 	width: 980px;
 //	background: url(/public/images/brown3_90.png);
 	background: url(/public/images/brown7_90.png);
-	z-index: 9999;
+	z-index: 9998;
 	top:0;
 }
 
@@ -248,13 +246,18 @@ a.aBtn:hover span{
 	text-align:left;	/* IE以外用の中央寄せ */
 }
 
+#mainInnerBtm {
+	clear: both;
+	padding-bottom: 20px;	
+}
+
 .daMainInner {
 //	width: 860px;
 	width: 960px;
 }
 
 .btMainInner {
-	width: 680px;
+//	width: 680px;
 //	width: 880px;
 }
 
@@ -332,6 +335,9 @@ a.aBtn:hover span{
 	font-size: 12px;
 //	font-weight: bold;
 	padding-left: 4px;
+}
+#logo-pre div {
+	width: 100px;
 }
 
 #genLogo-img {
@@ -720,7 +726,7 @@ fieldset {
 .da_tbl_all {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 //	font-size: 80%;
 	font-size: 90%;
 }
@@ -736,7 +742,7 @@ fieldset {
 .da_tbl_lt {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 //	width: 320px;
 	width: 420px;
 }
@@ -755,7 +761,7 @@ fieldset {
 .da_tbl_rt {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 }
 .da_tbl_rt li div.first {
 	display: table-cell;
@@ -778,7 +784,7 @@ fieldset {
 .da_tbl_lb {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 //	width: 320px;
 	width: 420px;
 }
@@ -793,7 +799,7 @@ fieldset {
 .da_tbl_rb {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 }
 .da_tbl_rb li div {
 	display: table-cell;
@@ -810,12 +816,12 @@ fieldset {
 
 #da_tcol {
 //	width: 320px;
-	height: 470px;
+//	height: 470px;
 	overflow: hidden;
 }
 
 #da_tbody {
-	height: 470px;
+//	height: 470px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -949,9 +955,12 @@ fieldset {
 	text-decoration: none;
 }
 
-.daPaddingYearMonth {
+#daPaddingYearMonth {
 	padding-left: 20px;
 	padding-right: 20px;
+}
+#daPaddingYearMonth span {
+	font-weight: normal;
 }
 
 
@@ -1039,51 +1048,86 @@ fieldset {
 /*
  * BalanceTable
  */
+ 
+#btChart {
+	margin-top: -30px;
+	margin-bottom: 15px;
+	height: 150px;
+}
 
-.bt_basisDate {
+#btBasisDate {
 	font-weight: bold;
 	padding-top: 5px;
 //	padding-left: 200px;
 //	padding-bottom: 10px;
 	text-align: center;
+	height: 40px;
+}
+
+#btRemTotal {
+	margin-left: auto;
+	margin-right: auto;
+	width: 700px;
+	font-size: 150%;
+}
+#btRemTotal ul {
+	list-style: none;
+	padding: 0;
+	display: table;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
+	margin: 0;
+}
+#btRemTotal li div {
+	display: table-cell;
+	vertical-align: middle;
+	white-space: nowrap;
+	width: 350px;
+	height: 40px;
+ }
+
+
+.btHddnChkBox {
+	 height: 30px;
 }
 
 /* .bt_tbl_all 残高表の大枠のテーブル */
-.bt_tbl_all {
+#bt_tbl_all {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin-top: 10px;
 //	font-size: 80%;
 	font-size: 90%;
 	width: 700px;
+//	width: 880px;
+	margin-right: auto;
+	margin-left: auto;
 }
-.bt_tbl_all li {
+#bt_tbl_all li {
 	clear: both;
 }
-.bt_tbl_all li div.bt_tbl_all_l {
+#bt_tbl_all li div.bt_tbl_all_l {
 	display: table-cell;
 //	display: block;
 	float: left;
 }
 
-.bt_tbl_all li div.bt_tbl_all_r {
+#bt_tbl_all li div.bt_tbl_all_r {
 	display: table-cell;
 //	display: block;
 	float: right;
 }
 
 #bt_tcol {
-	height: 450px;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow: hidden;	//親要素の高さを取り戻すおまじない？
 }
 
 /* .bt_tbl_each 残高表の各々(実残高、My貯金・・・) */
 .bt_tbl_each {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
-	width: 320px;
+	margin: 0;
+//	width: 320px;
+	width: 272px;
 	display: table;
 	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
 }
@@ -1137,7 +1181,6 @@ fieldset {
 //}
 
 #dl_tblFrameHd {
-	height: 103px;
 	overflow: hidden;
 }
 
@@ -1183,7 +1226,7 @@ fieldset {
 .dl_tbl {
 	list-style: none;
 	padding: 0;
-	mergin: 0;
+	margin: 0;
 	font-size: 90%;
 }
 
@@ -1448,6 +1491,9 @@ label.fieldName {
 }
 
 
-
-
-
+.invisible {
+	display: none;
+}
+.invisible2 {
+	display: none;
+}

@@ -504,11 +504,11 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	vlItemId
 	vlDebitDate
 	if(record?.id || errors) {
-		vlPaymentDate = record.payment_date?.format('yyyy/MM/dd HH:mm')
-		vlBalanceTypeId = record.balance_type_mst?.id
-		vlIdealDepositId = record.ideal_deposit_mst?.id
-		vlItemId = record.item_mst?.id
-		vlDebitDate = record.debit_date?.format('yyyy/MM/dd')
+		vlPaymentDate = record?.payment_date?.format('yyyy/MM/dd HH:mm')
+		vlBalanceTypeId = record?.balance_type_mst?.id
+		vlIdealDepositId = record?.ideal_deposit_mst?.id
+		vlItemId = record?.item_mst?.id
+		vlDebitDate = record?.debit_date?.format('yyyy/MM/dd')
 	} else {
 		vlPaymentDate = df_payment_date
 		vlBalanceTypeId = df_balance_type_id
@@ -519,7 +519,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 }%
 <div class="objectForm">
 #{form @save_rec(record?.id)}
-	<input type="text" name="calledFrom" value="${calledFrom}" style="display:none;" />
+	<input type="text" name="calledFrom" value="${calledFrom}" class="invisible" />
 
     <div class="crudField">
         #{field 'payment_date'}
@@ -652,6 +652,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
         #{/field}
     </div>
  
+#{secure.check 'admin'}
     <div class="crudField">
         #{field 'secret_remarks'}
         <label class="fieldName">&{'secret_remarks'}:</label>
@@ -668,6 +669,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
         <span class="error">#{error 'record.secret_rec_flg' /}</span>
         #{/field}
     </div>
+#{/secure.check}
 	
     <div class="crudField">
         <input type="submit" value="&{'insupd.save'}" id="idInsupd" />
@@ -678,7 +680,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 
 #{if record?.id}
 	#{form @del_rec(record?.id)}
-		<input type="text" name="calledFrom" value="${calledFrom}" style="display:none;" />
+		<input type="text" name="calledFrom" value="${calledFrom}" class="invisible" />
 	    <p class="crudDelete">
         	<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
 	    </p>

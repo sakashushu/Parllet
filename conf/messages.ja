@@ -44,6 +44,7 @@ views.common.lbl.make=作成
 views.common.lbl.edit=編集
 views.common.data=データ
 views.common.update=更新
+views.common.day=日
 
 views.application.tools.home=ホーム
 views.index.sinup.normal.title=新規ユーザー登録
@@ -232,9 +233,13 @@ HandlingType.bank=口座
 HandlingType.creca=クレジットカード
 HandlingType.emoney=電子マネー
 
+# 取扱(My貯金)種類(IdepoType)
+IdepoType.idepo=My貯金
+
 # 残高種類(RemainderType)
-RemainderType.real=実残高
-RemainderType.ideal_deposit=My貯金残高
+RemainderType.total=残高合計
+RemainderType.real=実際の残高
+RemainderType.ideal_deposit=My貯金の残高
 RemainderType.not_ideal_deposit=My貯金してないお金
 
 

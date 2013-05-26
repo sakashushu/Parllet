@@ -19,7 +19,7 @@ POST	/myDpRt								 	MyDpRt.index
 
 # DailyAccount
 GET		/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
-GET		/myDpRt/dailyAccount					ccount.dailyAccountDisp
+GET		/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
 #POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
 POST	/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
 #POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.jump
@@ -27,7 +27,7 @@ POST	/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
 
 # BalanceTable
 GET		/myDpRt/balanceTable/{intBasisDate}		DailyAccount.balanceTableDisp
-#GET		/myDpRt/balanceTable					DailyAccount.balanceTableDisp
+GET		/myDpRt/balanceTable					DailyAccount.balanceTableDisp
 
 
 # RecordEdit new

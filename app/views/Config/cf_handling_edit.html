@@ -41,23 +41,23 @@ jQuery(function() {
 		debitDay = jQuery('#hM_debit_day');
 	for(i = 1; i < 28; i++) {
 		#{ifnot hM?.cutoff_day}
-			cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+			cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");
 		#{/ifnot}
 		#{else}
 			if(${hM?.cutoff_day} == i) {
-				cutOffDay.append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
+				cutOffDay.append("<option value='"+i+"' selected>"+i+"&{'views.common.day'}</option>");
 			} else {
-				cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+				cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");
 			}
 		#{/else}
 		#{ifnot hM?.debit_day}
-			debitDay.append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.config.cf_creca.day'}</option>");
+			debitDay.append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.common.day'}</option>");
 		#{/ifnot}
 		#{else}
 			if(${hM?.debit_day} == i) {
-				debitDay.append("<option value='"+i+"' selected>"+i+"&{'views.config.cf_creca.day'}</option>");
+				debitDay.append("<option value='"+i+"' selected>"+i+"&{'views.common.day'}</option>");
 			} else {
-				debitDay.append("<option value='"+i+"'>"+i+"&{'views.config.cf_creca.day'}</option>");
+				debitDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");
 			}
 		#{/else}
 	};

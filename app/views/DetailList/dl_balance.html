@@ -109,16 +109,18 @@ jQuery(function(){
 #{include 'DetailList/dl_header.html' /}
 
 #{form @DetailList.dl_balance(), id:'frmDlBalance'}
+
+<!-- 絞込ボタン -->
+<div class="invisible">
+	<input type="submit" id="idSrch" name="srch" />
+</div>
+		
 <div id="dl_tblFrameHd">
 
 <div id="dl_tblContentHd">
   <ul class="dl_tbl">
 	<!-- ヘッダー行 -->
 	<li>
-		<!-- 絞込ボタン -->
-		<div class="dl_srch_edit dl_head" style="display:none;" >
-			<input type="submit" id="idSrch" class="dl_tbl_content" name="srch" value="絞込" />
-		</div>
 		#{if session.get('actionMode')!='View'}
 			<!-- 非公開フラグ -->
 			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft">
@@ -231,6 +233,7 @@ jQuery(function(){
 </div>  <!-- dlHeader -->
 
 
+
 <div id="dlMain">
 <div id="dl_tblFrame">
 <div id="dl_tblContent">
@@ -238,18 +241,20 @@ jQuery(function(){
 	<!-- 明細行 -->
 	#{if records?.size() > 0}
 	#{list items:records, as:'record'}
+	
+	<!-- 編集ボタン -->
+	<div class="dl_srch_edit invisible" >
+		<!-- id -->
+		<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
+		<!-- 
+		<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
+		 -->
+		<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
+	</div>
+
 	<li>
 		<input type="hidden" class="ToReId" value="${record?.id}" />
 		
-		<!-- 編集ボタン -->
-		<div class="dl_srch_edit" style="display:none;" >
-			<!-- id -->
-			<input type="hidden" id="e_id_${record.id}" name="e_id" value="${record.id}"/>
-			<!-- 
-			<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='@{RecordEdit.recordEdit(record.id)}'">
-			 -->
-			<a href="@{RecordEdit.recordEdit(record.id)}" class="dl_edit_link">編集</a>
-		</div>
 		#{if session.get('actionMode')!='View'}
 			<!-- 非公開フラグ -->
 			<div class="dl_secret_rec_flg dl_borderLeft menu_cell">
@@ -300,8 +305,8 @@ jQuery(function(){
 		</div>
 		<!-- 金額 -->
 		<div class="dl_amount menu_cell">
-		  <span class="num3">
-			${record?.amount}
+		  <span class="padR4">
+			${record?.amount.format('###,###')}
 		  </span>
 		</div>
 		<!-- 引落日 -->

@@ -10,7 +10,6 @@ public class WkDailyAccount {
 	private boolean bBudgetFlg;		/* 予算有無フラグ */
 	private long lBudgetId;			/* 予算ID */
 	private Long lBudgetAmount;		/* 予算金額(数値) */
-	private String sBudgetAmount;		/* 予算金額(表示用) */
 	private long lSumMonth;			/* 月計 */
 	private long lIdepoLink;			/* My貯金連結 */
 	private long[] lAryDays;			/* 日付毎 */
@@ -52,12 +51,6 @@ public class WkDailyAccount {
 	}
 	public void setlBudgetAmount(Long lBudgetAmount) {
 		this.lBudgetAmount = lBudgetAmount;
-	}
-	public String getsBudgetAmount() {
-		return sBudgetAmount;
-	}
-	public void setsBudgetAmount(String sBudgetAmount) {
-		this.sBudgetAmount = sBudgetAmount;
 	}
 	public long getlSumMonth() {
 		return lSumMonth;

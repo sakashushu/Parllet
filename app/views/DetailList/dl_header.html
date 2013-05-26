@@ -34,9 +34,6 @@ jQuery(function() {
 	/* 起動時のCSS設定 */
 	
 	#{if request.actionMethod=='dl_balance'}
-		/* #dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す */
-		jQuery('#dl_tblFrame').height(jQuery('#dl_tblContent').height()+14);
-		
 		/* 枠固定の左右の動き */
 	    jQuery('#dl_tblFrameFt').scroll(function() {
 	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
@@ -44,9 +41,6 @@ jQuery(function() {
 	    });
 	#{/if}
 	#{else}
-		/* #dl_tblFrameの内側の上下に何故か余白ができてしまうので、下の余白は以下で隠す */
-		jQuery('#dl_tblFrame').height(jQuery('#dlRb_tblContent').height()+14);
-		
 		/* 枠固定の左右の動き */
 	    jQuery('#dl_tblFrame').scroll(function() {
 	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
@@ -68,11 +62,11 @@ jQuery(function() {
 		setCssFooter();
     });
 	
-	/* 表示金額を3桁区切りに */
-	jQuery('.num3').each(function(i) {
-		var numStr = addFigure(jQuery(this).html());
-		jQuery(this).html(numStr);
-	});
+//	/* 表示金額を3桁区切りに */
+//	jQuery('.num3').each(function(i) {
+//		var numStr = addFigure(jQuery(this).html());
+//		jQuery(this).html(numStr);
+//	});
 	
 	/* 日付選択時にjumpするdatepicker(範囲指定) */
 	jQuery("#frJump").datepicker({

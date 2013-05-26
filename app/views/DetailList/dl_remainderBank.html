@@ -90,7 +90,7 @@ jQuery(function(){
 #{form @DetailList.dl_remainderBank()}
 
 <!-- 絞込のサブミット（非表示） -->
-<input type="submit" id="idSrch" name="srch" style="display:none;" />
+<input type="submit" id="idSrch" name="srch" class="invisible" />
 
 <div id="dl_tblFrameHd">
 
@@ -242,14 +242,14 @@ jQuery(function(){
 		 -->
 		<!-- 引出 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
-		  <span class="num3">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_out') ? wdrr?.lngAmount : ''}
+		  <span class="padR4">
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_out') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
 		</div>
 		<!-- 預入 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
-		  <span class="num3">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_in') ? wdrr?.lngAmount : ''}
+		  <span class="padR4">
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.bank_in') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
 		</div>
 		<!-- お店 -->
@@ -260,8 +260,8 @@ jQuery(function(){
 		</div>
 		<!-- 残高 -->
 		<div class="dlRb_remainder${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
-		  <span class="num3">
-			${wdrr?.lngRemainder}
+		  <span class="padR4">
+			${wdrr?.lngRemainder.format('###,###')}
 		  </span>
 		</div>
 	</li>

@@ -78,16 +78,18 @@ jQuery(function() {
     });
 	
 	/* 起動時の日毎の部分の幅と高さを調整 */
-	jQuery('#da_tcol').height(jQuery(window).innerHeight()-176);
-	jQuery('#da_tbody').height(jQuery(window).innerHeight()-176);
+//	jQuery('#da_tcol').height(jQuery(window).innerHeight()-156);
+//	jQuery('#da_tbody').height(jQuery(window).innerHeight()-156);
+	
 //	jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //	jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //	jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
 	
 	/* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
 	jQuery(window).resize(function() {
-		jQuery('#da_tcol').height(jQuery(this).innerHeight()-176);
-		jQuery('#da_tbody').height(jQuery(this).innerHeight()-176);
+//		jQuery('#da_tcol').height(jQuery(this).innerHeight()-156);
+//		jQuery('#da_tbody').height(jQuery(this).innerHeight()-156);
+		
 //		jQuery('#da_trow').width(jQuery(window).innerWidth()-350-16);
 //		jQuery('#da_tbody').width(jQuery(window).innerWidth()-350);
 //		jQuery('#da_tbody2').width(jQuery(window).innerWidth()-350);
@@ -162,10 +164,10 @@ jQuery(function() {
 	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
 	
 	/* 表示金額を3桁区切りに */
-	jQuery('.num3').each(function(i) {
-		var numStr = addFigure(jQuery(this).html());
-		jQuery(this).html(numStr);
-	});
+//	jQuery('.num3').each(function(i) {
+//		var numStr = addFigure(jQuery(this).html());
+//		jQuery(this).html(numStr);
+//	});
 	
 	/* 日付選択時にjumpするdatepicker */
 	jQuery(".datepickerJump").datepicker({
@@ -362,7 +364,7 @@ function addFigure(str) {
 							<a id="idPreYear" class="aBtn fontJura" tabindex="0" ><<span>&{'views.dailyaccount.movetype.year'}</span></a>
  -->
 							
-							<span class="daPaddingYearMonth">
+							<span id="daPaddingYearMonth">
 							
 								<select id="idYear">
 								</select>
@@ -422,18 +424,15 @@ function addFigure(str) {
 										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" />
 										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
 										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
-										<input type="text" class="numeric" name="e_budget_amount" value="${lwda.sBudgetAmount}" />
+										<input type="text" class="numeric" name="e_budget_amount" value="${lwda.lBudgetAmount?.format('###,###')}" />
 									</div>
 								#{/if}
 								<!-- 大分類毎 -->
 								#{else}
 									<div class="da_cate1_2">${lwda.sLargeCategory}</div>
 									<div class="da_budget numeric daBudgetSubject">
-										<span class="num3">
-											<!-- 
-											${lwda.sBudgetAmount}
-											 -->
-											${lwda.lBudgetAmount}
+										<span class="padR4">
+											${lwda.lBudgetAmount?.format('###,###')}
 										</span>
 									</div>
 								#{/else}
@@ -454,17 +453,17 @@ function addFigure(str) {
 										${lwda.sLargeCategory==messages.get('BalanceType.in') ||
 										lwda.sLargeCategory==messages.get('BalanceType.out') ||
 										lwda.sLargeCategory==messages.get('BalanceType.ideal_deposit_inOut') ? 'daBudgetSubject' : ''}">
-								<span class="num3">
-									${lwda.lSumMonth}
+								<span class="padR4">
+									${lwda.lSumMonth.format('###,###')}
 								</span>
 							</div>
 							<div class="da_sum_month numeric 
 										${lwda.sLargeCategory==messages.get('BalanceType.in') ||
 										lwda.sLargeCategory==messages.get('BalanceType.out') ? 'daBudgetNotSubject' : ''}">
-								<span class="num3">	
+								<span class="padR4">	
 									#{if lwda.sLargeCategory==messages.get('BalanceType.in') ||
 											lwda.sLargeCategory==messages.get('BalanceType.out')}
-										${lwda.lIdepoLink}
+										${lwda.lIdepoLink.format('###,###')}
 									#{/if}
 									#{else}
 										-
@@ -489,8 +488,8 @@ function addFigure(str) {
 						#{list items:lwda.lstWdtd, as:'wdtd'}
 						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric menu_cell">
 							<!-- 
-							<a href="@{DetailList.dl_balance(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="num3">${wdtd.lAmount}</a>
-							<a href="" class="num3" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
+							<a href="@{DetailList.dl_balance(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="padR4">${wdtd.lAmount}</a>
+							<a href="" class="padR4" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
 							 -->
 							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd?.sPaymentDateFr}" />
 							<input type="hidden" class="ToDlPaymentDateTo" value="${wdtd?.sPaymentDateTo}" />
@@ -498,7 +497,7 @@ function addFigure(str) {
 							<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
 							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
 							<input type="hidden" class="ToDlItemId" value="${wdtd?.lItemId}" />
-							<span class="num3">${wdtd.lAmount}</span>
+							<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 						</div>
 						%{leftFlg = 0}%
 						#{/list}

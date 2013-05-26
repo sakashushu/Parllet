@@ -371,12 +371,9 @@ public class DailyAccount extends Controller {
 			if(objEach[6]!=null) {
 				Long lngBgId = Long.parseLong(String.valueOf(objEach[5]));
 				Long lngBgAmount = Long.parseLong(String.valueOf(objEach[6]));
-				
-				String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
-				
+//				String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
 				wDaEach.setlBudgetId(lngBgId);
 				wDaEach.setlBudgetAmount(lngBgAmount);
-				wDaEach.setsBudgetAmount(sBudgetAmount);
 			}
 			
 			// 「実残高」の時は種類名に取扱種類名をセット
@@ -567,16 +564,26 @@ public class DailyAccount extends Controller {
 		String sqlRemNotIdealDeposit = makeSqlRemNotIdealDeposit(
 						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
-		//残高取得用SQL作成(My貯金残高)(合計)
-		String sqlRemIdealDepositAll = makeSqlRemIdealDeposit(
-						false,
-						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
-				);
+//		//残高取得用SQL作成(My貯金残高)(合計)
+//		String sqlRemIdealDepositAll = makeSqlRemIdealDeposit(
+//						false,
+//						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
+//				);
 		//残高取得用SQL作成(My貯金残高)(取扱毎)
 		String sqlRemIdealDeposit = makeSqlRemIdealDeposit(
 						true,
 						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
 				);
+//		//残高取得用SQL作成(My貯金残高)(合計)
+//		String sqlRemIdealDepositAll2 = makeSqlRemIdealDeposit2(
+//						false,
+//						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
+//				);
+//		//残高取得用SQL作成(My貯金残高)(取扱毎)
+//		String sqlRemIdealDeposit2 = makeSqlRemIdealDeposit2(
+//						true,
+//						dteStartDay, intDaysCnt, haUser, strFirstDay, strNextFirst
+//				);
 		
 		sql += "" +
 				" ( " + sqlRemRealAll + " ) " +
@@ -584,10 +591,14 @@ public class DailyAccount extends Controller {
 				" ( " + sqlRemReal + " ) " +
 				" UNION ALL " +
 				" ( " + sqlRemNotIdealDeposit + " ) " +
-				" UNION ALL " +
-				" ( " + sqlRemIdealDepositAll + " ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemIdealDepositAll + " ) " +
 				" UNION ALL " +
 				" ( " + sqlRemIdealDeposit + " ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemIdealDepositAll2 + " ) " +
+//				" UNION ALL " +
+//				" ( " + sqlRemIdealDeposit2 + " ) " +
 				" ORDER BY cate_order, item_order " +
 				"";
 		
@@ -1558,8 +1569,12 @@ public class DailyAccount extends Controller {
 		sql = "" +
 				" SELECT " +
 				"   *" +
-				" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 60 as cate_order " +
-				"  ,cast('" + Common.REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+//				" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 60 as cate_order " +
+//				"  ,cast('" + Common.REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+				" FROM ( SELECT 0 as item_id, 0 as item_order," +
+						"  cast('" + Common.REMAINDER_TYPE_NOT_IDEAL_DEPOSIT + "' as character varying(255)) as item_name," +
+						"  60 as cate_order " +
+				"  ,cast('" + Common.REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
 				"  ,0 as bg_id " +
 				"  ,0 as bg_amount " +
 				" ) rem_item " +
@@ -1691,6 +1706,329 @@ public class DailyAccount extends Controller {
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
 				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
 				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+				"";
+		
+		while(!(sqlLater.equals(sqlLater.replaceAll("  ", " "))))
+			sqlLater = sqlLater.replaceAll("  ", " ");
+		
+		return sqlLater;
+	}
+	
+	/**
+	 * 残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param dteStartDay
+	 * @param intDaysCnt
+	 * @param haUser
+	 * @param strFirstDay
+	 * @param strNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdealDeposit2(
+			boolean bolEach,
+			Date dteStartDay,
+			int intDaysCnt,
+			HaUser haUser,
+			String strFirstDay,
+			String strNextFirst
+			) {
+		
+		String sql = "";
+
+   		/** 
+   		 * SQL固定部分作成
+   		 */
+		
+		//  FROM句
+		String sqlFromPhrase = "" +
+   				" FROM Record r " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				"";
+		
+		/* CASE文内の加減算の条件 */
+		// My貯金から直接支払：減算、My貯金に直接入金：加算、単純支出：減算、単純収入：加算
+		String sqlSumCaseIdealDepoInOut = "" +
+   				" WHEN (    b.balance_type_name = '" + Common.BALANCE_TYPE_OUT + "' " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN -r.amount " +
+   				" WHEN (    b.balance_type_name = '" + Common.BALANCE_TYPE_IN + "' " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN r.amount " +
+   				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
+   				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
+				"";
+
+		if(!bolEach) {
+			//初日の残高取得用SQL作成（My貯金合計）
+			String sqlAllFirstDay = makeSqlRemIdeal2FirstDay(
+					false,
+					haUser,
+					strFirstDay,
+					sqlFromPhrase,
+					sqlSumCaseIdealDepoInOut
+					);
+			sql = "" +
+					" SELECT " +
+					"   *" +
+					" FROM ( SELECT 0 as item_id, 0 as item_order, cast('' as character varying(255)) as item_name, 70 as cate_order" +
+					"  ,cast('" + Common.REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+					"  ,0 as bg_id " +
+					"  ,0 as bg_amount " +
+					" ) rem_item " +
+					" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
+					"";
+			//2日目以降の残高取得用SQL作成（My貯金合計）
+			if(intDaysCnt>=2) {
+				String sqlAllLater = makeSqlRemIdeal2Later(
+						false,
+						dteStartDay,
+						intDaysCnt,
+						haUser,
+						strFirstDay,
+						strNextFirst,
+						sqlFromPhrase,
+						sqlSumCaseIdealDepoInOut
+						);
+				sql += " CROSS JOIN (" + sqlAllLater + " ) rem_later ";
+			}
+			sql += "" +
+					" CROSS JOIN ( " +
+					" SELECT " +
+					"   cast('' as character varying(255)) as item_type_name " +
+					"  ,cast(NULL as boolean) as inv_flg " +
+					" ) sel_item_type_name " +
+					"";
+			while(!(sql.equals(sql.replaceAll("  ", " "))))
+				sql = sql.replaceAll("  ", " ");
+			
+			return sql;
+		}
+
+		
+		
+		
+		
+		//  FROM句
+		sqlFromPhrase = "" +
+   				" FROM Record r " +
+				" LEFT JOIN ItemMst i " +
+				"   ON r.item_mst_id = i.id " +
+				" LEFT JOIN BalanceTypeMst b " +
+				"   ON r.balance_type_mst_id = b.id " +
+				" LEFT JOIN IdealDepositMst id " +
+				"   ON r.ideal_deposit_mst_id = id.id " +
+				" LEFT JOIN HandlingMst h " +
+				"   ON r.handling_mst_id = h.id " +
+				" LEFT JOIN HandlingTypeMst ht " +
+				"   ON h.handling_type_mst_id = ht.id" +
+				"";
+		
+		/* CASE文内の加減算の条件 */
+		// My貯金から直接支払：減算、My貯金に直接入金：加算、My貯金預入：加算、My貯金引出：減算
+		sqlSumCaseIdealDepoInOut = "" +
+   				" WHEN (    b.balance_type_name = '" + Common.BALANCE_TYPE_OUT + "' " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN -r.amount " +
+   				" WHEN (    b.balance_type_name = '" + Common.BALANCE_TYPE_IN + "' " +
+   					"   AND r.ideal_deposit_mst_id IS NOT NULL " +
+   					"   ) THEN r.amount " +
+   				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "' THEN r.amount" +
+   				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "' THEN -r.amount" +
+				"";
+
+		
+		
+		
+		
+		
+		String sqlDailyLater = "";
+		String sqlDailyZero = "";
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(dteStartDay);
+		for(int iDay = 1; iDay <= intDaysCnt; iDay++) {
+			sqlDailyZero += "" +
+					" OR  sum_day_" + iDay + " <> 0 ";
+			calendar.add(Calendar.DATE, 1);
+			if(iDay>=2)
+				sqlDailyLater += "" +
+						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " ";
+		}
+		
+		//初日の残高取得用SQL作成（取扱(My貯金)毎）
+		String sqlEachFirstDay = makeSqlRemIdeal2FirstDay(
+				true,
+				haUser,
+				strFirstDay,
+				sqlFromPhrase,
+				sqlSumCaseIdealDepoInOut
+				);
+		//2日目以降の残高取得用SQL作成（取扱(My貯金)毎）
+		String sqlJoinPhrase = "";
+		String sqlEachLater = "";
+		if(intDaysCnt>=2) {
+			sqlEachLater = makeSqlRemIdeal2Later(
+					true,
+					dteStartDay,
+					intDaysCnt,
+					haUser,
+					strFirstDay,
+					strNextFirst,
+					sqlFromPhrase,
+					sqlSumCaseIdealDepoInOut
+					);
+			sqlJoinPhrase = "" +
+					" LEFT JOIN (" + sqlEachLater + " ) rem_later " +
+					"   ON rem_firstday.id_id = rem_later.id_id " +
+					"";
+		}
+		sql = "" +
+				" SELECT " +
+				"   idm.id as item_id " +
+				"  ,idm.order_seq as item_order " +
+				"  ,idm.ideal_deposit_name as item_name " +
+				"  ,70 as cate_order " +
+				"  ,cast('" + Common.REMAINDER_TYPE_IDEAL_DEPOSIT + "' as character varying(255)) as cate_name " +
+				"  ,0 as bg_id " +
+				"  ,0 as bg_amount " +
+				"  ,COALESCE(rem_firstday.sum_day_1, 0) as sum_day_1 " + sqlDailyLater +
+				"  ,cast('' as character varying(255)) as item_type_name " +
+				"  ,cast(NULL as boolean) as inv_flg " +
+				" FROM IdealDepositMst idm " +
+				" LEFT JOIN ( " + sqlEachFirstDay + " ) rem_firstday " +
+				"   ON idm.id = rem_firstday.id_id" +
+				sqlJoinPhrase +
+				" WHERE idm.ha_user_id = " + haUser.id +
+				"   AND (idm.zero_hidden = false " + sqlDailyZero + ") " +
+				"";
+		while(!(sql.equals(sql.replaceAll("  ", " "))))
+			sql = sql.replaceAll("  ", " ");
+		
+		return sql;
+	}
+	
+	/**
+	 * 初日の残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param haUser
+	 * @param strFirstDay
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdeal2FirstDay(
+			boolean bolEach,
+			HaUser haUser,
+			String strFirstDay,
+			String sqlFromPhrase,
+			String sqlSumCaseIdealDepoInOut
+			) {
+		
+		//日付毎の合計取得部分のSQL
+		String sqlDaily = "" +
+				" COALESCE(SUM(" +
+				"   CASE " +
+				sqlSumCaseIdealDepoInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
+				"   END " +
+				" ), 0) as sum_day_1";
+		
+		//SQL
+		String sqlFirstDay = "" +
+				" SELECT " +
+   				(bolEach ?
+   				"   id.ideal_deposit_name as id_ideal_deposit_name " +
+   				"  ,id.id as id_id " +
+   				"  ,id.zero_hidden as id_zero_hidden , "
+   				: "") +
+				sqlDaily +		//日付毎の合計取得部分
+				sqlFromPhrase +	//FROM句
+				" WHERE r.ha_user_id = " + haUser.id +
+				"   AND (   (    b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "') " +
+							"AND r.ideal_deposit_mst_id IS NOT NULL " +
+							") " +
+						"OR b.balance_type_name in('" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) <= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+   				(bolEach ?
+				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
+   				: "") +
+				"";
+
+		while(!(sqlFirstDay.equals(sqlFirstDay.replaceAll("  ", " "))))
+			sqlFirstDay = sqlFirstDay.replaceAll("  ", " ");
+		
+		return sqlFirstDay;
+	}
+	
+	/**
+	 * 2日目以降の残高取得用SQL作成(My貯金残高)
+	 * @param bolEach
+	 * @param dteStartDay
+	 * @param intDaysCnt
+	 * @param haUser
+	 * @param strFirstDay
+	 * @param strNextFirst
+	 * @param sqlFromPhrase
+	 * @param sqlSumCaseIdealDepoInOut
+	 * @return
+	 */
+	private String makeSqlRemIdeal2Later(
+			boolean bolEach,
+			Date dteStartDay,
+			int intDaysCnt,
+			HaUser haUser,
+			String strFirstDay,
+			String strNextFirst,
+			String sqlFromPhrase,
+			String sqlSumCaseIdealDepoInOut
+			) {
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		String sqlDaily = "";
+		
+		//日付毎の合計取得部分のSQL
+		calendar.setTime(dteStartDay);
+		for(int iDay = 2; iDay <= intDaysCnt; iDay++) {
+			calendar.add(Calendar.DATE, 1);
+			sqlDaily += "" +
+					(iDay==2 ? " " : ",") +
+					" COALESCE(SUM(" +
+					"   CASE " +
+						" WHEN cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) = to_date('" + String.format("%1$tY%1$tm%1$td", calendar.getTime()) + "', 'YYYYMMDD') THEN " +
+						"   CASE " +
+					sqlSumCaseIdealDepoInOut +		//My貯金から直接支払減算・My貯金に直接入金加算・My貯金預入加算・My貯金引出減算
+						"   END " +
+						" ELSE 0 " +
+					"   END" +
+					" ), 0) as sum_day_" + iDay + " ";
+		}
+		
+		//SQL
+		String sqlLater = "" +
+				" SELECT " +
+   				(bolEach ?
+   				"   id.ideal_deposit_name as id_ideal_deposit_name " +
+   				"  ,id.id as id_id " +
+   				"  ,id.zero_hidden as id_zero_hidden , "
+   				: "") +
+				sqlDaily +		//日付毎の合計取得部分
+				sqlFromPhrase +		//FROM句
+				" WHERE r.ha_user_id = " + haUser.id +
+				"   AND (   (    b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "') " +
+							"AND r.ideal_deposit_mst_id IS NOT NULL " +
+							") " +
+						"OR b.balance_type_name in('" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_IN + "','" + Common.BALANCE_TYPE_IDEAL_DEPOSIT_OUT + "') " +
+						") " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) >= to_date('" + strFirstDay + "', 'YYYYMMDD') " +
+				"   AND cast((CASE WHEN r.debit_date IS NULL THEN r.payment_date ELSE r.debit_date END) as date) < to_date('" + strNextFirst + "', 'YYYYMMDD') " +
+				((session.get("actionMode")).equals("View") ? " AND r.secret_rec_flg = FALSE " : "") +
+   				(bolEach ?
+				" GROUP BY id.id, id.ideal_deposit_name, id.zero_hidden "
+   				: "") +
 				"";
 		
 		while(!(sqlLater.equals(sqlLater.replaceAll("  ", " "))))

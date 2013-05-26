@@ -113,7 +113,7 @@ public class RecordEdit extends Controller {
 			) {
 		checkAuthenticity();
 		
-		Record rec = null;
+		Record record = null;
 		Date paymentDate = null;
 		if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
@@ -165,7 +165,7 @@ public class RecordEdit extends Controller {
 		}
 		if (id==null) {
 			// 収支データの作成
-			rec = new Record(
+			record = new Record(
 					haUser,
 					paymentDate,
 					balanceTypeMst,
@@ -181,38 +181,37 @@ public class RecordEdit extends Controller {
 					store,
 					remarks,
 					secret_remarks,
-					secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false),
-					null
+					secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false)
 			);
 		} else {
 			// 収支データの読み出し
-			rec = Record.findById(id);
+			record = Record.findById(id);
 			// 編集
-			rec.payment_date = paymentDate;
-			rec.balance_type_mst = balanceTypeMst;
-			rec.handling_mst = handlingMst;
-			rec.ideal_deposit_mst = idealDepositMst;
-			rec.item_mst = itemMst;
-			rec.amount = intAmount;
-			rec.debit_date = debitDate;
-			rec.content = content;
-			rec.store = store;
-			rec.remarks = remarks;
-			rec.secret_remarks = secret_remarks;
-			rec.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
+			record.payment_date = paymentDate;
+			record.balance_type_mst = balanceTypeMst;
+			record.handling_mst = handlingMst;
+			record.ideal_deposit_mst = idealDepositMst;
+			record.item_mst = itemMst;
+			record.amount = intAmount;
+			record.debit_date = debitDate;
+			record.content = content;
+			record.store = store;
+			record.remarks = remarks;
+			record.secret_remarks = secret_remarks;
+			record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
 		}
 		// Validate
-		validation.valid(rec);
+		validation.valid(record);
 		if (validation.hasErrors()) {
-			render("@recordEdit", rec);
+			render("@recordEdit", record);
 		}
 		// 保存
-		rec.save();
+		record.save();
 		
 		RecordEdit reEd = new RecordEdit();
 		
 		// 明細表の絞り込み条件を、作成データにやんわり合わせる
-		reEd.setSessionDetailList(rec, calledFrom);
+		reEd.setSessionDetailList(record, calledFrom);
 		
 		// 呼び出し元画面に戻る
 		reEd.returnToCelledFrom(calledFrom);

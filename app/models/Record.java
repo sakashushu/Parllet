@@ -52,8 +52,6 @@ public class Record extends Model {
 	public String secret_remarks;				//備考（非公開）
 	public Boolean secret_rec_flg;				//非公開レコードフラグ
 	
-	public Integer remainder;
-	
 	public Record(
 			HaUser ha_user,
 			Date payment_date,
@@ -70,8 +68,7 @@ public class Record extends Model {
 			String store,
 			String remarks,
 			String secret_remarks,
-			Boolean secret_rec_flg,
-			Integer remainder
+			Boolean secret_rec_flg
 			) {
 		this.ha_user = ha_user;
 		this.payment_date = payment_date;
@@ -89,7 +86,6 @@ public class Record extends Model {
 		this.remarks = remarks;
 		this.secret_remarks = secret_remarks;
 		this.secret_rec_flg = secret_rec_flg;
-		this.remainder = remainder;
 	}
 	
 	public String toString() {

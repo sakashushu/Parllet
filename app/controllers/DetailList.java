@@ -164,8 +164,7 @@ public class DetailList extends Controller {
 	    						"",
 	    						"",
 	    						"",
-	    						false,
-	    						null
+	    						false
 	    						);
 	    				
 		    			// Validate

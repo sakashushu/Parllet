@@ -147,8 +147,7 @@ public class Config extends Controller {
 								store,
 								remarks,
 								secret_remarks,
-								secret_rec_flg,
-								null
+								secret_rec_flg
 						);
 						
 					} catch (ParseException e) {
@@ -211,8 +210,7 @@ public class Config extends Controller {
 									store,
 									remarks,
 									secret_remarks,
-									secret_rec_flg,
-									null
+									secret_rec_flg
 							);
 							
 						} catch (ParseException e) {

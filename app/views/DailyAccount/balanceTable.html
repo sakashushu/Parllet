@@ -1,6 +1,18 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.dailyaccount.balancetable') /}
 
+%{
+	REMAINDER_TYPE_TOTAL = messages.get('RemainderType.total')
+	REMAINDER_TYPE_REAL = messages.get('RemainderType.real')
+	REMAINDER_TYPE_IDEAL_DEPOSIT = messages.get('RemainderType.ideal_deposit')
+	REMAINDER_TYPE_NOT_IDEAL_DEPOSIT = messages.get('RemainderType.not_ideal_deposit')
+	HANDLING_TYPE_CASH = messages.get('HandlingType.cash')
+	HANDLING_TYPE_BANK = messages.get('HandlingType.bank')
+	HANDLING_TYPE_EMONEY = messages.get('HandlingType.emoney')
+	HANDLING_TYPE_CRECA = messages.get('HandlingType.creca')
+	IDEPO_TYPE_IDEPO = messages.get('IdepoType.idepo')
+}%
+
 <script type="text/javascript">
 <!--
 var bolDlgFrmUpdMstInsBkem,
@@ -35,12 +47,12 @@ jQuery(function() {
 	});
 	
 	/* 起動時の日毎の部分の幅と高さを調整 */
-	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-160);
+//	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-160);
 	
 	/* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
-	jQuery(window).resize(function() {
-		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-160);
-	});
+//	jQuery(window).resize(function() {
+//		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-160);
+//	});
 	
 	/* 年コンボボックスのリスト作成 */
 	%{year = sBasisDate.substring(0,4)}%
@@ -90,11 +102,11 @@ jQuery(function() {
 		jQuery('body').attr("disabled", "disabled");
 	});
 	
-	/* 表示金額を3桁区切りに */
-	jQuery('.num3').each(function(i) {
-		var numStr = addFigure(jQuery(this).html());
-		jQuery(this).html(numStr);
-	});
+//	/* 表示金額を3桁区切りに */
+//	jQuery('.num3').each(function(i) {
+//		var numStr = addFigure(jQuery(this).html());
+//		jQuery(this).html(numStr);
+//	});
 	
 	/* 日付選択時にjumpするdatepicker */
 	jQuery(".datepickerJump").datepicker({
@@ -132,32 +144,30 @@ jQuery(function() {
 			bolDlgFrmUpdMstUpdIdepo = false;
 			lngUpdId = null;
 			
-			if (jQuery('.ToDlHandlingId',this).val()!=undefined) {
-				//残高明細（口座系）へジャンプする際の絞込項目セット
-				jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
-				jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
-				jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
-			}
-			if (jQuery('.ToDlIdealDepositId',this).val()!=undefined) {
-				//残高明細（My貯金）へジャンプする際の絞込項目セット
-				jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr',this).val());
-				jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo',this).val());
-				jQuery('#idDlRiHdIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
-			}
-			if (jQuery.trim(jQuery(this).text())==="&{'RemainderType.real'}")
-				bolDlgFrmUpdMstInsBkem = true;
-			if (jQuery.trim(jQuery(this).text())==="&{'RemainderType.ideal_deposit'}")
-				bolDlgFrmUpdMstInsIdepo = true;
-			
-			if (jQuery('.lHandlingId',this).val()!=undefined) {
+			if (jQuery('.lHandlingId', jQuery(this).parent("li")).val()!=undefined) {
 				bolDlgFrmUpdMstUpdBkem = true;
-				strTypeName = jQuery('.strTypeName',this).val();
-				lngUpdId = parseInt(jQuery('.lHandlingId',this).val(), 10);
+				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
+				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
+				
+				//残高明細（口座系）へジャンプする際の絞込項目セット
+				jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+				jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+				jQuery('#hHandlingId').val(jQuery('.lHandlingId', jQuery(this).parent("li")).val());
 			}
-			if (jQuery('.lIdealDepositId',this).val()!=undefined) {
+			if (jQuery('.lIdealDepositId', jQuery(this).parent("li")).val()!=undefined) {
 				bolDlgFrmUpdMstUpdIdepo = true;
-				lngUpdId = parseInt(jQuery('.lIdealDepositId',this).val(), 10);
+				lngUpdId = parseInt(jQuery('.lIdealDepositId', jQuery(this).parent("li")).val(), 10);
+				
+				//残高明細（My貯金）へジャンプする際の絞込項目セット
+				jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+				jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+				jQuery('#idDlRiHdIdealDepositId').val(jQuery('.lIdealDepositId', jQuery(this).parent("li")).val());
 			}
+			
+			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!=undefined)
+				bolDlgFrmUpdMstInsBkem = true;
+			if (jQuery('.bolRemIdeal', jQuery(this).parent("li")).val()!=undefined)
+				bolDlgFrmUpdMstInsIdepo = true;
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -169,6 +179,15 @@ jQuery(function() {
 		build: function($trigger, e) {
 			var options = {
 				callback: function(key, options) {
+					if (key==="dialogFrmUpdMstInsBank" || key==="dialogFrmUpdMstUpdBank")
+						//口座更新フォームを開く
+						openDialogFrmUpdMst("${HANDLING_TYPE_BANK}", lngUpdId);
+					if (key==="dialogFrmUpdMstInsEmoney" || key==="dialogFrmUpdMstUpdEmoney")
+						//電子マネー更新フォームを開く
+						openDialogFrmUpdMst("${HANDLING_TYPE_EMONEY}", lngUpdId);
+					if (key==="dialogFrmUpdMstInsIdepo" || key==="dialogFrmUpdMstUpdIdepo")
+						//My貯金更新フォームを開く
+						openDialogFrmUpdMst("${IDEPO_TYPE_IDEPO}", lngUpdId);
 					if (key==="toDlRemainderBank") {
 						jQuery('#submitDlRemainderBank').click();
 						jQuery('body').attr("disabled", "disabled");
@@ -177,37 +196,28 @@ jQuery(function() {
 						jQuery('#submitDlRemainderIdeal').click();
 						jQuery('body').attr("disabled", "disabled");
 					}
-					if (key==="dialogFrmUpdMstInsBank" || key==="dialogFrmUpdMstUpdBank")
-						//口座更新フォームを開く
-						openDialogFrmUpdMst("&{'views.config.cf_bank'}", lngUpdId);
-					if (key==="dialogFrmUpdMstInsEmoney" || key==="dialogFrmUpdMstUpdEmoney")
-						//電子マネー更新フォームを開く
-						openDialogFrmUpdMst("&{'views.config.cf_emoney'}", lngUpdId);
-					if (key==="dialogFrmUpdMstInsIdepo" || key==="dialogFrmUpdMstUpdIdepo")
-						//My貯金更新フォームを開く
-						openDialogFrmUpdMst("&{'views.config.cf_idealdepo'}", lngUpdId);
 				},
 				items: {}
 			};
+			if (bolDlgFrmUpdMstInsBkem) {
+				options.items.dialogFrmUpdMstInsBank = {name: "&{'views.contextMenu.add', HANDLING_TYPE_BANK}"};
+				options.items.dialogFrmUpdMstInsEmoney = {name: "&{'views.contextMenu.add', HANDLING_TYPE_EMONEY}"};
+			}
+			if (bolDlgFrmUpdMstInsIdepo)
+				options.items.dialogFrmUpdMstInsIdepo = {name: "&{'views.contextMenu.add', IDEPO_TYPE_IDEPO}"};
+			if (bolDlgFrmUpdMstUpdBkem) {
+				if (strTypeName==="${HANDLING_TYPE_BANK}")
+					options.items.dialogFrmUpdMstUpdBank = {name: "&{'views.contextMenu.upd', HANDLING_TYPE_BANK}"};
+				if (strTypeName==="${HANDLING_TYPE_EMONEY}")
+					options.items.dialogFrmUpdMstUpdEmoney = {name: "&{'views.contextMenu.upd', HANDLING_TYPE_EMONEY}"};
+			}
+			if (bolDlgFrmUpdMstUpdIdepo) {
+				options.items.dialogFrmUpdMstUpdIdepo = {name: "&{'views.contextMenu.upd', IDEPO_TYPE_IDEPO}"};
+			}
 			if (jQuery('#hHandlingId').val()!='')
 				options.items.toDlRemainderBank = {name: "&{'views.common.menu.toDlRemainderBank'}"};
 			if (jQuery('#idDlRiHdIdealDepositId').val()!='')
 				options.items.toDlRemainderIdeal = {name: "&{'views.common.menu.toDlRemainderIdeal'}"};
-			if (bolDlgFrmUpdMstInsBkem) {
-				options.items.dialogFrmUpdMstInsBank = {name: "&{'views.contextMenu.add', messages.get('views.config.cf_bank')}"};
-				options.items.dialogFrmUpdMstInsEmoney = {name: "&{'views.contextMenu.add', messages.get('views.config.cf_emoney')}"};
-			}
-			if (bolDlgFrmUpdMstInsIdepo)
-				options.items.dialogFrmUpdMstInsIdepo = {name: "&{'views.contextMenu.add', messages.get('views.config.cf_idealdepo')}"};
-			if (bolDlgFrmUpdMstUpdBkem) {
-				if (strTypeName==="&{'views.config.cf_bank'}")
-					options.items.dialogFrmUpdMstUpdBank = {name: "&{'views.contextMenu.upd', messages.get('views.config.cf_bank')}"};
-				if (strTypeName==="&{'views.config.cf_emoney'}")
-					options.items.dialogFrmUpdMstUpdEmoney = {name: "&{'views.contextMenu.upd', messages.get('views.config.cf_emoney')}"};
-			}
-			if (bolDlgFrmUpdMstUpdIdepo) {
-				options.items.dialogFrmUpdMstUpdIdepo = {name: "&{'views.contextMenu.upd', messages.get('views.config.cf_idealdepo')}"};
-			}
 			return options;
 		}
 	});
@@ -282,28 +292,28 @@ function addFigure(str) {
 function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invFlgChkd, lngId) {
 	var strErrMsg;
 	if (lngId===null) lngId=undefined;
-	if (strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
+	if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}")
 		strErrMsg = "Common.updateHdlg";
-	if (strType==="&{'views.config.cf_idealdepo'}")
+	if (strType==="${IDEPO_TYPE_IDEPO}")
 		strErrMsg = "Common.updateIdepo";
 	switch (intRslt) {
 		case 0:
 			break;
 		case 1:
 			var jqxhrUpdMst;
-			if (strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
+			if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}") {
 				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngId: lngId});
 			}
-			if (strType==="&{'views.config.cf_idealdepo'}") {
+			if (strType==="${IDEPO_TYPE_IDEPO}") {
 				jqxhrUpdMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
 			}
 			jqxhrUpdMst
 			.done(function(z) {
 				switch (z.intRslt) {
 					case 0:
-						if (strType==="&{'views.config.cf_bank'}" ||
-								strType==="&{'views.config.cf_emoney'}" ||
-								strType==="&{'views.config.cf_idealdepo'}") {
+						if (strType==="${HANDLING_TYPE_BANK}" ||
+								strType==="${HANDLING_TYPE_EMONEY}" ||
+								strType==="${IDEPO_TYPE_IDEPO}") {
 							//画面を再表示
 							window.location.reload(true);
 						}
@@ -325,6 +335,101 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 			alert("dialogFrmUpdMst return value error");
 	}
 }
+
+google.load('visualization', '1', {'packages':['corechart']});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'type');
+	
+	data.addColumn('number', "${REMAINDER_TYPE_TOTAL}");
+	data.addColumn({type: 'string', role: 'tooltip'});
+	#{list items:lWDA, as:'lwda'}
+	  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+			lwda.sItem!='' &&
+			lwda.lstWdtd[0].lAmount!=0}
+		data.addColumn('number', '${lwda.sItem}');
+		data.addColumn({type: 'string', role: 'tooltip'});
+	  #{/if}
+	#{/list}
+	
+	#{list items:lWDA, as:'lwda'}
+	  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
+			(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+			lwda.lstWdtd[0].lAmount!=0}
+		data.addColumn('number', '${lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? lwda.sLargeCategory : lwda.sItem}');
+		data.addColumn({type: 'string', role: 'tooltip'});
+	  #{/if}
+	#{/list}
+	
+	data.addRows([
+		["${REMAINDER_TYPE_TOTAL}",
+			#{list items:lWDA, as:'lwda'}
+			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+					lwda.sItem==''}
+				${lwda.lstWdtd[0].lAmount}, "${REMAINDER_TYPE_TOTAL} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+			  #{/if}
+			#{/list}
+			#{list items:lWDA, as:'lwda'}
+			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+					lwda.sItem!='' &&
+					lwda.lstWdtd[0].lAmount!=0}
+				0, "",
+			  #{/if}
+			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					lwda.lstWdtd[0].lAmount!=0}
+				0, "",
+			  #{/if}
+			#{/list}
+		],
+		["${REMAINDER_TYPE_REAL}",
+			0, "",
+			#{list items:lWDA, as:'lwda'}
+			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+					lwda.sItem!='' &&
+					lwda.lstWdtd[0].lAmount!=0}
+				${lwda.lstWdtd[0].lAmount}, "${lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+			  #{/if}
+			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					lwda.lstWdtd[0].lAmount!=0}
+				0, "",
+			  #{/if}
+			#{/list}
+		],
+		["${REMAINDER_TYPE_IDEAL_DEPOSIT}",
+			0, "",
+			#{list items:lWDA, as:'lwda'}
+			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+					lwda.sItem!='' &&
+					lwda.lstWdtd[0].lAmount!=0}
+				0, "",
+			  #{/if}
+			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					lwda.lstWdtd[0].lAmount!=0}
+				${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+			  #{/if}
+			#{/list}
+		],
+	]);
+	
+	// グラフのオプションを指定する
+	var options = {
+//			title: '業績推移',
+			width: 980,
+			height: 150,
+			isStacked: true,
+//			backgroundColor: { fill:'transparent' },
+//			backgroundColor: "rgb(242,236,191)",
+			backgroundColor: "rgb(242,223,182)",
+	}
+	
+	// 描画する
+	var chart = new google.visualization.BarChart(document.getElementById('btChart'));
+	chart.draw(data, options);
+}
 // -->
 </script>
 
@@ -340,21 +445,21 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 
 
 <!-- 残高明細（口座系）へジャンプ用フォーム（非表示） -->
-#{form @DetailList.dl_remainderBank()}
-	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" style="display:none;" />
-	<input type="text" name="h_debit_date_fr" id="hDebitDateFr" style="display:none;" />
-	<input type="text" name="h_debit_date_to" id="hDebitDateTo" style="display:none;" />
-	<input type="text" name="h_handling_id" id="hHandlingId" style="display:none;" />
-	<input type="submit" name="srch" id="submitDlRemainderBank" style="display:none;" />
+#{form @DetailList.dl_remainderBank(), class:'invisible'}
+	<input type="text" name="h_secret_rec_flg" id="hSecretRecFlg" value="0" />
+	<input type="text" name="h_debit_date_fr" id="hDebitDateFr" />
+	<input type="text" name="h_debit_date_to" id="hDebitDateTo" />
+	<input type="text" name="h_handling_id" id="hHandlingId" />
+	<input type="submit" name="srch" id="submitDlRemainderBank" />
 #{/form}
 
 <!-- 残高明細（My貯金）へジャンプ用フォーム（非表示） -->
-#{form @DetailList.dl_remainderIdeal()}
-	<input type="text" name="dlRiHdSecretRecFlg" id="idDlRiHdSecretRecFlg" value="0" style="display:none;" />
-	<input type="text" name="dlRiHdDebitDateFr" id="idDlRiHdDebitDateFr" style="display:none;" />
-	<input type="text" name="dlRiHdDebitDateTo" id="idDlRiHdDebitDateTo" style="display:none;" />
-	<input type="text" name="dlRiHdIdealDepositId" id="idDlRiHdIdealDepositId" style="display:none;" />
-	<input type="submit" name="dlRiSrch" id="submitDlRemainderIdeal" style="display:none;" />
+#{form @DetailList.dl_remainderIdeal(), class:'invisible'}
+	<input type="text" name="dlRiHdSecretRecFlg" id="idDlRiHdSecretRecFlg" value="0" />
+	<input type="text" name="dlRiHdDebitDateFr" id="idDlRiHdDebitDateFr" />
+	<input type="text" name="dlRiHdDebitDateTo" id="idDlRiHdDebitDateTo" />
+	<input type="text" name="dlRiHdIdealDepositId" id="idDlRiHdIdealDepositId" />
+	<input type="submit" name="dlRiSrch" id="submitDlRemainderIdeal" />
 #{/form}
 
 	
@@ -366,27 +471,28 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 	</p>
 #{/ifErrors}
 
-<!-- 日付移動用フォーム -->
-#{form @jump(), id:'frmJump'}
+<!-- 日付移動用フォーム（非表示） -->
+#{form @jump(), id:'frmJump', class:'invisible'}
 	<input type="hidden" value="${strTableType}" name="strTableType" />
  
 	<!-- 移動種別 -->
-	<input type="text" class="invisible" name="strMoveType" id="idMoveType" />
+	<input type="text" name="strMoveType" id="idMoveType" />
 	<!-- 移動数 -->
-	<input type="text" class="invisible" name="intMoveNum" id="idMoveNum" />
+	<input type="text" name="intMoveNum" id="idMoveNum" />
  	
 	<input type="text" name="e_basis_date" id="idBasisDate"
-		value="${sBasisDate}" style="display:none;" />
+		value="${sBasisDate}" />
 	
-	<input type="submit" name="move" id="idMove" style="display:none;" />
+	<input type="submit" name="move" id="idMove" />
 #{/form}
 
+<div id="btChart"></div>
 
 <div id="mainInner" class="btMainInner">
 
-<div class="bt_basisDate">
+<div id="btBasisDate">
 	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
-	<span class="daPaddingYearMonth">
+	<span id="daPaddingYearMonth">
 	
 		<select id="idYear">
 		</select>
@@ -395,11 +501,11 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 		</select>
 		&{'month'}
 		&nbsp;&nbsp;
-		<span style="font-weight: normal;">
+		<span>
 		${sBasisDate.substring(8,10)}
 		</span>
 		&nbsp;
-		日
+		&{'views.common.day'}
 		<div class="inlineVerticalMiddle">
 			<input type="text" class="datepickerJump invisible dpClImg"
 				value="${sBasisDate}" />
@@ -409,72 +515,91 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 	
 	<a id="idNextMonth" class="aBtn fontJura" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
 </div>
-					
-<ul class="bt_tbl_all">
+
+<div id="btRemTotal">
+	<ul>
+		<li class="${vRemBkemZero} ${vInvisible} ${vRemBkemInv} ${vInvisible2}">
+			<div class="t_Line lrb_Line">
+				${REMAINDER_TYPE_TOTAL}
+			</div>
+			<div class="t_Line lrb_Line padR4 numeric">
+				#{list items:lWDA, as:'lwda'}
+				  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+						lwda.sItem==''}
+					${lwda.lstWdtd[0].lAmount.format('###,###')}
+				  #{/if}
+				#{/list}
+			</div>
+		</li>
+	</ul>
+</div>
+
+<ul id="bt_tbl_all">
 	<li>
 		<div id="bt_tcol">
 			<div class="bt_tbl_all_l">
 				<div>
 					%{
 						hU=models.HaUser.find("byEmail", session.username).first()
-						intHdlgInvCnt=models.HandlingMst.count("ha_user = ? and handling_type_mst.handling_type_name != ? and invalidity_flg = true", hU, messages.get('HandlingType.creca'))
+						intHdlgInvCnt=models.HandlingMst.count("ha_user = ? and handling_type_mst.handling_type_name != ? and invalidity_flg = true", hU, HANDLING_TYPE_CRECA)
 						intHdlgZeroExist=false
 					}%
 					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory==messages.get('RemainderType.real') &&
+					  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 					  		lwda.sItem!='' &&
-					  		lwda.sItem!=messages.get('HandlingType.cash') &&
+					  		lwda.sItem!=HANDLING_TYPE_CASH &&
 					  		lwda.lstWdtd[0].lAmount==0}
 						%{intHdlgZeroExist = true}%
 					  #{/if}
 					#{/list}
+					<div class="btHddnChkBox">
 					#{if intHdlgZeroExist}
 						<input type="checkbox" id="zeroHddnBkem" ${hU?.zero_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
 					#{/if}
 					#{if intHdlgInvCnt!=0}
 						<input type="checkbox" id="invHddnBkem" ${hU?.inv_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.invalid_hidden'}
 					#{/if}
-					<br>
-					<br>
+					</div>
 				</div>
 				
 				<ul class="bt_tbl_each">
 					%{topFlg = 1}%
 					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory==messages.get('RemainderType.real')}
+					  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL}
 					  	%{
-					  		vRemBkemZero = (lwda.sItem!='' && lwda.sItem!=messages.get('HandlingType.cash') && lwda.lstWdtd[0].lAmount==0) ? 'remBkemZero' : ''
+					  		wdtd = lwda.lstWdtd[0]
+					  		vRemBkemZero = (lwda.sItem!='' && lwda.sItem!=HANDLING_TYPE_CASH && wdtd.lAmount==0) ? 'remBkemZero' : ''
 					  		vInvisible = (hU?.zero_hidden_bkem && lwda.lstWdtd[0].lAmount==0) ? 'invisible' : ''
-					  		vRemBkemInv = (lwda.sItem!='' && lwda.sItem!=messages.get('HandlingType.cash') && lwda.bolInvFlg) ? 'remBkemInv' : ''
+					  		vRemBkemInv = (lwda.sItem!='' && lwda.sItem!=HANDLING_TYPE_CASH && lwda.bolInvFlg) ? 'remBkemInv' : ''
 					  		vInvisible2 = (hU?.inv_hidden_bkem && lwda.bolInvFlg) ? 'invisible2' : ''
+							vMenuCell = lwda.sItem==HANDLING_TYPE_CASH ? '' : 'menu_cell'
 					  	}%
 						<li class="${vRemBkemZero} ${vInvisible} ${vRemBkemInv} ${vInvisible2}">
 							#{if lwda.sItem == ''}
+								<input type="hidden" class="bolRemReal" value="${lwda.sLargeCategory}" />
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large menu_cell">
 									${lwda.sLargeCategory}
 								</div>
-								#{list items:lwda.lstWdtd, as:'wdtd'}
-									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric">
-										<span class="num3">${wdtd.lAmount}</span>
-									</div>
-								#{/list}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
+									<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
+								</div>
 							#{/if}
 							#{else}
+								<input type="hidden" class="lHandlingId" value="${wdtd.lHandlingId}" />
+								<input type="hidden" class="strTypeName" value="${lwda.strTypeNm}" />
+								
+								<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
+								<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
+<!-- 
+								<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
+ -->
 								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small${lwda.sItem==messages.get('HandlingType.cash') ? '' : ' menu_cell'}">
-									<input type="hidden" class="lHandlingId" value="${lwda.lstWdtd[0].lHandlingId}" />
-									<input type="hidden" class="strTypeName" value="${lwda.strTypeNm}" />
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${vMenuCell}">
 									${lwda.sItem}
 								</div>
-								#{list items:lwda.lstWdtd, as:'wdtd'}
-									%{vMenuCell = lwda.sItem==messages.get('HandlingType.cash') ? '' : 'menu_cell'}%
-									<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric ${vMenuCell}">
-										<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
-										<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
-										<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
-										<span class="num3">${wdtd.lAmount}</span>
-									</div>
-								#{/list}
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric ${vMenuCell}">
+									<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
+								</div>
 							#{/else}
 						</li>
 						%{topFlg = 0}%
@@ -482,57 +607,76 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 					#{/list}
 				</ul>
 			</div>
-	
+			
 			<div class="bt_tbl_all_r">
 				<div>
 					%{
 						intIdepoZeroExist=false
 					}%
 					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory!=messages.get('RemainderType.real') &&
+					  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
 					  		lwda.sItem!='' &&
 					  		lwda.lstWdtd[0].lAmount==0}
 						%{intIdepoZeroExist = true}%
 					  #{/if}
 					#{/list}
+					<div class="btHddnChkBox">
 					#{if intIdepoZeroExist}
 						<input type="checkbox" id="zeroHddnIdepo" ${hU?.zero_hidden_idepo ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
 					#{/if}
-					<br>
-					<br>
+					</div>
 				</div>
 				
 				<ul class="bt_tbl_each">
 					%{topFlg = 1}%
+					<li>
+						#{list items:lWDA, as:'lwda'}
+						  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
+								lwda.sItem==''}
+							<input type="hidden" class="bolRemIdeal" value="${REMAINDER_TYPE_IDEAL_DEPOSIT}" />
+							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large menu_cell">
+								${REMAINDER_TYPE_IDEAL_DEPOSIT}
+							</div>
+							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric menu_cell">
+								<span class="padR4">${lwda.lstWdtd[0].lAmount.format('###,###')}</span>
+							</div>
+						  #{/if}
+						#{/list}
+					</li>
+					
+					%{topFlg = 0}%
+					
 					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory!=messages.get('RemainderType.real')}
+					  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL}
 					  	%{
+							wdtd = lwda.lstWdtd[0]
 					  		vRemIdepoZero = (lwda.sItem!='' && lwda.lstWdtd[0].lAmount==0) ? 'remIdepoZero' : ''
 					  		vInvisible = (hU?.zero_hidden_idepo && lwda.lstWdtd[0].lAmount==0) ? 'invisible' : ''
 					  	}%
 						<li class="${vRemIdepoZero} ${vInvisible}">
+							<input type="hidden" class="lIdealDepositId" value="${wdtd.lIdealDepositId}" />
+							
+							<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
+							<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
+<!-- 
+							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
+ -->
 							#{if lwda.sItem==''}
-								%{vMenuCell = lwda.sLargeCategory==messages.get('RemainderType.ideal_deposit') ? 'menu_cell' : ''}%
+								%{vMenuCell = lwda.sLargeCategory==REMAINDER_TYPE_IDEAL_DEPOSIT ? 'menu_cell' : ''}%
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large ${vMenuCell}">
 									${lwda.sLargeCategory}
 								</div>
 							#{/if}
 							#{else}
 								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small menu_cell">
-									<input type="hidden" class="lIdealDepositId" value="${lwda.lstWdtd[0].lIdealDepositId}" />
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${lwda.sItem==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? '' : ' menu_cell'}">
 									${lwda.sItem}
 								</div>
 							#{/else}
-							#{list items:lwda.lstWdtd, as:'wdtd'}
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${lwda.sItem == '' ? '' : ' menu_cell'}">
-									<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
-									<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
-									<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
-									<span class="num3">${wdtd.lAmount}</span>
-								</div>
-								%{leftFlg = 0}%
-							#{/list}
+							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${lwda.sItem==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? '' : ' menu_cell'}">
+								<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
+							</div>
+							%{leftFlg = 0}%
 						</li>
 						%{topFlg = 0}%
 					  #{/if}
@@ -541,6 +685,8 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 			</div>
 		</div>
 	</li>
-</ul>
+</ul>  <!-- bt_tbl_all -->
+
+<div id="mainInnerBtm"></div>
 
 </div>  <!-- mainInner -->

@@ -1,0 +1,17 @@
+<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+	<input type='hidden' value="1.00" name="amount" />
+	<input name="currency_code" type="hidden" value="EUR" />
+	<input name="shipping" type="hidden" value="0.00" />
+	<input name="tax" type="hidden" value="0.00" />
+	<input name="return" type="hidden" value="http://mon_ip/paypalcontroller/success" />
+	<input name="cancel_return" type="hidden" value="http://mon_ip/paypalcontroller/fail" />
+	<input name="notify_url" type="hidden" value="http://mon_ip/paypalcontroller/validation" />
+	<input name="cmd" type="hidden" value="_xclick" />
+	<input name="business" type="hidden" value="seller@mail.com" />
+	<input name="item_name" type="hidden" value="buy with paypal" />
+	<input name="no_note" type="hidden" value="1" />
+	<input name="lc" type="hidden" value="FR" />
+	<input name="bn" type="hidden" value="PP-BuyNowBF" />
+	<input name="custom" type="hidden" value="3" />
+	<input style="border-style: none;" alt="Effectuez vos paiements via PayPal" name="submit" src="https://www.paypal.com/fr_FR/FR/i/btn/btn_buynow_LG.gif" type="image" /><img src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" border="0" alt="" width="1" height="1" />
+</form>
