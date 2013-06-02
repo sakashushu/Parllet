@@ -15,8 +15,9 @@ import play.mvc.Controller;
 *
 * Paypal controller
 *
-* @author guillaumeleone
-*
+* @author Original Author guillaumeleone
+* @author Another Author sakashushu
+* 
 */
 public class PaypalController extends Controller {
 
@@ -36,28 +37,28 @@ public class PaypalController extends Controller {
 		
 		Logger.info("validation");
 		
-		// creation de l'url a envoyé à paypal pour vérification
-		//on recupere les parametres de la requetes POST
+		// creation of the url sent to paypal to check the
+		//parameters of POST requests is recovered
 		String str = "cmd=_notify-validate&" + params.get("body");
 		Logger.info(str);
 		
-		//création d'une connection à la sandbox paypal
+		//creating a connection to the paypal
 		URL url = new URL("https://www.paypal.com/cgi-bin/webscr");
 		URLConnection connection = url.openConnection();
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
 		
-		//envoi de la requête
+		//sending the request
 		PrintWriter out = new PrintWriter(connection.getOutputStream());
 		out.println(str);
 		out.close();
 		
-		//lecture de la réponse
+		//reading the response
 		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String result = in.readLine();
 		in.close();
 		
-		// assign posted variables to local variables
+		//assign posted variables to local variables
 		String itemName = params.get("item_name");
 		String itemNumber = params.get("item_number");
 		String paymentStatus = params.get("payment_status");
@@ -67,33 +68,40 @@ public class PaypalController extends Controller {
 		String receiverEmail = params.get("receiver_email");
 		String payerEmail = params.get("payer_email");
 		
+		Logger.info("item_name = '"+itemName+"'");
+		Logger.info("item_number = '"+itemNumber+"'");
+		Logger.info("payment_status = '"+paymentStatus+"'");
+		Logger.info("mc_gross = '"+paymentAmount+"'");
+		Logger.info("mc_currency = '"+paymentCurrency+"'");
+		Logger.info("txn_id = '"+txnId+"'");
+		Logger.info("receiver_email = '"+receiverEmail+"'");
+		Logger.info("payer_email = '"+payerEmail+"'");
+		
 		//check notification validation
 		if ("VERIFIED".equals(result)) {
 			if ("Completed".equals(paymentStatus)) {
-				// on vérife que la txn_id n'a pas été traité précédemment
+				// verife that txn_id has not been previously treated
 				PaypalTransaction paypalTransaction = PaypalTransaction.findByTrxId(txnId);
-				// si aucune transaction en base ou si transaction mais en status invalide
-				// on traite la demande
+				// if no transaction or transaction basis but invalid status request is processed
 				if (paypalTransaction == null
 						|| (paypalTransaction != null && PaypalTransaction.TrxStatusEnum.INVALID.equals(paypalTransaction.status))) {
-					// on vérifie que receiver_email est votre adresse email
-					// a remplacer par l'adresse mail du vendeur
+					// check that your email address is receiver_email to replace the email address of the seller
 					if ("seller@paypalsandbox.com".equals(receiverEmail)) {
-						// vérifier que paymentAmount (EUR) et paymentCurrency (prix du produit vendu) sont corrects
+						// check paymentAmount (EUR) and paymentCurrency (product price) are correct
 						Logger.info("Transaction OK");
-						//sauvegarde la trace de la transaction paypal en base
+						// backup track of the transaction based paypal
 						new PaypalTransaction(itemName, itemNumber, paymentStatus, paymentAmount, paymentCurrency, txnId, receiverEmail, payerEmail,PaypalTransaction.TrxStatusEnum.VALID).save();
 					} else {
-						// Mauvaise adresse email paypal
+						// Wrong paypal email address
 						Logger.info("Mauvaise adresse email paypal");
 					}
 				} else {
-					// ID de transaction déjà utilisé
+					// Transaction ID already used
 					Logger.info("La transaction a déjà été traité");
 				}
 			} else {
-				// Statut de paiement: Echec
-				Logger.info("Statut de paiement: Echec");
+				// Payment Status: Failed
+				Logger.info("Payment Status: Failed");
 			}
 		} else if ("INVALID".equals(result)) {
 			Logger.info("Invalide transaction");
