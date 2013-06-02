@@ -9,6 +9,7 @@ import java.net.URLConnection;
 
 import models.PaypalTransaction;
 import play.Logger;
+import play.Play;
 import play.mvc.Controller;
 
 /**
@@ -62,6 +63,7 @@ public class PaypalController extends Controller {
 		String itemName = params.get("item_name");
 		String itemNumber = params.get("item_number");
 		String paymentStatus = params.get("payment_status");
+		String pendingReason = params.get("pending_reason");
 		String paymentAmount = params.get("mc_gross");
 		String paymentCurrency = params.get("mc_currency");
 		String txnId = params.get("txn_id");
@@ -71,6 +73,7 @@ public class PaypalController extends Controller {
 		Logger.info("item_name = '"+itemName+"'");
 		Logger.info("item_number = '"+itemNumber+"'");
 		Logger.info("payment_status = '"+paymentStatus+"'");
+		Logger.info("pending_reason = '"+pendingReason+"'");
 		Logger.info("mc_gross = '"+paymentAmount+"'");
 		Logger.info("mc_currency = '"+paymentCurrency+"'");
 		Logger.info("txn_id = '"+txnId+"'");
@@ -86,7 +89,7 @@ public class PaypalController extends Controller {
 				if (paypalTransaction == null
 						|| (paypalTransaction != null && PaypalTransaction.TrxStatusEnum.INVALID.equals(paypalTransaction.status))) {
 					// check that your email address is receiver_email to replace the email address of the seller
-					if ("seller@paypalsandbox.com".equals(receiverEmail)) {
+					if (Play.configuration.getProperty("paypal.receiver_email").equals(receiverEmail)) {
 						// check paymentAmount (EUR) and paymentCurrency (product price) are correct
 						Logger.info("Transaction OK");
 						// backup track of the transaction based paypal
