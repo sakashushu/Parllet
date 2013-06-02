@@ -42,7 +42,7 @@ public class PaypalController extends Controller {
 		Logger.info(str);
 		
 		//création d'une connection à la sandbox paypal
-		URL url = new URL("https://www.sandbox.paypal.com/cgi-bin/webscr");
+		URL url = new URL("https://www.paypal.com/cgi-bin/webscr");
 		URLConnection connection = url.openConnection();
 		connection.setDoOutput(true);
 		connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");

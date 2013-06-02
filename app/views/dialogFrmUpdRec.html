@@ -1,0 +1,292 @@
+<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
+<script type="text/javascript">
+<!-- 
+/**
+ * 収支データ更新用ダイアログ
+ */
+function openDialogFrmUpdRec(strType, dfurRec, lngMstId) {
+	jQuery(function() {
+		var STR80 = "80%",
+			STR100 = "100%",
+			STR150 = "150%",
+			dfurPayDate = jQuery("#dfurPayDate"),
+			dfurBType = jQuery("#dfurBType"),
+			dfurHdlg = jQuery('#dfurHdlg'),
+			dfurIdepo = jQuery('#dfurIdepo'),
+			dfurItem = jQuery('#dfurItem'),
+			dfurAmnt = jQuery('#dfurAmnt'),
+			dfurDebDate = jQuery('#dfurDebDate'),
+			dfurCntnt = jQuery('#dfurCntnt'),
+			dfurStore = jQuery('#dfurStore'),
+			dfurRmrks = jQuery('#dfurRmrks'),
+			title = dfurRec.id===null ? "&{'views.dialogFrmUpdRec.title.ins'}" : strType+"&{'views.dialogFrmUpdRec.title.upd'}",
+			buttons = {},
+			allFields = jQuery([]).add(dfurPayDate.children('input')),
+			tips = jQuery(".validateTips"),
+			intRslt = 0;
+		
+		/* 要素の初期化 */
+		initElem(dfurRec);
+		
+		allFields.removeClass("ui-state-error");
+		tips
+			.css('padding', '0')
+			.css('margin-bottom', '0')
+			.text("");
+		
+		buttons["&{'insupd.save'}"] = function() {
+			var bValid = true;
+			allFields.removeClass("ui-state-error");
+			bValid = bValid && checkRequired(dfurPayDate.children('input'), "&{'payment_date'}");
+			if (bValid) {
+				intRslt = 1;
+				
+				dfurRec.balance_type_mst_id = dfurPayDate.children('input').val();
+				dfurRec.handling_mst_id = dfurBType.children('select').val();
+				dfurRec.ideal_deposit_mst_id = dfurHdlg.children('input').val();
+				dfurRec.item_mst_id = dfurIdepo.children('input').val();
+				dfurRec.amount = dfurItem.children('input').val();
+				dfurRec.debit_date = dfurAmnt.children('input').val();
+				dfurRec.content = dfurDebDate.children('input').val();
+				dfurRec.store = dfurCntnt.children('input').val();
+				dfurRec.remarks = dfurStore.children('input').val();
+				dfurRec. = dfurRmrks.children('input').val();
+				
+				jQuery(this).dialog("close");
+			}
+		}
+		buttons["&{'views.common.btn.cancel'}"] = function() {
+			jQuery(this).dialog("close");
+		}
+		function updateTips(t) {
+			tips
+				.css('padding', '0.3em')
+				.css('margin-bottom', '1em')
+				.text(t)
+				.addClass("ui-state-highlight");
+			setTimeout(function() {
+				tips.removeClass("ui-state-highlight", 1500);
+			}, 500);
+		}
+		function checkRequired(o, n) {
+			if (o.val()==="") {
+				o.addClass("ui-state-error");
+				updateTips(n + " &{'views.login.fbLogin.err.required'}");
+				return false;
+			} else {
+				return true;
+			}
+		}
+		function errValidateTable(o, s) {
+			o.addClass("ui-state-error");
+			updateTips(s);
+		}
+		function initElem(dfurRec) {
+			chgElem(dfurPayDate, dfurRec.payment_date, dfurRec.balance_type_mst_id.flg, 'input');
+			chgElem(dfurBType, dfurRec.balance_type_mst_id, dfurRec.handling_mst_id.flg, 'select');
+			chgElem(dfurHdlg, dfurRec.handling_mst_id, dfurRec.ideal_deposit_mst_id.flg, 'select');
+			chgElem(dfurIdepo, dfurRec.ideal_deposit_mst_id, dfurRec.item_mst_id.flg, 'select');
+			chgElem(dfurItem, dfurRec.item_mst_id, dfurRec.amount.flg, 'select');
+			chgElem(dfurAmnt, dfurRec.amount, dfurRec.debit_date.flg, 'input');
+			chgElem(dfurDebDate, dfurRec.debit_date, dfurRec.content.flg, 'input');
+			chgElem(dfurCntnt, dfurRec.content, dfurRec.store.flg, 'input');
+			chgElem(dfurStore, dfurRec.store, dfurRec.remarks.flg, 'input');
+			chgElem(dfurRmrks, dfurRec.remarks, false, 'textarea');
+		}
+		function chgElem(jqSelector, dfurFlgValCrnt, dfurFlgValNextFlg, strInput) {
+			jqSelector.children(strInput).val(dfurFlgValCrnt.val);
+			if (strInput==='input' || strInput==='textarea')
+				jqSelector.children('a').text(dfurFlgValCrnt.val);
+			if (strInput==='select')
+				jqSelector.children('a').text(jqSelector.children(strInput).children(':selected').text());
+			if (dfurFlgValCrnt.flg) {
+				jqSelector.children('label').css('float', 'none');
+				jqSelector.children('label').css('clear', 'both');
+				jqSelector.children('label').css('font-size', STR100);
+//				jqSelector.children('a').addClass('invisible');
+				jqSelector.children('a').css('display', 'none');
+				if (jqSelector.children(strInput).hasClass('invisible'))
+					jqSelector.children(strInput).removeClass('invisible');
+				jqSelector.children('div').addClass('invisible');
+			} else {
+				jqSelector.children('label').css('font-size', STR80);
+//				if (jqSelector.children('a').hasClass('invisible'))
+//					jqSelector.children('a').removeClass('invisible');
+				jqSelector.children('a').css('display', 'block');
+				jqSelector.children(strInput).addClass('invisible');
+				if (!dfurFlgValNextFlg) {
+					jqSelector.children('div').addClass('invisible');
+				} else {
+					if (jqSelector.children('div').hasClass('invisible'))
+						jqSelector.children('div').removeClass('invisible');
+				}
+			}
+		}
+		jQuery("#dialog-updRec").dialog({
+			autoOpen: false,
+			resizable: false,
+			width:460,
+			modal: true,
+			title: title,
+			buttons: buttons,
+			close: function() {
+				dfurRec.payment_date = dfurPayDate.children('input').text();
+				//ダイアログクローズ時の処理は呼び出し元で行う
+				whenDialogFrmUpdRecClosed(intRslt, dfurRec);
+			}
+		});
+		jQuery("#dialog-updRec").dialog("open");
+		
+		/* Enterキーでのサブミット防止 */
+		jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
+			if ((e.which && e.which===13) || (e.keyCode && e.keyCode===13)) {
+				return false;
+			}else{
+				return true;
+			}
+		});
+	});
+}
+function DfurRec(
+		id,
+		payment_date,
+		balance_type_mst_id,
+		handling_mst_id,
+		ideal_deposit_mst_id,
+		item_mst_id,
+		amount,
+		debit_date,
+		content,
+		store,
+		remarks
+		) {
+	this.id = id;
+	this.payment_date = payment_date;
+	this.balance_type_mst_id = balance_type_mst_id;
+	this.handling_mst_id = handling_mst_id;
+	this.ideal_deposit_mst_id = ideal_deposit_mst_id;
+	this.item_mst_id = item_mst_id;
+	this.amount = amount;
+	this.debit_date = debit_date;
+	this.content = content;
+	this.store = store;
+	this.remarks = remarks;
+}
+function DfurFlgVal(flg, val) {
+	this.flg = flg;
+	this.val = val;
+}
+// -->
+</script>
+
+<div id="dialog-updRec" class="invisible">
+	<div class="validateTips"></div>
+	<form>
+	<fieldset>
+		
+		<span id="dfurPayDate" class="dfurElem">
+			<label>&{'payment_date'}:</label>
+			<a class="ui-widget-content"></a>
+			<input type="text" class="datepicker text ui-widget-content" 
+				value=""/>
+			<div></div>
+		</span>
+		
+		<span id="dfurBType" class="dfurElem">
+			<label>&{'balance_type_mst'}:</label>
+			<a class="ui-widget-content"></a>
+			<select>
+				#{list items:models.BalanceTypeMst.find("balance_type_name != ? and balance_type_name != ? order by id", messages.get('BalanceType.ideal_deposit_in'), messages.get('BalanceType.ideal_deposit_out')).fetch(), as:'bType'}
+				<option value="${bType.id}">${bType.balance_type_name}</option>
+				#{/list}
+			</select>
+			<div></div>
+		</span>
+		
+		<span id="dfurHdlg" class="dfurElem">
+			<label>&{'handling_mst'}:</label>
+			<a class="ui-widget-content"></a>
+			<select>
+				#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and (invalidity_flg = false) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+				<option value="${handling.id}">${handling.handling_name}</option>
+				#{/list}
+			</select>
+			<div></div>
+		</span>
+		
+		<span id="dfurIdepo" class="dfurElem">
+			<label>&{'ideal_deposit_mst'}:</label>
+			<a class="ui-widget-content"></a>
+			<select>
+				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
+				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
+				<option value="${idealDeposit.id}">${idealDeposit.ideal_deposit_name}</option>
+				#{/list}
+			</select>
+			<div></div>
+		</span>
+		
+		<span id="dfurItem" class="dfurElem">
+			<label>&{'item_mst'}:</label>
+			<a class="ui-widget-content"></a>
+			<select>
+				%{
+					bType
+					bTypeName
+					if(vlBalanceTypeId) {
+						bType = models.BalanceTypeMst.find("byId", vlBalanceTypeId).first()
+						bTypeName = bType.balance_type_name 
+					}
+				}%
+				#{if bTypeName==messages.get('BalanceType.in') ||
+						bTypeName==messages.get('BalanceType.out')}
+					#{list items:models.ItemMst.find("ha_user = ${haUser.id} and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+					<option value="${item.id}">${item.item_name}</option>
+					#{/list}
+				#{/if}
+			</select>
+			<div></div>
+		</span>
+		
+		<span id="dfurAmnt" class="dfurElem">
+			<label>&{'amount'}:</label>
+			<a class="ui-widget-content"></a>
+			<input type="text" class="numeric text ui-widget-content" 
+				value="" />
+			<div></div>
+		</span>
+		
+		<span id="dfurDebDate" class="dfurElem">
+			<label>&{'debit_date'}:</label>
+			<a class="ui-widget-content"></a>
+			<input type="text" class="datepicker text ui-widget-content" 
+				value="" />
+			<div></div>
+		</span>
+
+		<span id="dfurCntnt" class="dfurElem">
+			<label>&{'content'}:</label>
+			<a class="ui-widget-content"></a>
+			<input type="text" class="text ui-widget-content" 
+				value="" />
+			<div></div>
+		</span>
+
+		<span id="dfurStore" class="dfurElem">
+			<label>&{'store'}:</label>
+			<a class="ui-widget-content"></a>
+			<input type="text" class="text ui-widget-content" 
+				value="" />
+			<div></div>
+		</span>
+		
+		<span id="dfurRmrks" class="dfurElem">
+			<label>&{'remarks'}:</label>
+			<a class="ui-widget-content"></a>
+			<textarea class="ui-widget-content"></textarea>
+			<div></div>
+		</span>
+	</fieldset>
+	</form>
+</div>  <!-- dialog-updRec -->
+

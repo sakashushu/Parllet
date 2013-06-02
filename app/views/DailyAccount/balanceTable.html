@@ -11,6 +11,7 @@
 	HANDLING_TYPE_EMONEY = messages.get('HandlingType.emoney')
 	HANDLING_TYPE_CRECA = messages.get('HandlingType.creca')
 	IDEPO_TYPE_IDEPO = messages.get('IdepoType.idepo')
+	lngBTypeId = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
 }%
 
 <script type="text/javascript">
@@ -20,7 +21,8 @@ var bolDlgFrmUpdMstInsBkem,
 	bolDlgFrmUpdMstUpdBkem,
 	bolDlgFrmUpdMstUpdIdepo,
 	strTypeName,
-	lngUpdId;
+	lngUpdId,
+	strItemNm;
 jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
 	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", "")),
@@ -143,9 +145,12 @@ jQuery(function() {
 			bolDlgFrmUpdMstUpdBkem = false;
 			bolDlgFrmUpdMstUpdIdepo = false;
 			lngUpdId = null;
+			strItemNm = "";
+			%{vStrItemNm = ''}%
 			
 			if (jQuery('.lHandlingId', jQuery(this).parent("li")).val()!=undefined) {
 				bolDlgFrmUpdMstUpdBkem = true;
+				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
 				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
 				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
 				
@@ -179,6 +184,32 @@ jQuery(function() {
 		build: function($trigger, e) {
 			var options = {
 				callback: function(key, options) {
+					if (key==="dialogFrmInsRecBank") {
+						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}"),
+							dfurFvBType = new DfurFlgVal(true, ${lngBTypeId}),
+							dfurFvHdlg = new DfurFlgVal(false, lngUpdId),
+							dfurFvIdepo = new DfurFlgVal(false, 0),
+							dfurFvItem = new DfurFlgVal(false, 0),
+							dfurFvAmnt = new DfurFlgVal(true, null),
+							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}"),
+							dfurFvCntnt = new DfurFlgVal(false, ""),
+							dfurFvStore = new DfurFlgVal(false, ""),
+							dfurFvRmrks = new DfurFlgVal(false, ""),
+							dfurRec = new DfurRec(
+								null,
+								dfurFvPayDate,
+								dfurFvBType,
+								dfurFvHdlg,
+								dfurFvIdepo,
+								dfurFvItem,
+								dfurFvAmnt,
+								dfurFvDebDate,
+								dfurFvCntnt,
+								dfurFvStore,
+								dfurFvRmrks);
+						//家計簿入力フォームを開く
+						openDialogFrmUpdRec("${HANDLING_TYPE_BANK}", dfurRec, lngUpdId);
+					}
 					if (key==="dialogFrmUpdMstInsBank" || key==="dialogFrmUpdMstUpdBank")
 						//口座更新フォームを開く
 						openDialogFrmUpdMst("${HANDLING_TYPE_BANK}", lngUpdId);
@@ -206,8 +237,10 @@ jQuery(function() {
 			if (bolDlgFrmUpdMstInsIdepo)
 				options.items.dialogFrmUpdMstInsIdepo = {name: "&{'views.contextMenu.add', IDEPO_TYPE_IDEPO}"};
 			if (bolDlgFrmUpdMstUpdBkem) {
-				if (strTypeName==="${HANDLING_TYPE_BANK}")
+				if (strTypeName==="${HANDLING_TYPE_BANK}") {
+//					options.items.dialogFrmInsRecBank = {name: strItemNm+"&{'views.contextMenu.insRec'}"};
 					options.items.dialogFrmUpdMstUpdBank = {name: "&{'views.contextMenu.upd', HANDLING_TYPE_BANK}"};
+				}
 				if (strTypeName==="${HANDLING_TYPE_EMONEY}")
 					options.items.dialogFrmUpdMstUpdEmoney = {name: "&{'views.contextMenu.upd', HANDLING_TYPE_EMONEY}"};
 			}
@@ -276,64 +309,6 @@ function addFigure(str) {
 //	while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
 	return num;
-}
-// -->
-</script>
-
-<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
-<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
-
-#{include 'dialogFrmUpdMst.html' /}
-<script type="text/javascript">
-<!--
-/* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invFlgChkd, lngId) {
-	var strErrMsg;
-	if (lngId===null) lngId=undefined;
-	if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}")
-		strErrMsg = "Common.updateHdlg";
-	if (strType==="${IDEPO_TYPE_IDEPO}")
-		strErrMsg = "Common.updateIdepo";
-	switch (intRslt) {
-		case 0:
-			break;
-		case 1:
-			var jqxhrUpdMst;
-			if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}") {
-				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngId: lngId});
-			}
-			if (strType==="${IDEPO_TYPE_IDEPO}") {
-				jqxhrUpdMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
-			}
-			jqxhrUpdMst
-			.done(function(z) {
-				switch (z.intRslt) {
-					case 0:
-						if (strType==="${HANDLING_TYPE_BANK}" ||
-								strType==="${HANDLING_TYPE_EMONEY}" ||
-								strType==="${IDEPO_TYPE_IDEPO}") {
-							//画面を再表示
-							window.location.reload(true);
-						}
-						break;
-					case 99:
-						alert(z.strErr);
-						break;
-					default:
-						strErrMsg += " result Error";
-						alert(strErrMsg);
-				}
-			})
-			.fail(function() {
-				strErrMsg += " Failed";
-				alert(strErrMsg);
-			});
-			break;
-		default:
-			alert("dialogFrmUpdMst return value error");
-	}
 }
 
 google.load('visualization', '1', {'packages':['corechart']});
@@ -433,6 +408,115 @@ function drawChart() {
 // -->
 </script>
 
+<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
+<script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
+
+#{include 'dialogFrmUpdMst.html' /}
+<script type="text/javascript">
+<!--
+/* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
+function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invFlgChkd, lngId) {
+	var strErrMsg;
+	if (lngId===null) lngId=undefined;
+	if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}")
+		strErrMsg = "Common.updateHdlg";
+	if (strType==="${IDEPO_TYPE_IDEPO}")
+		strErrMsg = "Common.updateIdepo";
+	switch (intRslt) {
+		case 0:
+			break;
+		case 1:
+			var jqxhrUpdMst;
+			if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}") {
+				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngId: lngId});
+			}
+			if (strType==="${IDEPO_TYPE_IDEPO}") {
+				jqxhrUpdMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
+			}
+			jqxhrUpdMst
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						if (strType==="${HANDLING_TYPE_BANK}" ||
+								strType==="${HANDLING_TYPE_EMONEY}" ||
+								strType==="${IDEPO_TYPE_IDEPO}") {
+							//画面を再表示
+							window.location.reload(true);
+						}
+						break;
+					case 99:
+						alert(z.strErr);
+						break;
+					default:
+						strErrMsg += " result Error";
+						alert(strErrMsg);
+				}
+			})
+			.fail(function() {
+				strErrMsg += " Failed";
+				alert(strErrMsg);
+			});
+			break;
+		default:
+			alert("dialogFrmUpdMst return value error");
+	}
+}
+// -->
+</script>
+
+#{include 'dialogFrmUpdRec.html' /}
+<script type="text/javascript">
+<!--
+/* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
+function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
+	var strErrMsg;
+	if (dfurRec.id===null) dfurRec.id=undefined;
+	strErrMsg = "Common.updateRec";
+	switch (intRslt) {
+		case 0:
+			break;
+		case 1:
+			var jqxhrUpdMst = jQuery.post('@{Common.updateRec}', {
+				id: dfurRec.id,
+				payment_date: dfurRec.payment_date,
+				balance_type_mst: dfurRec.balance_type_mst,
+				handling_mst: dfurRec.handling_mst,
+				ideal_deposit_mst: dfurRec.ideal_deposit_mst,
+				item_mst: dfurRec.item_mst,
+				amount: dfurRec.amount,
+				debit_date: dfurRec.debit_date,
+				content: dfurRec.content,
+				store: dfurRec.store,
+				remarks: dfurRec.remarks,
+				secret_remarks: dfurRec.secret_remarks,
+				secret_rec_flg: dfurRec.secret_rec_flg});
+			jqxhrUpdMst
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						//画面を再表示
+						window.location.reload(true);
+						break;
+					case 99:
+						alert(z.strErr);
+						break;
+					default:
+						strErrMsg += " result Error";
+						alert(strErrMsg);
+				}
+			})
+			.fail(function() {
+				strErrMsg += " Failed";
+				alert(strErrMsg);
+			});
+			break;
+		default:
+			alert("dialogFrmUpdMst return value error");
+	}
+}
+// -->
+</script>
 
 
 #{set 'moreMenu'}
@@ -594,7 +678,7 @@ function drawChart() {
 								<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
  -->
 								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${vMenuCell}">
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${vMenuCell} lwdaSItem">
 									${lwda.sItem}
 								</div>
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric ${vMenuCell}">

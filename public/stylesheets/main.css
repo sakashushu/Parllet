@@ -62,6 +62,10 @@ input[type="submit"],input[type="button"] {
 	padding-right: 4px;
 }
 
+.fntSize1_5 {
+	font-size: 150%;
+}
+
 .aBtn {
 	font-size: 90%;
 	padding: 4px 4px;
@@ -162,6 +166,38 @@ a.aBtn:hover span{
 
 #dlgPassword {
 	padding: 3px 0 0 3px;
+}
+
+
+/** dialogFrmUpdRec **/
+#dialog-updRec fieldset {
+	margin-top: 15px;
+	max-height: 400px;
+}
+.dfurElem label {
+	display: block;
+	float: left;
+	min-height: 14px;
+	padding-top: 1px;
+}
+.dfurElem a {
+	display: block;
+	float: left;
+	margin-bottom: 12px;
+	font-size: 80%;
+	margin-right: 15px;
+	min-width: 25px;
+	min-height: 14px;
+}
+.dfurElem input, .dfurElem select, .dfurElem textarea {
+	font-size: 150%;
+}
+.dfurElem select {
+	width: 100%;
+	margin-bottom: 12px;
+}
+.dfurElem div {
+	height: 12px;
 }
 
 

@@ -145,6 +145,10 @@ views.dialogConfirm.suffix.text3=を作成しますか？
 views.dialogConfirm.suffix.btn=を作成
 views.dialogConfirm.bkem.btn.makeBank=口座を作成
 views.dialogConfirm.bkem.btn.makeEmoney=電子マネーを作成
+views.dialogFrmUpdRec.title.ins=家計簿入力
+views.dialogFrmUpdRec.title.upd=家計簿編集
+
+views.contextMenu.insRec=の家計簿を入力
 
 views.contextMenu.add=&{%s}を追加
 views.contextMenu.upd=&{%s}を編集

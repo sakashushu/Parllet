@@ -1,7 +1,10 @@
 package controllers;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.util.Date;
 
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -14,6 +17,7 @@ import models.HandlingMst;
 import models.HandlingTypeMst;
 import models.IdealDepositMst;
 import models.ItemMst;
+import models.Record;
 import models.WkAjaxRsltMin;
 import models.WkCmHdlgRslt;
 import models.WkCmIdepoRslt;
@@ -553,6 +557,129 @@ public class Common extends Controller {
 			wr.setIntRslt(0);
 		}
 		wr.setItMst(iM);
+		renderJSON(wr);
+	}
+	
+	/**
+	 * ダイアログフォームからRecordの更新
+	 * @param strType
+	 * @param strName
+	 * @param bolZeroHddn
+	 */
+	public static void updateRec(
+			Long id,
+			String payment_date,
+			Long balance_type_mst,
+			Long handling_mst,
+			Long ideal_deposit_mst,
+			Long item_mst,
+			String amount,
+			String debit_date,
+			String content,
+			String store,
+			String remarks,
+			String secret_remarks,
+			Boolean secret_rec_flg) {
+		WkCmIdepoRslt wr = new WkCmIdepoRslt();
+
+		Record record = null;
+		Date paymentDate = null;
+		if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+			try {
+				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date+":00");
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		//HaUser haUser = HaUser.find("byEmail", Security.connected()).first();
+		HaUser haUser  = (HaUser)renderArgs.get("haUser");
+		BalanceTypeMst balanceTypeMst = BalanceTypeMst.findById(balance_type_mst);
+		ItemMst itemMst = null;
+		if (item_mst!=null) {
+			itemMst = ItemMst.findById(item_mst); 
+		}
+		HandlingMst handlingMst = null;
+		if (handling_mst!=null) {
+			handlingMst = HandlingMst.findById(handling_mst);
+		}
+		Integer intAmount = null;
+		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
+		NumberFormat nf = NumberFormat.getInstance();
+		if (amount!=null && !amount.equals("")) {
+			//数値文字列をNumber型のオブジェクトに変換する
+			Number numAmount;
+			try {
+				numAmount = nf.parse(amount);
+				//Number型のオブジェクトからInteger値を取得する
+				intAmount = numAmount.intValue();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		Date debitDate = null;
+		if (debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+			try {
+				debitDate = DateFormat.getDateInstance().parse(debit_date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		IdealDepositMst idealDepositMst = null;
+		if (ideal_deposit_mst!=null) {
+			idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst);
+		}
+		if (id==null) {
+			// 収支データの作成
+			record = new Record(
+					haUser,
+					paymentDate,
+					balanceTypeMst,
+					handlingMst,
+					idealDepositMst,
+					itemMst,
+					null,
+					intAmount,
+					0,
+					0,
+					debitDate,
+					content,
+					store,
+					remarks,
+					secret_remarks,
+					false
+			);
+		} else {
+			// 収支データの読み出し
+			record = Record.findById(id);
+			// 編集
+			record.payment_date = paymentDate;
+			record.balance_type_mst = balanceTypeMst;
+			record.handling_mst = handlingMst;
+			record.ideal_deposit_mst = idealDepositMst;
+			record.item_mst = itemMst;
+			record.amount = intAmount;
+			record.debit_date = debitDate;
+			record.content = content;
+			record.store = store;
+			record.remarks = remarks;
+			record.secret_remarks = secret_remarks;
+//			record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
+		}
+		// Validate
+		validation.valid(record);
+		if (validation.hasErrors()) {
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+			renderJSON(wr);
+		}
+		// 保存
+		record.save();
+		
+		wr.setIntRslt(0);
 		renderJSON(wr);
 	}
 	

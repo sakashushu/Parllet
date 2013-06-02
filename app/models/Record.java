@@ -58,7 +58,7 @@ public class Record extends Model {
 			BalanceTypeMst balance_type,
 			HandlingMst handling_mst,
 			IdealDepositMst ideal_deposit_mst,
-			ItemMst item,
+			ItemMst item_mst,
 			String detail_mst,
 			Integer amount,
 			Integer price,
@@ -75,7 +75,7 @@ public class Record extends Model {
 		this.balance_type_mst = balance_type;
 		this.handling_mst = handling_mst;
 		this.ideal_deposit_mst = ideal_deposit_mst;
-		this.item_mst = item;
+		this.item_mst = item_mst;
 		this.detail_mst = detail_mst;
 		this.amount = amount;
 		this.price = price;

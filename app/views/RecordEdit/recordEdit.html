@@ -209,9 +209,9 @@ function fDebitDate(dBasic,cutoffDay,debitMonth,debitDay){
 
 /* 文字列を3桁区切りにする関数 */
 function addFigure(str) {
-    var num = new String(str).replace(/,|\n| |\t/g, "");
+	var num = new String(str).replace(/,|\n| |\t/g, "");
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
-    return num;
+	return num;
 }
 
 /* 「取扱(実際)」の状態調整 */
@@ -395,7 +395,7 @@ function whenDialogConfirmClosed(intRslt) {
 			openDialogFrmUpdMst("&{'views.dialogConfirm.case.itemOut'}");
 			break;
 		default:
-    		alert("dialogConfirm return value error");
+			alert("dialogConfirm return value error");
 	}
 }
 // -->
@@ -457,7 +457,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 						}
 						break;
 					case 99:
-			    		alert(z.strErr);
+						alert(z.strErr);
 						whenDialogConfirmClosed(0);
 						break;
 					default:
@@ -473,7 +473,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			});
 			break;
 		default:
-    		alert("dialogFrmUpdMst return value error");
+			alert("dialogFrmUpdMst return value error");
 	}
 }
 // -->
@@ -487,7 +487,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	&{'validation.title'}
 </p>
 #{/ifErrors}
-	    
+		
 <div id="crudShow">
 
 #{ifnot record?.id}
@@ -521,22 +521,22 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 #{form @save_rec(record?.id)}
 	<input type="text" name="calledFrom" value="${calledFrom}" class="invisible" />
 
-    <div class="crudField">
-        #{field 'payment_date'}
-        <label class="fieldName">&{'payment_date'}:</label>
+	<div class="crudField">
+		#{field 'payment_date'}
+		<label class="fieldName">&{'payment_date'}:</label>
 <!-- 
-        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
-            value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
+		<input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
+			value="${record?.payment_date?.format('yyyy/MM/dd HH:mm')}" />
  -->
-        <input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
-            value="${vlPaymentDate}" />
-        <span class="error">#{error 'record.payment_date' /}</span>
-        #{/field}
-    </div>
+		<input type="text" id="${field.name}" class="datetimepicker" name="${field.name}" 
+			value="${vlPaymentDate}" />
+		<span class="error">#{error 'record.payment_date' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'balance_type_mst'}
-        <label class="fieldName">&{'balance_type_mst'}:</label>
+	<div class="crudField">
+		#{field 'balance_type_mst'}
+		<label class="fieldName">&{'balance_type_mst'}:</label>
  		#{select field.name, id:field.name, class:'re_w150'}
 			<option value="0"${record?.balance_type_mst ? '' : ' selected'}>&{'views.common.combo.required.long'}</option>
 			#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
@@ -546,9 +546,9 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			<option value="${bType.id}"${vlBalanceTypeId==bType.id ? ' selected' : ''}>${bType.balance_type_name}</option>
 			#{/list}
  		#{/select}
-        <span class="error">#{error 'record.balance_type_mst' /}</span>
-        #{/field}
-    </div>
+		<span class="error">#{error 'record.balance_type_mst' /}</span>
+		#{/field}
+	</div>
  	
 	<div class="crudField">
 		#{field 'handling_mst'}
@@ -558,13 +558,13 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 			#{/list}
 		</select>
-        <span class="error">#{error 'record.handling_mst' /}</span>
-        #{/field}
-    </div>
+		<span class="error">#{error 'record.handling_mst' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'ideal_deposit_mst'}
-        <label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
+	<div class="crudField">
+		#{field 'ideal_deposit_mst'}
+		<label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
 			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
 			#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
@@ -574,13 +574,13 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 			<option value="${idealDeposit.id}"${vlIdealDepositId==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
 			#{/list}
 		</select>
-        <span class="error">#{error 'record.ideal_deposit_mst' /}</span>
-        #{/field}
-    </div>
+		<span class="error">#{error 'record.ideal_deposit_mst' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'item_mst'}
-        <label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
+	<div class="crudField">
+		#{field 'item_mst'}
+		<label id="item_mst_lbl" class="fieldName">&{'item_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
 			%{
 				bType
@@ -600,80 +600,80 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 				#{/list}
 			#{/if}
 		</select>
-        <span class="error">#{error 'record.item_mst' /}</span>
-        #{/field}
-    </div>
+		<span class="error">#{error 'record.item_mst' /}</span>
+		#{/field}
+	</div>
 
-    <div class="crudField">
-        #{field 'amount'}
-        <label class="fieldName">&{'amount'}:</label>
-        <input type="text" name="${field.name}" class="numeric" 
-            value="${record?.amount}" />
-        <span class="error">#{error 'record.amount' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'amount'}
+		<label class="fieldName">&{'amount'}:</label>
+		<input type="text" name="${field.name}" class="numeric" 
+			value="${record?.amount}" />
+		<span class="error">#{error 'record.amount' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'debit_date'}
-        <label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
+	<div class="crudField">
+		#{field 'debit_date'}
+		<label id="debit_date_lbl" class="fieldName">&{'debit_date'}:</label>
 <!-- 
-        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
-            value="${record?.debit_date?.format('yyyy/MM/dd')}" />
+		<input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
+			value="${record?.debit_date?.format('yyyy/MM/dd')}" />
  -->
-        <input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
-            value="${vlDebitDate}" />
-        <span class="error">#{error 'record.debit_date' /}</span>
-        #{/field}
-    </div>
+		<input type="text" id="${field.name}" class="datepicker" name="${field.name}" 
+			value="${vlDebitDate}" />
+		<span class="error">#{error 'record.debit_date' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'content'}
-        <label class="fieldName">&{'content'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.content}" />
-        <span class="error">#{error 'record.content' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'content'}
+		<label class="fieldName">&{'content'}:</label>
+		<input type="text" name="${field.name}" 
+			value="${record?.content}" />
+		<span class="error">#{error 'record.content' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'store'}
-        <label class="fieldName">&{'store'}:</label>
-        <input type="text" name="${field.name}" 
-            value="${record?.store}" />
-        <span class="error">#{error 'record.store' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'store'}
+		<label class="fieldName">&{'store'}:</label>
+		<input type="text" name="${field.name}" 
+			value="${record?.store}" />
+		<span class="error">#{error 'record.store' /}</span>
+		#{/field}
+	</div>
 
-    <div class="crudField">
-        #{field 'remarks'}
-        <label class="fieldName">&{'remarks'}:</label>
-        <textarea name="${field.name}">${record?.remarks}</textarea>
-        <span class="error">#{error 'record.remarks' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'remarks'}
+		<label class="fieldName">&{'remarks'}:</label>
+		<textarea name="${field.name}">${record?.remarks}</textarea>
+		<span class="error">#{error 'record.remarks' /}</span>
+		#{/field}
+	</div>
  
 #{secure.check 'admin'}
-    <div class="crudField">
-        #{field 'secret_remarks'}
-        <label class="fieldName">&{'secret_remarks'}:</label>
-        <textarea name="${field.name}">${record?.secret_remarks}</textarea>
-        <span class="error">#{error 'record.secret_remarks' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'secret_remarks'}
+		<label class="fieldName">&{'secret_remarks'}:</label>
+		<textarea name="${field.name}">${record?.secret_remarks}</textarea>
+		<span class="error">#{error 'record.secret_remarks' /}</span>
+		#{/field}
+	</div>
  
-    <div class="crudField">
-        #{field 'secret_rec_flg'}
-        <label class="fieldName">&{'secret_rec_flg'}:</label>
-        <input type="checkbox" name="${field.name}"
-            ${record?.secret_rec_flg ? 'checked' : ''} />
-        <span class="error">#{error 'record.secret_rec_flg' /}</span>
-        #{/field}
-    </div>
+	<div class="crudField">
+		#{field 'secret_rec_flg'}
+		<label class="fieldName">&{'secret_rec_flg'}:</label>
+		<input type="checkbox" name="${field.name}"
+			${record?.secret_rec_flg ? 'checked' : ''} />
+		<span class="error">#{error 'record.secret_rec_flg' /}</span>
+		#{/field}
+	</div>
 #{/secure.check}
 	
-    <div class="crudField">
-        <input type="submit" value="&{'insupd.save'}" id="idInsupd" />
-    </div>
+	<div class="crudField">
+		<input type="submit" value="&{'insupd.save'}" id="idInsupd" />
+	</div>
 
 #{/form}
 </div>
@@ -681,9 +681,9 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 #{if record?.id}
 	#{form @del_rec(record?.id)}
 		<input type="text" name="calledFrom" value="${calledFrom}" class="invisible" />
-	    <p class="crudDelete">
-        	<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
-	    </p>
+		<p class="crudDelete">
+			<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
+		</p>
 	#{/form}
 #{/if}
 
