@@ -282,6 +282,8 @@ validation.maxSize=%2$d 文字以下で入力してください
 validation.email=Ｅメールアドレス形式が不正です
 validation.crtPasswordError=現在のパスワードが違います
 validation.cnfPasswordError=確認パスワードが一致していません
+validation.badCall=不正な呼び出しです
+validation.anErrorOccured=エラーが発生しました
 
 
 #crudを真似

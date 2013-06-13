@@ -1477,6 +1477,27 @@ label.fieldName {
 }
 
 
+/* receipt */
+
+#receipt {
+	width: 660px;
+	margin: 50px auto;
+//	text-align: center;
+}
+
+#receipt h1 {
+	font-weight: bold;
+	color: #111;
+}
+
+#receipt .box {
+	border: 1px solid #aaa;
+	background: url(/public/images/white20.png);
+	padding: 10px;
+	text-align: left;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
+}
+
 /** Pagination **/
 
 #pagination {

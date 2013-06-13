@@ -178,18 +178,36 @@ jQuery(function() {
 
 #{secure.check 'admin'}
 <br>
+<!-- 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_s-xclick">
 <input type="hidden" name="hosted_button_id" value="JJ243U523YGJN">
-<input type="image" src="http://sakashushu.net/public/images/btn_month_paypal.gif" border="0" name="submit" alt="PayPal - オンラインでより安全・簡単にお支払い">
+<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name="submit" alt="PayPal - オンラインでより安全・簡単にお支払い">
 <input type="hidden" name="notify_url" value="http://sakashushu.net/PaypalController/validation">
 <img alt="" border="0" src="https://www.paypalobjects.com/ja_JP/i/scr/pixel.gif" width="1" height="1">
 </form>
 
+<br>
 
-
-<form action="/PaypalController/validation" method="GET">
-	<input type="text" name="tx" />
-	<input type="submit" value="tx送信"/>
+<form method="post" action="https://api-3t.paypal.com/nvp">
+<input type="hidden" name="USER" value="${play.configuration.getProperty('paypal.API_username')}">
+<input type="hidden" name="PWD" value="${play.configuration.getProperty('paypal.API_password')}">
+<input type="hidden" name="SIGNATURE" value="${play.configuration.getProperty('paypal.API_signature')}">
+<input type="hidden" name="VERSION" value="95.0">
+<input type="hidden" name="PAYMENTREQUEST_0_PAYMENTACTION" value="Sale">
+<input name="PAYMENTREQUEST_0_AMT" value="100">
+<input type="hidden" name=RETURNURL value="http://sakashushu.com/PaypalController/rtnSetExpressCheckoutApi">
+<input type="hidden" name=CANCELURL value="http://sakashushu.com/myDpRt/config/hauser/edit">
+// <input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
+<input type="submit" name="METHOD" value="SetExpressCheckout">
 </form>
+
+<br>
+ -->
+
+#{form @PaypalController.reqRedirSetExpressCheckout()}
+	<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
+#{/form}
+
 #{/secure.check}
+

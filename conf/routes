@@ -92,6 +92,9 @@ GET		/myDpRt/config/hauser_pw/edit			Config.cf_hauser_pw_edit
 POST	/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
 GET		/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
 
+# PaypalController
+GET		/myDpRt/paypal/receipt					PaypalController.receipt
+
 # WebSocket Demo
 GET 	/smplecho								SmplEcho.demo
 WS		/smplecho								SmplEcho.WebSocketEcho.listen

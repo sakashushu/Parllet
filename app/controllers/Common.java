@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.mvc.Before;
@@ -80,6 +81,7 @@ public class Common extends Controller {
 	static void setConnectedUser() {
 		if(Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			Logger.info("haUser byEmail Done.");
 			renderArgs.put("haUser", haUser);
 		}
 	}
@@ -425,7 +427,7 @@ public class Common extends Controller {
 	 */
 	public static void linkFacebook(Long id, String name, String link) {
 		WkAjaxRsltMin wr = new WkAjaxRsltMin();
-		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
+		HaUser hU = (HaUser)renderArgs.get("haUser");
 		hU.fbId = id;
 		hU.fbName = name;
 		hU.fbLink = link;
@@ -446,7 +448,7 @@ public class Common extends Controller {
 	 */
 	public static void breakLinkFacebook() {
 		WkAjaxRsltMin wr = new WkAjaxRsltMin();
-		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
+		HaUser hU = (HaUser)renderArgs.get("haUser");
 		hU.fbId = null;
 		hU.fbName = null;
 		hU.fbLink = null;

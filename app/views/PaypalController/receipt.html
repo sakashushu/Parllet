@@ -1,0 +1,59 @@
+#{extends 'main.html' /}
+#{set title:'支払最終確認' /}
+
+#{set 'moreMenu'}
+	#{include 'headerMenu.html' /}
+#{/set}
+
+#{set 'headerTools'}
+	#{include 'headerTools.html' /}
+#{/set}
+
+#{ifErrors}
+	<p class="crudFlash flashError">
+		#{errors}
+			${error}
+		#{/errors}
+	</p>
+#{/ifErrors}
+#{else}
+<div id="receipt">
+
+	<h1>
+	<span style="font-size: 24px;">支払の最終確認</span>
+	</h1>
+	
+	<div style="padding-top: 20px; margin-bottom: 30px;">
+		<p>
+		「支払を確定する」ボタンを押していただくことで、<br>
+		Paypalの
+		<a href="javascript:w=window.open('https://cms.paypal.com/jp/cgi-bin/marketingweb?cmd=_render-content&fli=true&content_ID=ua/UserAgreement_popup&locale.x=ja_JP','','scrollbars=yes,Width=640,Height=500');w.focus();">
+		既定の支払い方法
+		</a>
+		に基づいて支払が行われます。
+		</p>
+		
+		<p>
+		正常に完了しますと、登録可能レコード数が 100 → 1000,000 に上がります。
+		</p>
+	</div>
+
+	<div class="box">
+		<div style="width: 400px; margin-right: auto; margin-left: auto;">
+			<label style="width: 240px; float: left;">支払い方法：</label>
+			<div style="font-weight: bold;">月払い</div>
+			<label style="width: 240px; float: left;">1回あたりの支払の金額：</label>
+			<div style="font-weight: bold;">100円</div>
+			
+		</div>
+	</div>  <!-- box -->
+
+	<div style="margin-top: 40px; width: 100%;">
+		<div style="width:132px; margin-right: auto; margin-left: auto;">
+			#{form @confirm()}
+				<input type="submit" value="支払を確定する" style="font-weight: bold; padding:5px 10px; font-size: 16px;" />
+			#{/form}
+		</div>
+	</div>
+</div>
+#{/else}
