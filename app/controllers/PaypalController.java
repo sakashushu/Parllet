@@ -43,8 +43,8 @@ public class PaypalController extends Controller {
 				"&PAYMENTREQUEST_0_CURRENCYCODE=JPY" +
 				"&PAYMENTREQUEST_0_PAYMENTACTION=Sale" +
 				"&NOSHIPPING=1" +
-				"&RETURNURL=http://sakashushu.com/myDpRt/paypal/receipt" +
-				"&CANCELURL=http://sakashushu.com/myDpRt/config/hauser/edit" +
+				"&RETURNURL=" + Play.configuration.getProperty("paypal.API_returnurl") +
+				"&CANCELURL=" + Play.configuration.getProperty("paypal.API_cancelurl") +
 				"&L_BILLINGTYPE0=RecurringPayments" +
 				"&L_BILLINGAGREEMENTDESCRIPTION0=" + Play.configuration.getProperty("paypal.API_l_billingagreementdescription0") +
 				"";
