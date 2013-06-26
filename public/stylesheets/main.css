@@ -393,13 +393,14 @@ a.aBtn:hover span{
 }
 
 #logo-img {
-	width: 180px;
+	width: 116px;
 	height: 30px;
 	background: url(/public/images/logo.png) no-repeat 0 0;
 	text-indent: 100%;
 	white-space: nowrap;
 	overflow: hidden;
 	display: inline-block;
+	margin-left: 10px;
 	
 	/* 以下、IE6/7用 */
 	*height: 0;

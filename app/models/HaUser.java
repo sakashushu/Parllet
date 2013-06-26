@@ -42,6 +42,8 @@ public class HaUser extends Model {
 	public Boolean zero_hidden_idepo;
 	public Boolean inv_hidden_bkem;
 	
+	public String pplPayerId;
+	
 	public HaUser(
 			String email,
 			String password,
@@ -54,7 +56,8 @@ public class HaUser extends Model {
 			Boolean isAdmin,
 			Boolean zero_hidden_bkem,
 			Boolean zero_hidden_idepo,
-			Boolean inv_hidden_bkem
+			Boolean inv_hidden_bkem,
+			String pplPayerId
 			) {
 		this.email = email;
 		this.password = password;
@@ -68,6 +71,7 @@ public class HaUser extends Model {
 		this.zero_hidden_bkem = zero_hidden_bkem;
 		this.zero_hidden_idepo = zero_hidden_idepo;
 		this.inv_hidden_bkem = inv_hidden_bkem;
+		this.pplPayerId = pplPayerId;
 	}
 
     public static HaUser connect(String email, String password) {

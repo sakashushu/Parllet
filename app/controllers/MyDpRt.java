@@ -16,7 +16,7 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false);
+		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, null);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
@@ -38,7 +38,7 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false);
+		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, null);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {

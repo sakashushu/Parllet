@@ -19,6 +19,7 @@ import models.WkDaToDl;
 import models.WkDailyAccount;
 import models.WkDailyAccountRender;
 
+import play.Logger;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.mvc.Before;

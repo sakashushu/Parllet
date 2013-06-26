@@ -13,9 +13,9 @@ views.main.tools.login=ログイン
 views.main.tools.logo.pre=イメージで貯金できる家計簿
 views.main.tools.logo.pre1=イメージで
 views.main.tools.logo.pre2=貯金できる家計簿
-views.main.tools.logo=ネットでMy貯金
+views.main.tools.logo=Parllet
 views.main.tools.logo.alpha=α(ｱﾙﾌｧ)版
-views.main.tools.logo.alpha.caution1=ネットでMy貯金はアルファ版です。
+views.main.tools.logo.alpha.caution1=Parllet(パレット)はアルファ版です。
 views.main.tools.logo.alpha.caution2=ご承知おきください。
 
 views.login.tools.logout=ログアウト
