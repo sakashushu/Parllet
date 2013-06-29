@@ -43,6 +43,10 @@ public class HaUser extends Model {
 	public Boolean inv_hidden_bkem;
 	
 	public String pplPayerId;
+	public Integer pplStatus;
+	
+	public Date created;
+	public Date modified;
 	
 	public HaUser(
 			String email,
@@ -57,7 +61,10 @@ public class HaUser extends Model {
 			Boolean zero_hidden_bkem,
 			Boolean zero_hidden_idepo,
 			Boolean inv_hidden_bkem,
-			String pplPayerId
+			String pplPayerId,
+			Integer pplStatus,
+			Date created,
+			Date modified
 			) {
 		this.email = email;
 		this.password = password;
@@ -72,6 +79,9 @@ public class HaUser extends Model {
 		this.zero_hidden_idepo = zero_hidden_idepo;
 		this.inv_hidden_bkem = inv_hidden_bkem;
 		this.pplPayerId = pplPayerId;
+		this.pplStatus = pplStatus;
+		this.created = created;
+		this.modified = modified;
 	}
 
     public static HaUser connect(String email, String password) {

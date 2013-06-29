@@ -369,6 +369,8 @@ public class Config extends Controller {
 	 * 口座編集（リスト）
 	 */
 	public static void cf_bank_list() {
+		Calendar ca1 = Calendar.getInstance();
+		Date dteNow = Calendar.getInstance().getTime();
 		String sHandlingType = Messages.get("HandlingType.bank");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 //		render(handlingMsts);

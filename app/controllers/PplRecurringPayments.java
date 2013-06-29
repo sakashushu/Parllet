@@ -221,8 +221,9 @@ public class PplRecurringPayments extends Controller {
 					render();
 				}
 				//支払履歴
+				HaUser hu = (HaUser)renderArgs.get("haUser");
 				PaymentHistory ph = new PaymentHistory(
-						(HaUser)renderArgs.get("haUser"),
+						hu,
 						strActionMethod,
 						strSuccess,
 						Calendar.getInstance().getTime()
@@ -233,6 +234,13 @@ public class PplRecurringPayments extends Controller {
 					render();
 				// 保存
 				ph.save();
+				hu.pplStatus = 1;
+				// Validate
+				validation.valid(hu);
+				if (validation.hasErrors())
+					render();
+				// 保存
+				hu.save();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

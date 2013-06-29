@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import models.HaUser;
 import models.WkSyEsFbUsRslt;
 import play.i18n.Messages;
@@ -16,7 +19,8 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, null);
+		Date dteNow = Calendar.getInstance().getTime();
+		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
@@ -38,7 +42,8 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, null);
+		Date dteNow = Calendar.getInstance().getTime();
+		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {

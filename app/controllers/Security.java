@@ -1,6 +1,9 @@
 package controllers;
 
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.google.gson.JsonObject;
 
 import play.Logger;
@@ -66,7 +69,8 @@ public class Security extends Secure.Security {
 		String strPass = String.valueOf(id);
 		StringBuffer sb = new StringBuffer(strPass);
 		strPass = String.valueOf(sb.reverse());
-		HaUser haUser = new HaUser(email, strPass, null, null, id, name, link, false, false, false, false, false, null);
+		Date dteNow = Calendar.getInstance().getTime();
+		HaUser haUser = new HaUser(email, strPass, null, null, id, name, link, false, false, false, false, false, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {

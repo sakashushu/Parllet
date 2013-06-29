@@ -96,6 +96,10 @@ GET		/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
 GET		/myDpRt/paypal/receipt					PplRecurringPayments.receipt
 GET		/myDpRt/paypal/oneMonthLater			PplRecurringPayments.oneMonthLater
 
+# PplIpn
+#GET		/myDpRt/paypal/ipn						PplIpn.validation
+GET		/PaypalController/validation			PaypalController.validation
+
 # WebSocket Demo
 GET 	/smplecho								SmplEcho.demo
 WS		/smplecho								SmplEcho.WebSocketEcho.listen
