@@ -41,16 +41,16 @@ function openDialogFrmUpdRec(strType, dfurRec, lngMstId) {
 			if (bValid) {
 				intRslt = 1;
 				
-				dfurRec.balance_type_mst_id = dfurPayDate.children('input').val();
-				dfurRec.handling_mst_id = dfurBType.children('select').val();
-				dfurRec.ideal_deposit_mst_id = dfurHdlg.children('input').val();
-				dfurRec.item_mst_id = dfurIdepo.children('input').val();
-				dfurRec.amount = dfurItem.children('input').val();
-				dfurRec.debit_date = dfurAmnt.children('input').val();
-				dfurRec.content = dfurDebDate.children('input').val();
-				dfurRec.store = dfurCntnt.children('input').val();
-				dfurRec.remarks = dfurStore.children('input').val();
-				dfurRec. = dfurRmrks.children('input').val();
+				dfurRec.payment_date = dfurPayDate.children('input').val();
+				dfurRec.balance_type_mst_id = dfurBType.children('select').val();
+				dfurRec.handling_mst_id = dfurHdlg.children('input').val();
+				dfurRec.ideal_deposit_mst_id = dfurIdepo.children('input').val();
+				dfurRec.item_mst_id = dfurItem.children('input').val();
+				dfurRec.amount = dfurAmnt.children('input').val();
+				dfurRec.debit_date = dfurDebDate.children('input').val();
+				dfurRec.content = dfurCntnt.children('input').val();
+				dfurRec.store = dfurStore.children('input').val();
+				dfurRec.remarks = dfurRmrks.children('input').val();
 				
 				jQuery(this).dialog("close");
 			}

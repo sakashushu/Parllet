@@ -97,8 +97,7 @@ GET		/myDpRt/paypal/receipt					PplRecurringPayments.receipt
 GET		/myDpRt/paypal/oneMonthLater			PplRecurringPayments.oneMonthLater
 
 # PplIpn
-#GET		/myDpRt/paypal/ipn						PplIpn.validation
-GET		/PaypalController/validation			PplIpn.validation
+GET		/myDpRt/paypal/ipn						PplIpn.validation
 
 # WebSocket Demo
 GET 	/smplecho								SmplEcho.demo
