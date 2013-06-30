@@ -63,7 +63,7 @@ public class PaypalController extends Controller {
 			if (txnType.equals("recurring_payment_profile_created") ||
 					txnType.equals("recurring_payment")) {
 				//支払履歴
-				HaUser hu = HaUser.find("byPplPayerId", Long.parseLong(payerId)).first();
+				HaUser hu = HaUser.find("byPplPayerId", payerId).first();
 				if (hu==null) {
 					Logger.info("hu==null");
 				} else {

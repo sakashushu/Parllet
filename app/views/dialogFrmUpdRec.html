@@ -42,11 +42,11 @@ function openDialogFrmUpdRec(strType, dfurRec, lngMstId) {
 				intRslt = 1;
 				
 				dfurRec.payment_date = dfurPayDate.children('input').val();
-				dfurRec.balance_type_mst_id = dfurBType.children('select').val();
-				dfurRec.handling_mst_id = dfurHdlg.children('input').val();
-				dfurRec.ideal_deposit_mst_id = dfurIdepo.children('input').val();
-				dfurRec.item_mst_id = dfurItem.children('input').val();
-				dfurRec.amount = dfurAmnt.children('input').val();
+				dfurRec.balance_type_mst_id = parseInt(dfurBType.children('select').val());
+				dfurRec.handling_mst_id = parseInt(dfurHdlg.children('select').val());
+				dfurRec.ideal_deposit_mst_id = parseInt(dfurIdepo.children('select').val());
+				dfurRec.item_mst_id = parseInt(dfurItem.children('select').val());
+				dfurRec.amount = parseInt(dfurAmnt.children('input').val());
 				dfurRec.debit_date = dfurDebDate.children('input').val();
 				dfurRec.content = dfurCntnt.children('input').val();
 				dfurRec.store = dfurStore.children('input').val();
@@ -130,7 +130,7 @@ function openDialogFrmUpdRec(strType, dfurRec, lngMstId) {
 			title: title,
 			buttons: buttons,
 			close: function() {
-				dfurRec.payment_date = dfurPayDate.children('input').text();
+//				dfurRec.payment_date = dfurPayDate.children('input').text();
 				//ダイアログクローズ時の処理は呼び出し元で行う
 				whenDialogFrmUpdRecClosed(intRslt, dfurRec);
 			}
@@ -218,7 +218,7 @@ function DfurFlgVal(flg, val) {
 			<label>&{'ideal_deposit_mst'}:</label>
 			<a class="ui-widget-content"></a>
 			<select>
-				<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
+				<option value=""${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
 				#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
 				<option value="${idealDeposit.id}">${idealDeposit.ideal_deposit_name}</option>
 				#{/list}

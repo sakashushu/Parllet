@@ -1,6 +1,5 @@
 package controllers;
 
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
@@ -575,7 +574,7 @@ public class Common extends Controller {
 			Long handling_mst,
 			Long ideal_deposit_mst,
 			Long item_mst,
-			String amount,
+			Integer amount,
 			String debit_date,
 			String content,
 			String store,
@@ -588,7 +587,7 @@ public class Common extends Controller {
 		Date paymentDate = null;
 		if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
-				paymentDate = DateFormat.getDateTimeInstance().parse(payment_date+":00");
+				paymentDate = DateFormat.getDateInstance().parse(payment_date);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -607,20 +606,10 @@ public class Common extends Controller {
 			handlingMst = HandlingMst.findById(handling_mst);
 		}
 		Integer intAmount = null;
-		//カンマ区切りの数値文字列を数値型に変換するNumberFormatクラスのインスタンスを取得する
-		NumberFormat nf = NumberFormat.getInstance();
-		if (amount!=null && !amount.equals("")) {
-			//数値文字列をNumber型のオブジェクトに変換する
-			Number numAmount;
-			try {
-				numAmount = nf.parse(amount);
-				//Number型のオブジェクトからInteger値を取得する
-				intAmount = numAmount.intValue();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (amount!=null) {
+			intAmount = amount;
 		}
+		
 		Date debitDate = null;
 		if (debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 			try {
@@ -672,6 +661,7 @@ public class Common extends Controller {
 //			record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
 		}
 		// Validate
+		validation.clear();
 		validation.valid(record);
 		if (validation.hasErrors()) {
 			wr.setIntRslt(99);
