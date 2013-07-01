@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -234,7 +235,10 @@ public class PplRecurringPayments extends Controller {
 					render();
 				// 保存
 				ph.save();
+				
+				Date dteNow = Calendar.getInstance().getTime();
 				hu.pplStatus = 1;
+				hu.modified = dteNow;
 				// Validate
 				validation.valid(hu);
 				if (validation.hasErrors())

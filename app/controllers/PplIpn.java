@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.Date;
 
 import models.HaUser;
 import models.PaymentHistory;
@@ -78,9 +79,11 @@ public class PplIpn extends Controller {
 				// 保存
 				ph.save();
 				//定期支払（契約締結・決済）
+				Date dteNow = Calendar.getInstance().getTime();
 				if (txnType.equals("recurring_payment_profile_created") ||
 						txnType.equals("recurring_payment")) {
 					hu.pplStatus = 1;
+					hu.modified = dteNow;
 					// Validate
 					validation.valid(hu);
 					if (validation.hasErrors())
@@ -89,6 +92,7 @@ public class PplIpn extends Controller {
 					hu.save();
 				} else if (txnType.equals("recurring_payment_profile_cancel")) {
 					hu.pplStatus = 9;
+					hu.modified = dteNow;
 					// Validate
 					validation.valid(hu);
 					if (validation.hasErrors())
