@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.Type;
+
 import play.data.validation.Email;
 import play.data.validation.MaxSize;
 import play.data.validation.MinSize;

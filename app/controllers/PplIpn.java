@@ -59,30 +59,60 @@ public class PplIpn extends Controller {
 		
 		//check notification validation
 		if ("VERIFIED".equals(result)) {
-			//定期支払（契約締結・決済）
-			if (txnType.equals("recurring_payment_profile_created") ||
-					txnType.equals("recurring_payment")) {
-				//支払履歴
-				HaUser hu = HaUser.find("byPplPayerId", payerId).first();
-				if (hu==null) {
-					Logger.info("hu==null");
-				} else {
-					PaymentHistory ph = new PaymentHistory(
-							hu,
-							strActionMethod,
-							"txn_type="+txnType,
-							Calendar.getInstance().getTime()
-							);
+			
+			//支払履歴
+			HaUser hu = HaUser.find("byPplPayerId", payerId).first();
+			if (hu==null) {
+				Logger.info("hu==null");
+			} else {
+				PaymentHistory ph = new PaymentHistory(
+						hu,
+						strActionMethod,
+						"txn_type="+txnType,
+						Calendar.getInstance().getTime()
+						);
+				// Validate
+				validation.valid(ph);
+				if (validation.hasErrors())
+					render();
+				// 保存
+				ph.save();
+				//定期支払（契約締結・決済）
+				if (txnType.equals("recurring_payment_profile_created") ||
+						txnType.equals("recurring_payment")) {
+					hu.pplStatus = 1;
 					// Validate
-					validation.valid(ph);
+					validation.valid(hu);
 					if (validation.hasErrors())
 						render();
 					// 保存
-					ph.save();
+					hu.save();
+				} else if (txnType.equals("recurring_payment_profile_cancel")) {
+					hu.pplStatus = 9;
+					// Validate
+					validation.valid(hu);
+					if (validation.hasErrors())
+						render();
+					// 保存
+					hu.save();
 				}
+			}
+			
+			//定期支払（契約締結・決済）
+			if (txnType.equals("recurring_payment_profile_created") ||
+					txnType.equals("recurring_payment")) {
+				hu.pplStatus = 1;
+				// Validate
+				validation.valid(hu);
+				if (validation.hasErrors())
+					render();
+				// 保存
+				hu.save();
 			} else if (txnType.equals("recurring_payment_failed") ||
 					txnType.equals("recurring_payment_failed") ||
 					txnType.equals("recurring_payment_profile_cancel")) {
+				
+				
 				//管理者に自動メール送信予定
 				
 			} else {
