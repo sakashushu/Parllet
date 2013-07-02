@@ -102,10 +102,12 @@ public class PplIpn extends Controller {
 						hu.save();
 					}
 				}
-				
 			}
 			
 			//定期支払（契約締結・決済）
+			if (txnType!=null) {
+				
+			}
 			if (txnType!=null &&
 					(txnType.equals("recurring_payment_profile_created") ||
 						txnType.equals("recurring_payment"))) {
@@ -120,6 +122,7 @@ public class PplIpn extends Controller {
 					(txnType.equals("recurring_payment_failed") ||
 						txnType.equals("recurring_payment_failed") ||
 						txnType.equals("recurring_payment_profile_cancel"))) {
+				
 				
 				//管理者に自動メール送信予定
 				
@@ -153,7 +156,7 @@ public class PplIpn extends Controller {
 			Logger.info("Invalide transaction");
 			new PaypalTransaction(itemName, itemNumber, paymentStatus, paymentAmount, paymentCurrency, txnId, receiverEmail, payerEmail,PaypalTransaction.TrxStatusEnum.INVALID).save();
 		} else {
-			Logger.info("エラー処理");
+			Logger.info("Erreur lors du traitement");
 		}
     }
 	

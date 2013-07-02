@@ -80,6 +80,7 @@ public class Common extends Controller {
 	static void setConnectedUser() {
 		if(Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
+			Logger.info("haUser byEmail Done.");
 			renderArgs.put("haUser", haUser);
 		}
 	}
