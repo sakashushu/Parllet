@@ -79,38 +79,32 @@ public class PplIpn extends Controller {
 				// 保存
 				ph.save();
 				//定期支払（契約締結・決済）
-				if (txnType!=null) {
-					Date dteNow = Calendar.getInstance().getTime();
-					if (txnType.equals("recurring_payment_profile_created") ||
-							txnType.equals("recurring_payment")) {
-						hu.pplStatus = 1;
-						hu.modified = dteNow;
-						// Validate
-						validation.valid(hu);
-						if (validation.hasErrors())
-							render();
-						// 保存
-						hu.save();
-					} else if (txnType.equals("recurring_payment_profile_cancel")) {
-						hu.pplStatus = 9;
-						hu.modified = dteNow;
-						// Validate
-						validation.valid(hu);
-						if (validation.hasErrors())
-							render();
-						// 保存
-						hu.save();
-					}
+				Date dteNow = Calendar.getInstance().getTime();
+				if (txnType.equals("recurring_payment_profile_created") ||
+						txnType.equals("recurring_payment")) {
+					hu.pplStatus = 1;
+					hu.modified = dteNow;
+					// Validate
+					validation.valid(hu);
+					if (validation.hasErrors())
+						render();
+					// 保存
+					hu.save();
+				} else if (txnType.equals("recurring_payment_profile_cancel")) {
+					hu.pplStatus = 9;
+					hu.modified = dteNow;
+					// Validate
+					validation.valid(hu);
+					if (validation.hasErrors())
+						render();
+					// 保存
+					hu.save();
 				}
 			}
 			
 			//定期支払（契約締結・決済）
-			if (txnType!=null) {
-				
-			}
-			if (txnType!=null &&
-					(txnType.equals("recurring_payment_profile_created") ||
-						txnType.equals("recurring_payment"))) {
+			if (txnType.equals("recurring_payment_profile_created") ||
+					txnType.equals("recurring_payment")) {
 				hu.pplStatus = 1;
 				// Validate
 				validation.valid(hu);
@@ -118,10 +112,9 @@ public class PplIpn extends Controller {
 					render();
 				// 保存
 				hu.save();
-			} else if (txnType!=null &&
-					(txnType.equals("recurring_payment_failed") ||
-						txnType.equals("recurring_payment_failed") ||
-						txnType.equals("recurring_payment_profile_cancel"))) {
+			} else if (txnType.equals("recurring_payment_failed") ||
+					txnType.equals("recurring_payment_failed") ||
+					txnType.equals("recurring_payment_profile_cancel")) {
 				
 				
 				//管理者に自動メール送信予定
