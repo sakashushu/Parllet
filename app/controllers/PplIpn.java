@@ -27,7 +27,6 @@ public class PplIpn extends Controller {
 		//parameters of POST requests is recovered
 		String str = "cmd=_notify-validate&" + params.get("body");
 		Logger.info(str);
-		Logger.info(Security.connected());
 		
 		//creating a connection to the paypal
 		URL url = new URL("https://www.paypal.com/cgi-bin/webscr");
@@ -57,19 +56,22 @@ public class PplIpn extends Controller {
 		String receiverEmail = params.get("receiver_email");
 		String payerEmail = params.get("payer_email");
 		String payerId = params.get("payer_id");
+		String recurringPaymentId = params.get("recurring_payment_id");
 		
 		//check notification validation
 		if ("VERIFIED".equals(result)) {
-			
-			//支払履歴
 			HaUser hu = HaUser.find("byPplPayerId", payerId).first();
 			if (hu==null) {
 				Logger.info("hu==null");
 			} else {
+				//支払履歴
 				PaymentHistory ph = new PaymentHistory(
 						hu,
 						strActionMethod,
 						"txn_type="+txnType,
+						txnType,
+						recurringPaymentId,
+						paymentStatus,
 						Calendar.getInstance().getTime()
 						);
 				// Validate
@@ -104,20 +106,15 @@ public class PplIpn extends Controller {
 				}
 			}
 			
+			
+			
 			//定期支払（契約締結・決済）
 			if (txnType!=null &&
 					(txnType.equals("recurring_payment_profile_created") ||
 							txnType.equals("recurring_payment"))) {
-				hu.pplStatus = 1;
-				// Validate
-				validation.valid(hu);
-				if (validation.hasErrors())
-					render();
-				// 保存
-				hu.save();
+				
 			} else if (txnType!=null &&
 					(txnType.equals("recurring_payment_failed") ||
-							txnType.equals("recurring_payment_failed") ||
 							txnType.equals("recurring_payment_profile_cancel"))) {
 				//管理者に自動メール送信予定
 				
@@ -151,7 +148,7 @@ public class PplIpn extends Controller {
 			Logger.info("Invalide transaction");
 			new PaypalTransaction(itemName, itemNumber, paymentStatus, paymentAmount, paymentCurrency, txnId, receiverEmail, payerEmail,PaypalTransaction.TrxStatusEnum.INVALID).save();
 		} else {
-			Logger.info("Erreur lors du traitement");
+			Logger.info("エラー処理");
 		}
     }
 	

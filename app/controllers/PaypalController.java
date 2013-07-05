@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.Date;
 
 import models.HaUser;
 import models.PaymentHistory;
@@ -19,14 +20,13 @@ import play.mvc.Controller;
 public class PaypalController extends Controller {
 	
 	public static void validation() throws Exception {
-		String strActionMethod = "PplIpn_validation";
+		String strActionMethod = "PaypalController_validation";
 		Logger.info(strActionMethod);
 		
 		// creation of the url sent to paypal to check the
 		//parameters of POST requests is recovered
 		String str = "cmd=_notify-validate&" + params.get("body");
 		Logger.info(str);
-		Logger.info(Security.connected());
 		
 		//creating a connection to the paypal
 		URL url = new URL("https://www.paypal.com/cgi-bin/webscr");
@@ -56,19 +56,22 @@ public class PaypalController extends Controller {
 		String receiverEmail = params.get("receiver_email");
 		String payerEmail = params.get("payer_email");
 		String payerId = params.get("payer_id");
+		String recurringPaymentId = params.get("recurring_payment_id");
 		
 		//check notification validation
 		if ("VERIFIED".equals(result)) {
-			
-			//支払履歴
 			HaUser hu = HaUser.find("byPplPayerId", payerId).first();
 			if (hu==null) {
 				Logger.info("hu==null");
 			} else {
+				//支払履歴
 				PaymentHistory ph = new PaymentHistory(
 						hu,
 						strActionMethod,
 						"txn_type="+txnType,
+						txnType,
+						recurringPaymentId,
+						paymentStatus,
 						Calendar.getInstance().getTime()
 						);
 				// Validate
@@ -78,41 +81,41 @@ public class PaypalController extends Controller {
 				// 保存
 				ph.save();
 				//定期支払（契約締結・決済）
-				if (txnType.equals("recurring_payment_profile_created") ||
-						txnType.equals("recurring_payment")) {
-					hu.pplStatus = 1;
-					// Validate
-					validation.valid(hu);
-					if (validation.hasErrors())
-						render();
-					// 保存
-					hu.save();
-				} else if (txnType.equals("recurring_payment_profile_cancel")) {
-					hu.pplStatus = 9;
-					// Validate
-					validation.valid(hu);
-					if (validation.hasErrors())
-						render();
-					// 保存
-					hu.save();
+				if (txnType!=null) {
+					Date dteNow = Calendar.getInstance().getTime();
+					if (txnType.equals("recurring_payment_profile_created") ||
+							txnType.equals("recurring_payment")) {
+						hu.pplStatus = 1;
+						hu.modified = dteNow;
+						// Validate
+						validation.valid(hu);
+						if (validation.hasErrors())
+							render();
+						// 保存
+						hu.save();
+					} else if (txnType.equals("recurring_payment_profile_cancel")) {
+						hu.pplStatus = 9;
+						hu.modified = dteNow;
+						// Validate
+						validation.valid(hu);
+						if (validation.hasErrors())
+							render();
+						// 保存
+						hu.save();
+					}
 				}
 			}
 			
+			
+			
 			//定期支払（契約締結・決済）
-			if (txnType.equals("recurring_payment_profile_created") ||
-					txnType.equals("recurring_payment")) {
-				hu.pplStatus = 1;
-				// Validate
-				validation.valid(hu);
-				if (validation.hasErrors())
-					render();
-				// 保存
-				hu.save();
-			} else if (txnType.equals("recurring_payment_failed") ||
-					txnType.equals("recurring_payment_failed") ||
-					txnType.equals("recurring_payment_profile_cancel")) {
+			if (txnType!=null &&
+					(txnType.equals("recurring_payment_profile_created") ||
+							txnType.equals("recurring_payment"))) {
 				
-				
+			} else if (txnType!=null &&
+					(txnType.equals("recurring_payment_failed") ||
+							txnType.equals("recurring_payment_profile_cancel"))) {
 				//管理者に自動メール送信予定
 				
 			} else {
@@ -145,7 +148,7 @@ public class PaypalController extends Controller {
 			Logger.info("Invalide transaction");
 			new PaypalTransaction(itemName, itemNumber, paymentStatus, paymentAmount, paymentCurrency, txnId, receiverEmail, payerEmail,PaypalTransaction.TrxStatusEnum.INVALID).save();
 		} else {
-			Logger.info("Erreur lors du traitement");
+			Logger.info("エラー処理");
 		}
     }
 	

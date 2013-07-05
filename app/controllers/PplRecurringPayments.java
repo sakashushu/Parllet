@@ -31,7 +31,6 @@ public class PplRecurringPayments extends Controller {
 	static void setConnectedUser() {
 		if(Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
-			Logger.info("haUser byEmail Done.");
 			renderArgs.put("haUser", haUser);
 		}
 	}
@@ -227,6 +226,9 @@ public class PplRecurringPayments extends Controller {
 						hu,
 						strActionMethod,
 						strSuccess,
+						null,
+						null,
+						null,
 						Calendar.getInstance().getTime()
 						);
 				// Validate
