@@ -127,17 +127,6 @@ public class DailyAccount extends Controller {
 	public static void balanceTableDisp(
 			Integer intBasisDate
 			) {
-		Common cmn = new Common();
-		Date dteNow = cmn.locDate();
-		HaUser hu = (HaUser)renderArgs.get("haUser");
-		hu.modified = dteNow;
-		// 保存
-		hu.save();
-		
-		
-		
-		
-		
 		String sBasisDate = null;
 		DailyAccount da = new DailyAccount();
 		Common cm = new Common();
