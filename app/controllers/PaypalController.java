@@ -69,7 +69,6 @@ public class PaypalController extends Controller {
 				PaymentHistory ph = new PaymentHistory(
 						hu,
 						strActionMethod,
-						"txn_type="+txnType,
 						txnType,
 						recurringPaymentId,
 						paymentStatus,

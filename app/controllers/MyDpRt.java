@@ -19,7 +19,9 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		Date dteNow = Calendar.getInstance().getTime();
+//		Date dteNow = Calendar.getInstance().getTime();
+		Common cm = new Common();
+		Date dteNow = cm.locDate();
 		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
@@ -42,7 +44,9 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
-		Date dteNow = Calendar.getInstance().getTime();
+//		Date dteNow = Calendar.getInstance().getTime();
+		Common cm = new Common();
+		Date dteNow = cm.locDate();
 		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
@@ -56,7 +60,6 @@ public class MyDpRt extends Controller {
 			renderJSON(wr);
 	    }
 		haUser.save();
-		Common cm = new Common();
 		try {
 			cm.initUserConf(haUser);
 		} catch (Exception e) {

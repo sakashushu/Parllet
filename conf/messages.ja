@@ -275,7 +275,6 @@ validation.title=以下のエラーを修正して下さい
 validation.required=必須
 validation.unique=既に使われています
 validation.cutoff_debit=締日より過去
-validation.invalid=日付誤りで移動できませんでした
 validation.dateError=日付誤りで移動できませんでした
 validation.pageError=ページ数誤りのため1ページ目を表示しました
 validation.multipleName=この名前は既に使われています

@@ -17,7 +17,6 @@ public class PaymentHistory extends Model {
 	public HaUser ha_user;						//家計簿ユーザー
 	
 	public String action_method;
-	public String result;
 	public String txn_type;
 	public String recurring_payment_id;
 	public String payment_status;
@@ -27,7 +26,6 @@ public class PaymentHistory extends Model {
 	public PaymentHistory(
 			HaUser ha_user,
 			String action_method,
-			String result,
 			String txn_type,
 			String recurring_payment_id,
 			String payment_status,
@@ -35,7 +33,6 @@ public class PaymentHistory extends Model {
 			) {
 		this.ha_user = ha_user;
 		this.action_method = action_method;
-		this.result = result;
 		this.txn_type = txn_type;
 		this.recurring_payment_id = recurring_payment_id;
 		this.payment_status = payment_status;

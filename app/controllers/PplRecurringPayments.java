@@ -224,7 +224,6 @@ public class PplRecurringPayments extends Controller {
 				PaymentHistory ph = new PaymentHistory(
 						hu,
 						strActionMethod,
-						strSuccess,
 						null,
 						null,
 						null,
