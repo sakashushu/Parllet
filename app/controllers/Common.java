@@ -3,7 +3,9 @@ package controllers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import play.Logger;
 import play.db.jpa.JPA;
@@ -83,6 +85,25 @@ public class Common extends Controller {
 			renderArgs.put("haUser", haUser);
 		}
 	}
+	
+	public Date locDate() {
+		String strActionMethod = "Common_locDate";
+		Logger.info(strActionMethod);
+		
+		Logger.info(Messages.get("common.timezone"));
+		
+		TimeZone tzTokyo = TimeZone.getTimeZone(Messages.get("common.timezone"));
+		Calendar cal1 = Calendar.getInstance(tzTokyo);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.set(cal1.get(Calendar.YEAR),
+				cal1.get(Calendar.MONTH),
+				cal1.get(Calendar.DATE),
+				cal1.get(Calendar.HOUR_OF_DAY),
+				cal1.get(Calendar.MINUTE),
+				cal1.get(Calendar.SECOND));
+		return cal2.getTime();
+	}
+	
 	
 	/**
 	 * 日付数値の妥当性チェック

@@ -11,7 +11,6 @@ import java.util.Date;
 import models.HaUser;
 import models.PaymentHistory;
 import models.PaypalTransaction;
-
 import play.Logger;
 import play.Play;
 import play.mvc.Controller;
@@ -49,7 +48,6 @@ public class PaypalController extends Controller {
 		String itemName = params.get("item_name");
 		String itemNumber = params.get("item_number");
 		String paymentStatus = params.get("payment_status");
-		String pendingReason = params.get("pending_reason");
 		String paymentAmount = params.get("mc_gross");
 		String paymentCurrency = params.get("mc_currency");
 		String txnId = params.get("txn_id");
@@ -64,6 +62,9 @@ public class PaypalController extends Controller {
 			if (hu==null) {
 				Logger.info("hu==null");
 			} else {
+				Common cm = new Common();
+				Date dteNow = cm.locDate();
+				
 				//支払履歴
 				PaymentHistory ph = new PaymentHistory(
 						hu,
@@ -72,7 +73,7 @@ public class PaypalController extends Controller {
 						txnType,
 						recurringPaymentId,
 						paymentStatus,
-						Calendar.getInstance().getTime()
+						dteNow
 						);
 				// Validate
 				validation.valid(ph);
@@ -82,7 +83,6 @@ public class PaypalController extends Controller {
 				ph.save();
 				//定期支払（契約締結・決済）
 				if (txnType!=null) {
-					Date dteNow = Calendar.getInstance().getTime();
 					if (txnType.equals("recurring_payment_profile_created") ||
 							txnType.equals("recurring_payment")) {
 						hu.pplStatus = 1;

@@ -103,6 +103,7 @@ public class PplRecurringPayments extends Controller {
 	public static void receipt() {
 		Logger.info("PplRecurringPayments_receipt");
 		
+		String strPayerId = "";
 		String strToken = params.get("token");
 		validation.clear();
 		if (strToken==null || !strToken.equals(session.get("paypalToken"))) {
@@ -145,14 +146,8 @@ public class PplRecurringPayments extends Controller {
 				Logger.info(strDecodeRslt);
 				if (!map.get("ACK").equals("Success"))
 					validation.addError("ackError", Messages.get("validation.anErrorOccured"));
-				HaUser hu = (HaUser)renderArgs.get("haUser");
-				hu.pplPayerId = map.get("PAYERID");
-				// Validate
-				validation.valid(hu);
-				if (validation.hasErrors())
-					render();
-				// 保存
-				hu.save();
+				
+				strPayerId = map.get("PAYERID");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -163,10 +158,10 @@ public class PplRecurringPayments extends Controller {
 			e.printStackTrace();
 			validation.addError("malformedUrlError", e.getMessage());
 		}
-		render();
+		render(strPayerId);
 	}
 	
-	public static void confirm() {
+	public static void confirm(String strPayerId) {
 		String strActionMethod = "PplRecurringPayments_confirm";
 		Logger.info(strActionMethod);
 		Calendar calendar = Calendar.getInstance();
@@ -220,6 +215,10 @@ public class PplRecurringPayments extends Controller {
 					Logger.info(strDecodeRslt);
 					render();
 				}
+				
+				Common cm = new Common();
+				Date dteNow = cm.locDate();
+				
 				//支払履歴
 				HaUser hu = (HaUser)renderArgs.get("haUser");
 				PaymentHistory ph = new PaymentHistory(
@@ -229,7 +228,7 @@ public class PplRecurringPayments extends Controller {
 						null,
 						null,
 						null,
-						Calendar.getInstance().getTime()
+						dteNow
 						);
 				// Validate
 				validation.valid(ph);
@@ -238,7 +237,7 @@ public class PplRecurringPayments extends Controller {
 				// 保存
 				ph.save();
 				
-				Date dteNow = Calendar.getInstance().getTime();
+				hu.pplPayerId = strPayerId;
 				hu.pplStatus = 1;
 				hu.modified = dteNow;
 				// Validate

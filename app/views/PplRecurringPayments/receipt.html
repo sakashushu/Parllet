@@ -57,6 +57,7 @@
 	<div style="margin-top: 40px; width: 100%;">
 		<div style="width:132px; margin-right: auto; margin-left: auto;">
 			#{form @confirm()}
+				<input type="hidden" value="${strPayerId}" />
 				<input type="submit" value="支払を確定する" style="font-weight: bold; padding:5px 10px; font-size: 16px;" />
 			#{/form}
 		</div>
