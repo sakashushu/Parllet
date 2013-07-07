@@ -161,7 +161,7 @@ public class PplRecurringPayments extends Controller {
 		render(strPayerId);
 	}
 	
-	public static void confirm(String strPayerId) {
+	public static void confirm(String payer_id) {
 		String strActionMethod = "PplRecurringPayments_confirm";
 		Logger.info(strActionMethod);
 		Calendar calendar = Calendar.getInstance();
@@ -237,7 +237,7 @@ public class PplRecurringPayments extends Controller {
 				// 保存
 				ph.save();
 				
-				hu.pplPayerId = strPayerId;
+				hu.pplPayerId = payer_id;
 				hu.pplStatus = 1;
 				hu.modified = dteNow;
 				// Validate
