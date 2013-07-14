@@ -39,17 +39,17 @@ BalanceTypeMst(bank_in):
 BalanceTypeMst(bank_out):
     balance_type_name: 口座引出
 
-BalanceTypeMst(ideal_deposit_in):
-    balance_type_name: My貯金預入
+BalanceTypeMst(parllet_in):
+    balance_type_name: Parllet預入
 
-# BalanceTypeMst(from_ideal_deposit_out):
-#     balance_type_name: My貯金から支払
+# BalanceTypeMst(from_parllet_out):
+#     balance_type_name: Parlletから支払
 
-BalanceTypeMst(ideal_deposit_out):
-    balance_type_name: My貯金引出
+BalanceTypeMst(parllet_out):
+    balance_type_name: Parllet引出
 
-# BalanceTypeMst(to_ideal_deposit_in):
-#     balance_type_name: My貯金に直接預入
+# BalanceTypeMst(to_parllet_in):
+#     balance_type_name: Parlletに直接預入
 
 ItemMst(in1):
     ha_user:          sakashushu
@@ -569,65 +569,65 @@ HandlingMst(e-money11):
     invalidity_flg:       true
     order_seq:            11
 
-IdealDepositMst(ideal1):
+ParlletMst(prlt1):
     ha_user:          sakashushu
-    ideal_deposit_name:   交際貯金
-    zero_hidden:          true
-    order_seq:            1
+    parllet_name:     交際貯金
+    zero_hidden:      true
+    order_seq:        1
 
-IdealDepositMst(ideal2):
+ParlletMst(prlt2):
     ha_user:          sakashushu
-    ideal_deposit_name:   学資貯金
-    zero_hidden:          true
-    order_seq:            2
+    parllet_name:     学資貯金
+    zero_hidden:      true
+    order_seq:        2
 
-IdealDepositMst(ideal3):
+ParlletMst(prlt3):
     ha_user:          sakashushu
-    ideal_deposit_name:   雑多貯金
-    zero_hidden:          true
-    order_seq:            3
+    parllet_name:     雑多貯金
+    zero_hidden:      true
+    order_seq:        3
 
-IdealDepositMst(ideal4):
+ParlletMst(prlt4):
     ha_user:          sakashushu
-    ideal_deposit_name:   オモチャ貯金
-    zero_hidden:          true
-    order_seq:            4
+    parllet_name:     オモチャ貯金
+    zero_hidden:      true
+    order_seq:        4
 
-IdealDepositMst(ideal6):
+ParlletMst(prlt6):
     ha_user:          sakashushu
-    ideal_deposit_name:   臨時貯金
-    zero_hidden:          true
-    order_seq:            5
+    parllet_name:     臨時貯金
+    zero_hidden:      true
+    order_seq:        5
 
-IdealDepositMst(ideal5):
+ParlletMst(prlt5):
     ha_user:          sakashushu
-    ideal_deposit_name:   帰省貯金
-    zero_hidden:          true
-    order_seq:            6
+    parllet_name:     帰省貯金
+    zero_hidden:      true
+    order_seq:        6
 
-IdealDepositMst(ideal7):
+ParlletMst(prlt7):
     ha_user:          sakashushu
-    ideal_deposit_name:   市民税貯金
-    zero_hidden:          true
-    order_seq:            7
+    parllet_name:     市民税貯金
+    zero_hidden:      true
+    order_seq:        7
 
-IdealDepositMst(ideal8):
+ParlletMst(prlt8):
     ha_user:          sakashushu
-    ideal_deposit_name:   宮崎引越
-    zero_hidden:          true
-    order_seq:            8
+    parllet_name:     宮崎引越
+    zero_hidden:      true
+    order_seq:        8
 
-IdealDepositMst(ideal9):
+ParlletMst(prlt9):
     ha_user:          sakashushu
-    ideal_deposit_name:   通勤費
-    zero_hidden:          true
-    order_seq:            9
+    parllet_name:     通勤費
+    zero_hidden:      true
+    order_seq:        9
 
-IdealDepositMst(ideal10):
+ParlletMst(prlt10):
     ha_user:          sakashushu
-    ideal_deposit_name:   自動車貯金
-    zero_hidden:          true
-    order_seq:            10
+    parllet_name:     自動車貯金
+    zero_hidden:      true
+    order_seq:        10
 
 Record(test1):
     ha_user:          member1
@@ -659,6 +659,6 @@ Record(test3):
 Record(test4):
     ha_user:              member1
     payment_date:         '2012-07-04T00:00:00'
-    balance_type_mst:     ideal_deposit_in
+    balance_type_mst:     parllet_in
     amount:               10000
-    ideal_deposit_mst:    ideal1
+    parllet_mst:          prlt1

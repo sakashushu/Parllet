@@ -3,7 +3,7 @@ package models;
 public class WkCmIdepoRslt {
 	private int intRslt;
 	private String strErr;
-	private IdealDepositMst idMst;
+	private ParlletMst idMst;
 	public int getIntRslt() {
 		return intRslt;
 	}
@@ -16,10 +16,10 @@ public class WkCmIdepoRslt {
 	public void setStrErr(String strErr) {
 		this.strErr = strErr;
 	}
-	public IdealDepositMst getIdMst() {
+	public ParlletMst getIdMst() {
 		return idMst;
 	}
-	public void setIdMst(IdealDepositMst idMst) {
+	public void setIdMst(ParlletMst idMst) {
 		this.idMst = idMst;
 	}
 }

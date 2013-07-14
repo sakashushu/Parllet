@@ -17,7 +17,7 @@ import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
 import models.HandlingTypeMst;
-import models.IdealDepositMst;
+import models.ParlletMst;
 import models.ItemMst;
 import models.Record;
 import models.WkAjaxRsltMin;
@@ -31,13 +31,13 @@ public class Common extends Controller {
 	static final String BALANCE_TYPE_OUT = Messages.get("BalanceType.out");
 	static final String BALANCE_TYPE_BANK_IN = Messages.get("BalanceType.bank_in");
 	static final String BALANCE_TYPE_BANK_OUT = Messages.get("BalanceType.bank_out");
-	static final String BALANCE_TYPE_IDEAL_DEPOSIT_IN = Messages.get("BalanceType.ideal_deposit_in");
-	static final String BALANCE_TYPE_IDEAL_DEPOSIT_OUT = Messages.get("BalanceType.ideal_deposit_out");
-	static final String BALANCE_TYPE_IDEAL_DEPOSIT_INOUT = Messages.get("BalanceType.ideal_deposit_inOut");
-	static final String BALANCE_TYPE_OUT_IDEAL_DEPOSIT = Messages.get("BalanceType.out_ideal_deposit");
+	static final String BALANCE_TYPE_PARLLET_IN = Messages.get("BalanceType.parllet_in");
+	static final String BALANCE_TYPE_PARLLET_OUT = Messages.get("BalanceType.parllet_out");
+	static final String BALANCE_TYPE_PARLLET_INOUT = Messages.get("BalanceType.parllet_inOut");
+	static final String BALANCE_TYPE_OUT_PARLLET = Messages.get("BalanceType.out_parllet");
 	static final String REMAINDER_TYPE_REAL = Messages.get("RemainderType.real");
-	static final String REMAINDER_TYPE_IDEAL_DEPOSIT = Messages.get("RemainderType.ideal_deposit");
-	static final String REMAINDER_TYPE_NOT_IDEAL_DEPOSIT = Messages.get("RemainderType.not_ideal_deposit");
+	static final String REMAINDER_TYPE_PARLLET = Messages.get("RemainderType.parllet");
+	static final String REMAINDER_TYPE_NOT_PARLLET = Messages.get("RemainderType.not_parllet");
 	static final String HANDLING_TYPE_CASH = Messages.get("HandlingType.cash");
 	static final String HANDLING_TYPE_BANK = Messages.get("HandlingType.bank");
 	static final String HANDLING_TYPE_EMONEY = Messages.get("HandlingType.emoney");
@@ -310,44 +310,44 @@ public class Common extends Controller {
 	}
 	
 	/**
-	 * IdealDepositMstの保存メソッド
+	 * ParlletMstの保存メソッド
 	 * @param id
-	 * @param ideal_deposit_name
+	 * @param parllet_name
 	 * @param zero_hidden
-	 * @param refIdealDepositMst
+	 * @param refParlletMst
 	 * @return
 	 */
-	public static Integer ideal_deposit_mst_save(
+	public static Integer parllet_mst_save(
 			Long id,
-			String ideal_deposit_name,
+			String parllet_name,
 			Boolean zero_hidden,
-			RefIdealDepositMst refIdealDepositMst
+			RefParlletMst refParlletMst
 			) {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
-		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM IdealDepositMst WHERE ha_user_id = " + haUser.id + " ";
+		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM ParlletMst WHERE ha_user_id = " + haUser.id + " ";
 		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
 		if(id == null) {
-			// My貯金データの作成
-			refIdealDepositMst.idealDepositMst = new IdealDepositMst(
+			// Parlletデータの作成
+			refParlletMst.parlletMst = new ParlletMst(
 					haUser,
-					ideal_deposit_name,
+					parllet_name,
 					zero_hidden==null ? false : (zero_hidden==true ? true : false),
 					intMaxOrderSeq
 			);
 		} else {
-			// My貯金データの読み出し
-			refIdealDepositMst.idealDepositMst = IdealDepositMst.findById(id);
+			// Parlletデータの読み出し
+			refParlletMst.parlletMst = ParlletMst.findById(id);
 			// 編集
-			refIdealDepositMst.idealDepositMst.ideal_deposit_name = ideal_deposit_name;
-			refIdealDepositMst.idealDepositMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
+			refParlletMst.parlletMst.parllet_name = parllet_name;
+			refParlletMst.parlletMst.zero_hidden = zero_hidden==null ? false : (zero_hidden==true ? true : false);
 		}
 		// Validate
-		validation.valid(refIdealDepositMst.idealDepositMst);
+		validation.valid(refParlletMst.parlletMst);
 		if(validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
-		refIdealDepositMst.idealDepositMst.save();
+		refParlletMst.parlletMst.save();
 		
 		return 0;
 	}
@@ -371,12 +371,12 @@ public class Common extends Controller {
 	}
 	
 	/**
-	 * IdealDepositMst の参照渡し用クラス
+	 * ParlletMst の参照渡し用クラス
 	 * @author sakashushu
 	 *
 	 */
-	public static class RefIdealDepositMst {
-		IdealDepositMst idealDepositMst;
+	public static class RefParlletMst {
+		ParlletMst parlletMst;
 	}
 	
 	/**
@@ -495,7 +495,7 @@ public class Common extends Controller {
 	
 	public static void getClmsIdepo(Long lngId) {
 		WkCmIdepoRslt wr = new WkCmIdepoRslt();
-		IdealDepositMst iM = IdealDepositMst.findById(lngId);
+		ParlletMst iM = ParlletMst.findById(lngId);
 		wr.setIdMst(iM);
 		renderJSON(wr);
 	}
@@ -533,17 +533,17 @@ public class Common extends Controller {
 	}
 	
 	/**
-	 * ダイアログフォームからIdealDepositMstの更新
+	 * ダイアログフォームからParlletMstの更新
 	 * @param strType
 	 * @param strName
 	 * @param bolZeroHddn
 	 */
-	public static void updateIdepo(String strName, boolean bolZeroHddn, Long lngId) {
+	public static void updatePrlt(String strName, boolean bolZeroHddn, Long lngId) {
 		WkCmIdepoRslt wr = new WkCmIdepoRslt();
-		RefIdealDepositMst refIdealDepositMst = new RefIdealDepositMst();
+		RefParlletMst refParlletMst = new RefParlletMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.ideal_deposit_mst_save(lngId, strName, bolZeroHddn, refIdealDepositMst);
-		IdealDepositMst iDM = refIdealDepositMst.idealDepositMst;
+		Integer iRtn = cmn.parllet_mst_save(lngId, strName, bolZeroHddn, refParlletMst);
+		ParlletMst iDM = refParlletMst.parlletMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -592,7 +592,7 @@ public class Common extends Controller {
 			String payment_date,
 			Long balance_type_mst,
 			Long handling_mst,
-			Long ideal_deposit_mst,
+			Long parllet_mst,
 			Long item_mst,
 			Integer amount,
 			String debit_date,
@@ -639,9 +639,9 @@ public class Common extends Controller {
 				e.printStackTrace();
 			}
 		}
-		IdealDepositMst idealDepositMst = null;
-		if (ideal_deposit_mst!=null) {
-			idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst);
+		ParlletMst parlletMst = null;
+		if (parllet_mst!=null) {
+			parlletMst = ParlletMst.findById(parllet_mst);
 		}
 		if (id==null) {
 			// 収支データの作成
@@ -650,7 +650,7 @@ public class Common extends Controller {
 					paymentDate,
 					balanceTypeMst,
 					handlingMst,
-					idealDepositMst,
+					parlletMst,
 					itemMst,
 					null,
 					intAmount,
@@ -670,7 +670,7 @@ public class Common extends Controller {
 			record.payment_date = paymentDate;
 			record.balance_type_mst = balanceTypeMst;
 			record.handling_mst = handlingMst;
-			record.ideal_deposit_mst = idealDepositMst;
+			record.parllet_mst = parlletMst;
 			record.item_mst = itemMst;
 			record.amount = intAmount;
 			record.debit_date = debitDate;
@@ -681,7 +681,6 @@ public class Common extends Controller {
 //			record.secret_rec_flg = secret_rec_flg==null ? false : (secret_rec_flg==true ? true : false);
 		}
 		// Validate
-		validation.clear();
 		validation.valid(record);
 		if (validation.hasErrors()) {
 			wr.setIntRslt(99);

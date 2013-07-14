@@ -112,6 +112,7 @@ public class PaypalController extends Controller {
 					(txnType.equals("recurring_payment_profile_created") ||
 							txnType.equals("recurring_payment"))) {
 				
+			//定期支払（決済失敗・キャンセル）
 			} else if (txnType!=null &&
 					(txnType.equals("recurring_payment_failed") ||
 							txnType.equals("recurring_payment_profile_cancel"))) {
@@ -139,6 +140,11 @@ public class PaypalController extends Controller {
 						Logger.info("La transaction a déjà été traité");
 					}
 				} else {
+					if ("Refunded".equals(paymentStatus)) {
+						//スルーする条件が必要か？
+						
+						return;
+					}
 					// Payment Status: Failed
 					Logger.info("Payment Status: Failed");
 				}

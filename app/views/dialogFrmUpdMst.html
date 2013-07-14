@@ -3,7 +3,7 @@
 /**
  * マスター作成用ダイアログ
  */
-function openDialogFrmUpdMst(strType, lngId) {
+function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 	jQuery(function() {
 		var name = jQuery("#dlgName"),
 			lblName = jQuery("#lblName"),
@@ -59,7 +59,7 @@ function openDialogFrmUpdMst(strType, lngId) {
 				jqxhrGetClms = jQuery.post('@{Common.getClmsIdepo}', {lngId: lngId});
 				jqxhrGetClms
 				.done(function(z) {
-					name.val(z.idMst.ideal_deposit_name);
+					name.val(z.idMst.parllet_name);
 					zeroHddn.val(z.idMst.zero_hidden);
 				})
 				.fail(function() {
@@ -112,7 +112,25 @@ function openDialogFrmUpdMst(strType, lngId) {
 			buttons: buttons,
 			close: function() {
 				//ダイアログクローズ時の処理は呼び出し元で行う
-				whenDialogFrmUpdMstClosed(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+				switch (calledFrom) {
+					case "&{'views.name.balanceTable'}":
+						whenDialogFrmUpdMstClosedBt(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+						break;
+					case "&{'views.name.dlgFrmUpdRec'}":
+						whenDialogFrmUpdMstClosedDfur(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+						break;
+					case "&{'views.name.dlHeader'}":
+						whenDialogFrmUpdMstClosedDh(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+						break;
+					case "&{'views.name.recordEdit'}":
+						whenDialogFrmUpdMstClosedRe(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
+						break;
+					default:
+						alert("Unanticipated calledFrom error");
+				}
+				
+				//ダイアログクローズ時の処理は呼び出し元で行う
+//				whenDialogFrmUpdMstClosed(intRslt, strType, name.val(), zeroHddn.is(':checked'), invFlg.is(':checked'), lngId);
 			}
 		});
 		jQuery("#dialog-makeMaster").dialog("open");

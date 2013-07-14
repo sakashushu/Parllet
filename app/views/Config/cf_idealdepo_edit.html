@@ -12,7 +12,7 @@ jQuery(function() {
 	%{
 		recCnt = 0
 		if(iDM?.id) {
-			recCnt = models.Record.count("ha_user = ? and ideal_deposit_mst.ideal_deposit_name = ?", haUser, iDM.ideal_deposit_name)
+			recCnt = models.Record.count("ha_user = ? and parllet_mst.parllet_name = ?", haUser, iDM.parllet_name)
 		}
 	}%
 	jQuery('#cnf_del').click(function(e){
@@ -46,8 +46,8 @@ jQuery(function() {
 	#{form @cf_idealdepo_save(iDM?.id)}
 	 
 	    <div class="crudField">
-	        #{field 'iDM.ideal_deposit_name'}
-	        <label class="fieldName">&{'ideal_deposit_name'}:</label>
+	        #{field 'iDM.parllet_name'}
+	        <label class="fieldName">&{'parllet_name'}:</label>
 	        <input type="text" name="${field.id}" 
 	            value="${field.value}" />
 	        <span class="error">#{error field.name /}</span>

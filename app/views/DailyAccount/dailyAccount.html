@@ -291,7 +291,7 @@ function addFigure(str) {
 #{form @RecordEdit.recordEdit()}
 	<input type="text" name="df_payment_date" id="dfPaymentDate" class="invisible" />
 	<input type="text" name="df_balance_type_id" id="dfBalanceTypeId" class="invisible" />
-	<input type="text" name="df_ideal_deposit_id" id="dfIdealDepositId" class="invisible" />
+	<input type="text" name="df_parllet_id" id="dfIdealDepositId" class="invisible" />
 	<input type="text" name="df_item_id" id="dfItemId" class="invisible" />
 	<input type="text" name="df_debit_date" id="dfDebitDate" class="invisible" />
 	<input type="submit" id="submitRecordEdit" class="invisible" />
@@ -452,7 +452,7 @@ function addFigure(str) {
 							<div class="da_sum_month numeric 
 										${lwda.sLargeCategory==messages.get('BalanceType.in') ||
 										lwda.sLargeCategory==messages.get('BalanceType.out') ||
-										lwda.sLargeCategory==messages.get('BalanceType.ideal_deposit_inOut') ? 'daBudgetSubject' : ''}">
+										lwda.sLargeCategory==messages.get('BalanceType.parllet_inOut') ? 'daBudgetSubject' : ''}">
 								<span class="padR4">
 									${lwda.lSumMonth.format('###,###')}
 								</span>

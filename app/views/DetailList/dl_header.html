@@ -19,7 +19,7 @@ jQuery(function() {
 	jQuery("#aDlRemainderIdeal").click(function(e) {
 		var jText = jQuery(this).text();
 		%{
-			idpCnt = models.IdealDepositMst.count("byHa_user", hu);
+			idpCnt = models.ParlletMst.count("byHa_user", hu);
 		}%
 		if(${idpCnt}===0) {
 //			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
@@ -176,19 +176,22 @@ function whenDialogConfirmClosed(intRslt) {
 			break;
 		case 1:
 			//口座更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_bank'}");
+			openDialogFrmUpdMstDh("&{'views.config.cf_bank'}");
 			break;
 		case 2:
 			//電子マネー更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_emoney'}");
+			openDialogFrmUpdMstDh("&{'views.config.cf_emoney'}");
 			break;
 		case 3:
 			//My貯金更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_idealdepo'}");
+			openDialogFrmUpdMstDh("&{'views.config.cf_idealdepo'}");
 			break;
 		default:
     		alert("dialogConfirm return value error");
 	}
+}
+function openDialogFrmUpdMstDh(strMst) {
+	openDialogFrmUpdMst(strMst, "&{'views.name.dlHeader'}");
 }
 // -->
 </script>
@@ -197,12 +200,12 @@ function whenDialogConfirmClosed(intRslt) {
 <script type="text/javascript">
 <!--
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
+function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
 		strErrMsg = "Common.updateHdlg";
 	if(strType==="&{'views.config.cf_idealdepo'}")
-		strErrMsg = "Common.updateIdepo";
+		strErrMsg = "Common.updatePrlt";
 	switch (intRslt) {
 		case 0:
 			whenDialogConfirmClosed(0);
@@ -213,7 +216,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType==="&{'views.config.cf_idealdepo'}") {
-				jqxhrMkMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
+				jqxhrMkMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			jqxhrMkMst
 			.done(function(z) {

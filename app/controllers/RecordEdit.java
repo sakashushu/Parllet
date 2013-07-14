@@ -10,7 +10,7 @@ import java.util.List;
 import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
-import models.IdealDepositMst;
+import models.ParlletMst;
 import models.ItemMst;
 import models.Record;
 import play.data.validation.Required;
@@ -34,7 +34,7 @@ public class RecordEdit extends Controller {
 	 * @param id
 	 * @param df_payment_date
 	 * @param df_balance_type_id
-	 * @param df_ideal_deposit_id
+	 * @param df_parllet_id
 	 * @param df_item_id
 	 * @param df_debit_date
 	 * @param calledFrom
@@ -44,7 +44,7 @@ public class RecordEdit extends Controller {
 			String calledFrom,				/* 呼び出し元 */
 			String df_payment_date,			/* 初期支払日 */
 			Long df_balance_type_id,  		/* 初期収支種類ID */
-			Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+			Long df_parllet_id,				/* 初期取扱(Parllet)ID */
 			Long df_item_id,				/* 初期項目ID */
 			String df_debit_date
 			) {
@@ -55,18 +55,18 @@ public class RecordEdit extends Controller {
 			recordUpd(id, calledFrom);
 		}
 		//追加
-//		render(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
-		recordIns(df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
+//		render(df_payment_date, df_balance_type_id, df_parllet_id, df_item_id, df_debit_date);
+		recordIns(df_payment_date, df_balance_type_id, df_parllet_id, df_item_id, df_debit_date);
 	}
 	
 	public static void recordIns(
 			String df_payment_date,			/* 初期支払日 */
 			Long df_balance_type_id,  		/* 初期収支種類ID */
-			Long df_ideal_deposit_id,		/* 初期取扱(My貯金)ID */
+			Long df_parllet_id,		/* 初期取扱(Parllet)ID */
 			Long df_item_id,				/* 初期項目ID */
 			String df_debit_date
 			) {
-		render("@recordEdit", df_payment_date, df_balance_type_id, df_ideal_deposit_id, df_item_id, df_debit_date);
+		render("@recordEdit", df_payment_date, df_balance_type_id, df_parllet_id, df_item_id, df_debit_date);
 	}
 	
 	public static void recordUpd(
@@ -84,7 +84,7 @@ public class RecordEdit extends Controller {
 	 * @param payment_date
 	 * @param balance_type_mst
 	 * @param handling_mst
-	 * @param ideal_deposit_mst
+	 * @param parllet_mst
 	 * @param item_mst
 	 * @param amount
 	 * @param debit_date
@@ -100,7 +100,7 @@ public class RecordEdit extends Controller {
 			String payment_date,
 			Long balance_type_mst,
 			Long handling_mst,
-			Long ideal_deposit_mst,
+			Long parllet_mst,
 			Long item_mst,
 			String amount,
 			String debit_date,
@@ -159,9 +159,9 @@ public class RecordEdit extends Controller {
 				e.printStackTrace();
 			}
 		}
-		IdealDepositMst idealDepositMst = null;
-		if (ideal_deposit_mst!=null) {
-			idealDepositMst = IdealDepositMst.findById(ideal_deposit_mst);
+		ParlletMst parlletMst = null;
+		if (parllet_mst!=null) {
+			parlletMst = ParlletMst.findById(parllet_mst);
 		}
 		if (id==null) {
 			// 収支データの作成
@@ -170,7 +170,7 @@ public class RecordEdit extends Controller {
 					paymentDate,
 					balanceTypeMst,
 					handlingMst,
-					idealDepositMst,
+					parlletMst,
 					itemMst,
 					null,
 					intAmount,
@@ -190,7 +190,7 @@ public class RecordEdit extends Controller {
 			record.payment_date = paymentDate;
 			record.balance_type_mst = balanceTypeMst;
 			record.handling_mst = handlingMst;
-			record.ideal_deposit_mst = idealDepositMst;
+			record.parllet_mst = parlletMst;
 			record.item_mst = itemMst;
 			record.amount = intAmount;
 			record.debit_date = debitDate;
@@ -268,7 +268,7 @@ public class RecordEdit extends Controller {
 		if (calledFrom.equals("dl_remainderBank"))
 			setSessionDlRtnRemBk(rec);
 		
-		//残高明細（My貯金）に戻す場合
+		//残高明細（Parllet）に戻す場合
 		if (calledFrom.equals("dl_remainderIdeal"))
 			setSessionDlRtnRemId(rec);
 	}
@@ -316,20 +316,20 @@ public class RecordEdit extends Controller {
 				if (bolClear) session.put(Common.FLTR_DL_BAL_HDLG_ID, "");
 			}
 			
-			//取扱(My貯金)
+			//取扱(Parllet)
 			if (!strIdealDepositId.equals("")) {
 				boolean bolClear = false;
 				if (Long.parseLong(strIdealDepositId)==-2) {
-					if (rec.ideal_deposit_mst==null)
+					if (rec.parllet_mst==null)
 						bolClear = true;
 				} else if (Long.parseLong(strIdealDepositId)==-1) {
-					if (rec.ideal_deposit_mst!=null)
+					if (rec.parllet_mst!=null)
 						bolClear = true;
 				} else {
-					if (rec.ideal_deposit_mst==null) {
+					if (rec.parllet_mst==null) {
 						bolClear = true;
 					} else {
-						if (rec.ideal_deposit_mst.id!=Long.parseLong(strIdealDepositId))
+						if (rec.parllet_mst.id!=Long.parseLong(strIdealDepositId))
 							bolClear = true;
 					}
 				}
@@ -385,7 +385,7 @@ public class RecordEdit extends Controller {
 	}
 	
 	/**
-	 * 明細表の絞り込み条件を、作成データにやんわり合わせる（残高明細（My貯金）に戻す場合）
+	 * 明細表の絞り込み条件を、作成データにやんわり合わせる（残高明細（Parllet）に戻す場合）
 	 * @param rec
 	 */
 	private void setSessionDlRtnRemId(
@@ -399,10 +399,10 @@ public class RecordEdit extends Controller {
 			//引落日
 			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), Common.FLTR_DL_RI_DDTE_FR, Common.FLTR_DL_RI_DDTE_TO);
 			
-			//取扱(My貯金)
+			//取扱(Parllet)
 			if (!strIdealDepositId.equals("") &&
-					rec.ideal_deposit_mst!=null &&
-					rec.ideal_deposit_mst.id!=Long.parseLong(strIdealDepositId))
+					rec.parllet_mst!=null &&
+					rec.parllet_mst.id!=Long.parseLong(strIdealDepositId))
 				session.put(Common.FLTR_DL_RI_IDEPO_ID, "");
 		}
 	}

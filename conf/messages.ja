@@ -31,13 +31,14 @@ views.common.combo.notrequired=(なし)
 views.common.combo.all=すべて
 views.common.combo.space=(空白)
 views.common.combo.notspace=(空白以外)
+views.common.combo.new=新規作成
 views.common.update.list=リスト
 views.common.update.add=追加
 views.common.update.edit=編集
 views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
 views.common.menu.toDlBalance=収支明細へ
 views.common.menu.toDlRemainderBank=残高明細（口座系）へ
-views.common.menu.toDlRemainderIdeal=残高明細（My貯金）へ
+views.common.menu.toDlRemainderIdeal=残高明細（Parllet）へ
 views.common.menu.toRecordAdd=新規家計簿入力
 views.common.menu.toRecordEdit=このデータを編集
 views.common.btn.cancel=キャンセル
@@ -47,6 +48,11 @@ views.common.lbl.edit=編集
 views.common.data=データ
 views.common.update=更新
 views.common.day=日
+
+views.name.balanceTable=balanceTable
+views.name.dlgFrmUpdRec=dialogFrmUpdRec
+views.name.dlHeader=dl_header
+views.name.recordEdit=recordEdit
 
 views.application.tools.home=ホーム
 views.index.sinup.normal.title=新規ユーザー登録
@@ -74,7 +80,7 @@ views.login.fbLogin.err.length2=文字以上
 views.login.fbLogin.err.length3=文字以下である必要があります。
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
-views.detaillist.remainderIdeal.title=残高明細（My貯金）
+views.detaillist.remainderIdeal.title=残高明細（Parllet）
 views.detaillist.remainderBank.balanceBroughtForward=繰越金
 views.detaillist=明細表
 views.detaillist.diff=差額
@@ -82,7 +88,7 @@ views.detaillist.remainder=残高
 views.detaillist.remainderCommon.out=引出
 views.detaillist.remainderCommon.in=預入
 views.detaillist.remainder.err.noBank=口座か電子マネーの設定がまだ無いようです。
-views.detaillist.remainder.err.noIdeal=My貯金の設定がまだ無いようです。
+views.detaillist.remainder.err.noIdeal=Parlletの設定がまだ無いようです。
 views.detaillist.remainder.err.tryLater=設定後にご利用下さい。
 views.dailyaccount.dailyaccount=日計表
 views.dailyaccount.balancetable=残高表
@@ -95,7 +101,7 @@ views.dailyaccount.movetype.days.pre=前の5日
 views.dailyaccount.movetype.days.next=次の5日
 views.dailyaccount.lbl.monthBudget=月予算
 views.dailyaccount.lbl.monthSum=月計
-views.dailyaccount.lbl.idepoLink=My貯金から
+views.dailyaccount.lbl.idepoLink=Parlletから
 views.dailyaccount.lbl.budget.subject=予算対象
 views.dailyaccount.lbl.budget.notSubject=予算対象外
 views.balancetable.lbl.zero_hidden=残高０を隠す
@@ -105,7 +111,7 @@ views.config.cf_bank=口座
 views.config.cf_creca=クレジットカード
 views.config.cf_emoney=電子マネー
 views.config.cf_item=項目
-views.config.cf_idealdepo=My貯金
+views.config.cf_idealdepo=Parllet
 views.config.cf_creca.day=日
 views.config.cf_creca.lastday=末日
 views.config.cf_handling_edit.del.alert=この&{%s}を使用して作られた&{%s}があるため削除できません
@@ -135,8 +141,28 @@ views.config.cf_hauser.fbLinkage.break.notes4=Facebook連携を解除してよ�
 views.config.cf_hauser_pw.crt=現在の
 views.config.cf_hauser_pw.new=新しい
 
+views.pplRecurringPayments.receipt.title=支払最終確認
+views.pplRecurringPayments.receipt.h1=支払の最終確認
+views.pplRecurringPayments.receipt.defaultPayment=既定の支払い方法
+views.pplRecurringPayments.receipt.pay.firstDay=約１ヶ月後
+views.pplRecurringPayments.receipt.recCnt.before=100
+views.pplRecurringPayments.receipt.recCnt.after=1,000,000
+views.pplRecurringPayments.receipt.text1=「&{%s}」ボタンを押していただくことで、
+views.pplRecurringPayments.receipt.text2=Paypalの
+views.pplRecurringPayments.receipt.text3=に基づいて支払が行われます。
+views.pplRecurringPayments.receipt.text4=最初の支払は
+views.pplRecurringPayments.receipt.text5=からです。
+views.pplRecurringPayments.receipt.text6=正常に完了しますと、登録可能レコード数が 
+views.pplRecurringPayments.receipt.text7=に上がります。
+views.pplRecurringPayments.receipt.lbl1=支払い間隔：
+views.pplRecurringPayments.receipt.lbl2=1回あたりの支払の金額：
+views.pplRecurringPayments.receipt.pay.interval=月払い
+views.pplRecurringPayments.receipt.pay.amount=100円
+views.pplRecurringPayments.receipt.btn.confirm=支払を確定する
+
+
 views.dialogConfirm.case.bkem=口座か電子マネー
-views.dialogConfirm.case.ideal=取扱（My貯金）
+views.dialogConfirm.case.ideal=取扱（Parllet）
 views.dialogConfirm.case.itemIn=項目（収入）
 views.dialogConfirm.case.itemOut=項目（支出）
 views.dialogConfirm.suffix.title=がありません
@@ -169,8 +195,8 @@ ItemMst=項目
 ItemMsts=項目
 HandlingMst=取扱
 HandlingMsts=取扱
-IdealDepositMst=My貯金
-IdealDepositMsts=My貯金
+ParlletMst=Parllet
+ParlletMsts=Parllet
 Budget=予算データ
 Budgets=予算データ
 Record=収支データ
@@ -194,7 +220,7 @@ handling_mst=取扱（実際）
 debit_date=引落日
 remarks=備考
 secret_remarks=備考（非公開）
-ideal_deposit_mst=取扱（My貯金）
+parllet_mst=取扱（Parllet）
 secret_rec_flg=非公開レコード
 
 # HandlingMstの項目名
@@ -208,8 +234,8 @@ invalidity_flg=無効化（解約・しばらく利用しない等）
 # ItemMstの項目名
 item_name=項目名
 
-# IdealDepositMstの項目名
-ideal_deposit_name=My貯金名
+# ParlletMstの項目名
+parllet_name=Parllet名
 
 # Budgetの項目名
 year=年
@@ -228,10 +254,10 @@ BalanceType.in=収入
 BalanceType.out=支出
 BalanceType.bank_in=口座預入
 BalanceType.bank_out=口座引出
-BalanceType.ideal_deposit_in=My貯金預入
-BalanceType.ideal_deposit_out=My貯金引出
-BalanceType.ideal_deposit_inOut=My貯金預入・引出
-BalanceType.out_ideal_deposit=My貯金から支払
+BalanceType.parllet_in=Parllet預入
+BalanceType.parllet_out=Parllet引出
+BalanceType.parllet_inOut=Parllet預入・引出
+BalanceType.out_parllet=Parlletから支払
 
 # 取扱(実際)種類(HandlingType)
 HandlingType.cash=現金
@@ -239,14 +265,14 @@ HandlingType.bank=口座
 HandlingType.creca=クレジットカード
 HandlingType.emoney=電子マネー
 
-# 取扱(My貯金)種類(IdepoType)
-IdepoType.idepo=My貯金
+# 取扱(Parllet)種類(IdepoType)
+IdepoType.idepo=Parllet
 
 # 残高種類(RemainderType)
 RemainderType.total=残高合計
 RemainderType.real=実際の残高
-RemainderType.ideal_deposit=My貯金の残高
-RemainderType.not_ideal_deposit=My貯金してないお金
+RemainderType.parllet=Parlletの残高
+RemainderType.not_parllet=Parlletに入れてないお金
 
 
 # 引落月(DebitMonth)

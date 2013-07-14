@@ -169,14 +169,14 @@ jQuery(function(){
 		</div>
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column dl_head">
-			&{'ideal_deposit_mst'}<br>
-			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="h_ideal_deposit_id">
-				<option value="0"${h_ideal_deposit_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
+			&{'parllet_mst'}<br>
+			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="h_parllet_id">
+				<option value="0"${h_parllet_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
 				#{list items:iDepos, as:'iDepo'}
-				<option value="${iDepo.id}"${h_ideal_deposit_id==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
+				<option value="${iDepo.id}"${h_parllet_id==iDepo.id ? ' selected' : ''}>${iDepo.parllet_name}</option>
 				#{/list}
-				<option value="-1"${h_ideal_deposit_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
-				<option value="-2"${h_ideal_deposit_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
+				<option value="-1"${h_parllet_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
+				<option value="-2"${h_parllet_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
 			</select>
 		</div>
 		<!-- 項目 -->
@@ -294,7 +294,7 @@ jQuery(function(){
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
-			${record?.ideal_deposit_mst?.ideal_deposit_name}
+			${record?.parllet_mst?.parllet_name}
 		  </span>
 		</div>
 		<!-- 項目 -->

@@ -132,10 +132,10 @@ jQuery(function(){
 		</div>
 		<!-- 取扱(My貯金) -->
 		<div class="dl_common_column dl_head">
-			&{'ideal_deposit_mst'}<br>
+			&{'parllet_mst'}<br>
 			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="dlRiHdIdealDepositId">
 				#{list items:iDepos, as:'iDepo'}
-				<option value="${iDepo.id}"${dlRiHdIdealDepositId==iDepo.id ? ' selected' : ''}>${iDepo.ideal_deposit_name}</option>
+				<option value="${iDepo.id}"${dlRiHdIdealDepositId==iDepo.id ? ' selected' : ''}>${iDepo.parllet_name}</option>
 				#{/list}
 			</select>
 		</div>
@@ -235,13 +235,13 @@ jQuery(function(){
 		<!-- 引出 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="padR4">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.ideal_deposit_out') ? wdrr?.lngAmount.format('###,###') : ''}
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.parllet_out') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
 		</div>
 		<!-- 預入 -->
 		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="padR4">
-			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.ideal_deposit_in') ? wdrr?.lngAmount.format('###,###') : ''}
+			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.parllet_in') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
 		</div>
 		<!-- お店 -->

@@ -21,7 +21,7 @@ public class Budget extends Model {
 	@ManyToOne
 	public ItemMst item_mst;					//項目
 	@ManyToOne
-	public IdealDepositMst ideal_deposit_mst;	//取扱(My貯金)
+	public ParlletMst parllet_mst;				//取扱(Parllet)
 	
 	public Budget(
 			HaUser ha_user,
@@ -29,19 +29,19 @@ public class Budget extends Model {
 			Integer month,
 			Integer amount,
 			ItemMst item_mst,
-			IdealDepositMst ideal_deposit_mst
+			ParlletMst parllet_mst
 			) {
 		this.ha_user = ha_user;
 		this.year = year;
 		this.month = month;
 		this.amount = amount;
 		this.item_mst = item_mst;
-		this.ideal_deposit_mst = ideal_deposit_mst;
+		this.parllet_mst = parllet_mst;
 	}
 	public String toString() {
 		String sRtn = "";
 		if(item_mst==null) {
-			sRtn = year + "/" + month + " " + ideal_deposit_mst.ideal_deposit_name;
+			sRtn = year + "/" + month + " " + parllet_mst.parllet_name;
 		} else {
 			sRtn = year + "/" + month + " " + item_mst.item_name;
 		}

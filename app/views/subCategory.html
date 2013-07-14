@@ -1,0 +1,60 @@
+<script type="text/javascript">
+<!--
+/* 無効化フラグが立ったデータを編集する際の条件用 */
+%{
+	invalidityRecEdit = ''
+	if(record?.handling_mst?.id) {
+		invalidityRecEdit = ' or id = ' + record.handling_mst.id 
+	}
+}%
+
+/* 「収支種類」ごとの「項目」のサブカテゴリー */
+var subCatItem = {
+  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
+		bType.balance_type_name==messages.get('BalanceType.out')}
+	  "${bType.id}":[
+		#{list items:models.ItemMst.find("ha_user = '${haUser.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+		  {
+			"key":"${item.id}",
+			"value":"${item.item_name}"
+		  },
+		#{/list}
+	  ],
+	#{/if}
+  #{/list}
+},
+/* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（大分類） */
+subCatHdlgLarge = {
+  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
+		bType.balance_type_name==messages.get('BalanceType.out')}
+	  "${bType.id}":"ALL",
+	#{/if}
+	#{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
+		bType.balance_type_name==messages.get('BalanceType.bank_out')}
+	  "${bType.id}":"BANK",
+	#{/if}
+  #{/list}
+},
+/* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（小分類） */
+subCatHdlgSmall = {
+  "ALL":[
+	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and (invalidity_flg = false ${invalidityRecEdit} ) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	  {
+		"key":"${handling.id}",
+		"value":"${handling.handling_name}"
+	  },
+	  #{/list}
+  ],
+  "BANK":[
+	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	  {
+		"key":"${handling.id}",
+		"value":"${handling.handling_name}"
+	  },
+	  #{/list}
+  ],
+};
+// -->
+</script>

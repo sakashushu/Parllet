@@ -30,7 +30,7 @@ import javax.mail.internet.MimeUtility;
 import org.postgresql.translation.messages_bg;
 
 import controllers.Common.RefHandlingMst;
-import controllers.Common.RefIdealDepositMst;
+import controllers.Common.RefParlletMst;
 import controllers.Common.RefItemMst;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -39,7 +39,7 @@ import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
 import models.HandlingTypeMst;
-import models.IdealDepositMst;
+import models.ParlletMst;
 import models.ItemMst;
 import models.Record;
 
@@ -96,7 +96,7 @@ public class Config extends Controller {
 						balance_type_name = "口座預入";
 					}
 					String handling_name = strAryColumn[2];				//取扱
-					String ideal_deposit_name = strAryColumn[3];		//My貯金
+					String parllet_name = strAryColumn[3];				//Parllet
 					String item_name = strAryColumn[4];					//項目
 					Integer amount = Integer.parseInt(strAryColumn[5]);	//金額
 					String debit_date = strAryColumn[6];				//引落日
@@ -128,7 +128,7 @@ public class Config extends Controller {
 								debit_date += " 00:00";
 							debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 						}
-						IdealDepositMst idealDepositMst = IdealDepositMst.find("ha_user = ? and ideal_deposit_name = ?", haUser, ideal_deposit_name).first(); 
+						ParlletMst parlletMst = ParlletMst.find("ha_user = ? and parllet_name = ?", haUser, parllet_name).first(); 
 						
 						// 収支データの作成
 						record = new Record(
@@ -136,7 +136,7 @@ public class Config extends Controller {
 								paymentDate,
 								balanceTypeMst,
 								handlingMst,
-								idealDepositMst,
+								parlletMst,
 								itemMst,
 								null,
 								amount,
@@ -191,7 +191,7 @@ public class Config extends Controller {
 									debit_date += " 00:00";
 								debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 							}
-							IdealDepositMst idealDepositMst = IdealDepositMst.find("ha_user = ? and ideal_deposit_name = ?", haUser, ideal_deposit_name).first(); 
+							ParlletMst parlletMst = ParlletMst.find("ha_user = ? and parllet_name = ?", haUser, parllet_name).first(); 
 							
 							// 収支データの作成
 							record = new Record(
@@ -199,7 +199,7 @@ public class Config extends Controller {
 									paymentDate,
 									balanceTypeMst,
 									handlingMst,
-									idealDepositMst,
+									parlletMst,
 									itemMst,
 									null,
 									amount,
@@ -300,8 +300,8 @@ public class Config extends Controller {
 		sOutCsv += System.getProperty("line.separator");	//改行
 		
 		//明細行
-//		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
-		List<Record> records = Record.find(" payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, ideal_deposit_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+//		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+		List<Record> records = Record.find(" payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
 		for(Record rec : records) {
 			iCnt = 0;
 			
@@ -329,7 +329,7 @@ public class Config extends Controller {
 						fld.getType() == BalanceTypeMst.class ||
 						fld.getType() == ItemMst.class ||
 						fld.getType() == HandlingMst.class ||
-						fld.getType() == IdealDepositMst.class) {
+						fld.getType() == ParlletMst.class) {
 					bDblQwtFlg = true;
 				}
 				if(bDblQwtFlg) sOutCsv += "\"";
@@ -416,11 +416,11 @@ public class Config extends Controller {
 	}
 	
 	/**
-	 * My貯金編集（リスト）
+	 * Parllet編集（リスト）
 	 */
 	public static void cf_idealdepo_list() {
-		List<IdealDepositMst> idealDepositMsts = IdealDepositMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq, id").fetch();
-		render("@cf_idealdepo_list", idealDepositMsts);
+		List<ParlletMst> parlletMsts = ParlletMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq, id").fetch();
+		render("@cf_idealdepo_list", parlletMsts);
 	}
 	
 	/**
@@ -489,12 +489,12 @@ public class Config extends Controller {
 	}
 	
 	/**
-	 * My貯金編集
+	 * Parllet編集
 	 * @param id
 	 */
 	public static void cf_idealdepo_edit(Long id) {
 		if(id != null) {
-			IdealDepositMst iDM = IdealDepositMst.findById(id);
+			ParlletMst iDM = ParlletMst.findById(id);
 			render(iDM);
 		}
 		render();
@@ -659,22 +659,22 @@ public class Config extends Controller {
 	}
 	
 	/**
-	 * My貯金保存
+	 * Parllet保存
 	 * @param id
-	 * @param iDM_ideal_deposit_name
+	 * @param iDM_parllet_name
 	 * @param iDM_zero_hidden
 	 */
 	public static void cf_idealdepo_save(
 			Long id,
-			String iDM_ideal_deposit_name,
+			String iDM_parllet_name,
 			Boolean iDM_zero_hidden
 			) {
-		RefIdealDepositMst refItemMst = new RefIdealDepositMst();
+		RefParlletMst refItemMst = new RefParlletMst();
 		
-		//IdealDepositMst保存
+		//ParlletMst保存
 		Common cmn = new Common();
-		Integer iRtn = cmn.ideal_deposit_mst_save(id, iDM_ideal_deposit_name, iDM_zero_hidden, refItemMst);
-		IdealDepositMst iDM = refItemMst.idealDepositMst;
+		Integer iRtn = cmn.parllet_mst_save(id, iDM_parllet_name, iDM_zero_hidden, refItemMst);
+		ParlletMst iDM = refItemMst.parlletMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
@@ -725,12 +725,12 @@ public class Config extends Controller {
 	}
 	
 	/**
-	 * 「My貯金」削除
+	 * 「Parllet」削除
 	 * @param id
 	 */
 	public static void cf_idealdepo_del(Long id) {
 		// 項目データの読み出し
-		IdealDepositMst iDM = IdealDepositMst.findById(id);
+		ParlletMst iDM = ParlletMst.findById(id);
 		// 削除
 		iDM.delete();
 
@@ -806,7 +806,7 @@ public class Config extends Controller {
 	}
 	
 	/**
-	 * IdealDepositMstの並べ替え
+	 * ParlletMstの並べ替え
 	 * @param id
 	 * @param order
 	 */
@@ -817,16 +817,16 @@ public class Config extends Controller {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
 			// 「取扱（実際）」データの読み出し
-			IdealDepositMst idealDepositMst = IdealDepositMst.findById(lngId);
+			ParlletMst parlletMst = ParlletMst.findById(lngId);
 			// 編集
-			idealDepositMst.order_seq = intOrder.next();
+			parlletMst.order_seq = intOrder.next();
 			// Validate
-			validation.valid(idealDepositMst);
+			validation.valid(parlletMst);
 			if(validation.hasErrors()) {
 				break;
 		    }
 			// 保存
-			idealDepositMst.save();
+			parlletMst.save();
 		}
 		
 		cf_idealdepo_list();

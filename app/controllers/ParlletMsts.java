@@ -5,6 +5,6 @@ import play.mvc.*;
 
 @Check("admin")
 @With(Secure.class)
-public class IdealDepositMsts extends CRUD {
+public class ParlletMsts extends CRUD {
 
 }

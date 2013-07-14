@@ -30,7 +30,7 @@ public class Record extends Model {
 	public HandlingMst handling_mst;			//取扱(実際)
 	@ManyToOne
 	@CheckWith(IdealDepositConditionallyRequiredCheck.class)
-	public IdealDepositMst ideal_deposit_mst;	//取扱(My貯金)
+	public ParlletMst parllet_mst;			//取扱(Parllet)
 	@ManyToOne
 	@CheckWith(ItemConditionallyRequiredCheck.class)
 	public ItemMst item_mst;					//項目
@@ -57,7 +57,7 @@ public class Record extends Model {
 			Date payment_date,
 			BalanceTypeMst balance_type,
 			HandlingMst handling_mst,
-			IdealDepositMst ideal_deposit_mst,
+			ParlletMst parllet_mst,
 			ItemMst item_mst,
 			String detail_mst,
 			Integer amount,
@@ -74,7 +74,7 @@ public class Record extends Model {
 		this.payment_date = payment_date;
 		this.balance_type_mst = balance_type;
 		this.handling_mst = handling_mst;
-		this.ideal_deposit_mst = ideal_deposit_mst;
+		this.parllet_mst = parllet_mst;
 		this.item_mst = item_mst;
 		this.detail_mst = detail_mst;
 		this.amount = amount;
@@ -142,7 +142,7 @@ public class Record extends Model {
 	}
 	
 	/**
-	 * 「収支種類」がMy貯金預入・My貯金引出の時は「取扱(My貯金)」は必須
+	 * 「収支種類」がParllet預入・Parllet引出の時は「取扱(Parllet)」は必須
 	 * @author sakashushu
 	 *
 	 */
@@ -150,9 +150,9 @@ public class Record extends Model {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
 			if(record.balance_type_mst!=null) {
-				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.ideal_deposit_in")) ||
-						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.ideal_deposit_out"))) &&
-						(record.ideal_deposit_mst==null)) {
+				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.parllet_in")) ||
+						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.parllet_out"))) &&
+						(record.parllet_mst==null)) {
 					setMessage(Messages.get("validation.required"));
 					return false;
 				}

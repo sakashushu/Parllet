@@ -13,7 +13,7 @@ import play.db.jpa.Model;
 import play.i18n.Messages;
 
 @Entity
-public class IdealDepositMst extends Model {
+public class ParlletMst extends Model {
 
 	@Required
 	@ManyToOne
@@ -21,43 +21,43 @@ public class IdealDepositMst extends Model {
 	
 	@Required
 	@MaxSize(value=80)
-	@CheckWith(IdealDepositNameMultipleCheck.class)
-	public String ideal_deposit_name;
+	@CheckWith(ParlletNameMultipleCheck.class)
+	public String parllet_name;
 	
 	public Boolean zero_hidden;					//残高ゼロの時には残高表の対象外とする
 	
 	public Integer order_seq;
 	
-	public IdealDepositMst(
+	public ParlletMst(
 			HaUser ha_user,
-			String ideal_deposit_name,
+			String parllet_name,
 			Boolean zero_hidden,
 			Integer order_seq
 			) {
 		this.ha_user = ha_user;
-		this.ideal_deposit_name = ideal_deposit_name;
+		this.parllet_name = parllet_name;
 		this.zero_hidden = zero_hidden;
 		this.order_seq = order_seq;
 	}
 
 	public String toString() {
-        return ideal_deposit_name;
+        return parllet_name;
 	}
 	
 	/**
-	 * 「My貯金名」は重複登録不可
+	 * 「Parllet名」は重複登録不可
 	 * @author sakashushu
 	 *
 	 */
-	static class IdealDepositNameMultipleCheck extends Check {
+	static class ParlletNameMultipleCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
-			IdealDepositMst idealDepositMst = (IdealDepositMst)validatedObject;
-			IdealDepositMst idmExist = null;
-			idmExist = IdealDepositMst.find(
-					"ha_user = ? and ideal_deposit_name = ?",
-					idealDepositMst.ha_user,
-					idealDepositMst.ideal_deposit_name).first();
-			if(idmExist!=null && idmExist.id!=idealDepositMst.id) {
+			ParlletMst parlletMst = (ParlletMst)validatedObject;
+			ParlletMst idmExist = null;
+			idmExist = ParlletMst.find(
+					"ha_user = ? and parllet_name = ?",
+					parlletMst.ha_user,
+					parlletMst.parllet_name).first();
+			if(idmExist!=null && idmExist.id!=parlletMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

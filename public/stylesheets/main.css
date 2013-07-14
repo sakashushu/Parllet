@@ -186,7 +186,7 @@ a.aBtn:hover span{
 	margin-bottom: 12px;
 	font-size: 80%;
 	margin-right: 15px;
-	min-width: 25px;
+	min-width: 80px;
 	min-height: 14px;
 }
 .dfurElem input, .dfurElem select, .dfurElem textarea {
@@ -198,6 +198,10 @@ a.aBtn:hover span{
 }
 .dfurElem div {
 	height: 12px;
+}
+
+.editableInput, .editableTextarea {
+	cursor: pointer;
 }
 
 
@@ -1033,7 +1037,7 @@ fieldset {
 	z-index: 99999;
 	border: solid 1px #CCC;
 	background: #EEE;
-	padding: 0px;
+	padding: 10px;
 	margin: 0px;
 	display: none;
 }
@@ -1056,7 +1060,8 @@ fieldset {
 }
 .contextMenu LI.hover A {
 	color: #FFF;
-	background-color: #3399FF;
+//	background-color: #3399FF;
+	background-color: red;
 }
 .contextMenu LI.disabled A {
 	color: #AAA;
@@ -1490,6 +1495,14 @@ label.fieldName {
 	font-weight: bold;
 	color: #111;
 }
+#receipt h1 span {
+	font-size: 24px;
+}
+
+#receipt #instructions {
+	padding-top: 10px;
+	margin-bottom: 30px;
+}
 
 #receipt .box {
 	border: 1px solid #aaa;
@@ -1498,6 +1511,34 @@ label.fieldName {
 	text-align: left;
 	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
 }
+#receipt .box #inner {
+	width: 400px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#receipt .box #inner label {
+	width: 240px;
+	float: left;
+}
+#receipt .box #inner div {
+	font-weight: bold;
+}
+
+#receipt #flameConf {
+	margin-top: 40px;
+	width: 100%;
+}
+#receipt #flameConf div {
+	width:132px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#receipt #flameConf div input[type="submit"] {
+	padding:5px 10px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
 
 /** Pagination **/
 

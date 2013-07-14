@@ -23,67 +23,22 @@ myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
 <script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
+#{include 'subCategory.html' /}
+
 <script type="text/javascript">
 <!--
 /* 無効化フラグが立ったデータを編集する際の条件用 */
 %{
-	invalidityRecEdit = ''
+	invalidityRecEdit2 = ''
 	if(record?.handling_mst?.id) {
-		invalidityRecEdit = ' or id = ' + record.handling_mst.id 
+		invalidityRecEdit2 = ' or id = ' + record.handling_mst.id 
 	}
 }%
 
-/* 「収支種類」ごとの「項目」のサブカテゴリー */
-var subCatItem = {
-  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
-		bType.balance_type_name==messages.get('BalanceType.out')}
-	  "${bType.id}":[
-		#{list items:models.ItemMst.find("ha_user = '${haUser.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
-		  {
-			"key":"${item.id}",
-			"value":"${item.item_name}"
-		  },
-		#{/list}
-	  ],
-	#{/if}
-  #{/list}
-},
-/* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（大分類） */
-subCatHdlgLarge = {
-  #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
-	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
-		bType.balance_type_name==messages.get('BalanceType.out')}
-	  "${bType.id}":"ALL",
-	#{/if}
-	#{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
-		bType.balance_type_name==messages.get('BalanceType.bank_out')}
-	  "${bType.id}":"BANK",
-	#{/if}
-  #{/list}
-},
-/* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（小分類） */
-subCatHdlgSmall = {
-  "ALL":[
-	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and (invalidity_flg = false ${invalidityRecEdit} ) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
-	  {
-		"key":"${handling.id}",
-		"value":"${handling.handling_name}"
-	  },
-	  #{/list}
-  ],
-  "BANK":[
-	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
-	  {
-		"key":"${handling.id}",
-		"value":"${handling.handling_name}"
-	  },
-	  #{/list}
-  ],
-},
-preBtype;
+var TEMPLATE_NAME = "&{'views.name.recordEdit'}",
+	preBType;
 jQuery(function() {
-	preBtype = jQuery('#balance_type_mst').val();
+	preBType = jQuery('#balance_type_mst').val();
 	
 	/* 起動時の状態調整 */
 	
@@ -101,7 +56,7 @@ jQuery(function() {
 	
 	jQuery('#balance_type_mst').keypress(function(e){
 		if ((e.which && e.which===13) || (e.keyCode && e.keyCode===13)) {
-			preBtype = preBtype;
+			preBType = preBType;
 			return false;
 		}else{
 			return true;
@@ -134,9 +89,9 @@ jQuery(function() {
 			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
 			
 		//「収支種類」がMy貯金預入・My貯金引出で、「取扱(My貯金)」のリストがゼロの時
-		} else if((jText==="&{'BalanceType.ideal_deposit_in'}" ||
-					jText==="&{'BalanceType.ideal_deposit_out'}") &&
-				jQuery('#ideal_deposit_mst').children().length===1) {
+		} else if((jText==="&{'BalanceType.parllet_in'}" ||
+					jText==="&{'BalanceType.parllet_out'}") &&
+				jQuery('#parllet_mst').children().length===1) {
 			e.preventDefault();
 			//My貯金作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.ideal'}", jText);
@@ -150,7 +105,7 @@ jQuery(function() {
 			
 			//「取扱(My貯金)」の状態調整
 			conditionAdjust_IdealDepo();
-			preBtype = jQuery('#balance_type_mst').val();
+			preBType = jQuery('#balance_type_mst').val();
 			
 			//「項目」の状態調整
 			conditionAdjust_Item();
@@ -250,12 +205,12 @@ function remakeList_Handling() {
 function conditionAdjust_IdealDepo() {
 	if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.bank_in'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.bank_out'}") {
-		jQuery('#ideal_deposit_mst').val('0');  // (なし) を選択
-		jQuery('#ideal_deposit_mst_lbl').attr("disabled", "disabled");
-		jQuery('#ideal_deposit_mst').attr("disabled", "disabled");
+		jQuery('#parllet_mst').val('0');  // (なし) を選択
+		jQuery('#parllet_mst_lbl').attr("disabled", "disabled");
+		jQuery('#parllet_mst').attr("disabled", "disabled");
 	} else {
-		jQuery('#ideal_deposit_mst_lbl').removeAttr("disabled");
-		jQuery('#ideal_deposit_mst').removeAttr("disabled");
+		jQuery('#parllet_mst_lbl').removeAttr("disabled");
+		jQuery('#parllet_mst').removeAttr("disabled");
 	}
 }
 
@@ -316,8 +271,8 @@ function conditionDefDateAdjust_DebitDate() {
 	//「取扱(実際)」が現金以外の時
 	} else {
 		//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
-		if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.ideal_deposit_in'}" ||
-				jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.ideal_deposit_out'}"
+		if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.parllet_in'}" ||
+				jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.parllet_out'}"
 				) {
 			jQuery('#debit_date_lbl').attr("disabled", "disabled");
 			jQuery('#debit_date').attr("disabled", "disabled");
@@ -370,33 +325,36 @@ function conditionDefDateAdjust_DebitDate() {
 function whenDialogConfirmClosed(intRslt) {
 	switch (intRslt) {
 		case 0:
-			jQuery('#balance_type_mst').val(preBtype);
+			jQuery('#balance_type_mst').val(preBType);
 			jQuery('#balance_type_mst').change();
 			jQuery('#balance_type_mst').focus();
 			break;
 		case 1:
 			//口座更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_bank'}");
+			openDialogFrmUpdMstRe("&{'views.config.cf_bank'}");
 			break;
 		case 2:
 			//電子マネー更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_emoney'}");
+			openDialogFrmUpdMstRe("&{'views.config.cf_emoney'}");
 			break;
 		case 3:
 			//My貯金更新フォームを開く
-			openDialogFrmUpdMst("&{'views.config.cf_idealdepo'}");
+			openDialogFrmUpdMstRe("&{'views.config.cf_idealdepo'}");
 			break;
 		case 4:
 			//項目（収入）更新フォームを開く
-			openDialogFrmUpdMst("&{'views.dialogConfirm.case.itemIn'}");
+			openDialogFrmUpdMstRe("&{'views.dialogConfirm.case.itemIn'}");
 			break;
 		case 5:
 			//項目（支出）更新フォームを開く
-			openDialogFrmUpdMst("&{'views.dialogConfirm.case.itemOut'}");
+			openDialogFrmUpdMstRe("&{'views.dialogConfirm.case.itemOut'}");
 			break;
 		default:
 			alert("dialogConfirm return value error");
 	}
+}
+function openDialogFrmUpdMstRe(strMst) {
+	openDialogFrmUpdMst(strMst, "&{'views.name.recordEdit'}");
 }
 // -->
 </script>
@@ -405,12 +363,12 @@ function whenDialogConfirmClosed(intRslt) {
 <script type="text/javascript">
 <!--
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
+function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
 		strErrMsg = "Common.updateHdlg";
 	if(strType==="&{'views.config.cf_idealdepo'}")
-		strErrMsg = "Common.updateIdepo";
+		strErrMsg = "Common.updatePrlt";
 	if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}")
 		strErrMsg = "Common.makeItem";
 	switch (intRslt) {
@@ -423,7 +381,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType==="&{'views.config.cf_idealdepo'}") {
-				jqxhrMkMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
+				jqxhrMkMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}") {
 				var strBalanceType;
@@ -446,7 +404,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 						}
 						if(strType==="&{'views.config.cf_idealdepo'}") {
 							//作成したMy貯金を取扱(My貯金)のリストに追加し、収支種類の選択変更イベントを再実行
-							jQuery('#ideal_deposit_mst').append("<option value='"+z.idMst.id+"' selected>"+z.idMst.ideal_deposit_name+"</option>");
+							jQuery('#parllet_mst').append("<option value='"+z.idMst.id+"' selected>"+z.idMst.parllet_name+"</option>");
 							jQuery('#balance_type_mst').change();
 						}
 						if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}") {
@@ -506,13 +464,13 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	if(record?.id || errors) {
 		vlPaymentDate = record?.payment_date?.format('yyyy/MM/dd HH:mm')
 		vlBalanceTypeId = record?.balance_type_mst?.id
-		vlIdealDepositId = record?.ideal_deposit_mst?.id
+		vlIdealDepositId = record?.parllet_mst?.id
 		vlItemId = record?.item_mst?.id
 		vlDebitDate = record?.debit_date?.format('yyyy/MM/dd')
 	} else {
 		vlPaymentDate = df_payment_date
 		vlBalanceTypeId = df_balance_type_id
-		vlIdealDepositId = df_ideal_deposit_id
+		vlIdealDepositId = df_parllet_id
 		vlItemId = df_item_id
 		vlDebitDate = df_debit_date
 	}
@@ -554,7 +512,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 		#{field 'handling_mst'}
 		<label id="handling_mst_lbl" class="fieldName">&{'handling_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
-			#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and (invalidity_flg = false ${invalidityRecEdit}) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+			#{list items:models.HandlingMst.find("ha_user = ${haUser.id} and (invalidity_flg = false ${invalidityRecEdit2}) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
 			<option value="${handling.id}"${record?.handling_mst?.id==handling.id ? ' selected' : ''}>${handling.handling_name}</option>
 			#{/list}
 		</select>
@@ -563,18 +521,18 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd) {
 	</div>
  
 	<div class="crudField">
-		#{field 'ideal_deposit_mst'}
-		<label id="ideal_deposit_mst_lbl" class="fieldName">&{'ideal_deposit_mst'}:</label>
+		#{field 'parllet_mst'}
+		<label id="parllet_mst_lbl" class="fieldName">&{'parllet_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
-			<option value="0"${record?.ideal_deposit_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
-			#{list items:models.IdealDepositMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
+			<option value="0"${record?.parllet_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
+			#{list items:models.ParlletMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
 <!-- 
-			<option value="${idealDeposit.id}"${record?.ideal_deposit_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
+			<option value="${idealDeposit.id}"${record?.parllet_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.parllet_name}</option>
  -->
-			<option value="${idealDeposit.id}"${vlIdealDepositId==idealDeposit.id ? ' selected' : ''}>${idealDeposit.ideal_deposit_name}</option>
+			<option value="${idealDeposit.id}"${vlIdealDepositId==idealDeposit.id ? ' selected' : ''}>${idealDeposit.parllet_name}</option>
 			#{/list}
 		</select>
-		<span class="error">#{error 'record.ideal_deposit_mst' /}</span>
+		<span class="error">#{error 'record.parllet_mst' /}</span>
 		#{/field}
 	</div>
  

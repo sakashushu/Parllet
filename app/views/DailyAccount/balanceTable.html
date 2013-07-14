@@ -4,8 +4,8 @@
 %{
 	REMAINDER_TYPE_TOTAL = messages.get('RemainderType.total')
 	REMAINDER_TYPE_REAL = messages.get('RemainderType.real')
-	REMAINDER_TYPE_IDEAL_DEPOSIT = messages.get('RemainderType.ideal_deposit')
-	REMAINDER_TYPE_NOT_IDEAL_DEPOSIT = messages.get('RemainderType.not_ideal_deposit')
+	REMAINDER_TYPE_PARLLET = messages.get('RemainderType.parllet')
+	REMAINDER_TYPE_NOT_PARLLET = messages.get('RemainderType.not_parllet')
 	HANDLING_TYPE_CASH = messages.get('HandlingType.cash')
 	HANDLING_TYPE_BANK = messages.get('HandlingType.bank')
 	HANDLING_TYPE_EMONEY = messages.get('HandlingType.emoney')
@@ -176,6 +176,7 @@ jQuery(function() {
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
+			jQuery('.context-menu-list').width(jQuery('.context-menu-list').width()*1.1);
 		}
 	});
 	jQuery.contextMenu({
@@ -188,7 +189,7 @@ jQuery(function() {
 						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}"),
 							dfurFvBType = new DfurFlgVal(true, ${lngBTypeId}),
 							dfurFvHdlg = new DfurFlgVal(false, lngUpdId),
-							dfurFvIdepo = new DfurFlgVal(false, 0),
+							dfurFvPrlt = new DfurFlgVal(false, 0),
 							dfurFvItem = new DfurFlgVal(false, 0),
 							dfurFvAmnt = new DfurFlgVal(true, null),
 							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}"),
@@ -200,7 +201,7 @@ jQuery(function() {
 								dfurFvPayDate,
 								dfurFvBType,
 								dfurFvHdlg,
-								dfurFvIdepo,
+								dfurFvPrlt,
 								dfurFvItem,
 								dfurFvAmnt,
 								dfurFvDebDate,
@@ -212,13 +213,13 @@ jQuery(function() {
 					}
 					if (key==="dialogFrmUpdMstInsBank" || key==="dialogFrmUpdMstUpdBank")
 						//口座更新フォームを開く
-						openDialogFrmUpdMst("${HANDLING_TYPE_BANK}", lngUpdId);
+						openDialogFrmUpdMstBt("${HANDLING_TYPE_BANK}", lngUpdId);
 					if (key==="dialogFrmUpdMstInsEmoney" || key==="dialogFrmUpdMstUpdEmoney")
 						//電子マネー更新フォームを開く
-						openDialogFrmUpdMst("${HANDLING_TYPE_EMONEY}", lngUpdId);
+						openDialogFrmUpdMstBt("${HANDLING_TYPE_EMONEY}", lngUpdId);
 					if (key==="dialogFrmUpdMstInsIdepo" || key==="dialogFrmUpdMstUpdIdepo")
 						//My貯金更新フォームを開く
-						openDialogFrmUpdMst("${IDEPO_TYPE_IDEPO}", lngUpdId);
+						openDialogFrmUpdMstBt("${IDEPO_TYPE_IDEPO}", lngUpdId);
 					if (key==="toDlRemainderBank") {
 						jQuery('#submitDlRemainderBank').click();
 						jQuery('body').attr("disabled", "disabled");
@@ -254,6 +255,10 @@ jQuery(function() {
 			return options;
 		}
 	});
+	function openDialogFrmUpdMstBt(strMst, lngUpdId) {
+		openDialogFrmUpdMst(strMst, "&{'views.name.balanceTable'}", lngUpdId)
+	}
+	
 	
 	jQuery('#zeroHddnBkem, #zeroHddnIdepo, #invHddnBkem').click(function() {
 		var strErrMsg = "Common.updateHaUserFlg",
@@ -330,9 +335,9 @@ function drawChart() {
 	
 	#{list items:lWDA, as:'lwda'}
 	  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-			(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+			(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 			lwda.lstWdtd[0].lAmount!=0}
-		data.addColumn('number', '${lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? lwda.sLargeCategory : lwda.sItem}');
+		data.addColumn('number', '${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem}');
 		data.addColumn({type: 'string', role: 'tooltip'});
 	  #{/if}
 	#{/list}
@@ -352,7 +357,7 @@ function drawChart() {
 				0, "",
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
 				0, "",
 			  #{/if}
@@ -367,13 +372,13 @@ function drawChart() {
 				${lwda.lstWdtd[0].lAmount}, "${lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
 				0, "",
 			  #{/if}
 			#{/list}
 		],
-		["${REMAINDER_TYPE_IDEAL_DEPOSIT}",
+		["${REMAINDER_TYPE_PARLLET}",
 			0, "",
 			#{list items:lWDA, as:'lwda'}
 			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
@@ -382,9 +387,9 @@ function drawChart() {
 				0, "",
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT) &&
+					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
-				${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+				${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
 			  #{/if}
 			#{/list}
 		],
@@ -412,17 +417,18 @@ function drawChart() {
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+%{icldDlgFrmUpdMst=1}%
 #{include 'dialogFrmUpdMst.html' /}
 <script type="text/javascript">
 <!--
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invFlgChkd, lngId) {
+function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, invFlgChkd, lngId) {
 	var strErrMsg;
 	if (lngId===null) lngId=undefined;
 	if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}")
 		strErrMsg = "Common.updateHdlg";
 	if (strType==="${IDEPO_TYPE_IDEPO}")
-		strErrMsg = "Common.updateIdepo";
+		strErrMsg = "Common.updatePrlt";
 	switch (intRslt) {
 		case 0:
 			break;
@@ -432,7 +438,7 @@ function whenDialogFrmUpdMstClosed(intRslt, strType, nameVal, zeroHddnChkd, invF
 				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngId: lngId});
 			}
 			if (strType==="${IDEPO_TYPE_IDEPO}") {
-				jqxhrUpdMst = jQuery.post('@{Common.updateIdepo}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
+				jqxhrUpdMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
 			}
 			jqxhrUpdMst
 			.done(function(z) {
@@ -477,13 +483,12 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 		case 0:
 			break;
 		case 1:
-			var jqxhrUpdMst = jQuery.post('@{Common.updateRec}', {
+			var jqxhrUpdRec = jQuery.post('@{Common.updateRec}', {
 				id: dfurRec.id,
 				payment_date: dfurRec.payment_date,
 				balance_type_mst: dfurRec.balance_type_mst_id,
 				handling_mst: dfurRec.handling_mst_id,
-//				ideal_deposit_mst: dfurRec.ideal_deposit_mst_id,
-				ideal_deposit_mst: null,
+				parllet_mst: dfurRec.parllet_mst_id,
 				item_mst: dfurRec.item_mst_id,
 				amount: dfurRec.amount,
 				debit_date: dfurRec.debit_date,
@@ -492,7 +497,7 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 				remarks: dfurRec.remarks,
 				secret_remarks: dfurRec.secret_remarks,
 				secret_rec_flg: dfurRec.secret_rec_flg});
-			jqxhrUpdMst
+			jqxhrUpdRec
 			.done(function(z) {
 				switch (z.intRslt) {
 					case 0:
@@ -718,9 +723,9 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 						#{list items:lWDA, as:'lwda'}
 						  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 								lwda.sItem==''}
-							<input type="hidden" class="bolRemIdeal" value="${REMAINDER_TYPE_IDEAL_DEPOSIT}" />
+							<input type="hidden" class="bolRemIdeal" value="${REMAINDER_TYPE_PARLLET}" />
 							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large menu_cell">
-								${REMAINDER_TYPE_IDEAL_DEPOSIT}
+								${REMAINDER_TYPE_PARLLET}
 							</div>
 							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric menu_cell">
 								<span class="padR4">${lwda.lstWdtd[0].lAmount.format('###,###')}</span>
@@ -747,18 +752,18 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
  -->
 							#{if lwda.sItem==''}
-								%{vMenuCell = lwda.sLargeCategory==REMAINDER_TYPE_IDEAL_DEPOSIT ? 'menu_cell' : ''}%
+								%{vMenuCell = lwda.sLargeCategory==REMAINDER_TYPE_PARLLET ? 'menu_cell' : ''}%
 								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large ${vMenuCell}">
 									${lwda.sLargeCategory}
 								</div>
 							#{/if}
 							#{else}
 								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${lwda.sItem==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? '' : ' menu_cell'}">
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${lwda.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}">
 									${lwda.sItem}
 								</div>
 							#{/else}
-							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${lwda.sItem==REMAINDER_TYPE_NOT_IDEAL_DEPOSIT ? '' : ' menu_cell'}">
+							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${lwda.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}">
 								<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 							</div>
 							%{leftFlg = 0}%

@@ -3,17 +3,17 @@
 
 <h3>&{'views.config.cf_idealdepo'}　&{'views.common.update.edit'}</h3>
 
-#{if idealDepositMsts?.size() > 1}
+#{if parlletMsts?.size() > 1}
 　&{'views.common.order.change'}
 #{/if}
 
 #{form @cf_ideal_orderChange()}
 <div class="objectForm sortable">
-#{list items:idealDepositMsts, as:'idealDepositMst'}
-	<p class="data ${idealDepositMst_parity} crudField">
-		<a href="@{cf_idealdepo_edit(idealDepositMst.id)}">
-		${idealDepositMst.ideal_deposit_name}</a>
-		<input type="hidden" name="id" value="${idealDepositMst.id}" />
+#{list items:parlletMsts, as:'parlletMst'}
+	<p class="data ${parlletMst_parity} crudField">
+		<a href="@{cf_idealdepo_edit(parlletMst.id)}">
+		${parlletMst.parllet_name}</a>
+		<input type="hidden" name="id" value="${parlletMst.id}" />
 		<input type="hidden" class="order" name="order" />
 	</p>
 #{/list}

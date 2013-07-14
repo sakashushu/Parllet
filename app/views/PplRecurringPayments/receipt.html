@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'支払最終確認' /}
+#{set title:messages.get('views.pplRecurringPayments.receipt.title') /}
 
 #{set 'moreMenu'}
 	#{include 'headerMenu.html' /}
@@ -20,45 +20,45 @@
 <div id="receipt">
 
 	<h1>
-	<span style="font-size: 24px;">支払の最終確認</span>
+	<span>&{'views.pplRecurringPayments.receipt.h1'}</span>
 	</h1>
 	
-	<div style="padding-top: 10px; margin-bottom: 30px;">
+	<div id="instructions">
 		<p>
-		「支払を確定する」ボタンを押していただくことで、<br>
-		Paypalの
+		&{'views.pplRecurringPayments.receipt.text1', messages.get('views.pplRecurringPayments.receipt.btn.confirm')}<br>
+		&{'views.pplRecurringPayments.receipt.text2'}
 		<a href="javascript:w=window.open('https://cms.paypal.com/jp/cgi-bin/marketingweb?cmd=_render-content&fli=true&content_ID=ua/UserAgreement_popup&locale.x=ja_JP','','scrollbars=yes,Width=640,Height=500');w.focus();">
-		既定の支払い方法
+		&{'views.pplRecurringPayments.receipt.defaultPayment'}
 		</a>
-		に基づいて支払が行われます。
+		&{'views.pplRecurringPayments.receipt.text3'}
 		</p>
 		
 		<p>
-		最初の支払は
+		&{'views.pplRecurringPayments.receipt.text4'}
 		<a href="javascript:w=window.open('http://sakashushu.com/myDpRt/paypal/oneMonthLater','','scrollbars=yes,Width=600,Height=250');w.focus();">
-		約１ヶ月後</a>
-		からです。
+		&{'views.pplRecurringPayments.receipt.pay.firstDay'}</a>
+		&{'views.pplRecurringPayments.receipt.text5'}
 		</p>
 		<p>
-		正常に完了しますと、登録可能レコード数が 100 → 1000,000 に上がります。
+		&{'views.pplRecurringPayments.receipt.text6'} &{'views.pplRecurringPayments.receipt.recCnt.before'} → &{'views.pplRecurringPayments.receipt.recCnt.after'} &{'views.pplRecurringPayments.receipt.text7'}
 		</p>
 	</div>
 
 	<div class="box">
-		<div style="width: 400px; margin-right: auto; margin-left: auto;">
-			<label style="width: 240px; float: left;">支払い方法：</label>
-			<div style="font-weight: bold;">月払い</div>
-			<label style="width: 240px; float: left;">1回あたりの支払の金額：</label>
-			<div style="font-weight: bold;">100円</div>
+		<div id="inner">
+			<label>&{'views.pplRecurringPayments.receipt.lbl1'}</label>
+			<div>&{'views.pplRecurringPayments.receipt.pay.interval'}</div>
+			<label>&{'views.pplRecurringPayments.receipt.lbl2'}</label>
+			<div>&{'views.pplRecurringPayments.receipt.pay.amount'}</div>
 			
 		</div>
 	</div>  <!-- box -->
 
-	<div style="margin-top: 40px; width: 100%;">
-		<div style="width:132px; margin-right: auto; margin-left: auto;">
+	<div id="flameConf">
+		<div>
 			#{form @confirm()}
 				<input type="hidden" value="${strPayerId}" name="payer_id" />
-				<input type="submit" value="支払を確定する" style="font-weight: bold; padding:5px 10px; font-size: 16px;" />
+				<input type="submit" value="&{'views.pplRecurringPayments.receipt.btn.confirm'}" />
 			#{/form}
 		</div>
 	</div>
