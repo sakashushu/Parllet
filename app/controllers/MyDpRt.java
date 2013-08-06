@@ -12,6 +12,19 @@ import play.mvc.*;
 public class MyDpRt extends Controller {
 
 	public static void index() {
+		if (LevelMst.count()==0L) {
+			LevelMst lM = new LevelMst(0, "LV0", 0, 100);
+			lM.save();
+			lM = new LevelMst(1, "LV1", 100, 1000000);
+			lM.save();
+			lM = new LevelMst(3, "LV3", 300, 3000000);
+			lM.save();
+			lM = new LevelMst(5, "LV5", 500, 5000000);
+			lM.save();
+			lM = new LevelMst(10, "LV10", 1000, 10000000);
+			lM.save();
+		}
+		
 		render();
 	}
 	
