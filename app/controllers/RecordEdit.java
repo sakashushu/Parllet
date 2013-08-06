@@ -246,8 +246,8 @@ public class RecordEdit extends Controller {
 			DetailList.dl_balance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		if (calledFrom.equals("dl_remainderBank"))
 			DetailList.dl_remainderBank(null, null, null, null, null, null);
-		if (calledFrom.equals("dl_remainderIdeal"))
-			DetailList.dl_remainderIdeal(null, null, null, null, null, null);
+		if (calledFrom.equals("dl_remainderPrlt"))
+			DetailList.dl_remainderPrlt(null, null, null, null, null, null);
 		
 		DetailList.dl_balance(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
@@ -269,7 +269,7 @@ public class RecordEdit extends Controller {
 			setSessionDlRtnRemBk(rec);
 		
 		//残高明細（Parllet）に戻す場合
-		if (calledFrom.equals("dl_remainderIdeal"))
+		if (calledFrom.equals("dl_remainderPrlt"))
 			setSessionDlRtnRemId(rec);
 	}
 	
@@ -285,7 +285,7 @@ public class RecordEdit extends Controller {
 				(session.get(Common.FLTR_DL_BAL_EXST_FLG).equals("true"))) {
 			String strBalanceTypeId = session.get(Common.FLTR_DL_BAL_BTYPE_ID);
 			String strHandlingId = session.get(Common.FLTR_DL_BAL_HDLG_ID);
-			String strIdealDepositId = session.get(Common.FLTR_DL_BAL_IDEPO_ID);
+			String strParlletId = session.get(Common.FLTR_DL_BAL_PRLT_ID);
 			String strItemId = session.get(Common.FLTR_DL_BAL_ITEM_ID);
 
 			//購入日
@@ -317,23 +317,23 @@ public class RecordEdit extends Controller {
 			}
 			
 			//取扱(Parllet)
-			if (!strIdealDepositId.equals("")) {
+			if (!strParlletId.equals("")) {
 				boolean bolClear = false;
-				if (Long.parseLong(strIdealDepositId)==-2) {
+				if (Long.parseLong(strParlletId)==-2) {
 					if (rec.parllet_mst==null)
 						bolClear = true;
-				} else if (Long.parseLong(strIdealDepositId)==-1) {
+				} else if (Long.parseLong(strParlletId)==-1) {
 					if (rec.parllet_mst!=null)
 						bolClear = true;
 				} else {
 					if (rec.parllet_mst==null) {
 						bolClear = true;
 					} else {
-						if (rec.parllet_mst.id!=Long.parseLong(strIdealDepositId))
+						if (rec.parllet_mst.id!=Long.parseLong(strParlletId))
 							bolClear = true;
 					}
 				}
-				if (bolClear) session.put(Common.FLTR_DL_BAL_IDEPO_ID, "");
+				if (bolClear) session.put(Common.FLTR_DL_BAL_PRLT_ID, "");
 			}
 			
 			//項目
@@ -394,16 +394,16 @@ public class RecordEdit extends Controller {
 		//セッションに絞込条件が入っている時
 		if ((session.get(Common.FLTR_DL_RI_EXST_FLG) != null) &&
 				(session.get(Common.FLTR_DL_RI_EXST_FLG).equals("true"))) {
-			String strIdealDepositId = session.get(Common.FLTR_DL_RI_IDEPO_ID);
+			String strParlletId = session.get(Common.FLTR_DL_RI_PRLT_ID);
 			
 			//引落日
 			setSessionDlDate(String.format("%1$tY/%1$tm/%1$td", rec.debit_date), Common.FLTR_DL_RI_DDTE_FR, Common.FLTR_DL_RI_DDTE_TO);
 			
 			//取扱(Parllet)
-			if (!strIdealDepositId.equals("") &&
+			if (!strParlletId.equals("") &&
 					rec.parllet_mst!=null &&
-					rec.parllet_mst.id!=Long.parseLong(strIdealDepositId))
-				session.put(Common.FLTR_DL_RI_IDEPO_ID, "");
+					rec.parllet_mst.id!=Long.parseLong(strParlletId))
+				session.put(Common.FLTR_DL_RI_PRLT_ID, "");
 		}
 	}
 	

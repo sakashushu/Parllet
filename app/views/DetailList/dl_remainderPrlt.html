@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:messages.get('views.detaillist.remainderIdeal.title') /}
+#{set title:messages.get('views.detaillist.remainderPrlt.title') /}
 
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
@@ -15,7 +15,7 @@ jQuery(function(){
 			
 			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
-			jQuery('#hIdealDepositId').val(jQuery('.ToDlIdealDepositId', jQuery(this).closest("li")).val());
+			jQuery('#hParlletId').val(jQuery('.ToDlParlletId', jQuery(this).closest("li")).val());
 			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).closest("li")).val());
 			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).closest("li")).val());
 			
@@ -46,8 +46,8 @@ jQuery(function(){
 		}
 	});
 	
-	/* 「公開フラグ」・「取扱（My貯金）」の変更イベント */
-	jQuery("#idHdSecretRecFlg, #dlCmbHdIdealDeposit").change(function() {
+	/* 「公開フラグ」・「取扱（Parllet）」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdParllet").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
@@ -87,7 +87,7 @@ jQuery(function(){
 #{include 'DetailList/dl_header.html' /}
 
 
-#{form @DetailList.dl_remainderIdeal()}
+#{form @DetailList.dl_remainderPrlt()}
 
 <!-- 絞込のサブミット（非表示） -->
 <input type="submit" id="idSrch" name="dlRiSrch" class="invisible" />
@@ -130,12 +130,12 @@ jQuery(function(){
 		<div class="dl_balance_type dl_head">
 			&{'balance_type_mst'}<br>
 		</div>
-		<!-- 取扱(My貯金) -->
+		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column dl_head">
 			&{'parllet_mst'}<br>
-			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="dlRiHdIdealDepositId">
-				#{list items:iDepos, as:'iDepo'}
-				<option value="${iDepo.id}"${dlRiHdIdealDepositId==iDepo.id ? ' selected' : ''}>${iDepo.parllet_name}</option>
+			<select id="dlCmbHdParllet" class="dl_tbl_content" name="dlRiHdParlletId">
+				#{list items:prlts, as:'prlt'}
+				<option value="${prlt.id}"${dlRiHdParlletId==prlt.id ? ' selected' : ''}>${prlt.parllet_name}</option>
 				#{/list}
 			</select>
 		</div>
@@ -177,7 +177,7 @@ jQuery(function(){
 	<li>
 		<input type="hidden" class="ToReId" value="${wdrr?.lngId}" />
 		<input type="hidden" class="ToDlBalanceTypeId" value="${wdrr?.lngBalanceTypeId}" />
-		<input type="hidden" class="ToDlIdealDepositId" value="${wdrr?.lngIdealDepositId}" />
+		<input type="hidden" class="ToDlParlletId" value="${wdrr?.lngParlletId}" />
 		<input type="hidden" class="ToDlDebitDateFr" value="${wdrr?.strDebitDate}" />
 		<input type="hidden" class="ToDlDebitDateTo" value="${wdrr?.strDebitDate}" />
 		
@@ -220,10 +220,10 @@ jQuery(function(){
 			${wdrr?.strBalanceTypeName}
 		  </span>
 		</div>
-		<!-- 取扱(My貯金) -->
+		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="dl_string">
-			${wdrr?.strIdealDepositName}
+			${wdrr?.strParlletName}
 		  </span>
 		</div>
 		<!-- 取扱(実際) -->
@@ -272,6 +272,6 @@ jQuery(function(){
 </div>  <!-- dlRb_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
-	#{DetailList.dl_remainder_ideal.pagination /}
+	#{DetailList.dl_remainder_prlt.pagination /}
 </div>
 </div>

@@ -497,7 +497,13 @@ a.aBtn:hover span{
 	height: 20px;
 	color: #633308;
 }
-
+#tools li ul li a#cfHauserEdit {
+	height: 40px;
+}
+#htProgressBar {
+	height: 4px;
+	margin-top: 5px;
+}
 
 
 /* login */
@@ -728,6 +734,15 @@ fieldset {
 	background: pink;
 }
 
+#cfhuProgressBar, #cfhuProgressBarCrt {
+	height: 18px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+.spnUsed {
+	font-size: 80%;
+}
 
 /*
  * DailyAccount
@@ -758,9 +773,6 @@ fieldset {
 #tblDailyAccount {
 	font-size: 80%;
 }
-
-
-
 
 
 /* .da_tbl_all 日計表の枠固定の上下を分けるテーブル */
@@ -972,7 +984,7 @@ fieldset {
 	border-bottom: 1px solid #aaa;
 }
 
-.da_sum_month , .da_idepo_link {
+.da_sum_month , .da_prlt_link {
 	width: 96px;
 	border-bottom: 1px solid #aaa;
 }
@@ -1163,7 +1175,7 @@ fieldset {
 	overflow: hidden;	//親要素の高さを取り戻すおまじない？
 }
 
-/* .bt_tbl_each 残高表の各々(実残高、My貯金・・・) */
+/* .bt_tbl_each 残高表の各々(実残高、Parllet・・・) */
 .bt_tbl_each {
 	list-style: none;
 	padding: 0;
@@ -1210,12 +1222,16 @@ fieldset {
 }
 
 
-/** recordEdit **/
+/*
+ * RecordEdit
+ */
 .re_w150 {
 	width:150px;
 }
 
-/** detailList **/
+/*
+ * DetailList
+ */
 //#tblDetailList {
 //	font-size: 80%;
 //	width: 100%;
@@ -1392,6 +1408,13 @@ fieldset {
 }
 
 
+/*
+ * Config
+ */
+#aUnsubscribe {
+	color: red;
+}
+
 
 /** Form **/
 
@@ -1452,6 +1475,14 @@ label.fieldName {
 .crudField .upper {
 	margin-bottom: 10px;
 }
+.crudField div.bottom {
+	height: 6px;
+}
+
+.bbsNone {
+	border-bottom-style: none;
+}
+
 
 #configListPagination {
 	padding: 4px 5px;
@@ -1483,25 +1514,32 @@ label.fieldName {
 }
 
 
-/* receipt */
+/* receipt, confirm, unsubscribe */
 
-#receipt {
+#receipt, #confirm, #unsubscribe {
 	width: 660px;
 	margin: 50px auto;
 //	text-align: center;
 }
 
-#receipt h1 {
+#receipt h1, #confirm h1, #unsubscribe h1 {
 	font-weight: bold;
 	color: #111;
 }
-#receipt h1 span {
+#receipt h1 span, #confirm h1 span, #unsubscribe h1 span {
 	font-size: 24px;
 }
 
-#receipt #instructions {
+#receipt #instructions, #confirm #instructions, #unsubscribe #instructions {
 	padding-top: 10px;
 	margin-bottom: 30px;
+}
+#confirm #instructions p.bold {
+	font-weight: bold;
+}
+#unsubscribe #instructions p.caution {
+	color: red;
+	font-weight: bold;
 }
 
 #receipt .box {
@@ -1524,19 +1562,37 @@ label.fieldName {
 	font-weight: bold;
 }
 
-#receipt #flameConf {
-	margin-top: 40px;
+#receipt #flameConf, #unsubscribe #flameConf {
+	margin-top: 30px;
 	width: 100%;
 }
 #receipt #flameConf div {
 	width:132px;
+}
+#confirm #flameConf div {
+	width:136px;
+}
+#unsubscribe #flameConf div {
+	width:320px;
+}
+#receipt #flameConf div, #confirm #flameConf div, #unsubscribe #flameConf div {
+	height: 40px;
 	margin-right: auto;
 	margin-left: auto;
+}
+#receipt #flameConf dif form {
+	line-height: 40px;
 }
 #receipt #flameConf div input[type="submit"] {
 	padding:5px 10px;
 	font-weight: bold;
 	font-size: 16px;
+}
+#confirm #flameConf div a, #unsubscribe #flameConf div a {
+	padding:5px 10px;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 40px;
 }
 
 
@@ -1590,9 +1646,13 @@ label.fieldName {
 }
 
 
+
 .invisible {
 	display: none;
 }
 .invisible2 {
 	display: none;
+}
+.toolTip {
+	z-index: 100001;
 }

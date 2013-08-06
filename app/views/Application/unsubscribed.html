@@ -1,0 +1,27 @@
+#{extends 'main.html' /}
+
+#{set 'headerTools'}
+	<li>
+		<a href="@{DailyAccount.balanceTable()}">&{'views.main.tools.login'}</a>
+	</li>
+#{/set}
+
+#{ifnot hU?.id}
+<p class="crudFlash flashError">
+	&{'validation.badCall'}
+</p>
+#{/ifnot}
+#{else}
+<div id="confirm">
+	<h1>
+	<span>&{'views.unsubscribed.title'}</span>
+	</h1>
+	
+	<div id="instructions">
+		<p>
+		&{'views.unsubscribed.text1'}
+		</p>
+	</div>
+
+</div>
+#{/else}

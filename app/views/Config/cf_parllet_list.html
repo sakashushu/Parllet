@@ -1,17 +1,22 @@
 #{extends 'Config/cf_main.html' /}
-#{set title:messages.get('views.config.cf_idealdepo')+' '+messages.get('views.common.update.list') /}
+#{set title:messages.get('views.config.cf_prlt')+' '+messages.get('views.common.update.list') /}
 
-<h3>&{'views.config.cf_idealdepo'}　&{'views.common.update.edit'}</h3>
+<h3>&{'views.config.cf_prlt'}　&{'views.common.update.edit'}</h3>
 
 #{if parlletMsts?.size() > 1}
 　&{'views.common.order.change'}
 #{/if}
 
-#{form @cf_ideal_orderChange()}
+#{form @cf_prlt_orderChange()}
 <div class="objectForm sortable">
+%{
+	crudSize = parlletMsts.size()
+	crudCnt = 0
+}%
 #{list items:parlletMsts, as:'parlletMst'}
-	<p class="data ${parlletMst_parity} crudField">
-		<a href="@{cf_idealdepo_edit(parlletMst.id)}">
+	%{crudCnt++}%
+	<p class="data ${parlletMst_parity} crudField${crudCnt!=crudSize ? '' : ' bbsNone'}">
+		<a href="@{cf_parllet_edit(parlletMst.id)}">
 		${parlletMst.parllet_name}</a>
 		<input type="hidden" name="id" value="${parlletMst.id}" />
 		<input type="hidden" class="order" name="order" />
@@ -39,6 +44,6 @@ jQuery('.sortable').sortable().bind('sortupdate', function() {
 </script>
 
 <p id="newData" >
-    <a href="@{cf_idealdepo_edit()}">
-    <span>+</span> &{'insupd.add', messages.get('views.config.cf_idealdepo')}</a>
+    <a href="@{cf_parllet_edit()}">
+    <span>+</span> &{'insupd.add', messages.get('views.config.cf_prlt')}</a>
 </p>

@@ -31,7 +31,7 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 //			jQuery('#dspZeroHddn').removeClass("invisible");
 //		}
 		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}" ||
-				strType=="&{'views.config.cf_idealdepo'}" ||
+				strType=="&{'views.config.cf_prlt'}" ||
 				lngId==null) {
 			jQuery('#dspInvFlg').addClass("invisible");
 		} else {
@@ -54,13 +54,13 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 					alert(strErrMsg);
 				});
 			}
-			if (strType=="&{'views.config.cf_idealdepo'}") {
-				strErrMsg = "Common.getClmsIdepo";
-				jqxhrGetClms = jQuery.post('@{Common.getClmsIdepo}', {lngId: lngId});
+			if (strType=="&{'views.config.cf_prlt'}") {
+				strErrMsg = "Common.getClmsPrlt";
+				jqxhrGetClms = jQuery.post('@{Common.getClmsPrlt}', {lngId: lngId});
 				jqxhrGetClms
 				.done(function(z) {
-					name.val(z.idMst.parllet_name);
-					zeroHddn.val(z.idMst.zero_hidden);
+					name.val(z.plMst.parllet_name);
+					zeroHddn.val(z.plMst.zero_hidden);
 				})
 				.fail(function() {
 					strErrMsg += " Failed";

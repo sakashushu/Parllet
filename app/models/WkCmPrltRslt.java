@@ -1,9 +1,9 @@
 package models;
 
-public class WkCmIdepoRslt {
+public class WkCmPrltRslt {
 	private int intRslt;
 	private String strErr;
-	private ParlletMst idMst;
+	private ParlletMst plMst;
 	public int getIntRslt() {
 		return intRslt;
 	}
@@ -16,10 +16,10 @@ public class WkCmIdepoRslt {
 	public void setStrErr(String strErr) {
 		this.strErr = strErr;
 	}
-	public ParlletMst getIdMst() {
-		return idMst;
+	public ParlletMst getPlMst() {
+		return plMst;
 	}
-	public void setIdMst(ParlletMst idMst) {
-		this.idMst = idMst;
+	public void setPlMst(ParlletMst plMst) {
+		this.plMst = plMst;
 	}
 }

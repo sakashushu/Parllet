@@ -1,0 +1,58 @@
+#{extends 'Config/cf_main.html' /}
+#{set title:messages.get('views.config.hauser.unsubscribe.title') /}
+
+<script type="text/javascript">
+<!-- 
+jQuery(function(){
+	jQuery('#aUnsubscribe').click(function(e) {
+		e.preventDefault();
+		jQuery('#frmUnsubscribe').submit();
+	});
+});
+// -->
+</script>
+
+
+
+#{form @cf_hauser_unsubscribe_exec(), id:'frmUnsubscribe', class:'invisible'}
+	<input type="submit" />
+#{/form}
+
+#{ifErrors}
+<p class="crudFlash flashError">
+	#{errors}
+		${error}
+	#{/errors}
+</p>
+#{/ifErrors}
+#{else}
+<div id="unsubscribe">
+
+	<h1>
+	<span>&{'views.config.hauser.unsubscribe.title'}</span>
+	</h1>
+	
+	<div id="instructions">
+		<p>
+		&{'views.config.hauser.unsubscribe.text1', messages.get('views.config.hauser.unsubscribe.btn.agreeAndUnsubscribe')}		
+		</p>
+		<p>
+		&{'views.config.hauser.unsubscribe.text2'}
+		</p>
+		<p class="caution">
+		&{'views.config.hauser.unsubscribe.text3'}
+		</p>
+		<p class="caution">
+		&{'views.config.hauser.unsubscribe.text4'}
+		</p>
+		
+	</div>
+
+	<div id="flameConf">
+		<div>
+			<a href="@{cf_hauser_edit()}" class="aBtn">&{'views.common.btn.cancel'}</a>
+			<a href="" id="aUnsubscribe" class="aBtn">&{'views.config.hauser.unsubscribe.btn.agreeAndUnsubscribe'}</a>
+		</div>
+	</div>
+</div>
+#{/else}

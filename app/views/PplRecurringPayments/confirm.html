@@ -1,5 +1,35 @@
-#{extends 'main.html' /}
+#{extends 'Config/cf_main.html' /}
 #{set title:messages.get('views.config.cf_hauser')+' '+messages.get('views.common.update.edit') /}
 
-月払いを開始しました。
+#{ifErrors}
+<p class="crudFlash flashError">
+	#{errors}
+		${error}
+	#{/errors}
+</p>
+#{/ifErrors}
+#{else}
+<div id="confirm">
+	<h1>
+	<span>&{'views.pplRecurringPayments.confirm.title'}</span>
+	</h1>
+	
+	<div id="instructions">
+		<p>
+		&{'views.pplRecurringPayments.confirm.text1'}
+		</p>
+		<p>
+		&{'views.pplRecurringPayments.confirm.text2'} <span class="bold"">${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.pplRecurringPayments.confirm.text3'}
+		</p>
+		<p>
+		&{'views.pplRecurringPayments.confirm.text4'}<a href="https://www.paypal.jp/jp/home/" target=_blank>www.paypal.com/jp</a> &{'views.pplRecurringPayments.confirm.text5'}
+		</p>
+	</div>
 
+	<div id="flameConf">
+		<div>
+			<a href="@{Config.cf_hauser_edit()}" class="aBtn">&{'views.pplRecurringPayments.confirm.btn.return'}</a>
+		</div>
+	</div>
+</div>
+#{/else}

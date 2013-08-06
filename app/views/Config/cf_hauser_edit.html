@@ -21,8 +21,8 @@ var myObj = new Object();
 myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
 
 jQuery(function() {
-	/* パスワード変更リンクEnter時はクリックイベントへ */
-	jQuery('#chgPw').keypress(function(e) {
+	/* 各種リンクEnter時はクリックイベントへ */
+	jQuery('#aChgPw, #fbLinkLink, #fbLinkBreak, #aChgLv, #aGoToUnsubscribed').keypress(function(e) {
 		if(e.which==13) {
 			e.preventDefault();
 			jQuery(this).click();
@@ -30,7 +30,7 @@ jQuery(function() {
 	});
 	
 	/* パスワード変更リンククリック時はcf_hauser_pw_editイベントへ */
-	jQuery('#chgPw').click(function(e) {
+	jQuery('#aChgPw').click(function(e) {
 		e.preventDefault();
 	   	#{if haUser.fbId && !haUser.pwSetFlg}
 			jQuery('#firstTime').val('true');
@@ -77,19 +77,69 @@ jQuery(function() {
 					"&{'views.config.cf_hauser.fbLinkage.break.pwSet2'}");
 			if(myRet) {
 				e.preventDefault();
-				jQuery('#chgPw').click();
+				jQuery('#aChgPw').click();
 			}
 		#{/else}
+	});
+	
+	
+	%{
+		htRecCnt = models.Record.count("ha_user = ?", haUser)
+		htHdlgCnt = models.HandlingMst.count("ha_user = ?", haUser)
+		htPrltCnt = models.ParlletMst.count("ha_user = ?", haUser)
+		htItemCnt = models.ItemMst.count("ha_user = ?", haUser)
+		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
+		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
+	}%
+	var vSumCnt = ${htSumCnt},
+		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	jQuery('#spnUsePrcnt').text(vUsePercent);
+	jQuery('#cfhuProgressBar').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		var value = this.getAttribute("aria-valuenow");
+		
+		jQuery(selector).css('background','Green');
+		if (value >= 90) {
+			jQuery(selector).css('background', 'Red');
+		}
+	});
+	
+	/* アカウント種類変更リンククリック時はcf_hauser_lv_editイベントへ */
+	jQuery('#aChgLv').click(function(e) {
+		e.preventDefault();
+		
+//		jQuery('#pplSetExpressCheckout').submit();
+		jQuery('#frmChgLv').submit();
+	});
+	
+	/* 退会リンククリック時はcf_hauser_unsubscribeイベントへ */
+	jQuery('#aGoToUnsubscribed').click(function(e) {
+		e.preventDefault();
+		jQuery('#frmUnsubscribe').submit();
+		jQuery('body').attr("disabled", "disabled");
 	});
 });
 // -->
 </script>
 
 <!-- パスワード変更用フォーム -->
-#{form @cf_hauser_pw_edit(), id:'frmSetPw'}
-	<input type="text" name="firstTime" id="firstTime" class="invisible" />
-	<input type="submit" class="invisible" />
+#{form @cf_hauser_pw_edit(), id:'frmSetPw', class:'invisible'}
+	<input type="text" name="firstTime" id="firstTime" />
+	<input type="submit"  />
 #{/form}
+
+<!-- アカウント種類変更用フォーム -->
+#{form @cf_hauser_lv_edit(), id:'frmChgLv', class:'invisible'}
+	<input type="submit">
+#{/form}
+
+<!-- 退会用フォーム -->
+#{form @cf_hauser_unsubscribe(), id:'frmUnsubscribe', class:'invisible'}
+	<input type="submit"  />
+#{/form}
+
 
 #{ifErrors}
 <p class="crudFlash flashError">
@@ -121,7 +171,8 @@ jQuery(function() {
 					<div class="upper">&{'views.config.cf_hauser.notSetPw'}</div>
 					%{strPw=messages.get('views.config.cf_hauser.setPw')}%
 				#{/if}
-				<a id="chgPw" class="aBtn" tabindex="0">${strPw}</a>
+				<a id="aChgPw" class="aBtn" tabindex="0">${strPw}</a>
+				<div class="bottom"></div>
 			</div>
 		</div>
 		
@@ -161,11 +212,34 @@ jQuery(function() {
 				</div>
 				<a class="aBtn" id="fbLinkLink" tabindex="0">&{'views.config.cf_hauser.fbLinkage.link'}</a>
 				#{/else}
+				<div class="bottom"></div>
 			</div>
 			#{/field}
 		</div>
 		
 		<div class="crudField">
+			<label class="fieldName">&{'views.config.cf_hauser_lv'}:</label>
+			<div class="right">
+				<div class="upper">
+					${haUser.level_mst.level_name} (${haUser.level_mst.month_amount==0 ? messages.get('views.config.cf_hauser.lv_free') :
+						messages.get('views.config.cf_hauser.lv_monthAmount')+haUser.level_mst.month_amount.format('###,###')+messages.get('views.config.cf_hauser.lv_crncyCode')})<br>
+					<span id="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / ${haUser.level_mst.rec_size.format('###,###')} &{'views.common.data'}</span>
+				</div>
+				<div id="cfhuProgressBar"></div>
+				<a class="aBtn" id="aChgLv" tabindex="0">&{'views.config.cf_hauser.chgLv'}</a>
+				<div class="bottom"></div>
+			</div>
+		</div>
+		
+		<div class="crudField">
+			<label class="fieldName">Parlletを退会:</label>
+			<div class="right">
+				<a id="aGoToUnsubscribed" class="aBtn" tabindex="0">退会手続きに進む</a>
+			</div>
+			<div class="bottom"></div>
+		</div>
+		
+		<div class="crudField bbsNone">
 			<input type="submit" value="&{'insupd.save'}" />
 		</div>
 		
@@ -177,37 +251,9 @@ jQuery(function() {
 
 
 #{secure.check 'admin'}
-<br>
-<!-- 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="hosted_button_id" value="JJ243U523YGJN">
-<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name="submit" alt="PayPal - オンラインでより安全・簡単にお支払い">
-<input type="hidden" name="notify_url" value="http://sakashushu.net/PplIpn/validation">
-<img alt="" border="0" src="https://www.paypalobjects.com/ja_JP/i/scr/pixel.gif" width="1" height="1">
-</form>
 
-<br>
-
-<form method="post" action="https://api-3t.paypal.com/nvp">
-<input type="hidden" name="USER" value="${play.configuration.getProperty('paypal.API_username')}">
-<input type="hidden" name="PWD" value="${play.configuration.getProperty('paypal.API_password')}">
-<input type="hidden" name="SIGNATURE" value="${play.configuration.getProperty('paypal.API_signature')}">
-<input type="hidden" name="VERSION" value="95.0">
-<input type="hidden" name="PAYMENTREQUEST_0_PAYMENTACTION" value="Sale">
-<input name="PAYMENTREQUEST_0_AMT" value="100">
-<input type="hidden" name=RETURNURL value="http://sakashushu.com/myDpRt/paypal/receipt">
-<input type="hidden" name=CANCELURL value="http://sakashushu.com/myDpRt/config/hauser/edit">
-// <input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
-<input type="submit" name="METHOD" value="SetExpressCheckout">
-</form>
-
-<br>
- -->
-
-#{form @PplRecurringPayments.reqRedirSetExpressCheckout()}
-	<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
+#{form @PplRecurringPayments.reqWebPay()}
+	<input type="submit" value="WebPay test">
 #{/form}
 
 #{/secure.check}
-

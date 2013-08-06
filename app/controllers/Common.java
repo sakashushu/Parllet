@@ -1,30 +1,41 @@
 package controllers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
-
-import play.Logger;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
-import play.mvc.Before;
-import play.mvc.Controller;
 
 import models.BalanceTypeMst;
 import models.HaUser;
 import models.HandlingMst;
 import models.HandlingTypeMst;
-import models.ParlletMst;
 import models.ItemMst;
+import models.LevelMst;
+import models.ParlletMst;
 import models.Record;
 import models.WkAjaxRsltMin;
 import models.WkCmHdlgRslt;
-import models.WkCmIdepoRslt;
 import models.WkCmMkItemRslt;
-import models.WkSyEsFbUsRslt;
+import models.WkCmPrltRslt;
+import play.Logger;
+import play.Play;
+import play.db.jpa.JPA;
+import play.i18n.Messages;
+import play.mvc.Before;
+import play.mvc.Controller;
 
 public class Common extends Controller {
 	static final String BALANCE_TYPE_IN = Messages.get("BalanceType.in");
@@ -61,7 +72,7 @@ public class Common extends Controller {
 	static final String FLTR_DL_BAL_PDTE_FR = "FLTR_DL_BAL_PDTE_FR";
 	static final String FLTR_DL_BAL_PDTE_TO = "FLTR_DL_BAL_PDTE_TO";
 	static final String FLTR_DL_BAL_HDLG_ID = "FLTR_DL_BAL_HDLG_ID";
-	static final String FLTR_DL_BAL_IDEPO_ID = "FLTR_DL_BAL_IDEPO_ID";
+	static final String FLTR_DL_BAL_PRLT_ID = "FLTR_DL_BAL_PRLT_ID";
 	static final String FLTR_DL_BAL_ITEM_ID = "FLTR_DL_BAL_ITEM_ID";
 	static final String FLTR_DL_BAL_DDTE_FR = "FLTR_DL_BAL_DDTE_FR";
 	static final String FLTR_DL_BAL_DDTE_TO = "FLTR_DL_BAL_DDTE_TO";
@@ -74,13 +85,11 @@ public class Common extends Controller {
 	static final String FLTR_DL_RI_SCRT_REC_FLG = "FLTR_DL_RI_SCRT_REC_FLG";
 	static final String FLTR_DL_RI_DDTE_FR = "FLTR_DL_RI_DDTE_FR";
 	static final String FLTR_DL_RI_DDTE_TO = "FLTR_DL_RI_DDTE_TO";
-	static final String FLTR_DL_RI_IDEPO_ID = "FLTR_DL_RI_IDEPO_ID";
-//	daRiHdIdealDepositId
-	
+	static final String FLTR_DL_RI_PRLT_ID = "FLTR_DL_RI_PRLT_ID";
 	
 	@Before
 	static void setConnectedUser() {
-		if(Security.isConnected()) {
+		if (Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 			renderArgs.put("haUser", haUser);
 		}
@@ -111,7 +120,7 @@ public class Common extends Controller {
 	 * @return 存在する日付の場合true
 	 */
 	public boolean checkIntDate(Integer intDate) {
-			if(intDate<10000101 ||
+			if (intDate<10000101 ||
 					intDate>99991231)
 				return false;
 				
@@ -165,7 +174,7 @@ public class Common extends Controller {
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		Integer iCutoffDay = null;
 		Integer iDebitDay = null;
-		if(id == null) {
+		if (id == null) {
 			// 取扱データの作成
 			String sql = "SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = ?1 AND handling_type_mst_id = ?2";
 			Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).setParameter(1, haUser.id).setParameter(2, handlingTypeMst.id).getSingleResult() + 1;
@@ -191,7 +200,7 @@ public class Common extends Controller {
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
@@ -224,12 +233,12 @@ public class Common extends Controller {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		HandlingTypeMst handlingTypeMst = HandlingTypeMst.find("byHandling_type_name", sHandlingType).first();
 		HandlingMst debitBank = null;
-		if(debit_bank!=null) {
+		if (debit_bank!=null) {
 			debitBank = HandlingMst.findById(debit_bank);
 		}
 		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM HandlingMst WHERE ha_user_id = " + haUser.id + " AND handling_type_mst_id = " + handlingTypeMst.id + " ";
 		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
-		if(id == null) {
+		if (id == null) {
 			// 取扱データの作成
 			refHandlingMst.handlingMst = new HandlingMst(
 					haUser,
@@ -257,7 +266,7 @@ public class Common extends Controller {
 		}
 		// Validate
 		validation.valid(refHandlingMst.handlingMst);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
@@ -284,7 +293,7 @@ public class Common extends Controller {
 		BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("byBalance_type_name", sBalanceType).first();
 		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM ItemMst WHERE ha_user_id = " + haUser.id + " AND balance_type_mst_id = " + balanceTypeMst.id + " ";
 		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
-		if(id == null) {
+		if (id == null) {
 			// 取扱データの作成
 			refItemMst.itemMst = new ItemMst(
 					haUser,
@@ -300,7 +309,7 @@ public class Common extends Controller {
 		}
 		// Validate
 		validation.valid(refItemMst.itemMst);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
@@ -326,7 +335,7 @@ public class Common extends Controller {
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		String sql = " SELECT COALESCE(MAX(order_seq), 0) FROM ParlletMst WHERE ha_user_id = " + haUser.id + " ";
 		Integer intMaxOrderSeq = (Integer)JPA.em().createNativeQuery(sql).getSingleResult() + 1;
-		if(id == null) {
+		if (id == null) {
 			// Parlletデータの作成
 			refParlletMst.parlletMst = new ParlletMst(
 					haUser,
@@ -343,7 +352,7 @@ public class Common extends Controller {
 		}
 		// Validate
 		validation.valid(refParlletMst.parlletMst);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			return 1;
 	    }
 		// 保存
@@ -446,12 +455,14 @@ public class Common extends Controller {
 	 */
 	public static void linkFacebook(Long id, String name, String link) {
 		WkAjaxRsltMin wr = new WkAjaxRsltMin();
+		Date dteNow = new Common().locDate();
 		HaUser hU = (HaUser)renderArgs.get("haUser");
 		hU.fbId = id;
 		hU.fbName = name;
 		hU.fbLink = link;
+		hU.modified = dteNow;
 		validation.valid(hU);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			wr.setIntRslt(99);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);
@@ -467,12 +478,14 @@ public class Common extends Controller {
 	 */
 	public static void breakLinkFacebook() {
 		WkAjaxRsltMin wr = new WkAjaxRsltMin();
+		Date dteNow = new Common().locDate();
 		HaUser hU = (HaUser)renderArgs.get("haUser");
 		hU.fbId = null;
 		hU.fbName = null;
 		hU.fbLink = null;
+		hU.modified = dteNow;
 		validation.valid(hU);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			wr.setIntRslt(99);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);
@@ -493,10 +506,10 @@ public class Common extends Controller {
 		renderJSON(wr);
 	}
 	
-	public static void getClmsIdepo(Long lngId) {
-		WkCmIdepoRslt wr = new WkCmIdepoRslt();
-		ParlletMst iM = ParlletMst.findById(lngId);
-		wr.setIdMst(iM);
+	public static void getClmsPrlt(Long lngId) {
+		WkCmPrltRslt wr = new WkCmPrltRslt();
+		ParlletMst plM = ParlletMst.findById(lngId);
+		wr.setPlMst(plM);
 		renderJSON(wr);
 	}
 	
@@ -509,10 +522,10 @@ public class Common extends Controller {
 	public static void updateHdlg(String strType, String strName, Boolean bolZeroHddn, Boolean bolInvFlg, Long lngId) {
 		WkCmHdlgRslt wr = new WkCmHdlgRslt();
 		String strHandlingType = "";
-		if(strType.equals(Messages.get("views.config.cf_bank"))) {
+		if (strType.equals(Messages.get("views.config.cf_bank"))) {
 			strHandlingType = HANDLING_TYPE_BANK;
 		}
-		if(strType.equals(Messages.get("views.config.cf_emoney"))) {
+		if (strType.equals(Messages.get("views.config.cf_emoney"))) {
 			strHandlingType = HANDLING_TYPE_EMONEY;
 		}
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
@@ -520,7 +533,7 @@ public class Common extends Controller {
 		Integer iRtn = cmn.handling_mst_save(lngId, strName, bolZeroHddn, bolInvFlg, refHandlingMst, strHandlingType);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(hM);
 			wr.setIntRslt(99);
@@ -539,21 +552,21 @@ public class Common extends Controller {
 	 * @param bolZeroHddn
 	 */
 	public static void updatePrlt(String strName, boolean bolZeroHddn, Long lngId) {
-		WkCmIdepoRslt wr = new WkCmIdepoRslt();
+		WkCmPrltRslt wr = new WkCmPrltRslt();
 		RefParlletMst refParlletMst = new RefParlletMst();
 		Common cmn = new Common();
 		Integer iRtn = cmn.parllet_mst_save(lngId, strName, bolZeroHddn, refParlletMst);
-		ParlletMst iDM = refParlletMst.parlletMst;
+		ParlletMst plM = refParlletMst.parlletMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
-			validation.valid(iDM);
+			validation.valid(plM);
 			wr.setIntRslt(99);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 		} else {
 			wr.setIntRslt(0);
 		}
-		wr.setIdMst(iDM);
+		wr.setPlMst(plM);
 		renderJSON(wr);
 	}
 	
@@ -569,7 +582,7 @@ public class Common extends Controller {
 		Integer iRtn = cmn.item_mst_save(null, strName, refItemMst, strBalanceType);
 		ItemMst iM = refItemMst.itemMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(iM);
 			wr.setIntRslt(99);
@@ -601,7 +614,7 @@ public class Common extends Controller {
 			String remarks,
 			String secret_remarks,
 			Boolean secret_rec_flg) {
-		WkCmIdepoRslt wr = new WkCmIdepoRslt();
+		WkCmPrltRslt wr = new WkCmPrltRslt();
 
 		Record record = null;
 		Date paymentDate = null;
@@ -704,12 +717,12 @@ public class Common extends Controller {
 		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
 		if (strClm.equals("zero_hidden_bkem"))
 			hU.zero_hidden_bkem = bolFlg;
-		if (strClm.equals("zero_hidden_idepo"))
-			hU.zero_hidden_idepo = bolFlg;
+		if (strClm.equals("zero_hidden_prlt"))
+			hU.zero_hidden_prlt = bolFlg;
 		if (strClm.equals("inv_hidden_bkem"))
 			hU.inv_hidden_bkem = bolFlg;
 		validation.valid(hU);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			wr.setIntRslt(99);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);
@@ -718,4 +731,114 @@ public class Common extends Controller {
 		wr.setIntRslt(0);
 		renderJSON(wr);
 	}
+	
+	
+	/**
+	 * paypal支払いステータスチェック
+	 * @param email
+	 * @param password
+	 */
+	public static void checkPplStatus(
+			String email,
+			String password
+			) {
+//		Logger.info("Common_checkStatus");
+		StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
+		Logger.info(ste.getClassName() + "." + ste.getMethodName());
+		
+		WkAjaxRsltMin wr = new WkAjaxRsltMin();
+		HaUser hU = HaUser.find("byEmailAndPassword", email, password).first();
+		
+		//ログインエラーはそのまま戻す
+		if (hU==null) {
+			wr.setIntRslt(0);
+			renderJSON(wr);
+		}
+		
+		//無料ユーザはチェック対象外
+		if (hU.level_mst.month_amount==0) {
+			wr.setIntRslt(0);
+			renderJSON(wr);
+		}
+		
+		if (hU.isAdmin) {
+			wr.setIntRslt(0);
+			renderJSON(wr);
+		}
+		
+		String str = "" +
+				"METHOD=GetRecurringPaymentsProfileDetails" +
+				"&VERSION=95.0" +
+				"&USER=" + Play.configuration.getProperty("paypal.API_username") +
+				"&PWD=" + Play.configuration.getProperty("paypal.API_password") +
+				"&SIGNATURE=" + Play.configuration.getProperty("paypal.API_signature") +
+				"&PROFILEID=" + hU.pplProfileId +
+				"";
+		try {
+			URL url = new URL("https://api-3t.paypal.com/nvp");
+			URLConnection connection;
+			try {
+				connection = url.openConnection();
+				connection.setDoOutput(true);	//POST可能にする
+				connection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+				
+				//sending the request
+				PrintWriter out = new PrintWriter(connection.getOutputStream());
+				out.println(str);
+				out.close();
+				
+				//reading the response
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String result = in.readLine();
+				in.close();
+				
+				String strDecodeRslt = URLDecoder.decode(result, "utf-8");
+				StringTokenizer st = new StringTokenizer(strDecodeRslt, "&");
+				Map<String,String> map = new HashMap<String,String>();
+				while(st.hasMoreTokens()) {
+					StringTokenizer st2 = new StringTokenizer(st.nextToken(), "=");
+					map.put(st2.nextToken(), st2.nextToken());
+				}
+				Logger.info(strDecodeRslt);
+				wr.setIntRslt(0);
+				if (!map.get("STATUS").equals("Active")) {
+					Date dteNow = new Common().locDate();
+					LevelMst lM = LevelMst.find("byLevel", 0).first();
+					hU.level_mst = lM;
+					hU.pplPayerId = null;
+					hU.pplProfileId = null;
+					hU.pplStatus = null;
+					hU.modified = dteNow;
+					validation.valid(hU);
+					if (validation.hasErrors()) {
+						wr.setIntRslt(99);
+						wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+						renderJSON(wr);
+					}
+					hU.save();
+					validation.addError(
+							"paymentStatusError",
+							Messages.get("views.login.err.pplStatus.notAct1") + "" +
+							Messages.get("rec_size") + "(" + lM.rec_size + ")" + "" +
+							Messages.get("views.login.err.pplStatus.notAct2"));
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				validation.addError("ioError", e.getMessage());
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			validation.addError("malformedUrlError", e.getMessage());
+		}
+		if (validation.hasErrors()) {
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+			renderJSON(wr);
+		}
+		wr.setIntRslt(0);
+		renderJSON(wr);
+	}
+	
 }

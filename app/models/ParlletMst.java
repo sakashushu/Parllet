@@ -52,12 +52,12 @@ public class ParlletMst extends Model {
 	static class ParlletNameMultipleCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			ParlletMst parlletMst = (ParlletMst)validatedObject;
-			ParlletMst idmExist = null;
-			idmExist = ParlletMst.find(
+			ParlletMst plmExist = null;
+			plmExist = ParlletMst.find(
 					"ha_user = ? and parllet_name = ?",
 					parlletMst.ha_user,
 					parlletMst.parllet_name).first();
-			if(idmExist!=null && idmExist.id!=parlletMst.id) {
+			if(plmExist!=null && plmExist.id!=parlletMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

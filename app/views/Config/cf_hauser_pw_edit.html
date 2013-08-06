@@ -25,9 +25,10 @@
 		</div>
 		#{/if}
 		
+		%{vPassword = (firstTime=='true' ? '' : messages.get('views.config.cf_hauser_pw.new'))+messages.get('password')}%
 		<div class="crudField">
 			#{field 'haUser.password'}
-			<label class="fieldName">${firstTime=='true' ? '' : messages.get('views.config.cf_hauser_pw.new')}&{'password'}:</label>
+			<label class="fieldName">${vPassword}:</label>
 			<input type="password" name="${field.id}"  />
 			<span class="error">#{error field.name /}</span>
 			#{/field}
@@ -35,15 +36,15 @@
 		
 		<div class="crudField">
 			#{field 'cnf_password'}
-			<label class="fieldName">（確認）:</label>
+			<label class="fieldName">${vPassword}（&{'views.config.cf_hauser_pw.confirm'}）:</label>
 			<input type="password" name="${field.name}"  />
 			<span class="error">#{error field.name /}</span>
 			#{/field}
 		</div>
 		
-		<div class="crudField">
-			<input type="submit" name="save" value="&{'insupd.save'}" />
+		<div class="crudField bbsNone">
 			<input type="submit" name="cancel" value="&{'views.common.btn.cancel'}" />
+			<input type="submit" name="save" value="&{'insupd.save'}" />
 		</div>
 		
 	#{/form}

@@ -1,54 +1,38 @@
 package controllers;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.mail.internet.MimeUtility;
-
-import org.postgresql.translation.messages_bg;
-
-import controllers.Common.RefHandlingMst;
-import controllers.Common.RefParlletMst;
-import controllers.Common.RefItemMst;
-
-import au.com.bytecode.opencsv.CSVReader;
+import org.apache.commons.lang.Validate;
 
 import models.BalanceTypeMst;
+import models.Budget;
 import models.HaUser;
 import models.HandlingMst;
-import models.HandlingTypeMst;
-import models.ParlletMst;
 import models.ItemMst;
+import models.ParlletMst;
 import models.Record;
-
-import play.data.validation.Required;
-import play.db.jpa.JPA;
+import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+import au.com.bytecode.opencsv.CSVReader;
+import controllers.Common.RefHandlingMst;
+import controllers.Common.RefItemMst;
+import controllers.Common.RefParlletMst;
 
 @With(Secure.class)
 public class Config extends Controller {
@@ -369,8 +353,6 @@ public class Config extends Controller {
 	 * 口座編集（リスト）
 	 */
 	public static void cf_bank_list() {
-		Calendar ca1 = Calendar.getInstance();
-		Date dteNow = Calendar.getInstance().getTime();
 		String sHandlingType = Messages.get("HandlingType.bank");
 		List<HandlingMst> handlingMsts = get_handling_msts(sHandlingType);
 //		render(handlingMsts);
@@ -418,9 +400,9 @@ public class Config extends Controller {
 	/**
 	 * Parllet編集（リスト）
 	 */
-	public static void cf_idealdepo_list() {
+	public static void cf_parllet_list() {
 		List<ParlletMst> parlletMsts = ParlletMst.find("ha_user = '" + ((HaUser)renderArgs.get("haUser")).id + "' order by order_seq, id").fetch();
-		render("@cf_idealdepo_list", parlletMsts);
+		render("@cf_parllet_list", parlletMsts);
 	}
 	
 	/**
@@ -492,10 +474,10 @@ public class Config extends Controller {
 	 * Parllet編集
 	 * @param id
 	 */
-	public static void cf_idealdepo_edit(Long id) {
+	public static void cf_parllet_edit(Long id) {
 		if(id != null) {
-			ParlletMst iDM = ParlletMst.findById(id);
-			render(iDM);
+			ParlletMst plM = ParlletMst.findById(id);
+			render(plM);
 		}
 		render();
 	}
@@ -661,28 +643,28 @@ public class Config extends Controller {
 	/**
 	 * Parllet保存
 	 * @param id
-	 * @param iDM_parllet_name
-	 * @param iDM_zero_hidden
+	 * @param plM_parllet_name
+	 * @param plM_zero_hidden
 	 */
-	public static void cf_idealdepo_save(
+	public static void cf_parllet_save(
 			Long id,
-			String iDM_parllet_name,
-			Boolean iDM_zero_hidden
+			String plM_parllet_name,
+			Boolean plM_zero_hidden
 			) {
 		RefParlletMst refItemMst = new RefParlletMst();
 		
 		//ParlletMst保存
 		Common cmn = new Common();
-		Integer iRtn = cmn.parllet_mst_save(id, iDM_parllet_name, iDM_zero_hidden, refItemMst);
-		ParlletMst iDM = refItemMst.parlletMst;
+		Integer iRtn = cmn.parllet_mst_save(id, plM_parllet_name, plM_zero_hidden, refItemMst);
+		ParlletMst plM = refItemMst.parlletMst;
 		
 		if(iRtn == 1) {
 			validation.clear();
-			validation.valid(iDM);
-			render("@cf_idealdepo_edit", iDM);
+			validation.valid(plM);
+			render("@cf_parllet_edit", plM);
 		}
 		
-		cf_idealdepo_list();
+		cf_parllet_list();
 		
 	}
 
@@ -728,13 +710,13 @@ public class Config extends Controller {
 	 * 「Parllet」削除
 	 * @param id
 	 */
-	public static void cf_idealdepo_del(Long id) {
+	public static void cf_parllet_del(Long id) {
 		// 項目データの読み出し
-		ParlletMst iDM = ParlletMst.findById(id);
+		ParlletMst plM = ParlletMst.findById(id);
 		// 削除
-		iDM.delete();
+		plM.delete();
 
-		cf_idealdepo_list();
+		cf_parllet_list();
 	}
 	
 	/**
@@ -810,7 +792,7 @@ public class Config extends Controller {
 	 * @param id
 	 * @param order
 	 */
-	public static void cf_ideal_orderChange(
+	public static void cf_prlt_orderChange(
     		List<Long> id,
     		List<Integer> order
     		) {
@@ -829,7 +811,7 @@ public class Config extends Controller {
 			parlletMst.save();
 		}
 		
-		cf_idealdepo_list();
+		cf_parllet_list();
 	}
 	
 	/**
@@ -873,12 +855,22 @@ public class Config extends Controller {
 	
 	/**
 	 * 会員情パスワード編集
+	 * @param firstTime
 	 */
 	public static void cf_hauser_pw_edit(
 			String firstTime
 			) {
-		HaUser haUser = (HaUser)renderArgs.get("haUser");
-		render(haUser, firstTime);
+		render(firstTime);
+	}
+	
+	/**
+	 * アカウントの種類編集
+	 */
+	public static void cf_hauser_lv_edit(Boolean bolError, String strField, String strMessage) {
+		if (bolError!=null && bolError) {
+			validation.addError(strField, strMessage);
+		}
+		render();
 	}
 	
 	/**
@@ -980,4 +972,45 @@ public class Config extends Controller {
 		cf_actionMode();
 	}
 	
+	/**
+	 * 退会手続き画面
+	 */
+	public static void cf_hauser_unsubscribe() {
+		render();
+	}
+	
+	/**
+	 * 退会処理実行
+	 */
+	public static void cf_hauser_unsubscribe_exec() {
+		checkAuthenticity();
+		
+		//データ削除
+		HaUser hU = (HaUser)renderArgs.get("haUser");
+		Budget.delete("ha_user = ?", hU);
+		Record.delete("ha_user = ?", hU);
+		ItemMst.delete("ha_user = ?", hU);
+		HandlingMst.delete("ha_user = ?", hU);
+		ParlletMst.delete("ha_user = ?", hU);
+		Date dteNow = new Common().locDate();
+		hU.email = hU.email+"_backup_"+String.format("%1$tY%1$tm%1$td_%1$tH%1$tM", dteNow);
+		hU.modified = dteNow;
+		hU.save();
+		
+		//ログアウト
+		try {
+//			Secure.logout();
+			
+//	        Security.invoke("onDisconnect");
+	        session.clear();
+	        response.removeCookie("rememberme");
+//	        Security.invoke("onDisconnected");
+	        flash.success("secure.logout");
+//	        login();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		render("@Application.unsubscribed", hU);
+	}
 }

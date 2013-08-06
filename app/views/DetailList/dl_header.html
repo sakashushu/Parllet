@@ -9,22 +9,20 @@ jQuery(function() {
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
 		}%
 		if(${hdlgCnt}===0) {
-//			alert("&{'views.detaillist.remainder.err.noBank'}\n&{'views.detaillist.remainder.err.tryLater'}");
 			//口座・電子マネー作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
 			
 			e.preventDefault();
 		}
     });
-	jQuery("#aDlRemainderIdeal").click(function(e) {
+	jQuery("#aDlRemainderPrlt").click(function(e) {
 		var jText = jQuery(this).text();
 		%{
 			idpCnt = models.ParlletMst.count("byHa_user", hu);
 		}%
 		if(${idpCnt}===0) {
-//			alert("&{'views.detaillist.remainder.err.noIdeal'}\n&{'views.detaillist.remainder.err.tryLater'}");
-			//My貯金作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.ideal'}", jText);
+			//Parllet作成用ダイアログ
+			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
 			
 			e.preventDefault();
 		}
@@ -116,7 +114,7 @@ jQuery(function() {
 		if(ckDate("${h_debit_date_to}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
 	#{/if}
-	#{if request.actionMethod=='dl_remainderIdeal'}
+	#{if request.actionMethod=='dl_remainderPrlt'}
 		if(ckDate("${dlRiHdDebitDateFr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
 		if(ckDate("${dlRiHdDebitDateTo}"))
@@ -183,8 +181,8 @@ function whenDialogConfirmClosed(intRslt) {
 			openDialogFrmUpdMstDh("&{'views.config.cf_emoney'}");
 			break;
 		case 3:
-			//My貯金更新フォームを開く
-			openDialogFrmUpdMstDh("&{'views.config.cf_idealdepo'}");
+			//Parllet更新フォームを開く
+			openDialogFrmUpdMstDh("&{'views.config.cf_prlt'}");
 			break;
 		default:
     		alert("dialogConfirm return value error");
@@ -204,7 +202,7 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
 		strErrMsg = "Common.updateHdlg";
-	if(strType==="&{'views.config.cf_idealdepo'}")
+	if(strType==="&{'views.config.cf_prlt'}")
 		strErrMsg = "Common.updatePrlt";
 	switch (intRslt) {
 		case 0:
@@ -215,7 +213,7 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 			if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
-			if(strType==="&{'views.config.cf_idealdepo'}") {
+			if(strType==="&{'views.config.cf_prlt'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			jqxhrMkMst
@@ -226,9 +224,9 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 							//収支明細（口座系）へジャンプ
 							jQuery('#frmDlRemainderBank').submit();
 						}
-						if(strType==="&{'views.config.cf_idealdepo'}") {
-							//収支明細（My貯金）へジャンプ
-							jQuery('#frmDlRemainderIdeal').submit();
+						if(strType==="&{'views.config.cf_prlt'}") {
+							//収支明細（Parllet）へジャンプ
+							jQuery('#frmDlRemainderPrlt').submit();
 						}
 						break;
 					case 99:
@@ -256,8 +254,8 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 	<input type="submit" class="invisible" />
 #{/form}
 
-<!-- 残高明細（My貯金）へジャンプ用フォーム（非表示） -->
-#{form @DetailList.dl_remainderIdeal(), id:'frmDlRemainderIdeal'}
+<!-- 残高明細（Parllet）へジャンプ用フォーム（非表示） -->
+#{form @DetailList.dl_remainderPrlt(), id:'frmDlRemainderPrlt'}
 	<input type="submit" class="invisible" />
 #{/form}
 
@@ -269,8 +267,8 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 		<li class="${request.actionMethod=='dl_remainderBank' ? 'selected' : ''}">
 			#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}
 		</li>
-		<li class="${request.actionMethod=='dl_remainderIdeal' ? 'selected' : ''}">
-			#{a @DetailList.dl_remainderIdeal(), id:'aDlRemainderIdeal'}&{'views.detaillist.remainderIdeal.title'}#{/a}
+		<li class="${request.actionMethod=='dl_remainderPrlt' ? 'selected' : ''}">
+			#{a @DetailList.dl_remainderPrlt(), id:'aDlRemainderPrlt'}&{'views.detaillist.remainderPrlt.title'}#{/a}
 		</li>
 	</ul>
 </div>

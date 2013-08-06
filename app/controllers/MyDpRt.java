@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import models.HaUser;
+import models.LevelMst;
 import models.WkSyEsFbUsRslt;
 import play.i18n.Messages;
 import play.mvc.*;
@@ -19,10 +20,11 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
+		LevelMst lM = LevelMst.find("byLevel", 0).first();
 //		Date dteNow = Calendar.getInstance().getTime();
 		Common cm = new Common();
 		Date dteNow = cm.locDate();
-		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
+		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, lM, null, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {
@@ -44,10 +46,11 @@ public class MyDpRt extends Controller {
     		String password
 			) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
+		LevelMst lM = LevelMst.find("byLevel", 0).first();
 //		Date dteNow = Calendar.getInstance().getTime();
 		Common cm = new Common();
 		Date dteNow = cm.locDate();
-		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, null, null, dteNow, dteNow);
+		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, lM, null, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
 	    if(validation.hasErrors()) {

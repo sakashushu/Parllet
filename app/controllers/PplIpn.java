@@ -19,8 +19,13 @@ import play.mvc.Controller;
 public class PplIpn extends Controller {
 	
 	public static void validation() throws Exception {
-		String strActionMethod = "PplIpn_validation";
+		
+//		String strActionMethod = "PplIpn_validation";
+		StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
+		String strActionMethod = ste.getClassName() + "." + ste.getMethodName();
 		Logger.info(strActionMethod);
+		
+		
 		
 		// creation of the url sent to paypal to check the
 		//parameters of POST requests is recovered
@@ -58,8 +63,8 @@ public class PplIpn extends Controller {
 		
 		//check notification validation
 		if ("VERIFIED".equals(result)) {
-			HaUser hu = HaUser.find("byPplPayerId", payerId).first();
-			if (hu==null) {
+			HaUser hU = HaUser.find("byPplPayerId", payerId).first();
+			if (hU==null) {
 				Logger.info("hu==null");
 			} else {
 				Common cm = new Common();
@@ -67,7 +72,7 @@ public class PplIpn extends Controller {
 				
 				//支払履歴
 				PaymentHistory ph = new PaymentHistory(
-						hu,
+						hU,
 						strActionMethod,
 						txnType,
 						recurringPaymentId,
@@ -84,23 +89,23 @@ public class PplIpn extends Controller {
 				if (txnType!=null) {
 					if (txnType.equals("recurring_payment_profile_created") ||
 							txnType.equals("recurring_payment")) {
-						hu.pplStatus = 1;
-						hu.modified = dteNow;
+						hU.pplStatus = 1;
+						hU.modified = dteNow;
 						// Validate
-						validation.valid(hu);
+						validation.valid(hU);
 						if (validation.hasErrors())
 							render();
 						// 保存
-						hu.save();
+						hU.save();
 					} else if (txnType.equals("recurring_payment_profile_cancel")) {
-						hu.pplStatus = 9;
-						hu.modified = dteNow;
+						hU.pplStatus = 9;
+						hU.modified = dteNow;
 						// Validate
-						validation.valid(hu);
+						validation.valid(hU);
 						if (validation.hasErrors())
 							render();
 						// 保存
-						hu.save();
+						hU.save();
 					}
 				}
 			}
@@ -112,6 +117,7 @@ public class PplIpn extends Controller {
 					(txnType.equals("recurring_payment_profile_created") ||
 							txnType.equals("recurring_payment"))) {
 				
+			//定期支払（決済失敗・キャンセル）
 			} else if (txnType!=null &&
 					(txnType.equals("recurring_payment_failed") ||
 							txnType.equals("recurring_payment_profile_cancel"))) {
@@ -139,6 +145,11 @@ public class PplIpn extends Controller {
 						Logger.info("La transaction a déjà été traité");
 					}
 				} else {
+					if ("Refunded".equals(paymentStatus)) {
+						//スルーする条件が必要か？
+						
+						return;
+					}
 					// Payment Status: Failed
 					Logger.info("Payment Status: Failed");
 				}

@@ -10,14 +10,14 @@ public class WkDlRbRec {
 	private String strPaymentDate;
 	private String strBalanceTypeName;
 	private String strHandlingName;
-	private String strIdealDepositName;
+	private String strParlletName;
 	private Long lngAmount;
 	private String strStore;
 	private Long lngRemainder;
 	private String strPaymentDateOrder;
 	private Long lngBalanceTypeId;  		/* 絞込収支種類ID */
 	private Long lngHandlingId;			/* 絞込取扱(実際)ID */
-	private Long lngIdealDepositId;		/* 絞込取扱(My貯金)ID */
+	private Long lngParlletId;				/* 絞込取扱(Parllet)ID */
 	public Long getLngId() {
 		return lngId;
 	}
@@ -54,11 +54,11 @@ public class WkDlRbRec {
 	public void setStrHandlingName(String strHandlingName) {
 		this.strHandlingName = strHandlingName;
 	}
-	public String getStrIdealDepositName() {
-		return strIdealDepositName;
+	public String getStrParlletName() {
+		return strParlletName;
 	}
-	public void setStrIdealDepositName(String strIdealDepositName) {
-		this.strIdealDepositName = strIdealDepositName;
+	public void setStrParlletName(String strParlletName) {
+		this.strParlletName = strParlletName;
 	}
 	public Long getLngAmount() {
 		return lngAmount;
@@ -96,10 +96,10 @@ public class WkDlRbRec {
 	public void setLngHandlingId(Long lngHandlingId) {
 		this.lngHandlingId = lngHandlingId;
 	}
-	public Long getLngIdealDepositId() {
-		return lngIdealDepositId;
+	public Long getLngParlletId() {
+		return lngParlletId;
 	}
-	public void setLngIdealDepositId(Long lngIdealDepositId) {
-		this.lngIdealDepositId = lngIdealDepositId;
+	public void setLngParlletId(Long lngParlletId) {
+		this.lngParlletId = lngParlletId;
 	}
 }

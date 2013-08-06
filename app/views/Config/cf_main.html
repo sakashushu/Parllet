@@ -8,7 +8,6 @@
 	#{include 'headerTools.html' /}
 #{/set}
 
-
 <div id="cfHeader">
 
 <div>
@@ -38,15 +37,19 @@
 					request.actionMethod == 'cf_item_out_save') ? 'selected' : ''}">
 			<a href="@{Config.cf_item_out_list()}">&{'views.config.cf_item'}(&{'BalanceType.out'})</a>
 		</li>
-		<li class="${(request.actionMethod == 'cf_idealdepo_list' ||
-					request.actionMethod == 'cf_idealdepo_edit' ||
-					request.actionMethod == 'cf_idealdepo_save') ? 'selected' : ''}">
-			<a href="@{Config.cf_idealdepo_list()}">&{'views.config.cf_idealdepo'}</a>
+		<li class="${(request.actionMethod == 'cf_parllet_list' ||
+					request.actionMethod == 'cf_parllet_edit' ||
+					request.actionMethod == 'cf_parllet_save') ? 'selected' : ''}">
+			<a href="@{Config.cf_parllet_list()}">&{'views.config.cf_prlt'}</a>
 		</li>
 		<li class="${(request.actionMethod == 'cf_hauser_edit' ||
 					request.actionMethod == 'cf_hauser_save' ||
 					request.actionMethod == 'cf_hauser_pw_edit' ||
-					request.actionMethod == 'cf_hauser_pw_save') ? 'selected' : ''}">
+					request.actionMethod == 'cf_hauser_pw_save' ||
+					request.actionMethod == 'cf_hauser_lv_edit' ||
+					request.actionMethod == 'cf_hauser_unsubscribe' ||
+					request.actionMethod == 'receipt' ||
+					request.actionMethod == 'confirm') ? 'selected' : ''}">
 			<a href="@{Config.cf_hauser_edit()}">&{'views.config.cf_hauser'}</a>
 		</li>
 		#{secure.check 'admin'}

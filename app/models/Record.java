@@ -29,7 +29,7 @@ public class Record extends Model {
 	@CheckWith(HandlingConditionallyRequiredCheck.class)
 	public HandlingMst handling_mst;			//取扱(実際)
 	@ManyToOne
-	@CheckWith(IdealDepositConditionallyRequiredCheck.class)
+	@CheckWith(ParlletConditionallyRequiredCheck.class)
 	public ParlletMst parllet_mst;			//取扱(Parllet)
 	@ManyToOne
 	@CheckWith(ItemConditionallyRequiredCheck.class)
@@ -146,7 +146,7 @@ public class Record extends Model {
 	 * @author sakashushu
 	 *
 	 */
-	static class IdealDepositConditionallyRequiredCheck extends Check {
+	static class ParlletConditionallyRequiredCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
 			if(record.balance_type_mst!=null) {

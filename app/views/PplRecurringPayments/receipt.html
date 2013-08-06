@@ -1,20 +1,26 @@
-#{extends 'main.html' /}
+#{extends 'Config/cf_main.html' /}
 #{set title:messages.get('views.pplRecurringPayments.receipt.title') /}
 
-#{set 'moreMenu'}
-	#{include 'headerMenu.html' /}
-#{/set}
-
-#{set 'headerTools'}
-	#{include 'headerTools.html' /}
-#{/set}
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.tgClickToolTip.css'}" />
+<script type="text/javascript" src="@{'/public/javascripts/jquery.tgClickToolTip.js'}"></script>
+<script type="text/javascript">
+<!-- 
+jQuery(function(){
+	jQuery(this).tgClickToolTip({
+		selector : 'a.clickToolTip',	// セレクタ
+		PositionTop : '0',				// ツールチップ出現位置（+数値で下方向へ移動）
+		PositionLeft : '30',			// ツールチップ出現位置（+数値で右方向へ移動）
+	});
+});
+// -->
+</script>
 
 #{ifErrors}
-	<p class="crudFlash flashError">
-		#{errors}
-			${error}
-		#{/errors}
-	</p>
+<p class="crudFlash flashError">
+	#{errors}
+		${error}
+	#{/errors}
+</p>
 #{/ifErrors}
 #{else}
 <div id="receipt">
@@ -27,7 +33,7 @@
 		<p>
 		&{'views.pplRecurringPayments.receipt.text1', messages.get('views.pplRecurringPayments.receipt.btn.confirm')}<br>
 		&{'views.pplRecurringPayments.receipt.text2'}
-		<a href="javascript:w=window.open('https://cms.paypal.com/jp/cgi-bin/marketingweb?cmd=_render-content&fli=true&content_ID=ua/UserAgreement_popup&locale.x=ja_JP','','scrollbars=yes,Width=640,Height=500');w.focus();">
+		<a href="javascript:w=window.open('https://cms.paypal.com/jp/cgi-bin/marketingweb?cmd=_render-content&fli=true&content_ID=ua/UserAgreement_popup&locale.x=ja_JP','defaultPayment','scrollbars=yes,Width=640,Height=500');w.focus();">
 		&{'views.pplRecurringPayments.receipt.defaultPayment'}
 		</a>
 		&{'views.pplRecurringPayments.receipt.text3'}
@@ -35,12 +41,19 @@
 		
 		<p>
 		&{'views.pplRecurringPayments.receipt.text4'}
-		<a href="javascript:w=window.open('http://sakashushu.com/myDpRt/paypal/oneMonthLater','','scrollbars=yes,Width=600,Height=250');w.focus();">
+<!-- 
+		<a href="javascript:w=window.open('http://sakashushu.com/prlt/paypal/oneMonthLater','','scrollbars=yes,Width=600,Height=250');w.focus();">
 		&{'views.pplRecurringPayments.receipt.pay.firstDay'}</a>
+ -->
+		<a href="#pOneMonthLater" class="clickToolTip">&{'views.pplRecurringPayments.receipt.pay.firstDay'}</a>
 		&{'views.pplRecurringPayments.receipt.text5'}
 		</p>
+		<p id="pOneMonthLater" class="toolTip invisible">
+		&{'views.tooltip.oneMonthLater.text1'}<br>
+		&{'views.tooltip.oneMonthLater.text2'}
+		</p>
 		<p>
-		&{'views.pplRecurringPayments.receipt.text6'} &{'views.pplRecurringPayments.receipt.recCnt.before'} → &{'views.pplRecurringPayments.receipt.recCnt.after'} &{'views.pplRecurringPayments.receipt.text7'}
+		&{'views.pplRecurringPayments.receipt.text6'} ${haUser.level_mst.rec_size.format('###,###')} → <span style="font-weight: bold;">${models.LevelMst.find("byMonth_amount", intAmt).first().rec_size.format('###,###')}</span> &{'views.pplRecurringPayments.receipt.text7'}
 		</p>
 	</div>
 
@@ -49,7 +62,7 @@
 			<label>&{'views.pplRecurringPayments.receipt.lbl1'}</label>
 			<div>&{'views.pplRecurringPayments.receipt.pay.interval'}</div>
 			<label>&{'views.pplRecurringPayments.receipt.lbl2'}</label>
-			<div>&{'views.pplRecurringPayments.receipt.pay.amount'}</div>
+			<div>${intAmt}&{'views.config.cf_hauser.lv_crncyCode'}</div>
 			
 		</div>
 	</div>  <!-- box -->
@@ -58,6 +71,7 @@
 		<div>
 			#{form @confirm()}
 				<input type="hidden" value="${strPayerId}" name="payer_id" />
+				<input type="hidden" value="${intAmt}" name="intAmt" />
 				<input type="submit" value="&{'views.pplRecurringPayments.receipt.btn.confirm'}" />
 			#{/form}
 		</div>

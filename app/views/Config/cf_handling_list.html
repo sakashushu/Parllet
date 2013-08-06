@@ -9,8 +9,13 @@
 
 #{form @cf_handling_orderChange()}
 <div class="objectForm sortable">
+%{
+	crudSize = handlingMsts.size()
+	crudCnt = 0
+}%
 #{list items:handlingMsts, as:'handlingMst'}
-	<p class="data ${handlingMst_parity} crudField">
+	%{crudCnt++}%
+	<p class="data ${handlingMst_parity} crudField${crudCnt!=crudSize ? '' : ' bbsNone'}">
 	  #{if sHandlingType == messages.get('HandlingType.bank')}
 		<a href="@{cf_bank_edit(handlingMst.id)}">
 	  #{/if}

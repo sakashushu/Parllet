@@ -1,0 +1,44 @@
+@charset "utf-8";
+/* ===================================================================
+CSS information
+ file name  :  jquery.tgClickToolTip.css
+ style info :  jquery.tgClickToolTip.js用スタイルシートです。
+
+ @Copyright : 2012 toogie | http://wataame.sumomo.ne.jp/archives/1719
+ @Version   : 1.0
+ @Modified  : 2012-09-18
+ @Modified(sakashushu)  : 2013-07-28
+=================================================================== */
+.invisible {
+	display: none;
+}
+
+a.clickToolTip {
+//	margin: 0;
+//	padding: 2px 6px;
+//	background-color: green;
+//	border-radius: 5px;
+//	-moz-border-radius: 5px;
+//	text-decoration: none;
+//	color: #fff;
+//	font-size: 12px;
+}
+
+p.toolTip {
+//	margin: 0;
+	padding: 10px;
+	minwidth: 250px;
+	min-height: 30px;
+	background-color: rgb(242,223,182);
+//	opacity: 0.6;
+//	border-radius: 5px;
+//	-moz-border-radius: 5px;
+//	color: #fff;
+	position: absolute;
+//	top: 100px;
+//	left: 20px;
+
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}

@@ -11,7 +11,7 @@ public class WkDailyAccount {
 	private long lBudgetId;			/* 予算ID */
 	private Long lBudgetAmount;		/* 予算金額(数値) */
 	private long lSumMonth;			/* 月計 */
-	private long lIdepoLink;			/* My貯金連結 */
+	private long lPrltLink;			/* Parllet連結 */
 	private long[] lAryDays;			/* 日付毎 */
 	private List<WkDaToDl> lstWdtd;	/* 日計表から明細表へのリンク時の引渡し項目 */
 	private String strTypeNm;			/* 種類名 */
@@ -70,11 +70,11 @@ public class WkDailyAccount {
 	public void setLSumMonth(long lSumMonth) {
 		this.lSumMonth = lSumMonth;
 	}
-	public long getlIdepoLink() {
-		return lIdepoLink;
+	public long getlPrltLink() {
+		return lPrltLink;
 	}
-	public void setlIdepoLink(long lIdepoLink) {
-		this.lIdepoLink = lIdepoLink;
+	public void setlPrltLink(long lPrltLink) {
+		this.lPrltLink = lPrltLink;
 	}
 	public long[] getLAryDays() {
 		return lAryDays;

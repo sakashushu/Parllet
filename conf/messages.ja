@@ -38,7 +38,7 @@ views.common.update.edit=編集
 views.common.order.change=（※ドラッグ＆ドロップで並び替えができます。）
 views.common.menu.toDlBalance=収支明細へ
 views.common.menu.toDlRemainderBank=残高明細（口座系）へ
-views.common.menu.toDlRemainderIdeal=残高明細（Parllet）へ
+views.common.menu.toDlRemainderPrlt=残高明細（Parllet）へ
 views.common.menu.toRecordAdd=新規家計簿入力
 views.common.menu.toRecordEdit=このデータを編集
 views.common.btn.cancel=キャンセル
@@ -63,6 +63,8 @@ views.index.signup.sns.button.text=Facebookで登録
 views.login.normal.title=ノーマルログイン
 views.login.sns.title=SNSでログイン
 views.login.err.duplicate=この&{%s}は既に使われています。
+views.login.err.pplStatus.notAct1=月々の支払いが止まっている為アカウントの種類がLV0に変更され、
+views.login.err.pplStatus.notAct2=を超えたデータの追加が出来なくなりました。
 views.login.fbLogin.button.text=Facebookでログイン
 views.login.fbLogin.name=ニックネーム
 views.login.fbLogin.email=Ｅメール
@@ -80,16 +82,13 @@ views.login.fbLogin.err.length2=文字以上
 views.login.fbLogin.err.length3=文字以下である必要があります。
 views.detaillist.balance.title=収支明細
 views.detaillist.remainderBank.title=残高明細（口座系）
-views.detaillist.remainderIdeal.title=残高明細（Parllet）
+views.detaillist.remainderPrlt.title=残高明細（Parllet）
 views.detaillist.remainderBank.balanceBroughtForward=繰越金
 views.detaillist=明細表
 views.detaillist.diff=差額
 views.detaillist.remainder=残高
 views.detaillist.remainderCommon.out=引出
 views.detaillist.remainderCommon.in=預入
-views.detaillist.remainder.err.noBank=口座か電子マネーの設定がまだ無いようです。
-views.detaillist.remainder.err.noIdeal=Parlletの設定がまだ無いようです。
-views.detaillist.remainder.err.tryLater=設定後にご利用下さい。
 views.dailyaccount.dailyaccount=日計表
 views.dailyaccount.balancetable=残高表
 views.dailyaccount.movetype.year=年移動
@@ -101,7 +100,7 @@ views.dailyaccount.movetype.days.pre=前の5日
 views.dailyaccount.movetype.days.next=次の5日
 views.dailyaccount.lbl.monthBudget=月予算
 views.dailyaccount.lbl.monthSum=月計
-views.dailyaccount.lbl.idepoLink=Parlletから
+views.dailyaccount.lbl.prltLink=Parlletから
 views.dailyaccount.lbl.budget.subject=予算対象
 views.dailyaccount.lbl.budget.notSubject=予算対象外
 views.balancetable.lbl.zero_hidden=残高０を隠す
@@ -111,7 +110,7 @@ views.config.cf_bank=口座
 views.config.cf_creca=クレジットカード
 views.config.cf_emoney=電子マネー
 views.config.cf_item=項目
-views.config.cf_idealdepo=Parllet
+views.config.cf_prlt=Parllet
 views.config.cf_creca.day=日
 views.config.cf_creca.lastday=末日
 views.config.cf_handling_edit.del.alert=この&{%s}を使用して作られた&{%s}があるため削除できません
@@ -140,29 +139,53 @@ views.config.cf_hauser.fbLinkage.break.notes3=のみになります。
 views.config.cf_hauser.fbLinkage.break.notes4=Facebook連携を解除してよろしいですか？
 views.config.cf_hauser_pw.crt=現在の
 views.config.cf_hauser_pw.new=新しい
+views.config.cf_hauser_pw.confirm=確認
+views.config.cf_hauser_lv=アカウントの種類
+views.config.cf_hauser.chgLv=アカウントの種類を変更
+views.config.cf_hauser.lv_free=無料
+views.config.cf_hauser.lv_monthAmount=月額
+views.config.cf_hauser.lv_crncyCode=円
+views.config.cf_hauser.about=約
+views.config.cf_hauser.used=使用済み
+views.config.hauser.unsubscribe.title=退会手続き
+views.config.hauser.unsubscribe.text1=「&{%s}」ボタンを押すことで、Parlletから完全に退会することができます。
+views.config.hauser.unsubscribe.text2=現在支払をされている場合は、今後の支払いは自動的にキャンセルされます。
+views.config.hauser.unsubscribe.text3=また、Parlletに保存されている全てのデータが削除され、元に戻すことはできません。
+views.config.hauser.unsubscribe.text4=本当に全てのデータを削除して退会手続きを行って宜しいでしょうか？
+views.config.hauser.unsubscribe.btn.agreeAndUnsubscribe=同意して退会する
 
+views.pplRecurringPayments.reqRedirSetExpressCheckout.ioErr=paypal接続エラー
 views.pplRecurringPayments.receipt.title=支払最終確認
 views.pplRecurringPayments.receipt.h1=支払の最終確認
 views.pplRecurringPayments.receipt.defaultPayment=既定の支払い方法
 views.pplRecurringPayments.receipt.pay.firstDay=約１ヶ月後
-views.pplRecurringPayments.receipt.recCnt.before=100
-views.pplRecurringPayments.receipt.recCnt.after=1,000,000
 views.pplRecurringPayments.receipt.text1=「&{%s}」ボタンを押していただくことで、
 views.pplRecurringPayments.receipt.text2=Paypalの
 views.pplRecurringPayments.receipt.text3=に基づいて支払が行われます。
 views.pplRecurringPayments.receipt.text4=最初の支払は
 views.pplRecurringPayments.receipt.text5=からです。
-views.pplRecurringPayments.receipt.text6=正常に完了しますと、登録可能レコード数が 
-views.pplRecurringPayments.receipt.text7=に上がります。
+views.pplRecurringPayments.receipt.text6=正常に完了しますと、作成可能データ数が 
+views.pplRecurringPayments.receipt.text7=に変更されます。
 views.pplRecurringPayments.receipt.lbl1=支払い間隔：
 views.pplRecurringPayments.receipt.lbl2=1回あたりの支払の金額：
 views.pplRecurringPayments.receipt.pay.interval=月払い
 views.pplRecurringPayments.receipt.pay.amount=100円
 views.pplRecurringPayments.receipt.btn.confirm=支払を確定する
+views.pplRecurringPayments.confirm.title=月払いを開始しました
+views.pplRecurringPayments.confirm.text1=お支払いいただき、ありがとうございました。
+views.pplRecurringPayments.confirm.text2=今後の作成可能レコード数は
+views.pplRecurringPayments.confirm.text3=になりました。
+views.pplRecurringPayments.confirm.text4=この取引の詳細は、
+views.pplRecurringPayments.confirm.text5=でpaypalアカウントにログインして確認できます。
+views.pplRecurringPayments.confirm.btn.return=会員情報に戻る
+
+
+views.unsubscribed.title=退会処理を完了しました
+views.unsubscribed.text1=今まで Parllet をご利用いただき、ありがとうございました。
 
 
 views.dialogConfirm.case.bkem=口座か電子マネー
-views.dialogConfirm.case.ideal=取扱（Parllet）
+views.dialogConfirm.case.prlt=取扱（Parllet）
 views.dialogConfirm.case.itemIn=項目（収入）
 views.dialogConfirm.case.itemOut=項目（支出）
 views.dialogConfirm.suffix.title=がありません
@@ -180,6 +203,9 @@ views.contextMenu.insRec=の家計簿を入力
 
 views.contextMenu.add=&{%s}を追加
 views.contextMenu.upd=&{%s}を編集
+
+views.tooltip.oneMonthLater.text1=・支払を確定した日が１～２７日の場合は、１ヶ月後（次の月の同じ日）。
+views.tooltip.oneMonthLater.text2=・支払を確定した日が２８日以降の場合は、次の月の２７日。
 
 
 # テーブル
@@ -199,8 +225,11 @@ ParlletMst=Parllet
 ParlletMsts=Parllet
 Budget=予算データ
 Budgets=予算データ
+LevelMst=アカウントの種類
+LevelMsts=アカウントの種類
 Record=収支データ
 Records=収支データ
+
 
 # BalanceTypeMst(収支種類)の項目名
 balance_type_name=収支種類名称
@@ -248,6 +277,13 @@ nickname=ニックネーム
 fullname=フルネーム
 fbId=FacebookID
 isAdmin=管理者権限
+level=アカウントの種類
+
+# LevelMstの項目名
+level_name=アカウントの種類名
+month_amount=月額
+rec_size=作成可能データ数
+
 
 # 収支種類(BalanceType)
 BalanceType.in=収入
@@ -265,8 +301,8 @@ HandlingType.bank=口座
 HandlingType.creca=クレジットカード
 HandlingType.emoney=電子マネー
 
-# 取扱(Parllet)種類(IdepoType)
-IdepoType.idepo=Parllet
+# 取扱(Parllet)種類(PrltType)
+PrltType.prlt=Parllet
 
 # 残高種類(RemainderType)
 RemainderType.total=残高合計

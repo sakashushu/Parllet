@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Type;
 
@@ -41,11 +42,15 @@ public class HaUser extends Model {
 	public Boolean isAdmin;
 	
 	public Boolean zero_hidden_bkem;
-	public Boolean zero_hidden_idepo;
+	public Boolean zero_hidden_prlt;
 	public Boolean inv_hidden_bkem;
+	
+	@ManyToOne
+	public LevelMst level_mst;
 	
 	public String pplPayerId;
 	public Integer pplStatus;
+	public String pplProfileId;
 	
 	public Date created;
 	public Date modified;
@@ -61,10 +66,12 @@ public class HaUser extends Model {
 			Boolean pwSetFlg,
 			Boolean isAdmin,
 			Boolean zero_hidden_bkem,
-			Boolean zero_hidden_idepo,
+			Boolean zero_hidden_prlt,
 			Boolean inv_hidden_bkem,
+			LevelMst level_mst,
 			String pplPayerId,
 			Integer pplStatus,
+			String pplProfileId,
 			Date created,
 			Date modified
 			) {
@@ -78,10 +85,12 @@ public class HaUser extends Model {
 		this.pwSetFlg = pwSetFlg;
 		this.isAdmin = isAdmin;
 		this.zero_hidden_bkem = zero_hidden_bkem;
-		this.zero_hidden_idepo = zero_hidden_idepo;
+		this.zero_hidden_prlt = zero_hidden_prlt;
 		this.inv_hidden_bkem = inv_hidden_bkem;
+		this.level_mst = level_mst;
 		this.pplPayerId = pplPayerId;
 		this.pplStatus = pplStatus;
+		this.pplProfileId = pplProfileId;
 		this.created = created;
 		this.modified = modified;
 	}

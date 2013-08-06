@@ -1,0 +1,197 @@
+#{extends 'Config/cf_main.html' /}
+#{set title:messages.get('views.config.cf_hauser')+' '+messages.get('views.config.cf_hauser_lv') /}
+
+<script type="text/javascript">
+<!--
+var mapLvlName = new Object(),
+	mapLvlMonthAmount	 = new Object(),
+	mapLvlRecSize = new Object(),
+	preLevel;
+#{list items:models.LevelMst.find("order by level").fetch(), as:'lM'}
+	mapLvlName[${lM.level}] = "${lM.level_name}";
+	mapLvlMonthAmount[${lM.level}] = ${lM.month_amount};
+	mapLvlRecSize[${lM.level}] = ${lM.rec_size};
+#{/list}
+
+jQuery(function() {
+	preLevel = jQuery('#level').val();
+	%{
+		htRecCnt = models.Record.count("ha_user = ?", haUser)
+		htHdlgCnt = models.HandlingMst.count("ha_user = ?", haUser)
+		htPrltCnt = models.ParlletMst.count("ha_user = ?", haUser)
+		htItemCnt = models.ItemMst.count("ha_user = ?", haUser)
+		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
+		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
+	}%
+	var vSumCnt = ${htSumCnt},
+		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	jQuery('#spnUsePrcntCrt, #spnUsePrcnt').text(vUsePercent);
+	jQuery('#cfhuProgressBar, #cfhuProgressBarCrt').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		
+		jQuery(selector).css('background','Green');
+		if (vUsePercent >= 90)
+			jQuery(selector).css('background', 'Red');
+	});
+	
+	jQuery('#level').change(function(e){
+		var jVal = jQuery(this).val();
+		if (vSumCnt>mapLvlRecSize[jVal]) {
+			alert(mapLvlName[jVal]+"の&{'rec_size'}("+mapLvlRecSize[jVal]+")を超えた&{'Records'}が既に作られています。\n"+
+					mapLvlName[jVal]+"に戻すには"+mapLvlRecSize[jVal]+"件以下になるまで&{'Records'}を削除する必要があります。");
+			e.preventDefault();
+			jQuery(this).val(preLevel);
+			return;
+		}
+		preLevel = jQuery('#level').val();
+		vUsePercent = roundup(vSumCnt*100/mapLvlRecSize[jVal], 0);
+		jQuery('.spnLvlRecSize').each(function() {
+			jQuery(this).text(addFigure(mapLvlRecSize[jVal]));
+		});
+		jQuery('#spnUsePrcnt').text(vUsePercent);
+		jQuery('#cfhuProgressBar').progressbar("value", vUsePercent)
+								.each(function() {
+			var selector = jQuery(this).find('div');
+			
+			jQuery(selector).css('background','Green');
+			if (vUsePercent >= 90)
+				jQuery(selector).css('background', 'Red');
+		});
+	});
+	
+	/* 保存リンクEnter時はクリックイベントへ */
+	jQuery('#aSetExpressCheckout').keypress(function(e) {
+		if(e.which==13) {
+			e.preventDefault();
+			jQuery(this).click();
+		}
+	});
+	/* 保存リンククリックイベント */
+	jQuery('#aSetExpressCheckout').click(function(e) {
+		e.preventDefault();
+		var jVal = parseInt(jQuery('#level').val());
+		if (jVal===${haUser.level_mst.level}) {
+			jQuery('#frmHauserEdit').submit();
+		} else {
+			jQuery('#inpAmt').val(mapLvlMonthAmount[jVal]);
+			jQuery('#inpLevelNew').val(jVal);
+			jQuery('#pplSetExpressCheckout').submit();
+		}
+	});
+});
+/* 文字列を3桁区切りにする関数 */
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
+// -->
+</script>
+
+<!-- paypal支払用フォーム -->
+#{form @PplRecurringPayments.reqRedirSetExpressCheckout(), id:'pplSetExpressCheckout', class:'invisible'}
+<!-- 
+	<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
+ -->
+ 	<input type="text" name=intAmt id="inpAmt" />
+ 	<input type="text" name=intLevelNew id="inpLevelNew" />
+	<input type="submit" name=METHOD value="SetExpressCheckout" />
+#{/form}
+
+<!-- 会員情報変更変更用フォーム -->
+#{form @cf_hauser_edit(), id:'frmHauserEdit', class:'invisible'}
+	<input type="submit"  />
+#{/form}
+
+
+#{ifErrors}
+<p class="crudFlash flashError">
+	#{errors}
+		${error}
+	#{/errors}
+</p>
+#{/ifErrors}
+#{else}
+<div id="crudShow">
+	
+	<h3><span>&{'insupd.edit', messages.get('views.config.cf_hauser_lv')}</span></h3>
+	
+	<div class="objectForm">
+		
+		<div class="crudField">
+			#{field 'level_pre'}
+			<label class="fieldName">&{'views.config.cf_hauser_pw.crt'}&{'level'}:</label>
+			<div class="right">
+				<div class="upper">
+					%{lM = haUser.level_mst}%
+					${lM.level_name} (${lM.month_amount==0 ? messages.get('views.config.cf_hauser.lv_free') : messages.get('views.config.cf_hauser.lv_monthAmount')+lM.month_amount.format('###,###')+messages.get('views.config.cf_hauser.lv_crncyCode')})<br>
+					<br>
+					&{'rec_size'}：<span>${haUser.level_mst.rec_size.format('###,###')}</span><br>
+					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcntCrt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / <span>${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
+				</div>
+				<div id="cfhuProgressBarCrt"></div>
+			</div>
+			#{/field}
+		</div>
+		
+		<div class="crudField">
+			#{field 'level'}
+			<label id="level_lbl" class="fieldName">&{'views.config.cf_hauser_pw.new'}&{'level'}:</label>
+			<div class="right">
+				<div class="upper">
+					<select id="${field.name}" name="${field.name}" class="re_w150">
+						#{list items:models.LevelMst.find("order by level").fetch(), as:'lM'}
+						<option value=${lM.level}${haUser?.level_mst.id==lM.id ? ' selected' : ''}>${lM.level_name}
+							 (${lM.month_amount==0 ? messages.get('views.config.cf_hauser.lv_free') : messages.get('views.config.cf_hauser.lv_monthAmount')+lM.month_amount.format('###,###')+messages.get('views.config.cf_hauser.lv_crncyCode')})
+						</option>
+						#{/list}
+					</select><br>
+					<br>
+					&{'rec_size'}：<span class="spnLvlRecSize">${haUser.level_mst.rec_size.format('###,###')}</span><br>
+					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / <span class="spnLvlRecSize">${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
+				</div>
+				<div id="cfhuProgressBar"></div>
+			</div>
+			#{/field}
+		</div>
+		
+		<div class="crudField bbsNone">
+			<a href="@{Config.cf_hauser_edit()}" class="aBtn">&{'views.common.btn.cancel'}</a>
+			<a tabindex="0" class="aBtn" id="aSetExpressCheckout">&{'insupd.save'}</a>
+		</div>
+		
+	</div>
+	
+</div>
+
+
+<br>
+<!-- 
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="JJ243U523YGJN">
+<input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name="submit" alt="PayPal - オンラインでより安全・簡単にお支払い">
+<input type="hidden" name="notify_url" value="http://sakashushu.net/PplIpn/validation">
+<img alt="" border="0" src="https://www.paypalobjects.com/ja_JP/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+<br>
+
+<form method="post" action="https://api-3t.paypal.com/nvp">
+<input type="hidden" name="USER" value="${play.configuration.getProperty('paypal.API_username')}">
+<input type="hidden" name="PWD" value="${play.configuration.getProperty('paypal.API_password')}">
+<input type="hidden" name="SIGNATURE" value="${play.configuration.getProperty('paypal.API_signature')}">
+<input type="hidden" name="VERSION" value="95.0">
+<input type="hidden" name="PAYMENTREQUEST_0_PAYMENTACTION" value="Sale">
+<input name="PAYMENTREQUEST_0_AMT" value="100">
+<input type="hidden" name=RETURNURL value="http://sakashushu.com/myDpRt/paypal/receipt">
+<input type="hidden" name=CANCELURL value="http://sakashushu.com/myDpRt/config/hauser/edit">
+// <input type="image" src="@{'/public/images/btn_month_paypal.gif'}" border="0" name=METHOD alt="PayPal - オンラインでより安全・簡単にお支払い" value="SetExpressCheckout">
+<input type="submit" name="METHOD" value="SetExpressCheckout">
+</form>
+
+<br>
+ -->
+#{/else}

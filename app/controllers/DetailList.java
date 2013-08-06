@@ -98,8 +98,8 @@ public class DetailList extends Controller {
 				if(!session.get(Common.FLTR_DL_BAL_HDLG_ID).equals(""))
 					h_handling_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_HDLG_ID));
 				h_parllet_id = null;
-				if(!session.get(Common.FLTR_DL_BAL_IDEPO_ID).equals(""))
-					h_parllet_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_IDEPO_ID));
+				if(!session.get(Common.FLTR_DL_BAL_PRLT_ID).equals(""))
+					h_parllet_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_PRLT_ID));
 		    	h_item_id = null;
 		    	if(!session.get(Common.FLTR_DL_BAL_ITEM_ID).equals(""))
 		    		h_item_id = Long.parseLong(session.get(Common.FLTR_DL_BAL_ITEM_ID));
@@ -124,7 +124,7 @@ public class DetailList extends Controller {
 	
 		List<Record> records = null;
 		List<BalanceTypeMst> bTypes = null;
-		List<ParlletMst> iDepos = null;
+		List<ParlletMst> prlts = null;
 		List<HandlingMst> handlings = null;
 		BalanceTypeMst bTypeIn = null;
 		BalanceTypeMst bTypeOut = null;
@@ -171,7 +171,7 @@ public class DetailList extends Controller {
 					    validation.valid(eRec);
 					    if(validation.hasErrors()) {
 					    	// 以下の描画では駄目かも？
-					    	render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_parllet_id, h_item_id);
+					    	render(bTypes, handlings, prlts, itemsIn, itemsOut, records, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_parllet_id, h_item_id);
 					    }
 	    				// 何れかの項目が変更されていた行だけ更新
 	    				if (rec.payment_date != eRec.payment_date ||
@@ -263,7 +263,7 @@ public class DetailList extends Controller {
 			session.put(Common.FLTR_DL_BAL_PDTE_TO, h_payment_date_to==null ? "" : h_payment_date_to);
 			session.put(Common.FLTR_DL_BAL_BTYPE_ID, h_balance_type_id==null ? "" : h_balance_type_id);
 			session.put(Common.FLTR_DL_BAL_HDLG_ID, h_handling_id==null ? "" : h_handling_id);
-			session.put(Common.FLTR_DL_BAL_IDEPO_ID, h_parllet_id==null ? "" : h_parllet_id);
+			session.put(Common.FLTR_DL_BAL_PRLT_ID, h_parllet_id==null ? "" : h_parllet_id);
 			session.put(Common.FLTR_DL_BAL_ITEM_ID, h_item_id==null ? "" : h_item_id);
 			session.put(Common.FLTR_DL_BAL_DDTE_FR, h_debit_date_fr==null ? "" : h_debit_date_fr);
 			session.put(Common.FLTR_DL_BAL_DDTE_TO, h_debit_date_to==null ? "" : h_debit_date_to);
@@ -274,7 +274,7 @@ public class DetailList extends Controller {
 			bTypes = BalanceTypeMst.find("order by id").fetch();
 			
 			// 検索処理(ParlletMst)
-			iDepos = ParlletMst.find("ha_user = ? order by order_seq", haUser).fetch();
+			prlts = ParlletMst.find("ha_user = ? order by order_seq", haUser).fetch();
 			
 			// 検索処理(HandlingMst)
 			handlings = HandlingMst.find("ha_user = ? order by handling_type_mst.handling_type_order, order_seq", haUser).fetch();
@@ -349,7 +349,7 @@ public class DetailList extends Controller {
 					sqlSrchRec).from(0).fetch(page, 30);
 		}
 		
-		render(bTypes, handlings, iDepos, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_parllet_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
+		render(bTypes, handlings, prlts, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_parllet_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
     }
 	
 	
@@ -500,7 +500,7 @@ public class DetailList extends Controller {
 				wkDlRbRecEach.setStrPaymentDate(objEach[3]==null ? "" : String.valueOf(objEach[3]));
 				wkDlRbRecEach.setStrBalanceTypeName(objEach[4]==null ? "" : String.valueOf(objEach[4]));
 				wkDlRbRecEach.setStrHandlingName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
-				wkDlRbRecEach.setStrIdealDepositName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
+				wkDlRbRecEach.setStrParlletName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
 				wkDlRbRecEach.setLngAmount(objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7])));
 				wkDlRbRecEach.setStrStore(objEach[8]==null ? "" : String.valueOf(objEach[8]));
 				wkDlRbRecEach.setLngRemainder(lngRemainder);
@@ -704,7 +704,7 @@ public class DetailList extends Controller {
 				"  ,to_char(r.payment_date, 'YYYY/MM/DD HH24:MI') as rm_payment_date " +
 				"  ,b.balance_type_name as rm_balance_type_name " +
 				"  ,h.handling_name as rm_handling_name " +
-				"  ,id.parllet_name as rm_parllet_name " +
+				"  ,pm.parllet_name as rm_parllet_name " +
 				"  ,r.amount as rm_amount " +
 				"  ,r.store as rm_store " +
 				"  ,null as rm_balance_type_id " +
@@ -712,8 +712,8 @@ public class DetailList extends Controller {
 				"  ,r.payment_date as rm_payment_date_order " +
 				" FROM Record r " +
 				sqlJoinPhrase +
-				" LEFT JOIN ParlletMst id " +
-				"   ON r.parllet_mst_id = id.id " +
+				" LEFT JOIN ParlletMst pm " +
+				"   ON r.parllet_mst_id = pm.id " +
 				sqlWherePhrase +
 				"   AND h.id = " + h_handling_id +
 				"   AND b.balance_type_name in('" + Common.BALANCE_TYPE_OUT + "','" + Common.BALANCE_TYPE_IN + "','" + Common.BALANCE_TYPE_BANK_OUT + "','" + Common.BALANCE_TYPE_BANK_IN + "') " +
@@ -735,13 +735,13 @@ public class DetailList extends Controller {
 	 * @param h_handling_id
 	 * @param dlRiSrch
 	 */
-	public static void dl_remainderIdeal(
+	public static void dl_remainderPrlt(
     		Integer page,					/* 現在ページ */
     		Integer dlRiHdSecretRecFlg,		/* 絞込非公開フラグ */
     		String dlRiHdDebitDateFr,		/* 絞込引落日範囲（開始） */
     		String dlRiHdDebitDateTo,		/* 絞込引落日範囲（終了） */
-    		Long dlRiHdIdealDepositId,		/* 絞込取扱(Parllet)ID */
-    		String dlRiSrch						/* 「絞込」ボタン */
+    		Long dlRiHdParlletId,			/* 絞込取扱(Parllet)ID */
+    		String dlRiSrch					/* 「絞込」ボタン */
     		) {
 		
 		//意図的に絞り込まれていない時
@@ -753,9 +753,9 @@ public class DetailList extends Controller {
 		    		dlRiHdSecretRecFlg = Integer.parseInt(session.get(Common.FLTR_DL_RI_SCRT_REC_FLG));
 				dlRiHdDebitDateFr = session.get(Common.FLTR_DL_RI_DDTE_FR);
 				dlRiHdDebitDateTo = session.get(Common.FLTR_DL_RI_DDTE_TO);
-		    	dlRiHdIdealDepositId = null;
-				if(!session.get(Common.FLTR_DL_RI_IDEPO_ID).equals(""))
-					dlRiHdIdealDepositId = Long.parseLong(session.get(Common.FLTR_DL_RI_IDEPO_ID));
+		    	dlRiHdParlletId = null;
+				if(!session.get(Common.FLTR_DL_RI_PRLT_ID).equals(""))
+					dlRiHdParlletId = Long.parseLong(session.get(Common.FLTR_DL_RI_PRLT_ID));
 		    	
 		    //初回読み込み時は絞込引落日範囲は1か月前から半年後
 			} else {
@@ -772,7 +772,7 @@ public class DetailList extends Controller {
 			page = 1;
 	
 		List<Record> records = null;
-		List<ParlletMst> iDepos = null;
+		List<ParlletMst> prlts = null;
 		
 		
 		long count = 0L;		//レコード数
@@ -793,12 +793,12 @@ public class DetailList extends Controller {
 		session.put(Common.FLTR_DL_RI_SCRT_REC_FLG, dlRiHdSecretRecFlg==null ? "" : dlRiHdSecretRecFlg);
 		session.put(Common.FLTR_DL_RI_DDTE_FR, dlRiHdDebitDateFr==null ? "" : dlRiHdDebitDateFr);
 		session.put(Common.FLTR_DL_RI_DDTE_TO, dlRiHdDebitDateTo==null ? "" : dlRiHdDebitDateTo);
-		session.put(Common.FLTR_DL_RI_IDEPO_ID, dlRiHdIdealDepositId==null ? "" : dlRiHdIdealDepositId);
+		session.put(Common.FLTR_DL_RI_PRLT_ID, dlRiHdParlletId==null ? "" : dlRiHdParlletId);
 		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		
 		// 検索処理(ParlletMst)
-		iDepos = ParlletMst.find("ha_user = ? order by order_seq", haUser).fetch();
+		prlts = ParlletMst.find("ha_user = ? order by order_seq", haUser).fetch();
 		
 		
 		/* 残高明細行作成 */
@@ -806,19 +806,19 @@ public class DetailList extends Controller {
 		DetailList dl = new DetailList();
 		//  取扱(Parllet)
 		//意図的に絞り込まれていない時は取扱(Parllet)の先頭のモノで絞り込む
-		if(dlRiSrch==null && dlRiHdIdealDepositId==null)
-			dlRiHdIdealDepositId = iDepos.get(0).id;
+		if(dlRiSrch==null && dlRiHdParlletId==null)
+			dlRiHdParlletId = prlts.get(0).id;
 		// JOIN句 固定部分
 		String sqlJoinPhrase = "" +
 				" LEFT JOIN BalanceTypeMst b " +
 				"   ON r.balance_type_mst_id = b.id " +
-				" LEFT JOIN ParlletMst id " +
-				"   ON r.parllet_mst_id = id.id " +
+				" LEFT JOIN ParlletMst pm " +
+				"   ON r.parllet_mst_id = pm.id " +
 				"";
 		// WHERE句 固定部分
 		String sqlWherePhrase = "" +
 				" WHERE r.ha_user_id = " + haUser.id +
-				"   AND id.id = " + dlRiHdIdealDepositId +
+				"   AND pm.id = " + dlRiHdParlletId +
 				"";
 		//  非公開フラグ
 		String sqlSecretRecFlg = "";
@@ -841,7 +841,7 @@ public class DetailList extends Controller {
 		/* 残高明細行作成 */
 		
 		//残高明細行取得用SQL作成
-		sql = dl.makeSqlDlRiRec(dlRiHdDebitDateFr, dlRiHdDebitDateTo, dlRiHdIdealDepositId, sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg);
+		sql = dl.makeSqlDlRiRec(dlRiHdDebitDateFr, dlRiHdDebitDateTo, dlRiHdParlletId, sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg);
 
 		List<Object[]> lstObjEach = JPA.em().createNativeQuery(sql).getResultList();
 		
@@ -874,7 +874,7 @@ public class DetailList extends Controller {
 				wkDlRbRecEach.setStrDebitDate(String.valueOf(objEach[2]));
 				wkDlRbRecEach.setStrPaymentDate(objEach[3]==null ? "" : String.valueOf(objEach[3]));
 				wkDlRbRecEach.setStrBalanceTypeName(objEach[4]==null ? "" : String.valueOf(objEach[4]));
-				wkDlRbRecEach.setStrIdealDepositName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
+				wkDlRbRecEach.setStrParlletName(objEach[5]==null ? "" : String.valueOf(objEach[5]));
 				wkDlRbRecEach.setStrHandlingName(objEach[6]==null ? "" : String.valueOf(objEach[6]));
 				wkDlRbRecEach.setLngAmount(objEach[7]==null ? 0 : Long.parseLong(String.valueOf(objEach[7])));
 				wkDlRbRecEach.setStrStore(objEach[8]==null ? "" : String.valueOf(objEach[8]));
@@ -882,7 +882,7 @@ public class DetailList extends Controller {
 				
 				//収支明細へジャンプのための引数をセット
 				wkDlRbRecEach.setLngBalanceTypeId(objEach[9]==null ? null : Long.parseLong(String.valueOf(objEach[9])));
-				wkDlRbRecEach.setLngIdealDepositId(objEach[10]==null ? null : Long.parseLong(String.valueOf(objEach[10])));
+				wkDlRbRecEach.setLngParlletId(objEach[10]==null ? null : Long.parseLong(String.valueOf(objEach[10])));
 				
 				lWDRR.add(wkDlRbRecEach);
 			}
@@ -890,7 +890,7 @@ public class DetailList extends Controller {
 				break;
 		}
 		
-		render(dlRiHdDebitDateFr, dlRiHdDebitDateTo, iDepos, records, lWDRR, dlRiHdSecretRecFlg, dlRiHdIdealDepositId, count, nbPages, page);
+		render(dlRiHdDebitDateFr, dlRiHdDebitDateTo, prlts, records, lWDRR, dlRiHdSecretRecFlg, dlRiHdParlletId, count, nbPages, page);
     }
 	
 	/**
@@ -914,7 +914,7 @@ public class DetailList extends Controller {
 					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_OUT + "' THEN -r.amount " +
 					"";
 			// Parllet引出：減算、Parllet預入：加算
-			String sqlSumIdealDepositInOut = "" +
+			String sqlSumParlletInOut = "" +
 					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_PARLLET_OUT + "' THEN -r.amount" +
 					" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_PARLLET_IN + "' THEN r.amount" +
 					"";
@@ -922,8 +922,8 @@ public class DetailList extends Controller {
 			sql = "   SELECT " +
 					"   COALESCE(SUM(" +
 					"     CASE " +
-					sqlSumBalanceInOut +		//収入加算・支出減算
-					sqlSumIdealDepositInOut +	//Parllet引出減算・Parllet預入加算
+					sqlSumBalanceInOut +	//収入加算・支出減算
+					sqlSumParlletInOut +	//Parllet引出減算・Parllet預入加算
 					"     END" +
 					"   ), 0) " +
 					" FROM Record r " +
@@ -949,15 +949,15 @@ public class DetailList extends Controller {
 	 * 残高明細（Parllet）行取得用SQL作成
 	 * @param dlRiHdDebitDateFr
 	 * @param dlRiHdDebitDateTo
-	 * @param dlRiHdIdealDepositId
+	 * @param dlRiHdParlletId
 	 * @param sqlJoinPhrase
 	 * @param sqlSecretRecFlg
 	 * @return
 	 */
 	private String makeSqlDlRiRec(
-    		String dlRiHdDebitDateFr,		/* 絞込引落日範囲（開始） */
-    		String dlRiHdDebitDateTo,		/* 絞込引落日範囲（終了） */
-    		Long dlRiHdIdealDepositId,		/* 絞込取扱(Parllet)ID */
+    		String dlRiHdDebitDateFr,	/* 絞込引落日範囲（開始） */
+    		String dlRiHdDebitDateTo,	/* 絞込引落日範囲（終了） */
+    		Long dlRiHdParlletId,		/* 絞込取扱(Parllet)ID */
     		String sqlJoinPhrase,
 			String sqlWherePhrase,
     		String sqlSecretRecFlg
@@ -976,10 +976,10 @@ public class DetailList extends Controller {
 		sqlWherePhrase += sqlDebitDateFr + sqlDebitDateTo;
 		
 		//残高明細行取得用SQL作成(クレジットカード)
-		String sqlDlRbRecCreca = makeSqlDlRiRecCreca(sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, dlRiHdIdealDepositId);
+		String sqlDlRbRecCreca = makeSqlDlRiRecCreca(sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, dlRiHdParlletId);
 		
 		//残高明細行取得用SQL作成(クレジットカード以外)
-		String sqlDlRbRecNotCreca = makeSqlDlRiRecNotCreca(sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, dlRiHdIdealDepositId);
+		String sqlDlRbRecNotCreca = makeSqlDlRiRecNotCreca(sqlJoinPhrase, sqlWherePhrase, sqlSecretRecFlg, dlRiHdParlletId);
 		
 		sql = "" +
 				" ( " + sqlDlRbRecCreca + " ) " +
@@ -1017,12 +1017,12 @@ public class DetailList extends Controller {
 				"  ,to_char(r.debit_date, 'YYYY/MM/DD') as rm_debit_date " +
 				"  ,cast('' as character varying(255)) as rm_payment_date " +
 				"  ,b.balance_type_name as rm_balance_type_name " +
-				"  ,id.parllet_name as rm_parllet_name " +
+				"  ,pm.parllet_name as rm_parllet_name " +
 				"  ,h.handling_name as rm_handling_name " +
 				"  ,COALESCE(SUM(r.amount), 0) as rm_amount " +
 				"  ,cast('' as character varying(255)) as rm_store " +
 				"  ,b.id as rm_balance_type_id " +
-				"  ,id.id as rm_parllet_id " +
+				"  ,pm.id as rm_parllet_id " +
 				"  ,r.debit_date as rm_payment_date_order " +
 				" FROM Record r " +
 				sqlJoinPhrase +
@@ -1064,7 +1064,7 @@ public class DetailList extends Controller {
 				"  ,to_char(r.debit_date, 'YYYY/MM/DD') as rm_debit_date " +
 				"  ,to_char(r.payment_date, 'YYYY/MM/DD HH24:MI') as rm_payment_date " +
 				"  ,b.balance_type_name as rm_balance_type_name " +
-				"  ,id.parllet_name as rm_parllet_name " +
+				"  ,pm.parllet_name as rm_parllet_name " +
 				"  ,h.handling_name as rm_handling_name " +
 				"  ,r.amount as rm_amount " +
 				"  ,r.store as rm_store " +

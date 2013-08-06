@@ -9,8 +9,13 @@
 
 #{form @cf_item_orderChange()}
 <div class="objectForm sortable">
+%{
+	crudSize = itemMsts.size()
+	crudCnt = 0
+}%
 #{list items:itemMsts, as:'itemMst'}
-	<p class="data ${itemMst_parity} crudField">
+	%{crudCnt++}%
+	<p class="data ${itemMst_parity} crudField${crudCnt!=crudSize ? '' : ' bbsNone'}">
 	  #{if sBalanceType == messages.get('BalanceType.in')}
 		<a href="@{cf_item_in_edit(itemMst.id)}">
 	  #{/if}

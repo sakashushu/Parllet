@@ -11,7 +11,7 @@ public class WkDaToDl {
 	private String sDebitDateTo;		/* 絞込引落日範囲（終了） */
 	private Long lBalanceTypeId;  		/* 絞込収支種類ID */
 	private Long lHandlingId;			/* 絞込取扱(実際)ID */
-	private Long lIdealDepositId;		/* 絞込取扱(My貯金)ID */
+	private Long lParlletId;			/* 絞込取扱(Parllet)ID */
 	private Long lItemId;				/* 絞込項目ID */
 	public long getlAmount() {
 		return lAmount;
@@ -61,11 +61,11 @@ public class WkDaToDl {
 	public void setlHandlingId(Long lHandlingId) {
 		this.lHandlingId = lHandlingId;
 	}
-	public Long getlIdealDepositId() {
-		return lIdealDepositId;
+	public Long getlParlletId() {
+		return lParlletId;
 	}
-	public void setlIdealDepositId(Long lIdealDepositId) {
-		this.lIdealDepositId = lIdealDepositId;
+	public void setlParlletId(Long lParlleId) {
+		this.lParlletId = lParlleId;
 	}
 	public Long getlItemId() {
 		return lItemId;

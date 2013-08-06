@@ -48,13 +48,14 @@ function login(title, linkFlg) {
 //							jQuery("#dialog-form").dialog( "open" );
 							openDialogForm(title, true, "", "", vId, vName, vLink);
 						} else {
-							jQuery('#saUsername').css('display', 'none');
-							jQuery('#saUsername2').css('display', 'inline');
-							jQuery('#saPassword').css('display', 'none');
-							jQuery('#saPassword2').css('display', 'inline');
-							jQuery('#saUsername').val(jsonA.strEmail);
-							jQuery('#saPassword').val(jsonA.strPassword);
-							jQuery('#signin').click();
+							executeLogin(jsonA.strEmail, jsonA.strPassword);
+//							jQuery('#saUsername').css('display', 'none');
+//							jQuery('#saUsername2').css('display', 'inline');
+//							jQuery('#saPassword').css('display', 'none');
+//							jQuery('#saPassword2').css('display', 'inline');
+//							jQuery('#saUsername').val(jsonA.strEmail);
+//							jQuery('#saPassword').val(jsonA.strPassword);
+//							jQuery('#signin').click();
 						}
 					}
 				})
@@ -68,6 +69,16 @@ function login(title, linkFlg) {
 		}
 	});
 }
+function executeLogin(email, password) {
+	jQuery('#saUsername').css('display', 'none');
+	jQuery('#saUsername2').css('display', 'inline');
+	jQuery('#saPassword').css('display', 'none');
+	jQuery('#saPassword2').css('display', 'inline');
+	jQuery('#saUsername').val(email);
+	jQuery('#saPassword').val(password);
+	jQuery('#signin').click();
+}
+
 
 function testAPI() {
 	console.log('Welcome!  Fetching your information.... ');

@@ -202,13 +202,13 @@ jQuery(function() {
 			jQuery('#hPaymentDateTo').val(jQuery('.ToDlPaymentDateTo',this).val());
 			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
 			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId',this).val());
-			jQuery('#hIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			jQuery('#hParlletId').val(jQuery('.ToDlParlletId',this).val());
 			jQuery('#hItemId').val(jQuery('.ToDlItemId',this).val());
 			
 			//家計簿入力へジャンプする際の絞込項目セット
 			jQuery('#dfPaymentDate').val(jQuery('.ToDlPaymentDateFr',this).val()+' 00:00');
 			jQuery('#dfBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
-			jQuery('#dfIdealDepositId').val(jQuery('.ToDlIdealDepositId',this).val());
+			jQuery('#dfParlletId').val(jQuery('.ToDlParlletId',this).val());
 			jQuery('#dfItemId').val(jQuery('.ToDlItemId',this).val());
 			jQuery('#dfDebitDate').val(jQuery('.ToDlPaymentDateFr',this).val());
 			
@@ -291,7 +291,7 @@ function addFigure(str) {
 #{form @RecordEdit.recordEdit()}
 	<input type="text" name="df_payment_date" id="dfPaymentDate" class="invisible" />
 	<input type="text" name="df_balance_type_id" id="dfBalanceTypeId" class="invisible" />
-	<input type="text" name="df_parllet_id" id="dfIdealDepositId" class="invisible" />
+	<input type="text" name="df_parllet_id" id="dfParlletId" class="invisible" />
 	<input type="text" name="df_item_id" id="dfItemId" class="invisible" />
 	<input type="text" name="df_debit_date" id="dfDebitDate" class="invisible" />
 	<input type="submit" id="submitRecordEdit" class="invisible" />
@@ -345,8 +345,8 @@ function addFigure(str) {
 						&{'views.dailyaccount.lbl.monthSum'}
 						<div class="da_budget_subject">(&{'views.dailyaccount.lbl.budget.subject'})</div>
 					</div>
-					<div class="da_idepo_link da_head second">
-						&{'views.dailyaccount.lbl.idepoLink'}
+					<div class="da_prlt_link da_head second">
+						&{'views.dailyaccount.lbl.prltLink'}
 						<div class="da_budget_subject">(&{'views.dailyaccount.lbl.budget.notSubject'})</div>
 					</div>
 				</li>
@@ -416,7 +416,7 @@ function addFigure(str) {
 						<li>
 							<!-- 予算あり -->
 							#{if lwda.bBudgetFlg}
-								<!-- 項目・My貯金　毎 -->
+								<!-- 項目・Parllet　毎 -->
 								#{if lwda.sItem != ''}
 									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
 									<div class="da_cate2">${lwda.sItem}</div>
@@ -439,7 +439,7 @@ function addFigure(str) {
 							#{/if}
 							<!-- 予算なし -->
 							#{else}
-								<!-- 項目・My貯金　毎 -->
+								<!-- 項目・Parllet　毎 -->
 								#{if lwda.sItem != ''}
 									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
 									<div class="da_cate2_budget">${lwda.sItem}</div>
@@ -463,7 +463,7 @@ function addFigure(str) {
 								<span class="padR4">	
 									#{if lwda.sLargeCategory==messages.get('BalanceType.in') ||
 											lwda.sLargeCategory==messages.get('BalanceType.out')}
-										${lwda.lIdepoLink.format('###,###')}
+										${lwda.lPrltLink.format('###,###')}
 									#{/if}
 									#{else}
 										-
@@ -488,14 +488,14 @@ function addFigure(str) {
 						#{list items:lwda.lstWdtd, as:'wdtd'}
 						<div class="${leftFlg==1 ? 'da_left_cell ' : ''}da_ary_day numeric menu_cell">
 							<!-- 
-							<a href="@{DetailList.dl_balance(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lIdealDepositId,wdtd.lItemId)}" class="padR4">${wdtd.lAmount}</a>
+							<a href="@{DetailList.dl_balance(1,0,wdtd.sPaymentDateFr,wdtd.sPaymentDateTo,wdtd.lBalanceTypeId,wdtd.lHandlingId,wdtd.lParlletId,wdtd.lItemId)}" class="padR4">${wdtd.lAmount}</a>
 							<a href="" class="padR4" onclick="document.frmDetailList.submit();return false;">${wdtd.lAmount}</a>
 							 -->
 							<input type="hidden" class="ToDlPaymentDateFr" value="${wdtd?.sPaymentDateFr}" />
 							<input type="hidden" class="ToDlPaymentDateTo" value="${wdtd?.sPaymentDateTo}" />
 							<input type="hidden" class="ToDlBalanceTypeId" value="${wdtd?.lBalanceTypeId}" />
 							<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
-							<input type="hidden" class="ToDlIdealDepositId" value="${wdtd?.lIdealDepositId}" />
+							<input type="hidden" class="ToDlParlletId" value="${wdtd?.lParlletId}" />
 							<input type="hidden" class="ToDlItemId" value="${wdtd?.lItemId}" />
 							<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 						</div>

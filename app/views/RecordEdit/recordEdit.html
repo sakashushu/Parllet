@@ -45,8 +45,8 @@ jQuery(function() {
 	//「取扱(実際)」の状態調整
 	conditionAdjust_Handling();
 	
-	//「取扱(My貯金)」の状態調整
-	conditionAdjust_IdealDepo();
+	//「取扱(Parllet)」の状態調整
+	conditionAdjust_Prlt();
 	
 	//「項目」の状態調整
 	conditionAdjust_Item();
@@ -88,13 +88,13 @@ jQuery(function() {
 			//口座・電子マネー作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
 			
-		//「収支種類」がMy貯金預入・My貯金引出で、「取扱(My貯金)」のリストがゼロの時
+		//「収支種類」がParllet預入・Parllet引出で、「取扱(Parllet)」のリストがゼロの時
 		} else if((jText==="&{'BalanceType.parllet_in'}" ||
 					jText==="&{'BalanceType.parllet_out'}") &&
 				jQuery('#parllet_mst').children().length===1) {
 			e.preventDefault();
-			//My貯金作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.ideal'}", jText);
+			//Parllet作成用ダイアログ
+			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
 			
 		} else {
 			//「取扱(実際)」の状態調整
@@ -103,8 +103,8 @@ jQuery(function() {
 			//「取扱(実際)」のリスト再作成
 			remakeList_Handling();
 			
-			//「取扱(My貯金)」の状態調整
-			conditionAdjust_IdealDepo();
+			//「取扱(Parllet)」の状態調整
+			conditionAdjust_Prlt();
 			preBType = jQuery('#balance_type_mst').val();
 			
 			//「項目」の状態調整
@@ -188,7 +188,7 @@ function conditionAdjust_Handling() {
 
 /* 「取扱(実際)」のリスト再作成 */
 function remakeList_Handling() {
-	//「収支種類」が収入・支出で「取扱(My貯金)」未選択時は「項目」のリストを再作成
+	//「収支種類」が収入・支出で「取扱(Parllet)」未選択時は「項目」のリストを再作成
 	if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.in'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.out'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.bank_in'}" ||
@@ -201,8 +201,8 @@ function remakeList_Handling() {
 	}
 }
 
-/* 「取扱(My貯金)」の状態調整 */
-function conditionAdjust_IdealDepo() {
+/* 「取扱(Parllet)」の状態調整 */
+function conditionAdjust_Prlt() {
 	if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.bank_in'}" ||
 			jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.bank_out'}") {
 		jQuery('#parllet_mst').val('0');  // (なし) を選択
@@ -270,7 +270,7 @@ function conditionDefDateAdjust_DebitDate() {
 		jQuery('#debit_date').val(ckDate(sDate)===true ? sDate : '');
 	//「取扱(実際)」が現金以外の時
 	} else {
-		//「収支種類」がMy貯金預入・My貯金引出の時は「引落日」は選択不可
+		//「収支種類」がParllet預入・Parllet引出の時は「引落日」は選択不可
 		if(jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.parllet_in'}" ||
 				jQuery('#balance_type_mst').children(':selected').text()==="&{'BalanceType.parllet_out'}"
 				) {
@@ -338,8 +338,8 @@ function whenDialogConfirmClosed(intRslt) {
 			openDialogFrmUpdMstRe("&{'views.config.cf_emoney'}");
 			break;
 		case 3:
-			//My貯金更新フォームを開く
-			openDialogFrmUpdMstRe("&{'views.config.cf_idealdepo'}");
+			//Parllet更新フォームを開く
+			openDialogFrmUpdMstRe("&{'views.config.cf_prlt'}");
 			break;
 		case 4:
 			//項目（収入）更新フォームを開く
@@ -367,7 +367,7 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
 		strErrMsg = "Common.updateHdlg";
-	if(strType==="&{'views.config.cf_idealdepo'}")
+	if(strType==="&{'views.config.cf_prlt'}")
 		strErrMsg = "Common.updatePrlt";
 	if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}")
 		strErrMsg = "Common.makeItem";
@@ -380,7 +380,7 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 			if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
-			if(strType==="&{'views.config.cf_idealdepo'}") {
+			if(strType==="&{'views.config.cf_prlt'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}") {
@@ -402,9 +402,9 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 							subCatHdlgSmall["BANK"].push(newBank);
 							jQuery('#balance_type_mst').change();
 						}
-						if(strType==="&{'views.config.cf_idealdepo'}") {
-							//作成したMy貯金を取扱(My貯金)のリストに追加し、収支種類の選択変更イベントを再実行
-							jQuery('#parllet_mst').append("<option value='"+z.idMst.id+"' selected>"+z.idMst.parllet_name+"</option>");
+						if(strType==="&{'views.config.cf_prlt'}") {
+							//作成したParlletを取扱(Parllet)のリストに追加し、収支種類の選択変更イベントを再実行
+							jQuery('#parllet_mst').append("<option value='"+z.plMst.id+"' selected>"+z.plMst.parllet_name+"</option>");
 							jQuery('#balance_type_mst').change();
 						}
 						if(strType==="&{'views.dialogConfirm.case.itemIn'}" || strType==="&{'views.dialogConfirm.case.itemOut'}") {
@@ -458,19 +458,19 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 %{
 	vlPaymentDate
 	vlBalanceTypeId
-	vlIdealDepositId
+	vlParlletId
 	vlItemId
 	vlDebitDate
 	if(record?.id || errors) {
 		vlPaymentDate = record?.payment_date?.format('yyyy/MM/dd HH:mm')
 		vlBalanceTypeId = record?.balance_type_mst?.id
-		vlIdealDepositId = record?.parllet_mst?.id
+		vlParlletId = record?.parllet_mst?.id
 		vlItemId = record?.item_mst?.id
 		vlDebitDate = record?.debit_date?.format('yyyy/MM/dd')
 	} else {
 		vlPaymentDate = df_payment_date
 		vlBalanceTypeId = df_balance_type_id
-		vlIdealDepositId = df_parllet_id
+		vlParlletId = df_parllet_id
 		vlItemId = df_item_id
 		vlDebitDate = df_debit_date
 	}
@@ -525,11 +525,11 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 		<label id="parllet_mst_lbl" class="fieldName">&{'parllet_mst'}:</label>
 		<select id="${field.name}" name="${field.name}" class="re_w150">
 			<option value="0"${record?.parllet_mst ? '' : ' selected'}>&{'views.common.combo.notrequired'}</option>
-			#{list items:models.ParlletMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'idealDeposit'}
+			#{list items:models.ParlletMst.find("ha_user = ${haUser.id} order by id").fetch(), as:'parllet'}
 <!-- 
-			<option value="${idealDeposit.id}"${record?.parllet_mst?.id==idealDeposit.id ? ' selected' : ''}>${idealDeposit.parllet_name}</option>
+			<option value="${parllet.id}"${record?.parllet_mst?.id==parllet.id ? ' selected' : ''}>${parllet.parllet_name}</option>
  -->
-			<option value="${idealDeposit.id}"${vlIdealDepositId==idealDeposit.id ? ' selected' : ''}>${idealDeposit.parllet_name}</option>
+			<option value="${parllet.id}"${vlParlletId==parllet.id ? ' selected' : ''}>${parllet.parllet_name}</option>
 			#{/list}
 		</select>
 		<span class="error">#{error 'record.parllet_mst' /}</span>
@@ -629,7 +629,7 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 	</div>
 #{/secure.check}
 	
-	<div class="crudField">
+	<div class="crudField bbsNone">
 		<input type="submit" value="&{'insupd.save'}" id="idInsupd" />
 	</div>
 

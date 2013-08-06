@@ -1,5 +1,5 @@
 #{extends 'Config/cf_main.html' /}
-#{set title:messages.get('views.config.cf_idealdepo')+' '+messages.get('views.common.update.edit') /}
+#{set title:messages.get('views.config.cf_prlt')+' '+messages.get('views.common.update.edit') /}
 
 <!-- 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
@@ -11,13 +11,13 @@
 jQuery(function() {
 	%{
 		recCnt = 0
-		if(iDM?.id) {
-			recCnt = models.Record.count("ha_user = ? and parllet_mst.parllet_name = ?", haUser, iDM.parllet_name)
+		if(plM?.id) {
+			recCnt = models.Record.count("ha_user = ? and parllet_mst.parllet_name = ?", haUser, plM.parllet_name)
 		}
 	}%
 	jQuery('#cnf_del').click(function(e){
 		if(${recCnt}>0) {
-			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_idealdepo'), messages.get('Record')}");
+			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_prlt'), messages.get('Record')}");
 			e.preventDefault();
 			return;
 		}
@@ -35,18 +35,18 @@ jQuery(function() {
 
 <div id="crudShow">
 
-	#{ifnot iDM?.id}
-		<h3><span>&{'insupd.add', messages.get('views.config.cf_idealdepo')}</span></h3>
+	#{ifnot plM?.id}
+		<h3><span>&{'insupd.add', messages.get('views.config.cf_prlt')}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'insupd.edit', messages.get('views.config.cf_idealdepo')}</span></h3>
+		<h3><span>&{'insupd.edit', messages.get('views.config.cf_prlt')}</span></h3>
 	#{/else}
 
     <div class="objectForm">
-	#{form @cf_idealdepo_save(iDM?.id)}
+	#{form @cf_parllet_save(plM?.id)}
 	 
 	    <div class="crudField">
-	        #{field 'iDM.parllet_name'}
+	        #{field 'plM.parllet_name'}
 	        <label class="fieldName">&{'parllet_name'}:</label>
 	        <input type="text" name="${field.id}" 
 	            value="${field.value}" />
@@ -55,7 +55,7 @@ jQuery(function() {
 	    </div>
 		
 	    <div class="crudField invisible">
-	        #{field 'iDM.zero_hidden'}
+	        #{field 'plM.zero_hidden'}
 	        <label class="fieldName">&{'zero_hidden'}:</label>
 	        <input type="checkbox" name="${field.id}"
 	            ${field.value ? 'checked' : ''} />
@@ -63,17 +63,17 @@ jQuery(function() {
 	        #{/field}
 	    </div>
 	    
-	    <div class="crudField">
+	    <div class="crudField bbsNone">
 	        <input type="submit" value="&{'insupd.save'}" />
 	    </div>
 	    
 	#{/form}
 	</div>
 
-	#{if iDM?.id}
-		#{form @cf_idealdepo_del(iDM?.id)}
+	#{if plM?.id}
+		#{form @cf_parllet_del(plM?.id)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'insupd.delete', messages.get('views.config.cf_idealdepo')}" id="cnf_del" />
+		        <input type="submit" value="&{'insupd.delete', messages.get('views.config.cf_prlt')}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

@@ -10,94 +10,97 @@ GET	/									   		Application.index
 # *		/admin							  		module:crud
 
 # Import Secure routes
-*	/myDpRt									   	module:secure
+*	/prlt									   	module:secure
 
 
-# MyDpRt
-GET		/myDpRt									MyDpRt.index
-POST	/myDpRt								 	MyDpRt.index
+# Prlt
+GET		/prlt									MyDpRt.index
+POST	/prlt								 	MyDpRt.index
 
 # DailyAccount
-GET		/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
-GET		/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
-#POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
-POST	/myDpRt/dailyAccount					DailyAccount.dailyAccountDisp
-#POST	/myDpRt/dailyAccount/{intBasisDate}		DailyAccount.jump
-#POST	/myDpRt/dailyAccount					DailyAccount.jump
+GET		/prlt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
+GET		/prlt/dailyAccount						DailyAccount.dailyAccountDisp
+#POST	/prlt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp
+POST	/prlt/dailyAccount						DailyAccount.dailyAccountDisp
+#POST	/prlt/dailyAccount/{intBasisDate}		DailyAccount.jump
+#POST	/prlt/dailyAccount						DailyAccount.jump
 
 # BalanceTable
-GET		/myDpRt/balanceTable/{intBasisDate}		DailyAccount.balanceTableDisp
-GET		/myDpRt/balanceTable					DailyAccount.balanceTableDisp
+GET		/prlt/balanceTable/{intBasisDate}		DailyAccount.balanceTableDisp
+GET		/prlt/balanceTable						DailyAccount.balanceTableDisp
 
 
 # RecordEdit new
-#GET		/myDpRt/data/myData/{id}				RecordEdit.recordEdit
-#GET		/myDpRt/data/new						RecordEdit.recordEdit
-GET		/myDpRt/data/new						RecordEdit.recordIns
-GET		/myDpRt/data/edit						RecordEdit.recordUpd
-#POST	/myDpRt/data/new						RecordEdit.save_rec
-#POST	/myDpRt/data/myData/{id}				RecordEdit.save_rec
+#GET		/prlt/data/myData/{id}					RecordEdit.recordEdit
+#GET		/prlt/data/new							RecordEdit.recordEdit
+GET		/prlt/data/new							RecordEdit.recordIns
+GET		/prlt/data/edit							RecordEdit.recordUpd
+#POST	/prlt/data/new							RecordEdit.save_rec
+#POST	/prlt/data/myData/{id}					RecordEdit.save_rec
 
 # WebSocket detailList
-POST	/myDpRt/detailList/balance/{page}		DetailList.dl_balance
-GET		/myDpRt/detailList/balance/{page}		DetailList.dl_balance
-POST	/myDpRt/detailList/balance				DetailList.dl_balance
-GET		/myDpRt/detailList/balance				DetailList.dl_balance
-WS		/myDpRt/detailList						DetailList.WebSocketApp.listen
-POST	/myDpRt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
-GET		/myDpRt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
-POST	/myDpRt/detailList/remainderBank		DetailList.dl_remainderBank
-GET		/myDpRt/detailList/remainderBank		DetailList.dl_remainderBank
-POST	/myDpRt/detailList/remainderIdeal/{page}	DetailList.dl_remainderIdeal
-GET		/myDpRt/detailList/remainderIdeal/{page}	DetailList.dl_remainderIdeal
-POST	/myDpRt/detailList/remainderIdeal		DetailList.dl_remainderIdeal
-GET		/myDpRt/detailList/remainderIdeal		DetailList.dl_remainderIdeal
+POST	/prlt/detailList/balance/{page}			DetailList.dl_balance
+GET		/prlt/detailList/balance/{page}			DetailList.dl_balance
+POST	/prlt/detailList/balance				DetailList.dl_balance
+GET		/prlt/detailList/balance				DetailList.dl_balance
+WS		/prlt/detailList						DetailList.WebSocketApp.listen
+POST	/prlt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
+GET		/prlt/detailList/remainderBank/{page}	DetailList.dl_remainderBank
+POST	/prlt/detailList/remainderBank			DetailList.dl_remainderBank
+GET		/prlt/detailList/remainderBank			DetailList.dl_remainderBank
+POST	/prlt/detailList/remainderPrlt/{page}	DetailList.dl_remainderPrlt
+GET		/prlt/detailList/remainderPrlt/{page}	DetailList.dl_remainderPrlt
+POST	/prlt/detailList/remainderPrlt			DetailList.dl_remainderPrlt
+GET		/prlt/detailList/remainderPrlt			DetailList.dl_remainderPrlt
 
 # Config
-POST	/myDpRt/config/bank/list				Config.cf_bank_list
-GET		/myDpRt/config/bank/list				Config.cf_bank_list
-GET		/myDpRt/config/bank/myBank/{id}			Config.cf_bank_edit
-GET		/myDpRt/config/bank/new					Config.cf_bank_edit
-#POST	/myDpRt/config/bank/myBank/{id}			Config.cf_bank_save
-#POST	/myDpRt/config/bank/new					Config.cf_bank_save
-POST	/myDpRt/config/card/list				Config.cf_creca_list
-GET		/myDpRt/config/card/list				Config.cf_creca_list
-GET		/myDpRt/config/card/myCard/{id}			Config.cf_creca_edit
-GET		/myDpRt/config/card/new					Config.cf_creca_edit
-POST	/myDpRt/config/card/myCard/{id}			Config.cf_creca_save
-POST	/myDpRt/config/card/new					Config.cf_creca_save
-POST	/myDpRt/config/emoney/list				Config.cf_emoney_list
-GET		/myDpRt/config/emoney/list				Config.cf_emoney_list
-GET		/myDpRt/config/emoney/myEmoney/{id}		Config.cf_emoney_edit
-GET		/myDpRt/config/emoney/new				Config.cf_emoney_edit
-POST	/myDpRt/config/emoney/myEmoney/{id}		Config.cf_emoney_save
-POST	/myDpRt/config/emoney/new				Config.cf_emoney_save
-POST	/myDpRt/config/itemIn/list				Config.cf_item_in_list
-GET		/myDpRt/config/itemIn/list				Config.cf_item_in_list
-GET		/myDpRt/config/itemIn/myItem/{id}		Config.cf_item_in_edit
-GET		/myDpRt/config/itemIn/new				Config.cf_item_in_edit
-POST	/myDpRt/config/itemIn/myItem/{id}		Config.cf_item_in_save
-POST	/myDpRt/config/itemIn/new				Config.cf_item_in_save
-POST	/myDpRt/config/itemOut/list				Config.cf_item_out_list
-GET		/myDpRt/config/itemOut/list				Config.cf_item_out_list
-GET		/myDpRt/config/itemOut/myItem/{id}		Config.cf_item_out_edit
-GET		/myDpRt/config/itemOut/new				Config.cf_item_out_edit
-POST	/myDpRt/config/itemOut/myItem/{id}		Config.cf_item_out_save
-POST	/myDpRt/config/itemOut/new				Config.cf_item_out_save
-GET		/myDpRt/config/ioData					Config.cf_io
-GET		/myDpRt/config/hauser/edit				Config.cf_hauser_edit
-POST	/myDpRt/config/hauser/edit				Config.cf_hauser_save
-POST	/myDpRt/config/hauser_pw/edit			Config.cf_hauser_pw_edit
-GET		/myDpRt/config/hauser_pw/edit			Config.cf_hauser_pw_edit
-POST	/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
-GET		/myDpRt/config/hauser_pw/save			Config.cf_hauser_pw_save
+POST	/prlt/config/bank/list					Config.cf_bank_list
+GET		/prlt/config/bank/list					Config.cf_bank_list
+GET		/prlt/config/bank/myBank/{id}			Config.cf_bank_edit
+GET		/prlt/config/bank/new					Config.cf_bank_edit
+#POST	/prlt/config/bank/myBank/{id}			Config.cf_bank_save
+#POST	/prlt/config/bank/new					Config.cf_bank_save
+POST	/prlt/config/card/list					Config.cf_creca_list
+GET		/prlt/config/card/list					Config.cf_creca_list
+GET		/prlt/config/card/myCard/{id}			Config.cf_creca_edit
+GET		/prlt/config/card/new					Config.cf_creca_edit
+POST	/prlt/config/card/myCard/{id}			Config.cf_creca_save
+POST	/prlt/config/card/new					Config.cf_creca_save
+POST	/prlt/config/emoney/list				Config.cf_emoney_list
+GET		/prlt/config/emoney/list				Config.cf_emoney_list
+GET		/prlt/config/emoney/myEmoney/{id}		Config.cf_emoney_edit
+GET		/prlt/config/emoney/new					Config.cf_emoney_edit
+POST	/prlt/config/emoney/myEmoney/{id}		Config.cf_emoney_save
+POST	/prlt/config/emoney/new					Config.cf_emoney_save
+POST	/prlt/config/itemIn/list				Config.cf_item_in_list
+GET		/prlt/config/itemIn/list				Config.cf_item_in_list
+GET		/prlt/config/itemIn/myItem/{id}			Config.cf_item_in_edit
+GET		/prlt/config/itemIn/new					Config.cf_item_in_edit
+POST	/prlt/config/itemIn/myItem/{id}			Config.cf_item_in_save
+POST	/prlt/config/itemIn/new					Config.cf_item_in_save
+POST	/prlt/config/itemOut/list				Config.cf_item_out_list
+GET		/prlt/config/itemOut/list				Config.cf_item_out_list
+GET		/prlt/config/itemOut/myItem/{id}		Config.cf_item_out_edit
+GET		/prlt/config/itemOut/new				Config.cf_item_out_edit
+POST	/prlt/config/itemOut/myItem/{id}		Config.cf_item_out_save
+POST	/prlt/config/itemOut/new				Config.cf_item_out_save
+GET		/prlt/config/ioData						Config.cf_io
+GET		/prlt/config/hauser/edit				Config.cf_hauser_edit
+POST	/prlt/config/hauser/edit				Config.cf_hauser_save
+POST	/prlt/config/hauser_pw/edit				Config.cf_hauser_pw_edit
+GET		/prlt/config/hauser_pw/edit				Config.cf_hauser_pw_edit
+POST	/prlt/config/hauser_pw/save				Config.cf_hauser_pw_save
+GET		/prlt/config/hauser_pw/save				Config.cf_hauser_pw_save
+GET		/prlt/config/hauser_lv/edit				Config.cf_hauser_lv_edit
+GET		/prlt/config/hauser/unsubscribe			Config.cf_hauser_unsubscribe
 
 # PplRecurringPayments
-GET		/myDpRt/paypal/receipt					PplRecurringPayments.receipt
-GET		/myDpRt/paypal/oneMonthLater			PplRecurringPayments.oneMonthLater
+GET		/prlt/paypal/receipt					PplRecurringPayments.receipt
+GET		/prlt/paypal/confirm					PplRecurringPayments.confirm
+GET		/prlt/paypal/oneMonthLater				PplRecurringPayments.oneMonthLater
 
 # PplIpn
-GET		/myDpRt/paypal/ipn						PplIpn.validation
+GET		/prlt/paypal/ipn						PplIpn.validation
 
 # WebSocket Demo
 GET 	/smplecho								SmplEcho.demo
@@ -105,7 +108,7 @@ WS		/smplecho								SmplEcho.WebSocketEcho.listen
 
 
 # Ignore favicon requests
-GET		/myDpRt/favicon.ico						404
+GET		/prlt/favicon.ico						404
 
 # Map static resources from the /app/public folder to the /public path
 GET		/public/								staticDir:public

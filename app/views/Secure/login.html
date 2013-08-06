@@ -12,6 +12,34 @@ jQuery(function() {
 	jQuery('#fb-login').click(function() {
 		login("&{'views.login.fbLogin.dialogTitle'}");
 	});
+	
+	jQuery('#signin').click(function(e) {
+		//支払いステータスチェック
+		strErrMsg = "Common.checkPplStatus";
+		var email = jQuery('#saUsername').val(),
+			password = jQuery('#saPassword').val(),
+			jqxhrPplChkStts = jQuery.post('@{Common.checkPplStatus}', {email: email, password: password});
+		jqxhrPplChkStts
+		.done(function(z) {
+			switch (z.intRslt) {
+				case 0:
+					break;
+				case 99:
+					alert(z.strErr);
+					e.preventDefault();
+					break;
+				default:
+					strErrMsg += " result Error";
+					alert(strErrMsg);
+					e.preventDefault();
+			}
+		})
+		.fail(function() {
+			strErrMsg += " Failed";
+			alert(strErrMsg);
+			e.preventDefault();
+		});
+	});
 });
 // -->
 </script>

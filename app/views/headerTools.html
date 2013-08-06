@@ -20,7 +20,7 @@ jQuery(function() {
 	});
 	
 	jQuery(window).mousedown(function(e) {
-		if(onMenu=='out' && tlsLi.hasClass("click")) {
+		if (onMenu==='out' && tlsLi.hasClass("click")) {
 			e.preventDefault();
 			tlsLi.removeClass("click");
 			tlsLiUl.hide();
@@ -30,7 +30,7 @@ jQuery(function() {
 	
 	tlsLi.focus(function() {
 		jQuery(this).addClass("focused");
-		if(!jQuery(this).hasClass("click"))
+		if (!jQuery(this).hasClass("click"))
 			jQuery(this).css('background', 'url(/public/images/white40.png)');
 	});
 	tlsLi.blur(function() {
@@ -39,23 +39,23 @@ jQuery(function() {
 	});
 	tlsLi.hover(function() {
 		onMenu = 'over';
-		if(!jQuery(this).hasClass("click"))
+		if (!jQuery(this).hasClass("click"))
 			jQuery(this).css('background', 'url(/public/images/white40.png)');
 	},function() {
 		onMenu = 'out';
-		if(!jQuery(this).hasClass("focused"))
+		if (!jQuery(this).hasClass("focused"))
 			jQuery(this).css('background', 'url(/public/images/white20.png)');
 	});
 	tlsLi.keypress(function(e) {
-		if(e.which==13) {
-			if(jQuery(e.target).is("li")) {
+		if (e.which===13) {
+			if (jQuery(e.target).is("li")) {
 				e.preventDefault();
 				jQuery(this).click();
 			}
 		}
 	});
 	tlsLi.click(function() {
-		if(jQuery(this).hasClass("click")) {
+		if (jQuery(this).hasClass("click")) {
 			jQuery(this).removeClass("click");
 			jQuery(this).css('background', 'url(/public/images/white40.png)');
 			tlsLiUl.hide();
@@ -73,7 +73,7 @@ jQuery(function() {
 	});
 	tlsLiUlLiA.blur(function() {
 		jQuery(this).removeClass("focused");
-		if(!jQuery(this).hasClass("hovered"))
+		if (!jQuery(this).hasClass("hovered"))
 			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
 	});
 	tlsLiUlLiA.hover(function() {
@@ -81,8 +81,31 @@ jQuery(function() {
 		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
 	},function() {
 		jQuery(this).removeClass("hovered");
-		if(!jQuery(this).hasClass("focused"))
+		if (!jQuery(this).hasClass("focused"))
 			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	
+	%{
+		haUser = models.HaUser.find("byEmail", session.username).first()
+		htRecCnt = models.Record.count("ha_user = ?", haUser)
+		htHdlgCnt = models.HandlingMst.count("ha_user = ?", haUser)
+		htPrltCnt = models.ParlletMst.count("ha_user = ?", haUser)
+		htItemCnt = models.ItemMst.count("ha_user = ?", haUser)
+		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
+		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
+	}%
+	var vSumCnt = ${htSumCnt},
+		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	jQuery('#htProgressBar').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		var value = this.getAttribute("aria-valuenow");
+		
+		jQuery(selector).css('background','Green');
+		if (value >= 90) {
+			jQuery(selector).css('background', 'Red');
+		}
 	});
 });
 // -->
@@ -90,10 +113,10 @@ jQuery(function() {
 
 %{
 	name=models.HaUser.find("byEmail", session.username).first()?.nickname
-	if(name==null || name=='') {
+	if (name==null || name=='') {
 		name='id:'+models.HaUser.find("byEmail", session.username).first().id
 	} else {
-		if(name.length()>10)
+		if (name.length()>10)
 			name=name.substring(0,10)+'..'
 	}
 }%
@@ -101,7 +124,12 @@ jQuery(function() {
 <li id="tlsLi" tabindex="0" class="open">
 	${name}
 	<ul id="tlsLiUl">
-		<li>#{a @Config.cf_hauser_edit()}&{'views.config.cf_hauser'}#{/a}</li>
+		<li>
+			#{a @Config.cf_hauser_edit(), id:'cfHauserEdit'}
+				&{'views.config.cf_hauser'}
+				<div id="htProgressBar"></div>
+			#{/a}
+		</li>
 		<li>#{a @Secure.logout(), id:'fb-logout'}&{'views.login.tools.logout'}#{/a}</li>
 		#{secure.check 'admin'}
 		<li>

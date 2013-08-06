@@ -70,8 +70,8 @@ jQuery(function(){
 	if(ckDate("${h_debit_date_to}"))
 		jQuery("#frJump2").datepicker("option", "maxDate", "${h_debit_date_to}");
 	
-	/* 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（My貯金）」・「項目」の変更イベント */
-	jQuery("#idHdSecretRecFlg, #dlCmbHdBalanceType, #dlCmbHdHandling, #dlCmbHdIdealDeposit, #idHdItem").change(function() {
+	/* 「公開フラグ」・「収支種類」・「取扱（実際）」・「取扱（Parllet）」・「項目」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdBalanceType, #dlCmbHdHandling, #dlCmbHdParllet, #idHdItem").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
     });
@@ -167,13 +167,13 @@ jQuery(function(){
 				<option value="-2"${h_handling_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
 			</select>
 		</div>
-		<!-- 取扱(My貯金) -->
+		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column dl_head">
 			&{'parllet_mst'}<br>
-			<select id="dlCmbHdIdealDeposit" class="dl_tbl_content" name="h_parllet_id">
+			<select id="dlCmbHdParllet" class="dl_tbl_content" name="h_parllet_id">
 				<option value="0"${h_parllet_id==0 ? ' selected' : ''}>&{'views.common.combo.all'}</option>
-				#{list items:iDepos, as:'iDepo'}
-				<option value="${iDepo.id}"${h_parllet_id==iDepo.id ? ' selected' : ''}>${iDepo.parllet_name}</option>
+				#{list items:prlts, as:'prlt'}
+				<option value="${prlt.id}"${h_parllet_id==prlt.id ? ' selected' : ''}>${prlt.parllet_name}</option>
 				#{/list}
 				<option value="-1"${h_parllet_id==-1 ? ' selected' : ''}>&{'views.common.combo.space'}</option>
 				<option value="-2"${h_parllet_id==-2 ? ' selected' : ''}>&{'views.common.combo.notspace'}</option>
@@ -291,7 +291,7 @@ jQuery(function(){
 			${record?.handling_mst?.handling_name}
 		  </span>
 		</div>
-		<!-- 取扱(My貯金) -->
+		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			${record?.parllet_mst?.parllet_name}
