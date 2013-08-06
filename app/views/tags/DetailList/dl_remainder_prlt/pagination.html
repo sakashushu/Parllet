@@ -24,14 +24,14 @@
 
         #{if _caller.page > 1}
             <span class="previous">
-            	<a href="/myDpRt/detailList/remainderPrlt/${_caller.page-1}">
+            	<a href="/prlt/detailList/remainderPrlt/${_caller.page-1}">
             	&{'crud.pagination.previous'}</a>
             </span>
         #{/if}
 
         #{if start > 1}
             <span class="first">
-            	<a href="/myDpRt/detailList/remainderPrlt/${1}">
+            	<a href="/prlt/detailList/remainderPrlt/${1}">
             	&{'crud.pagination.first'}</a>
             </span>
         #{/if}
@@ -42,7 +42,7 @@
                     <strong>${i}</strong>
                 #{/if}
                 #{else}
-	            	<a href="/myDpRt/detailList/remainderPrlt/${i}">
+	            	<a href="/prlt/detailList/remainderPrlt/${i}">
 	            	${i}</a>
                 #{/else}
             </span>
@@ -50,14 +50,14 @@
 
         #{if end < _caller.nbPages}
             <span class="last">
-            	<a href="/myDpRt/detailList/remainderPrlt/${_caller.nbPages}">
+            	<a href="/prlt/detailList/remainderPrlt/${_caller.nbPages}">
             	&{'crud.pagination.last'}</a>
             </span>
         #{/if}
 
         #{if _caller.page < _caller.nbPages}
             <span class="next">
-            	<a href="/myDpRt/detailList/remainderPrlt/${_caller.page+1}">
+            	<a href="/prlt/detailList/remainderPrlt/${_caller.page+1}">
             	&{'crud.pagination.next'}</a>
             </span>
         #{/if}

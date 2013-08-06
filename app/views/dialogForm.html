@@ -107,7 +107,7 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 						if(typeFb) {
 							jqxhr = jQuery.post('@{Security.ensureFbUser}', {id: pId, name: pName, link: pLink, email: email.val()});
 						} else {
-							jqxhr = jQuery.post('@{MyDpRt.signup}', {email: emailVal.text(), password: password.text()});
+							jqxhr = jQuery.post('@{PrltRt.signup}', {email: emailVal.text(), password: password.text()});
 						}
 						jqxhr
 						.done(function(z) {
@@ -117,7 +117,7 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 							if(typeFb) {
 								alert("Security.ensureFbUser Error");
 							} else {
-								alert("MyDpRt.signup Error");
+								alert("PrltRt.signup Error");
 							}
 						});
 					}

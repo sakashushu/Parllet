@@ -9,7 +9,7 @@ import models.WkSyEsFbUsRslt;
 import play.i18n.Messages;
 import play.mvc.*;
 
-public class MyDpRt extends Controller {
+public class PrltRt extends Controller {
 
 	public static void index() {
 		if (LevelMst.count()==0L) {

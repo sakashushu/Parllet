@@ -14,8 +14,8 @@ GET	/									   		Application.index
 
 
 # Prlt
-GET		/prlt									MyDpRt.index
-POST	/prlt								 	MyDpRt.index
+GET		/prlt									PrltRt.index
+POST	/prlt								 	PrltRt.index
 
 # DailyAccount
 GET		/prlt/dailyAccount/{intBasisDate}		DailyAccount.dailyAccountDisp

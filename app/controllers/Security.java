@@ -109,7 +109,7 @@ public class Security extends Secure.Security {
 	}
 	
 	static void onDisconnected() {
-		MyDpRt.index();
+		PrltRt.index();
 	}
 	
 	static void onAuthenticated() {
