@@ -40,10 +40,10 @@ public class PrltRt extends Controller {
 		HaUser haUser = new HaUser(email, password, null, "", null, null, null, true, false, false, false, false, lM, null, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
-	    if(validation.hasErrors()) {
-	    	if(validation.errors().get(0).getKey().equals("haUser.email"))
+	    if (validation.hasErrors()) {
+	    	if (validation.errors().get(0).getKey().equals("haUser.email"))
 	    		wr.setIntRslt(1);
-	    	if(validation.errors().get(0).getKey().equals("haUser.password"))
+	    	if (validation.errors().get(0).getKey().equals("haUser.password"))
 	    		wr.setIntRslt(2);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);
@@ -66,11 +66,11 @@ public class PrltRt extends Controller {
 		HaUser haUser = new HaUser(email, password, null, null, null, null, null, true, false, false, false, false, lM, null, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
-	    if(validation.hasErrors()) {
+	    if (validation.hasErrors()) {
     		wr.setIntRslt(99);
-	    	if(validation.errors().get(0).getKey().equals("haUser.email"))
+	    	if (validation.errors().get(0).getKey().equals("haUser.email"))
 	    		wr.setIntRslt(1);
-	    	if(validation.errors().get(0).getKey().equals("haUser.password"))
+	    	if (validation.errors().get(0).getKey().equals("haUser.password"))
 	    		wr.setIntRslt(2);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);

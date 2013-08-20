@@ -11,7 +11,8 @@
 	HANDLING_TYPE_EMONEY = messages.get('HandlingType.emoney')
 	HANDLING_TYPE_CRECA = messages.get('HandlingType.creca')
 	PRLT_TYPE_PRLT = messages.get('PrltType.prlt')
-	lngBTypeId = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
+	lngBtIdBankIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
+	lngBtIdPrltIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.parllet_in')).first().id
 }%
 
 <script type="text/javascript">
@@ -20,6 +21,7 @@ var bolDlgFrmUpdMstInsBkem,
 	bolDlgFrmUpdMstInsPrlt,
 	bolDlgFrmUpdMstUpdBkem,
 	bolDlgFrmUpdMstUpdPrlt,
+	bolDlgFrmUpdRecInsBkem,
 	strTypeName,
 	lngUpdId,
 	strItemNm;
@@ -144,12 +146,15 @@ jQuery(function() {
 			bolDlgFrmUpdMstInsPrlt = false;
 			bolDlgFrmUpdMstUpdBkem = false;
 			bolDlgFrmUpdMstUpdPrlt = false;
+			bolDlgFrmUpdRecInsBkem = false;
 			lngUpdId = null;
 			strItemNm = "";
 			%{vStrItemNm = ''}%
 			
 			if (jQuery('.lHandlingId', jQuery(this).parent("li")).val()!=undefined) {
 				bolDlgFrmUpdMstUpdBkem = true;
+				if (!jQuery(this).parent("li").hasClass('remBkemInv'))
+					bolDlgFrmUpdRecInsBkem = true;
 				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
 				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
 				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
@@ -187,16 +192,16 @@ jQuery(function() {
 			var options = {
 				callback: function(key, options) {
 					if (key==="dialogFrmInsRecBank") {
-						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}"),
-							dfurFvBType = new DfurFlgVal(true, ${lngBTypeId}),
-							dfurFvHdlg = new DfurFlgVal(false, lngUpdId),
-							dfurFvPrlt = new DfurFlgVal(false, 0),
-							dfurFvItem = new DfurFlgVal(false, 0),
-							dfurFvAmnt = new DfurFlgVal(true, null),
-							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}"),
-							dfurFvCntnt = new DfurFlgVal(false, ""),
-							dfurFvStore = new DfurFlgVal(false, ""),
-							dfurFvRmrks = new DfurFlgVal(false, ""),
+						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}", false),
+							dfurFvBType = new DfurFlgVal(true, ${lngBtIdBankIn}, true),
+							dfurFvHdlg = new DfurFlgVal(false, lngUpdId, false),
+							dfurFvPrlt = new DfurFlgVal(false, 0, true),
+							dfurFvItem = new DfurFlgVal(false, 0, true),
+							dfurFvAmnt = new DfurFlgVal(true, null, true),
+							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}", false),
+							dfurFvCntnt = new DfurFlgVal(false, "", true),
+							dfurFvStore = new DfurFlgVal(false, "", true),
+							dfurFvRmrks = new DfurFlgVal(false, "", true),
 							dfurRec = new DfurRec(
 								null,
 								dfurFvPayDate,
@@ -210,20 +215,19 @@ jQuery(function() {
 								dfurFvStore,
 								dfurFvRmrks);
 						//家計簿入力フォームを開く（口座系）
-//						openDialogFrmUpdRec("${HANDLING_TYPE_BANK}", dfurRec, lngUpdId);
 						openDialogFrmUpdRec(strTypeName, dfurRec, lngUpdId);
 					}
 					if (key==="dialogFrmInsRecPrlt") {
-						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}"),
-							dfurFvBType = new DfurFlgVal(true, ${lngBTypeId}),
-							dfurFvHdlg = new DfurFlgVal(false, lngUpdId),
-							dfurFvPrlt = new DfurFlgVal(false, 0),
-							dfurFvItem = new DfurFlgVal(false, 0),
-							dfurFvAmnt = new DfurFlgVal(true, null),
-							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}"),
-							dfurFvCntnt = new DfurFlgVal(false, ""),
-							dfurFvStore = new DfurFlgVal(false, ""),
-							dfurFvRmrks = new DfurFlgVal(false, ""),
+						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}", false),
+							dfurFvBType = new DfurFlgVal(true, ${lngBtIdPrltIn}, true),
+							dfurFvHdlg = new DfurFlgVal(false, 0, true),
+							dfurFvPrlt = new DfurFlgVal(false, lngUpdId, false),
+							dfurFvItem = new DfurFlgVal(false, 0, true),
+							dfurFvAmnt = new DfurFlgVal(true, null, true),
+							dfurFvDebDate = new DfurFlgVal(false, "${sBasisDate}", false),
+							dfurFvCntnt = new DfurFlgVal(false, "", true),
+							dfurFvStore = new DfurFlgVal(false, "", true),
+							dfurFvRmrks = new DfurFlgVal(false, "", true),
 							dfurRec = new DfurRec(
 								null,
 								dfurFvPayDate,
@@ -265,8 +269,9 @@ jQuery(function() {
 			}
 			if (bolDlgFrmUpdMstInsPrlt)
 				options.items.dialogFrmUpdMstInsPrlt = {name: "&{'views.contextMenu.add', PRLT_TYPE_PRLT}"};
-			if (bolDlgFrmUpdMstUpdBkem) {
+			if (bolDlgFrmUpdRecInsBkem)
 				options.items.dialogFrmInsRecBank = {name: strItemNm+"&{'views.contextMenu.insRec'}"};
+			if (bolDlgFrmUpdMstUpdBkem) {
 				if (strTypeName==="${HANDLING_TYPE_BANK}")
 					options.items.dialogFrmUpdMstUpdBank = {name: "&{'views.contextMenu.upd', HANDLING_TYPE_BANK}"};
 				if (strTypeName==="${HANDLING_TYPE_EMONEY}")
@@ -310,7 +315,7 @@ jQuery(function() {
 			jqChgInvisible = jQuery('.remBkemInv');
 			strInvisible = "invisible2";
 		}
-		jqxhr = jQuery.post('@{Common.updateHaUserFlg}', {strClm: strClm, bolFlg: jqThisChkd});
+		jqxhr = jQuery.post('@{Common.updateHaUserFlg}', {strHuClm: strClm, bolFlg: jqThisChkd});
 		jqxhr
 		.done(function(z) {
 			switch (z.intRslt) {
@@ -445,6 +450,13 @@ function drawChart() {
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
+<link media="only screen and (max-device-width:480px)" href="@{'/public/stylesheets/smart.jquery.contextMenu.css'}" type="text/css" rel="stylesheet" />
+<link media="screen and (min-device-width:481px)" href="@{'/public/stylesheets/jquery.contextMenu.css'}" type="text/css" rel="stylesheet" />
+<!--[if IE]>
+<link href="@{'/public/stylesheets/jquery.contextMenu.css'}" type="text/css" rel="stylesheet" />
+<![endif]-->
+
+
 %{icldDlgFrmUpdMst=1}%
 #{include 'dialogFrmUpdMst.html' /}
 <script type="text/javascript">
@@ -463,10 +475,10 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 		case 1:
 			var jqxhrUpdMst;
 			if (strType==="${HANDLING_TYPE_BANK}" || strType==="${HANDLING_TYPE_EMONEY}") {
-				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngId: lngId});
+				jqxhrUpdMst = jQuery.post('@{Common.updateHdlg}', {strHdlgType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd, bolInvFlg: invFlgChkd, lngHdlgId: lngId});
 			}
 			if (strType==="${PRLT_TYPE_PRLT}") {
-				jqxhrUpdMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngId: lngId});
+				jqxhrUpdMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd, lngPrltId: lngId});
 			}
 			jqxhrUpdMst
 			.done(function(z) {

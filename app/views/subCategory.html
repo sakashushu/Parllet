@@ -3,7 +3,7 @@
 /* 無効化フラグが立ったデータを編集する際の条件用 */
 %{
 	invalidityRecEdit = ''
-	if(record?.handling_mst?.id) {
+	if (record?.handling_mst?.id) {
 		invalidityRecEdit = ' or id = ' + record.handling_mst.id 
 	}
 }%
@@ -55,6 +55,25 @@ subCatHdlgSmall = {
 	  },
 	  #{/list}
   ],
+},
+subCatHdlgtypeToHdlg = {
+  #{list items:models.HandlingTypeMst.find("order by handling_type_order").fetch(), as:'handlingType'}
+	"${handlingType.handling_type_name}":[
+	  #{list items:models.HandlingMst.find("ha_user = ? and handling_type_mst.handling_type_name = ? order by handling_type_mst.handling_type_order, order_seq", haUser, handlingType.handling_type_name).fetch(), as:'handling'}
+	  {
+		"key":"${handling.id}",
+		"handling_name":"${handling.handling_name}",
+		"zero_hidden":"${handling.zero_hidden}",
+		"invalidity_flg":"${handling.invalidity_flg}"
+	  },
+	  #{/list}
+	],
+  #{/list}
+},
+subCatPrlt = {
+  #{list items:models.ParlletMst.find("ha_user = '${haUser.id}' order by order_seq").fetch(), as:'parllet'}
+	${parllet.id}:"${parllet.parllet_name}",
+  #{/list}
 };
 // -->
 </script>

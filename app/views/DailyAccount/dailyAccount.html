@@ -6,14 +6,14 @@
 jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
 	var daCate2MaxWidth;
-	if(jQuery('.da_cate2').length > 0)
+	if (jQuery('.da_cate2').length > 0)
 		daCate2MaxWidth = parseInt(jQuery('.da_cate2').css('max-width').replace("px", ""));
 	jQuery('.da_cate2').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
 			strThOrg = jTh.text(),
 			strThEllipse;
-		if(jTh.width()>daCate2MaxWidth) {
+		if (jTh.width()>daCate2MaxWidth) {
 			strTh = strTh.slice(0, strTh.length-1);
 			while(jTh.width()>daCate2MaxWidth) {
 				strTh = strTh.slice(0, strTh.length-1);
@@ -31,14 +31,14 @@ jQuery(function() {
 			.css('left', parentLeft+10);
 	});
 	var daCate2BudgetMaxWidth;
-	if(jQuery('.da_cate2_budget').length > 0)
+	if (jQuery('.da_cate2_budget').length > 0)
 		daCate2BudgetMaxWidth = jQuery('.da_cate2_budget').css('max-width').replace("px", "")-0;
 	jQuery('.da_cate2_budget').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
 			strThOrg = jTh.text(),
 			strThEllipse;
-		if(jTh.width()>daCate2BudgetMaxWidth) {
+		if (jTh.width()>daCate2BudgetMaxWidth) {
 			strTh = strTh.slice(0, strTh.length-1);
 			while(jTh.width()>daCate2BudgetMaxWidth) {
 				strTh = strTh.slice(0, strTh.length-1);
@@ -127,33 +127,33 @@ jQuery(function() {
 //	var nMonth = new Number(sDate.substr(5, 2)-1);
 //	var nDay = new Number(sDate.substr(8, 2)-0);
 	jQuery('#idPreYear, #idPreMonth, #idPreDays, #idNextYear, #idNextMonth, #idNextDays').click(function() {
-//		if(this.id=="idPreYear")
+//		if (this.id=="idPreYear")
 //			nYear -= 1;
-//		if(this.id=="idPreMonth")
+//		if (this.id=="idPreMonth")
 //			nMonth -= 1;
-//		if(this.id=="idNextMonth")
+//		if (this.id=="idNextMonth")
 //			nMonth += 1;
-//		if(this.id=="idNextYear")
+//		if (this.id=="idNextYear")
 //			nYear += 1;
 //		var nDate = new Date(nYear, nMonth, nDay);
 //		jQuery('#idBasisDate').val(dateFormat.format(nDate));
 
 		//移動種別
-		if(this.id=="idPreYear" || this.id=="idNextYear")
+		if (this.id=="idPreYear" || this.id=="idNextYear")
 			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.year'}");
-		if(this.id=="idPreMonth" || this.id=="idNextMonth")
+		if (this.id=="idPreMonth" || this.id=="idNextMonth")
 			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.month'}");
-		if(this.id=="idPreDays" || this.id=="idNextDays")
+		if (this.id=="idPreDays" || this.id=="idNextDays")
 			jQuery('#idMoveType').val("&{'views.dailyaccount.movetype.days'}");
 		
 		//移動数
-		if(this.id=="idPreYear" || this.id=="idPreMonth")
+		if (this.id=="idPreYear" || this.id=="idPreMonth")
 			jQuery('#idMoveNum').val('-1');
-		if(this.id=="idNextYear" || this.id=="idNextMonth")
+		if (this.id=="idNextYear" || this.id=="idNextMonth")
 			jQuery('#idMoveNum').val('1');
-		if(this.id=="idPreDays")
+		if (this.id=="idPreDays")
 			jQuery('#idMoveNum').val('-5');
-		if(this.id=="idNextDays")
+		if (this.id=="idNextDays")
 			jQuery('#idMoveNum').val('5');
 		
 		jQuery('#idMove').click();
@@ -196,7 +196,7 @@ jQuery(function() {
 	
 	/* 左クリックか右クリックでメニュー表示 */
 	jQuery('.menu_cell').mousedown(function(e) {
-		if(e.which==1 || e.which==3) {
+		if (e.which==1 || e.which==3) {
 			//収支明細へジャンプする際の絞込項目セット
 			jQuery('#hPaymentDateFr').val(jQuery('.ToDlPaymentDateFr',this).val());
 			jQuery('#hPaymentDateTo').val(jQuery('.ToDlPaymentDateTo',this).val());
@@ -222,9 +222,9 @@ jQuery(function() {
 		callback: function(key, options) {
 //			var m = "clicked: " + key;
 //			window.console && console.log(m) || alert(m);
-			if(key=="toDlBalance")
+			if (key=="toDlBalance")
 				jQuery('#submitDlBalance').click();
-			if(key=="toRecordAdd")
+			if (key=="toRecordAdd")
 				jQuery('#submitRecordEdit').click();
 			jQuery('body').attr("disabled", "disabled");
 		},
@@ -243,7 +243,7 @@ jQuery(function() {
 	/* Enterキーでのサブミット防止 */
 	jQuery('input[type!="submit"][type!="button"], a#idPreYear, a#idNextYear, a#idPreMonth, a#idNextMonth, a#idPreDays, a#idNextDays').keypress(function(e){
 		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-			if(this.id=="idPreYear" ||
+			if (this.id=="idPreYear" ||
 					this.id=="idNextYear" ||
 					this.id=="idPreMonth" ||
 					this.id=="idNextMonth" ||

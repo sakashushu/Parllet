@@ -30,7 +30,7 @@ public class PplRecurringPayments extends Controller {
 	
 	@Before
 	static void setConnectedUser() {
-		if(Security.isConnected()) {
+		if (Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 			renderArgs.put("haUser", haUser);
 		}

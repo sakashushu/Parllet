@@ -1,7 +1,7 @@
 #{extends 'Config/cf_main.html' /}
-#{set title:messages.get('views.config.cf_prlt')+' '+messages.get('views.common.update.list') /}
+#{set title:messages.get('PrltType.prlt')+' '+messages.get('views.common.update.list') /}
 
-<h3>&{'views.config.cf_prlt'}　&{'views.common.update.edit'}</h3>
+<h3>&{'PrltType.prlt'}　&{'views.common.update.edit'}</h3>
 
 #{if parlletMsts?.size() > 1}
 　&{'views.common.order.change'}
@@ -45,5 +45,5 @@ jQuery('.sortable').sortable().bind('sortupdate', function() {
 
 <p id="newData" >
     <a href="@{cf_parllet_edit()}">
-    <span>+</span> &{'insupd.add', messages.get('views.config.cf_prlt')}</a>
+    <span>+</span> &{'insupd.add', messages.get('PrltType.prlt')}</a>
 </p>

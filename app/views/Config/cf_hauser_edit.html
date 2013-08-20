@@ -23,7 +23,7 @@ myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
 jQuery(function() {
 	/* 各種リンクEnter時はクリックイベントへ */
 	jQuery('#aChgPw, #fbLinkLink, #fbLinkBreak, #aChgLv, #aGoToUnsubscribed').keypress(function(e) {
-		if(e.which==13) {
+		if (e.which==13) {
 			e.preventDefault();
 			jQuery(this).click();
 		}
@@ -49,7 +49,7 @@ jQuery(function() {
 					"&{'views.config.cf_hauser.fbLinkage.break.notes2'}\n"+
 					"&{'views.config.cf_hauser.fbLinkage.break.notes3'}\n"+
 					"&{'views.config.cf_hauser.fbLinkage.break.notes4'}");
-			if(myRet) {
+			if (myRet) {
 //				jQuery.post('@{Common.breakLinkFacebook}', function(c){
 				var jqxhr = jQuery.post('@{Common.breakLinkFacebook}');
 				jqxhr
@@ -75,7 +75,7 @@ jQuery(function() {
 		#{else}
 			myRet = confirm("&{'views.config.cf_hauser.fbLinkage.break.pwSet1'}\n"+
 					"&{'views.config.cf_hauser.fbLinkage.break.pwSet2'}");
-			if(myRet) {
+			if (myRet) {
 				e.preventDefault();
 				jQuery('#aChgPw').click();
 			}

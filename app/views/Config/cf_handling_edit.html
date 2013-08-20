@@ -17,18 +17,18 @@ jQuery(function() {
 	%{
 		crecaCnt = 0
 		recCnt = 0
-		if(hM?.id) {
+		if (hM?.id) {
 			crecaCnt = models.HandlingMst.count("ha_user = ? and debit_bank.handling_name = ?", haUser, hM.handling_name)
 			recCnt = models.Record.count("ha_user = ? and handling_mst.handling_name = ?", haUser, hM.handling_name)
 		}
 	}%
 	jQuery('#cnf_del').click(function(e){
-		if(${crecaCnt}>0) {
+		if (${crecaCnt}>0) {
 			alert("&{'views.config.cf_handling_edit.del.alert', sHandlingType, messages.get('HandlingType.creca')}");
 			e.preventDefault();
 			return;
 		}
-		if(${recCnt}>0) {
+		if (${recCnt}>0) {
 			alert("&{'views.config.cf_handling_edit.del.alert', sHandlingType, messages.get('Record')}");
 			e.preventDefault();
 			return;
@@ -44,7 +44,7 @@ jQuery(function() {
 			cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");
 		#{/ifnot}
 		#{else}
-			if(${hM?.cutoff_day} == i) {
+			if (${hM?.cutoff_day} == i) {
 				cutOffDay.append("<option value='"+i+"' selected>"+i+"&{'views.common.day'}</option>");
 			} else {
 				cutOffDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");
@@ -54,7 +54,7 @@ jQuery(function() {
 			debitDay.append("<option value='"+i+"'"+(i==10 ? ' selected' : '')+">"+i+"&{'views.common.day'}</option>");
 		#{/ifnot}
 		#{else}
-			if(${hM?.debit_day} == i) {
+			if (${hM?.debit_day} == i) {
 				debitDay.append("<option value='"+i+"' selected>"+i+"&{'views.common.day'}</option>");
 			} else {
 				debitDay.append("<option value='"+i+"'>"+i+"&{'views.common.day'}</option>");

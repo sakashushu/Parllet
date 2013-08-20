@@ -33,7 +33,7 @@ public class DailyAccount extends Controller {
 
 	@Before
 	static void setConnectedUser() {
-		if(!Security.isConnected())
+		if (!Security.isConnected())
 			return;
 		
 		HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
@@ -50,11 +50,11 @@ public class DailyAccount extends Controller {
 			) {
 		DailyAccount da = new DailyAccount();
 		//単純に呼ばれた時の基準日のセット
-		if(strBasisDate==null)
+		if (strBasisDate==null)
 			strBasisDate = da.setBasisDate();
 		
 		Integer intBasisDate = null; 
-		if(strBasisDate!=null)
+		if (strBasisDate!=null)
 			intBasisDate = Integer.parseInt(strBasisDate.replace("/", ""));
 		dailyAccountDisp(intBasisDate);
 	}
@@ -68,11 +68,11 @@ public class DailyAccount extends Controller {
 			) {
 		DailyAccount da = new DailyAccount();
    		//単純に呼ばれた時の基準日のセット(残高表)
-		if(strBasisDate==null)
+		if (strBasisDate==null)
 			strBasisDate = da.setBasisDateBt();
 
 		Integer intBasisDate = null;
-		if(strBasisDate!=null)
+		if (strBasisDate!=null)
 			intBasisDate = Integer.parseInt(strBasisDate.replace("/", ""));
 		balanceTableDisp(intBasisDate);
 	}
@@ -88,10 +88,10 @@ public class DailyAccount extends Controller {
 		DailyAccount da = new DailyAccount();
 		Common cm = new Common();
 		//単純に呼ばれた時の基準日のセット
-		if(intBasisDate==null) {
+		if (intBasisDate==null) {
 			sBasisDate = da.setBasisDate();
 		} else {
-			if(cm.checkIntDate(intBasisDate)) {
+			if (cm.checkIntDate(intBasisDate)) {
 				String strTmp = intBasisDate.toString();
 				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
 			} else {
@@ -132,10 +132,10 @@ public class DailyAccount extends Controller {
 		DailyAccount da = new DailyAccount();
 		Common cm = new Common();
 		//単純に呼ばれた時の基準日のセット(残高表)
-		if(intBasisDate==null) {
+		if (intBasisDate==null) {
 			sBasisDate = da.setBasisDateBt();
 		} else {
-			if(cm.checkIntDate(intBasisDate)) {
+			if (cm.checkIntDate(intBasisDate)) {
 				String strTmp = intBasisDate.toString();
 				sBasisDate = strTmp.substring(0, 4) + "/" + strTmp.substring(4, 6) + "/" + strTmp.substring(6, 8);
 			} else {
@@ -176,11 +176,11 @@ public class DailyAccount extends Controller {
    		wkDAR.setStrBasisDate(strBasisDate);
    		
 		//検索条件をセッションに保存
-		if(strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
+		if (strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
 			session.put("daFilExistFlg", "true");
 			session.put("daStrBasisDate", strBasisDate);
 		}
-		if(strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
+		if (strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
 			session.put("btFilExistFlg", "true");
 			session.put("btStrBasisDate", strBasisDate);
 		}
@@ -199,12 +199,12 @@ public class DailyAccount extends Controller {
 
 		int iDaysCnt = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
-		if(strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
+		if (strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
 			//日計表の表示日数
 			iDaysCnt = 5;
 			calendar.add(Calendar.DATE, -2);
 		}
-		if(strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
+		if (strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
 			iDaysCnt = 1;
 		}
 		
@@ -248,19 +248,19 @@ public class DailyAccount extends Controller {
 			) {
 		
 		// 「移動」ボタンが押されていない時は処理を抜ける
-		if(move==null)
+		if (move==null)
 			return;
 		
 		//ジャンプ後の日付を取得
 		DailyAccount da = new DailyAccount();
-		if(e_basis_date!=null && strMoveType!=null && intMoveNum!=null )
+		if (e_basis_date!=null && strMoveType!=null && intMoveNum!=null )
 			e_basis_date = da.dteAfterJump(e_basis_date, strMoveType, intMoveNum);
 		
-		if(strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
+		if (strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
 			dailyAccount(e_basis_date);
 			return;
 		} 
-		if(strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
+		if (strTableType.equals(Common.VIEWS_BALANCE_TABLE)) {
 			balanceTable(e_basis_date);
 			return;
 		}
@@ -287,13 +287,13 @@ public class DailyAccount extends Controller {
 			e.printStackTrace();
 		}
 		calendar.setTime(dBasis);
-		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.year"))) {
+		if (strMoveType.equals(Messages.get("views.dailyaccount.movetype.year"))) {
 			calendar.add(Calendar.YEAR, intMoveNum);
 		}
-		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.month"))) {
+		if (strMoveType.equals(Messages.get("views.dailyaccount.movetype.month"))) {
 			calendar.add(Calendar.MONTH, intMoveNum);
 		}
-		if(strMoveType.equals(Messages.get("views.dailyaccount.movetype.days"))) {
+		if (strMoveType.equals(Messages.get("views.dailyaccount.movetype.days"))) {
 			calendar.add(Calendar.DATE, intMoveNum);
 		}
 		e_basis_date = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
@@ -330,7 +330,7 @@ public class DailyAccount extends Controller {
    		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
 
-		if(strTableType.equals(Common.VIEWS_BALANCE_TABLE))
+		if (strTableType.equals(Common.VIEWS_BALANCE_TABLE))
 			sFirstDay =  String.format("%1$tY%1$tm%1$td", dteStartDay);
 		
 		//全行取得用SQL作成
@@ -346,11 +346,11 @@ public class DailyAccount extends Controller {
 		for(Object[] objEach : lstObjEach) {
 			String strLargeCategoryName = String.valueOf(objEach[4]);
 			
-			if(intCnt==0)
+			if (intCnt==0)
 				strOldLargeCategoryName = strLargeCategoryName;
 			
 			//大分類が変わる時
-			if(!strOldLargeCategoryName.equals(strLargeCategoryName)) {
+			if (!strOldLargeCategoryName.equals(strLargeCategoryName)) {
 				lWDA.get(intLwdaCnt+intCnt-1).setBolLastItemFlg(true);	//大分類ブレイク時に、一つ前の行に最終行フラグを立てる
 				strOldLargeCategoryName = strLargeCategoryName;
 			}
@@ -364,14 +364,14 @@ public class DailyAccount extends Controller {
 			wDaEach.setbBudgetFlg(false);
 	
 			//「収入」・「支出」・「Parllet預入・引出」の場合、予算有フラグを立てる
-			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
+			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
 				wDaEach.setbBudgetFlg(true);
 			}
 			
 			// ある時だけ予算をセット
-			if(objEach[6]!=null) {
+			if (objEach[6]!=null) {
 				Long lngBgId = Long.parseLong(String.valueOf(objEach[5]));
 				Long lngBgAmount = Long.parseLong(String.valueOf(objEach[6]));
 //				String sBudgetAmount = String.format("%1$,3d", lngBgAmount).trim();
@@ -380,11 +380,11 @@ public class DailyAccount extends Controller {
 			}
 			
 			// 「実残高」の時は種類名に取扱種類名をセット
-			if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL))
+			if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL))
 				wDaEach.setStrTypeNm(String.valueOf(objEach[intDaysCnt+7]));
 			
 			// 「実残高」・「Parllet残高」の時は無効フラグの中身をセット
-			if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
+			if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
 					strLargeCategoryName.equals(Common.REMAINDER_TYPE_PARLLET))
 				wDaEach.setBolInvFlg(Boolean.valueOf(String.valueOf(objEach[intDaysCnt+8])));
 			
@@ -395,7 +395,7 @@ public class DailyAccount extends Controller {
 			List<WkDaToDl> lstWdtd = new ArrayList<WkDaToDl>();
 			for(int iDay = 0; iDay < intDaysCnt; iDay++) {
 				//「実残高」・「Parlletに入れてないお金」・「Parllet残高」の時は2日目以降は加算
-				if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
+				if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
 						strLargeCategoryName.equals(Common.REMAINDER_TYPE_NOT_PARLLET) ||
 						strLargeCategoryName.equals(Common.REMAINDER_TYPE_PARLLET)) {
 					lngEach += Long.parseLong(String.valueOf(objEach[iDay+7]));	//日毎金額
@@ -420,7 +420,7 @@ public class DailyAccount extends Controller {
 			}
 			wDaEach.setLstWdtd(lstWdtd);
 			//「収入」・「支出」・「Parllet預入・引出」・「口座預入」・「口座引出」の場合、月計をセット
-			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
+			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_BANK_IN) ||
@@ -428,7 +428,7 @@ public class DailyAccount extends Controller {
 				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[intDaysCnt+7])));
 			}
 			//「収入」・「支出」の場合、Parllet連結をセット
-			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
+			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT)) {
 				wDaEach.setLSumMonth(Long.parseLong(String.valueOf(objEach[intDaysCnt+7])));
 				wDaEach.setlPrltLink(Long.parseLong(String.valueOf(objEach[intDaysCnt+8])));
@@ -464,7 +464,7 @@ public class DailyAccount extends Controller {
 			) {
 		
 		String sql = "";
-		if(strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
+		if (strTableType.equals(Common.VIEWS_DAILY_ACCOUNT)) {
 			//収支取得用SQL作成(収入)(合計)
 			String sqlBalInAll = makeSqlBalInOut(
 					false,
@@ -668,7 +668,7 @@ public class DailyAccount extends Controller {
 				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_BANK_IN + "' THEN r.amount" +
 				"";
 		
-		if(!bolEach) {
+		if (!bolEach) {
 			//残高取得用SQL作成(実残高)(取扱合計)
 			sql = makeSqlRemRealAll(
 					dteStartDay,
@@ -692,7 +692,7 @@ public class DailyAccount extends Controller {
 			sqlDailyZero += "" +
 					" OR  sum_day_" + iDay + " <> 0 ";
 			calendar.add(Calendar.DATE, 1);
-			if(iDay > 1)
+			if (iDay > 1)
 				sqlDailyLater += "" +
 						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " " +
 						"";
@@ -756,7 +756,7 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 				"";
 		//2日目以降の残高取得用SQL作成（取扱合計）
-		if(intDaysCnt>=2) {
+		if (intDaysCnt>=2) {
 			String sqlAllLater = makeSqlRemRealAllLater(
 					dteStartDay,
 					intDaysCnt,
@@ -936,7 +936,7 @@ public class DailyAccount extends Controller {
 				"   ON hm.id = rem_firstday.hd_id " +
 				"";
 		//2日目以降の残高取得用SQL作成（取扱(実際)毎）
-		if(intDaysCnt>=2) {
+		if (intDaysCnt>=2) {
 			String sqlEachLater = makeSqlRemRealEachLater(
 					dteStartDay,
 					intDaysCnt,
@@ -1263,7 +1263,7 @@ public class DailyAccount extends Controller {
    				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_PARLLET_OUT + "' THEN -r.amount" +
 				"";
 
-		if(!bolEach) {
+		if (!bolEach) {
 			//初日の残高取得用SQL作成（Parllet合計）
 			String sqlAllFirstDay = makeSqlRemPrltFirstDay(
 					false,
@@ -1283,7 +1283,7 @@ public class DailyAccount extends Controller {
 					" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 					"";
 			//2日目以降の残高取得用SQL作成（Parllet合計）
-			if(intDaysCnt>=2) {
+			if (intDaysCnt>=2) {
 				String sqlAllLater = makeSqlRemPrltLater(
 						false,
 						dteStartDay,
@@ -1320,7 +1320,7 @@ public class DailyAccount extends Controller {
 			sqlDailyZero += "" +
 					" OR  sum_day_" + iDay + " <> 0 ";
 			calendar.add(Calendar.DATE, 1);
-			if(iDay>=2)
+			if (iDay>=2)
 				sqlDailyLater += "" +
 						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " ";
 		}
@@ -1336,7 +1336,7 @@ public class DailyAccount extends Controller {
 		//2日目以降の残高取得用SQL作成（取扱(Parllet)毎）
 		String sqlJoinPhrase = "";
 		String sqlEachLater = "";
-		if(intDaysCnt>=2) {
+		if (intDaysCnt>=2) {
 			sqlEachLater = makeSqlRemPrltLater(
 					true,
 					dteStartDay,
@@ -1578,7 +1578,7 @@ public class DailyAccount extends Controller {
 				" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 				"";
 		//2日目以降の残高取得用SQL作成（Parlletに入れてないお金合計）
-		if(intDaysCnt>=2) {
+		if (intDaysCnt>=2) {
 			String sqlAllLater = makeSqlRemNotPrltLater(
 					dteStartDay,
 					intDaysCnt,
@@ -1756,7 +1756,7 @@ public class DailyAccount extends Controller {
    				" WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_PARLLET_OUT + "' THEN -r.amount" +
 				"";
 
-		if(!bolEach) {
+		if (!bolEach) {
 			//初日の残高取得用SQL作成（Parllet合計）
 			String sqlAllFirstDay = makeSqlRemPrlt2FirstDay(
 					false,
@@ -1776,7 +1776,7 @@ public class DailyAccount extends Controller {
 					" CROSS JOIN ( " + sqlAllFirstDay + " ) rem_firstday " +
 					"";
 			//2日目以降の残高取得用SQL作成（Parllet合計）
-			if(intDaysCnt>=2) {
+			if (intDaysCnt>=2) {
 				String sqlAllLater = makeSqlRemPrlt2Later(
 						false,
 						dteStartDay,
@@ -1847,7 +1847,7 @@ public class DailyAccount extends Controller {
 			sqlDailyZero += "" +
 					" OR  sum_day_" + iDay + " <> 0 ";
 			calendar.add(Calendar.DATE, 1);
-			if(iDay>=2)
+			if (iDay>=2)
 				sqlDailyLater += "" +
 						" ,COALESCE(rem_later.sum_day_" + iDay + ", 0) as sum_day_" + iDay + " ";
 		}
@@ -1863,7 +1863,7 @@ public class DailyAccount extends Controller {
 		//2日目以降の残高取得用SQL作成（取扱(Parllet)毎）
 		String sqlJoinPhrase = "";
 		String sqlEachLater = "";
-		if(intDaysCnt>=2) {
+		if (intDaysCnt>=2) {
 			sqlEachLater = makeSqlRemPrlt2Later(
 					true,
 					dteStartDay,
@@ -2048,7 +2048,7 @@ public class DailyAccount extends Controller {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dStartDay);
 		String strAmount = "";
-		if(strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
+		if (strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
 			strAmount = " CASE WHEN b.balance_type_name = '" + Common.BALANCE_TYPE_PARLLET_IN + "' THEN r.amount ELSE -r.amount END ";
 		} else {
 			strAmount = " r.amount ";
@@ -2139,7 +2139,7 @@ public class DailyAccount extends Controller {
 				"   AND bg.month = " + month +
 				" ) b ) " +
 				"";
-		if(bolEach) {
+		if (bolEach) {
 			sqlSelGroupby = "" +
 	   				"   i.id as item_id " +
 	   				"  ,i.order_seq as item_order" +
@@ -2248,7 +2248,7 @@ public class DailyAccount extends Controller {
 				"   AND bg.month = " + month +
 				" ) b ) " +
 				"";
-		if(bolEach) {
+		if (bolEach) {
 			sqlSelGroupby = "" +
 	   				"   pm.id as item_id " +
 	   				"  ,pm.order_seq as item_order" +
@@ -2388,20 +2388,20 @@ public class DailyAccount extends Controller {
 
 		
 		/** 合計行の場合 **/
-		if(lngItemId==0) {
+		if (lngItemId==0) {
 			// 「収入」・「支出」・「口座預入」・「口座引出」
-			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
+			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_BANK_IN) ||
 					strLargeCategoryName.equals(Common.BALANCE_TYPE_BANK_OUT)) {
 				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
 			}
 			// 「Parllet預入・引出」
-			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
+			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
 				wkDaToDl.setlParlletId((long) -2);		//Parllet＝NULLでない
 			}
 //			// 「Parlletから支払」
-//			if(strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT_PARLLET)) {
+//			if (strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT_PARLLET)) {
 //				wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
 //				wkDaToDl.setlParlletId((long) -2);		//Parllet＝NULLでない
 //			}
@@ -2413,21 +2413,21 @@ public class DailyAccount extends Controller {
 		/** 明細行の場合 **/
 		
 		// 「収入」・「支出」
-		if(strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
+		if (strLargeCategoryName.equals(Common.BALANCE_TYPE_IN) ||
 				strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT)) {
 			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", strLargeCategoryName)).first()).id);
 			wkDaToDl.setiItemId(lngItemId);
 		}
 		// 「Parllet預入・引出」
-		if(strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT))
+		if (strLargeCategoryName.equals(Common.BALANCE_TYPE_PARLLET_INOUT))
 			wkDaToDl.setlParlletId(lngItemId);
 //		// 「Parlletから支払」
-//		if(strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT_PARLLET)) {
+//		if (strLargeCategoryName.equals(Common.BALANCE_TYPE_OUT_PARLLET)) {
 //			wkDaToDl.setlBalanceTypeId(((BalanceTypeMst)(BalanceTypeMst.find("byBalance_type_name", BALANCE_TYPE_OUT)).first()).id);
 //			wkDaToDl.setlParlletId(lngItemId);
 //		}
 		// 「実残高」・「Parllet」
-		if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
+		if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL) ||
 				strLargeCategoryName.equals(Common.REMAINDER_TYPE_PARLLET)) {
 			calendar.add(Calendar.MONTH, -1);
 			String sDateFr = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
@@ -2436,11 +2436,11 @@ public class DailyAccount extends Controller {
 			String sDateTo = String.format("%1$tY/%1$tm/%1$td", calendar.getTime());
 			wkDaToDl.setsDebitDateTo(sDateTo);
 			// 「実残高」
-			if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL)) {
+			if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_REAL)) {
 				wkDaToDl.setlHandlingId(lngItemId);
 			}
 			// 「Parllet」
-			if(strLargeCategoryName.equals(Common.REMAINDER_TYPE_PARLLET)) {
+			if (strLargeCategoryName.equals(Common.REMAINDER_TYPE_PARLLET)) {
 				wkDaToDl.setlParlletId(lngItemId);
 			}
 		}
@@ -2456,7 +2456,7 @@ public class DailyAccount extends Controller {
 	 */
 	private String setBasisDate() {
 		//セッションに絞込条件が入っている時はセット
-		if((session.get("daFilExistFlg") != null) &&
+		if ((session.get("daFilExistFlg") != null) &&
 				(session.get("daFilExistFlg").equals("true")))
 			return session.get("daStrBasisDate");
    		Calendar calendar = Calendar.getInstance();
@@ -2473,7 +2473,7 @@ public class DailyAccount extends Controller {
 	 */
 	private String setBasisDateBt() {
 		//セッションに絞込条件が入っている時はセット
-		if((session.get("btFilExistFlg") != null) &&
+		if ((session.get("btFilExistFlg") != null) &&
 				(session.get("btFilExistFlg").equals("true")))
 			return session.get("btStrBasisDate");
    		//単純に呼ばれた時（初回等）は、今日をセット
@@ -2504,9 +2504,9 @@ public class DailyAccount extends Controller {
 			String strEItemVal = sEItem.next();
 
 			//予算が空白にされた時
-			if(strEBudgetAmountVal.equals("")) {
+			if (strEBudgetAmountVal.equals("")) {
 				//既存レコードが無ければなにもしない
-				if(lngId==0L)
+				if (lngId==0L)
 					continue;
 				//既存レコードがある場合レコード削除
 				Budget budget = Budget.findById(lngId);
@@ -2553,7 +2553,7 @@ public class DailyAccount extends Controller {
 			Integer iEBudgetAmount = nEBudgetAmount.intValue();
 			
 			//既存レコードがある場合は更新
-			if(lngId!=0L) {
+			if (lngId!=0L) {
 				Budget budget = Budget.findById(lngId);
 				// 変更有無チェック用のレコードにセット
 				Budget eBudget = new Budget(
@@ -2567,7 +2567,7 @@ public class DailyAccount extends Controller {
 				
 				// Validate
 				validation.valid(eBudget);
-				if(validation.hasErrors()) {
+				if (validation.hasErrors()) {
 					dailyAccount(bg_basis_date);
 				}
 				// 項目が変更されていた行だけ更新
@@ -2587,7 +2587,7 @@ public class DailyAccount extends Controller {
 			ItemMst itemMst = null;
 			ParlletMst parlletMst = null;
 			//大分類が「Parllet預入・引出」の場合は「取扱(Parllet)」ごとの登録
-			if(strELargeCategoryVal.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
+			if (strELargeCategoryVal.equals(Common.BALANCE_TYPE_PARLLET_INOUT)) {
 				parlletMst = ParlletMst.find("ha_user = " + haUser.id + " and parllet_name = '" + strEItemVal + "'").first();
 			//大分類が「Parllet預入・引出」でない場合は「項目」ごとの登録
 			} else {
@@ -2604,7 +2604,7 @@ public class DailyAccount extends Controller {
 			
 			// Validate
 			validation.valid(budget);
-			if(validation.hasErrors()) {
+			if (validation.hasErrors()) {
 				dailyAccount(bg_basis_date);
 			}
 			// 保存

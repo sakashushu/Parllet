@@ -1,5 +1,5 @@
 #{extends 'Config/cf_main.html' /}
-#{set title:messages.get('views.config.cf_prlt')+' '+messages.get('views.common.update.edit') /}
+#{set title:messages.get('PrltType.prlt')+' '+messages.get('views.common.update.edit') /}
 
 <!-- 
 <script type="text/javascript" src="@{'/public/javascripts/confirm.js'}" ></script>
@@ -11,13 +11,13 @@
 jQuery(function() {
 	%{
 		recCnt = 0
-		if(plM?.id) {
+		if (plM?.id) {
 			recCnt = models.Record.count("ha_user = ? and parllet_mst.parllet_name = ?", haUser, plM.parllet_name)
 		}
 	}%
 	jQuery('#cnf_del').click(function(e){
-		if(${recCnt}>0) {
-			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_prlt'), messages.get('Record')}");
+		if (${recCnt}>0) {
+			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('PrltType.prlt'), messages.get('Record')}");
 			e.preventDefault();
 			return;
 		}
@@ -36,10 +36,10 @@ jQuery(function() {
 <div id="crudShow">
 
 	#{ifnot plM?.id}
-		<h3><span>&{'insupd.add', messages.get('views.config.cf_prlt')}</span></h3>
+		<h3><span>&{'insupd.add', messages.get('PrltType.prlt')}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'insupd.edit', messages.get('views.config.cf_prlt')}</span></h3>
+		<h3><span>&{'insupd.edit', messages.get('PrltType.prlt')}</span></h3>
 	#{/else}
 
     <div class="objectForm">
@@ -73,7 +73,7 @@ jQuery(function() {
 	#{if plM?.id}
 		#{form @cf_parllet_del(plM?.id)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'insupd.delete', messages.get('views.config.cf_prlt')}" id="cnf_del" />
+		        <input type="submit" value="&{'insupd.delete', messages.get('PrltType.prlt')}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

@@ -10,7 +10,7 @@ public class SmplPjax extends Controller {
 		String data1 = params.get("data1");
 		
 		
-		if(data1 == null) {
+		if (data1 == null) {
 			render();
 		} else {
 			List<String> results = new ArrayList<String>();
@@ -18,7 +18,7 @@ public class SmplPjax extends Controller {
 				results.add("data" + i);
 			}
 			
-			if(isPjax()) {
+			if (isPjax()) {
 				render("/tags/result.html", results);
 			} else {
 				results.add("directCalled");
@@ -28,9 +28,9 @@ public class SmplPjax extends Controller {
 	}
 	
 	private static boolean isPjax() {
-		if(params._contains("_pjax")) {
+		if (params._contains("_pjax")) {
 			return true;
-		} else if(request.headers.containsKey("X-PJAX")) {
+		} else if (request.headers.containsKey("X-PJAX")) {
 			return true;
 		} else {
 			return false;

@@ -8,7 +8,7 @@ jQuery(function() {
 		%{
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
 		}%
-		if(${hdlgCnt}===0) {
+		if (${hdlgCnt}===0) {
 			//口座・電子マネー作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
 			
@@ -20,7 +20,7 @@ jQuery(function() {
 		%{
 			idpCnt = models.ParlletMst.count("byHa_user", hu);
 		}%
-		if(${idpCnt}===0) {
+		if (${idpCnt}===0) {
 			//Parllet作成用ダイアログ
 			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
 			
@@ -103,21 +103,21 @@ jQuery(function() {
 	});
 	/* 起動時のdatepickerの選択可能範囲絞込 */
 	#{if request.actionMethod=='dl_balance'}
-		if(ckDate("${h_payment_date_fr}"))
+		if (ckDate("${h_payment_date_fr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${h_payment_date_fr}");
-		if(ckDate("${h_payment_date_to}"))
+		if (ckDate("${h_payment_date_to}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_payment_date_to}");
 	#{/if}
 	#{if request.actionMethod=='dl_remainderBank'}
-		if(ckDate("${h_debit_date_fr}"))
+		if (ckDate("${h_debit_date_fr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${h_debit_date_fr}");
-		if(ckDate("${h_debit_date_to}"))
+		if (ckDate("${h_debit_date_to}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
 	#{/if}
 	#{if request.actionMethod=='dl_remainderPrlt'}
-		if(ckDate("${dlRiHdDebitDateFr}"))
+		if (ckDate("${dlRiHdDebitDateFr}"))
 			jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
-		if(ckDate("${dlRiHdDebitDateTo}"))
+		if (ckDate("${dlRiHdDebitDateTo}"))
 			jQuery("#frJump").datepicker("option", "maxDate", "${dlRiHdDebitDateTo}");
 	#{/if}
 	
@@ -140,11 +140,11 @@ function setCssFooter() {
 		winSrTp = jQuery(window).scrollTop(),
 		ftrHt = jQuery('#footer').height(),
 		winSrBtm = ctnHt - winSrTp - winInHt;
-	if(winInHt < ctnHt) {
+	if (winInHt < ctnHt) {
 		dlFtr.css('position', 'fixed');
 		dlMn.css('padding-bottom', '41px');
 		dlFtr.css('bottom', '0');
-		if(winSrBtm < ftrHt) {
+		if (winSrBtm < ftrHt) {
 			dlFtr.css('bottom', ftrHt - winSrBtm + 'px');
 		}
 	} else {
@@ -174,15 +174,15 @@ function whenDialogConfirmClosed(intRslt) {
 			break;
 		case 1:
 			//口座更新フォームを開く
-			openDialogFrmUpdMstDh("&{'views.config.cf_bank'}");
+			openDialogFrmUpdMstDh("&{'HandlingType.bank'}");
 			break;
 		case 2:
 			//電子マネー更新フォームを開く
-			openDialogFrmUpdMstDh("&{'views.config.cf_emoney'}");
+			openDialogFrmUpdMstDh("&{'HandlingType.emoney'}");
 			break;
 		case 3:
 			//Parllet更新フォームを開く
-			openDialogFrmUpdMstDh("&{'views.config.cf_prlt'}");
+			openDialogFrmUpdMstDh("&{'PrltType.prlt'}");
 			break;
 		default:
     		alert("dialogConfirm return value error");
@@ -200,9 +200,9 @@ function openDialogFrmUpdMstDh(strMst) {
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
 function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
-	if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}")
+	if (strType==="&{'HandlingType.bank'}" || strType==="&{'HandlingType.emoney'}")
 		strErrMsg = "Common.updateHdlg";
-	if(strType==="&{'views.config.cf_prlt'}")
+	if (strType==="&{'PrltType.prlt'}")
 		strErrMsg = "Common.updatePrlt";
 	switch (intRslt) {
 		case 0:
@@ -210,21 +210,21 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 			break;
 		case 1:
 			var jqxhrMkMst;
-			if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
-				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
+			if (strType==="&{'HandlingType.bank'}" || strType==="&{'HandlingType.emoney'}") {
+				jqxhrMkMst = jQuery.post('@{Common.updateHdlg}', {strHdlgType: strType, strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
-			if(strType==="&{'views.config.cf_prlt'}") {
+			if (strType==="&{'PrltType.prlt'}") {
 				jqxhrMkMst = jQuery.post('@{Common.updatePrlt}', {strName: nameVal, bolZeroHddn: zeroHddnChkd});
 			}
 			jqxhrMkMst
 			.done(function(z) {
 				switch (z.intRslt) {
 					case 0:
-						if(strType==="&{'views.config.cf_bank'}" || strType==="&{'views.config.cf_emoney'}") {
+						if (strType==="&{'HandlingType.bank'}" || strType==="&{'HandlingType.emoney'}") {
 							//収支明細（口座系）へジャンプ
 							jQuery('#frmDlRemainderBank').submit();
 						}
-						if(strType==="&{'views.config.cf_prlt'}") {
+						if (strType==="&{'PrltType.prlt'}") {
 							//収支明細（Parllet）へジャンプ
 							jQuery('#frmDlRemainderPrlt').submit();
 						}

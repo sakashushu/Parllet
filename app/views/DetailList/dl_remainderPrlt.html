@@ -8,7 +8,7 @@
 jQuery(function(){
 	/* 左クリックか右クリックでメニュー表示 */
 	jQuery('.menu_cell').mousedown(function(e) {
-		if(e.which==1 || e.which==3) {
+		if (e.which==1 || e.which==3) {
 			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
 			jQuery('#reEdCalledFrom').val("${request.actionMethod}");
@@ -29,9 +29,9 @@ jQuery(function(){
 		build: function($trigger, e) {
 			var options = {
 				callback: function(key, options) {
-					if(key=="toRecordEdit")
+					if (key=="toRecordEdit")
 						jQuery('#submitRecordEdit').click();
-					if(key=="toDlBalance")
+					if (key=="toDlBalance")
 						jQuery('#submitDlBalance').click();
 					jQuery('body').attr("disabled", "disabled");
 				},
@@ -46,7 +46,7 @@ jQuery(function(){
 		}
 	});
 	
-	/* 「公開フラグ」・「取扱（Parllet）」の変更イベント */
+	/* 「公開フラグ」・「取扱(Parllet)」の変更イベント */
 	jQuery("#idHdSecretRecFlg, #dlCmbHdParllet").change(function() {
 		jQuery('#idSrch').click();
 		jQuery('body').attr("disabled", "disabled");
@@ -55,7 +55,7 @@ jQuery(function(){
 	/* 「引落日」の変更イベント */
 	jQuery("#frJump, #toJump").change(function() {
 		var sDate = jQuery(this).val().substr(0,10);
-		if(sDate=='' || ckDate(sDate)==true) {
+		if (sDate=='' || ckDate(sDate)==true) {
 			jQuery('#idSrch').click();
 			jQuery('body').attr("disabled", "disabled");
 		}
@@ -112,7 +112,7 @@ jQuery(function(){
 		<!-- 引落日 -->
 		%{
 			clDlRbDebitDateHd = 'dlRb_debit_date dl_head'
-            if(session.get('actionMode')=='View'){
+            if (session.get('actionMode')=='View'){
                 clDlRbDebitDateHd += ' dl_borderLeft'
             }
 		}%
@@ -191,7 +191,7 @@ jQuery(function(){
 		%{
 			clDlRbDebitDate = 'dlRb_debit_date'
 			clDlRbDebitDate += wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'
-            if(session.get('actionMode')=='View'){
+            if (session.get('actionMode')=='View'){
                 clDlRbDebitDate += ' dl_borderLeft'
             }
 		}%

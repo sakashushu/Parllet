@@ -3,8 +3,12 @@ html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget te
 }
 
 body {
+//	word-wrap:break-word;
+	word-break:break-all;
+	
 	margin: auto;
-	font-size: 11pt;
+//	font-size: 11pt;
+	font-size: 18pt;
 //	background: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
 	background: #e8cc8b;
@@ -172,23 +176,25 @@ a.aBtn:hover span{
 /** dialogFrmUpdRec **/
 #dialog-updRec fieldset {
 	margin-top: 15px;
-//	max-height: 400px;
+	max-height: 400px;
 }
 .dfurElem {
-	min-height: 32px;
+	min-height: 30px;
 	min-width: 200px;
 }
 .dfurElem label {
 	display: block;
 	min-height: 14px;
 	padding-top: 1px;
+	width: 96px;
 }
 .dfurElem a {
 	display: block;
 	float: left;
 	margin-bottom: 12px;
 	font-size: 80%;
-	min-width: 80px;
+//	min-width: 80px;
+	width: 96px;
 	min-height: 14px;
 }
 .dfurElem input, .dfurElem select, .dfurElem textarea {
@@ -199,10 +205,10 @@ a.aBtn:hover span{
 	margin-bottom: 12px;
 }
 .dfurElem div {
-//	float: left;
+	height: 12px;
 }
 
-.editable {
+.editableInput, .editableTextarea {
 	cursor: pointer;
 }
 
@@ -225,7 +231,7 @@ a.aBtn:hover span{
 }
 
 #hdContainer {
-	width: 980px;
+//	width: 980px;
 	height: 36px;
 	margin-left:auto;
 	margin-right:auto;
@@ -1231,9 +1237,6 @@ fieldset {
 	width: 99px;
 }
 
-.remBkemInv .lrb_Line {
-	background: #ccc;
-}
 
 /*
  * RecordEdit

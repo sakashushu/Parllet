@@ -11,11 +11,11 @@
             start = _caller.page - (int)(limit/2) + (limit % 2 ? 0 : 1)
             end = _caller.page + (int)(limit/2)
 
-            if(start < 1){
+            if (start < 1){
                 extra = 1 - start
                 end = (end + extra < _caller.nbPages ? end + extra : _caller.nbPages)
                 start = 1
-            }else if(end > _caller.nbPages){
+            }else if (end > _caller.nbPages){
                 extra = end - _caller.nbPages
                 start = (start - extra > 1 ? start - extra : 1)
                 end = _caller.nbPages

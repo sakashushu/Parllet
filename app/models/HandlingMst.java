@@ -84,7 +84,7 @@ public class HandlingMst extends Model {
 					"ha_user = ? and handling_name = ?",
 					handlingMst.ha_user,
 					handlingMst.handling_name).first();
-			if(hmExist!=null && hmExist.id!=handlingMst.id) {
+			if (hmExist!=null && hmExist.id!=handlingMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}
@@ -101,7 +101,7 @@ public class HandlingMst extends Model {
 	static class DebitBankConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
+			if (handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.debit_bank==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -119,7 +119,7 @@ public class HandlingMst extends Model {
 	static class CutoffConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
+			if (handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.cutoff_day==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -137,7 +137,7 @@ public class HandlingMst extends Model {
 	static class DebitMonthConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
+			if (handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca")) &&
 					handlingMst.debit_month==null) {
 				setMessage(Messages.get("validation.required"));
 				return false;
@@ -156,15 +156,15 @@ public class HandlingMst extends Model {
 	static class CutoffDebitConditionallyCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			HandlingMst handlingMst = (HandlingMst)validatedObject;
-			if(handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca"))) {
-				if(handlingMst.debit_day==null) {
+			if (handlingMst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.creca"))) {
+				if (handlingMst.debit_day==null) {
 					setMessage(Messages.get("validation.required"));
 					return false;
 				} else {
-					if(handlingMst.cutoff_day!=null &&
+					if (handlingMst.cutoff_day!=null &&
 							handlingMst.debit_month!=null &&
 							handlingMst.debit_day!=null) {
-						if(handlingMst.debit_month.equals(Messages.get("DebitMonth.this")) &&
+						if (handlingMst.debit_month.equals(Messages.get("DebitMonth.this")) &&
 								handlingMst.cutoff_day > handlingMst.debit_day) {
 							setMessage(Messages.get("validation.cutoff_debit"));
 							return false;

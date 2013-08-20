@@ -107,8 +107,8 @@ public class Record extends Model {
 	static class HandlingConditionallyRequiredCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
-			if(record.balance_type_mst!=null) {
-				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
+			if (record.balance_type_mst!=null) {
+				if ((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.out")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.bank_in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.bank_out"))) &&
@@ -129,8 +129,8 @@ public class Record extends Model {
 	static class ItemConditionallyRequiredCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
-			if(record.balance_type_mst!=null) {
-				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
+			if (record.balance_type_mst!=null) {
+				if ((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.out"))) &&
 						(record.item_mst==null)) {
 					setMessage(Messages.get("validation.required"));
@@ -149,8 +149,8 @@ public class Record extends Model {
 	static class ParlletConditionallyRequiredCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
-			if(record.balance_type_mst!=null) {
-				if((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.parllet_in")) ||
+			if (record.balance_type_mst!=null) {
+				if ((record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.parllet_in")) ||
 						record.balance_type_mst.balance_type_name.equals(Messages.get("BalanceType.parllet_out"))) &&
 						(record.parllet_mst==null)) {
 					setMessage(Messages.get("validation.required"));
@@ -169,8 +169,8 @@ public class Record extends Model {
 	static class DebitDateConditionallyRequiredCheck extends Check {
 		public boolean isSatisfied(Object validatedObject, Object value) {
 			Record record = (Record)validatedObject;
-			if(record.handling_mst!=null) {
-				if(!record.handling_mst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.cash")) &&
+			if (record.handling_mst!=null) {
+				if (!record.handling_mst.handling_type_mst.handling_type_name.equals(Messages.get("HandlingType.cash")) &&
 						(record.debit_date==null)) {
 					setMessage(Messages.get("validation.required"));
 					return false;

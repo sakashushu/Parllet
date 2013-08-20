@@ -59,7 +59,7 @@ public class ItemMst extends Model {
 					itemMst.ha_user,
 					itemMst.balance_type_mst,
 					itemMst.item_name).first();
-			if(imExist!=null && imExist.id!=itemMst.id) {
+			if (imExist!=null && imExist.id!=itemMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

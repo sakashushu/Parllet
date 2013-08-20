@@ -57,7 +57,7 @@ public class ParlletMst extends Model {
 					"ha_user = ? and parllet_name = ?",
 					parlletMst.ha_user,
 					parlletMst.parllet_name).first();
-			if(plmExist!=null && plmExist.id!=parlletMst.id) {
+			if (plmExist!=null && plmExist.id!=parlletMst.id) {
 				setMessage(Messages.get("validation.multipleName"));
 				return false;
 			}

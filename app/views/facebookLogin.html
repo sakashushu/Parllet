@@ -14,8 +14,8 @@ function login(title, linkFlg) {
 				jqxhr_sCrty_cFbUsr
 				.done(function(jsonA) {
 //					var jsonA = JSON.parse(a);
-					if(linkFlg) {
-						if(jsonA.bolVirginFlg) {
+					if (linkFlg) {
+						if (jsonA.bolVirginFlg) {
 //							jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink}, function(b){
 							var jqxhr_cMn_lnkFb = jQuery.post('@{Common.linkFacebook}', {id: vId, name: vName, link: vLink});
 							jqxhr_cMn_lnkFb
@@ -41,7 +41,7 @@ function login(title, linkFlg) {
 							logout();
 						}
 					} else {
-						if(jsonA.bolVirginFlg) {
+						if (jsonA.bolVirginFlg) {
 							jQuery(".validateTips")
 								.css('padding', '0')
 								.text("");

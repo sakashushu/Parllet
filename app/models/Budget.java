@@ -40,7 +40,7 @@ public class Budget extends Model {
 	}
 	public String toString() {
 		String sRtn = "";
-		if(item_mst==null) {
+		if (item_mst==null) {
 			sRtn = year + "/" + month + " " + parllet_mst.parllet_name;
 		} else {
 			sRtn = year + "/" + month + " " + item_mst.item_name;

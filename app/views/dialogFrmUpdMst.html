@@ -15,6 +15,7 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 			btnMakeUpd = lngId==null ? "&{'views.common.lbl.make'}" : "&{'views.common.update'}",
 			allFields = jQuery([]).add(name),
 			tips = jQuery(".validateTips"),
+			dlFumWidth,
 			intRslt = 0;
 		allFields.removeClass("ui-state-error");
 		tips
@@ -31,7 +32,7 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 //			jQuery('#dspZeroHddn').removeClass("invisible");
 //		}
 		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}" ||
-				strType=="&{'views.config.cf_prlt'}" ||
+				strType=="&{'PrltType.prlt'}" ||
 				lngId==null) {
 			jQuery('#dspInvFlg').addClass("invisible");
 		} else {
@@ -40,23 +41,39 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 		if (lngId!=null) {
 			var strErrMsg;
 			var jqxhrGetClms;
-			if (strType=="&{'views.config.cf_bank'}" || strType=="&{'views.config.cf_emoney'}") {
+			if (strType=="&{'HandlingType.bank'}" || strType=="&{'HandlingType.emoney'}") {
 				strErrMsg = "Common.getClmsHdlg";
-				jqxhrGetClms = jQuery.post('@{Common.getClmsHdlg}', {lngId: lngId});
+				jqxhrGetClms = jQuery.post('@{Common.getClmsHdlg}', {lngHdlgId: lngId});
 				jqxhrGetClms
 				.done(function(z) {
 					name.val(z.hlMst.handling_name);
-					zeroHddn.val(z.hlMst.zero_hidden);
-					invFlg.val(z.hlMst.invalidity_flg);
+					zeroHddn.attr('checked', z.hlMst.zero_hidden);
+					invFlg.attr('checked', z.hlMst.invalidity_flg);
 				})
 				.fail(function() {
 					strErrMsg += " Failed";
 					alert(strErrMsg);
 				});
+//				jQuery.each(subCatHdlgtypeToHdlg[strType], function(key,value){
+//					if (String(lngId)===value["key"]) {
+//						var bolInvFlg = new Boolean(value["invalidity_flg"]);
+//						name.val(value["handling_name"]);
+//						zeroHddn.attr('checked', Boolean.valueOf(value["zero_hidden"]));
+//						invFlg.attr('checked', bolInvFlg);
+//					}
+//				});
+
+//				#{list items:models.HandlingMst.find("byHa_user", haUser).fetch(), as:'handlingMst'}
+//					if (lngId===${handlingMst.id}) {
+//						name.val("${handlingMst.handling_name}");
+//						zeroHddn.attr('checked', ${handlingMst.zero_hidden});
+//						invFlg.attr('checked', ${handlingMst.invalidity_flg});
+//					}
+//				#{/list}
 			}
-			if (strType=="&{'views.config.cf_prlt'}") {
+			if (strType=="&{'PrltType.prlt'}") {
 				strErrMsg = "Common.getClmsPrlt";
-				jqxhrGetClms = jQuery.post('@{Common.getClmsPrlt}', {lngId: lngId});
+				jqxhrGetClms = jQuery.post('@{Common.getClmsPrlt}', {lngPrltId: lngId});
 				jqxhrGetClms
 				.done(function(z) {
 					name.val(z.plMst.parllet_name);
@@ -103,12 +120,20 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 			o.addClass("ui-state-error");
 			updateTips(s);
 		}
+		
+		if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) ||
+				navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+			dlFumWidth = 300;
+		}else {
+			dlFumWidth = 460;
+		}
 		jQuery("#dialog-makeMaster").dialog({
 			autoOpen: false,
 			resizable: false,
-			width:460,
+			width: dlFumWidth,
 			modal: true,
 			title: title,
+			closeOnEscape: false,
 			buttons: buttons,
 			close: function() {
 				//ダイアログクローズ時の処理は呼び出し元で行う

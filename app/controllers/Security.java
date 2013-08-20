@@ -35,7 +35,7 @@ public class Security extends Secure.Security {
 	public static void checkFbUser(Long id) {
 		WkSyEsFbUsRslt wr = new WkSyEsFbUsRslt();
 		HaUser hU = HaUser.find("byFbId", id).first();
-		if(hU==null) {
+		if (hU==null) {
 			//アカウントが作られていない場合
 			wr.setBolVirginFlg(true);
 			renderJSON(wr);
@@ -59,7 +59,7 @@ public class Security extends Secure.Security {
 		
 //		//email重複チェック
 //		HaUser huEmail = HaUser.find("byEmail", email).first();
-//		if(huEmail!=null) {
+//		if (huEmail!=null) {
 //			wr.setIntRslt(2);
 //			wr.setStrErr(Messages.get("views.login.err.duplicate",
 //							Messages.get("views.login.fbLogin.email")));
@@ -76,9 +76,9 @@ public class Security extends Secure.Security {
 		HaUser haUser = new HaUser(email, strPass, null, null, id, name, link, false, false, false, false, false, lM, null, null, null, dteNow, dteNow);
 		// Validate
 	    validation.valid(haUser);
-	    if(validation.hasErrors()) {
+	    if (validation.hasErrors()) {
     		wr.setIntRslt(99);
-	    	if(validation.errors().get(0).getKey().equals("haUser.email"))
+	    	if (validation.errors().get(0).getKey().equals("haUser.email"))
 	    		wr.setIntRslt(1);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
 			renderJSON(wr);
@@ -122,7 +122,7 @@ public class Security extends Secure.Security {
 	}
 	
 	static boolean check(String profile) {
-		if("admin".equals(profile)) {
+		if ("admin".equals(profile)) {
 			return HaUser.find("byEmail", connected()).<HaUser>first().isAdmin;
 		}
 		return false;

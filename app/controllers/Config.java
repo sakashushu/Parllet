@@ -39,7 +39,7 @@ public class Config extends Controller {
 
 	@Before
 	static void setConnectedUser() {
-		if(Security.isConnected()) {
+		if (Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 			renderArgs.put("haUser", haUser);
 		}
@@ -54,7 +54,7 @@ public class Config extends Controller {
 	 * @param csv
 	 */
 	public static void cf_upload(File csv) {
-		if(csv != null) {
+		if (csv != null) {
 			try {
 				//Shift-JISファイルを読み込む想定。（良く分かっていないが、色々試して文字化けしたが、下記のやり方なら文字化けしないようだ。）
 //				BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csv),"MS932"));
@@ -75,7 +75,7 @@ public class Config extends Controller {
 					Record record = null;
 					String payment_date = strAryColumn[0];				//支払日
 					String balance_type_name = strAryColumn[1];			//収支種類
-					if(balance_type_name.equals("口座振替")) {
+					if (balance_type_name.equals("口座振替")) {
 						bTransferFlg = true;
 						balance_type_name = "口座預入";
 					}
@@ -92,23 +92,23 @@ public class Config extends Controller {
 					
 					try {
 						Date paymentDate = null;
-						if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+						if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 							String strPdTail = payment_date.substring(payment_date.length()-3, payment_date.length()-2);
-							if(!strPdTail.equals(":"))
+							if (!strPdTail.equals(":"))
 								payment_date += " 00:00";
 							paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 						}
 						HaUser haUser = (HaUser)renderArgs.get("haUser");
 						BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = ?", balance_type_name).first();
 						ItemMst itemMst = null;
-						if(item_name!=null) {
+						if (item_name!=null) {
 							itemMst = ItemMst.find("ha_user = ? and item_name = ?", haUser, item_name).first(); 
 						}
 						HandlingMst handlingMst = HandlingMst.find("ha_user = ? and handling_name = ?", haUser, handling_name).first();
 						Date debitDate = null;
-						if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+						if (debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 							String strDdTail = debit_date.substring(debit_date.length()-3, debit_date.length()-2);
-							if(!strDdTail.equals(":"))
+							if (!strDdTail.equals(":"))
 								debit_date += " 00:00";
 							debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 						}
@@ -143,35 +143,35 @@ public class Config extends Controller {
 					}
 					// Validate
 					validation.valid(record);
-					if(validation.hasErrors()) {
+					if (validation.hasErrors()) {
 						//エラー処理が必要
 				
 					}
 					// 保存
 					record.save();
 					
-					if(bTransferFlg) {
+					if (bTransferFlg) {
 						balance_type_name = "口座引出";
 						handling_name = secret_remarks;
 						try {
 							Date paymentDate = null;
-							if(payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+							if (payment_date!=null && !payment_date.equals("")) {  // 「payment_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 								String strPdTail = payment_date.substring(payment_date.length()-3, payment_date.length()-2);
-								if(!strPdTail.equals(":"))
+								if (!strPdTail.equals(":"))
 									payment_date += " 00:00";
 								paymentDate = DateFormat.getDateTimeInstance().parse(payment_date + ":00");
 							}
 							HaUser haUser = (HaUser)renderArgs.get("haUser");
 							BalanceTypeMst balanceTypeMst = BalanceTypeMst.find("balance_type_name = ?", balance_type_name).first();
 							ItemMst itemMst = null;
-							if(item_name!=null) {
+							if (item_name!=null) {
 								itemMst = ItemMst.find("ha_user = ? and item_name = ?", haUser, item_name).first(); 
 							}
 							HandlingMst handlingMst = HandlingMst.find("ha_user = ? and handling_name = ?", haUser, handling_name).first();
 							Date debitDate = null;
-							if(debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
+							if (debit_date!=null && !debit_date.equals("")) {  // 「debit_date!=null」だけでは「java.text.ParseException: Unparseable date: ""」
 								String strDdTail = debit_date.substring(debit_date.length()-3, debit_date.length()-2);
-								if(!strDdTail.equals(":"))
+								if (!strDdTail.equals(":"))
 									debit_date += " 00:00";
 								debitDate = DateFormat.getDateTimeInstance().parse(debit_date + ":00");
 							}
@@ -206,7 +206,7 @@ public class Config extends Controller {
 						}
 						// Validate
 						validation.valid(record);
-						if(validation.hasErrors()) {
+						if (validation.hasErrors()) {
 							//エラー処理が必要
 				
 						}
@@ -244,10 +244,10 @@ public class Config extends Controller {
 		String sOutCsv = "";
 		int iCnt = 0;
 
-		if((down_date_fr==null) || (down_date_fr.equals(""))) {
+		if ((down_date_fr==null) || (down_date_fr.equals(""))) {
 			down_date_fr = "1900/01/01";
 		}
-		if((down_date_to==null) || (down_date_to.equals(""))) {
+		if ((down_date_to==null) || (down_date_to.equals(""))) {
 			down_date_to = "2999/12/31";
 		}
 		
@@ -267,7 +267,7 @@ public class Config extends Controller {
 		Field[] fldAryHd = Record.class.getDeclaredFields();
 		for(Field fldHd : fldAryHd) {
 			//「家計簿ユーザー」・「項目詳細」・「単価」・「数量」は無視
-			if(fldHd.getName().equals("ha_user") ||
+			if (fldHd.getName().equals("ha_user") ||
 					fldHd.getName().equals("detail_mst") ||
 					fldHd.getName().equals("price") ||
 					fldHd.getName().equals("quantity") ||
@@ -276,7 +276,7 @@ public class Config extends Controller {
 			iCnt++;
 			
 			//先頭項目以外はカンマで区切る
-			if(iCnt != 1) sOutCsv += ",";
+			if (iCnt != 1) sOutCsv += ",";
 
 			sOutCsv += "\"" + Messages.get(fldHd.getName()) + "\"";
 			
@@ -294,7 +294,7 @@ public class Config extends Controller {
 			//項目毎に取得し、カンマ区切り
 			for(Field fld : fldAry) {
 				//「家計簿ユーザー」・「項目詳細」・「単価」・「数量」・「残高」は無視
-				if(fld.getName().equals("ha_user") ||
+				if (fld.getName().equals("ha_user") ||
 						fld.getName().equals("detail_mst") ||
 						fld.getName().equals("price") ||
 						fld.getName().equals("quantity") ||
@@ -303,12 +303,12 @@ public class Config extends Controller {
 				iCnt++;
 				
 				//先頭項目以外はカンマで区切る
-				if(iCnt != 1) sOutCsv += ",";
+				if (iCnt != 1) sOutCsv += ",";
 	
 				boolean bDblQwtFlg = false;
 				
 				//ダブルクウォーテーション判定
-				if(fld.getType() == Date.class ||
+				if (fld.getType() == Date.class ||
 						fld.getType() == String.class ||
 						fld.getType() == BalanceTypeMst.class ||
 						fld.getType() == ItemMst.class ||
@@ -316,11 +316,11 @@ public class Config extends Controller {
 						fld.getType() == ParlletMst.class) {
 					bDblQwtFlg = true;
 				}
-				if(bDblQwtFlg) sOutCsv += "\"";
+				if (bDblQwtFlg) sOutCsv += "\"";
 				
 				try {
-					if(fld.get(rec) != null) {
-						if(fld.getType() == Date.class) {
+					if (fld.get(rec) != null) {
+						if (fld.getType() == Date.class) {
 							sOutCsv += String.format("%1$tY/%1$tm/%1$td %1$tH:%1$tM", fld.get(rec));							
 						} else {
 							sOutCsv += fld.get(rec);
@@ -333,7 +333,7 @@ public class Config extends Controller {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(bDblQwtFlg) sOutCsv += "\"";
+				if (bDblQwtFlg) sOutCsv += "\"";
 
 			}
 			
@@ -411,7 +411,7 @@ public class Config extends Controller {
 	 */
 	public static void cf_bank_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.bank");
-		if(id != null) {
+		if (id != null) {
 			HandlingMst hM = HandlingMst.findById(id);
 			render("@cf_handling_edit", hM, sHandlingType);
 		}
@@ -424,7 +424,7 @@ public class Config extends Controller {
 	 */
 	public static void cf_creca_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.creca");
-		if(id != null) {
+		if (id != null) {
 			HandlingMst hM = HandlingMst.findById(id);
 			render("@cf_handling_edit", hM, sHandlingType);
 		}
@@ -437,7 +437,7 @@ public class Config extends Controller {
 	 */
 	public static void cf_emoney_edit(Long id) {
 		String sHandlingType = Messages.get("HandlingType.emoney");
-		if(id != null) {
+		if (id != null) {
 			HandlingMst hM = HandlingMst.findById(id);
 			render("@cf_handling_edit", hM, sHandlingType);
 		}
@@ -450,7 +450,7 @@ public class Config extends Controller {
 	 */
 	public static void cf_item_in_edit(Long id) {
 		String sBalanceType = Messages.get("BalanceType.in");
-		if(id != null) {
+		if (id != null) {
 			ItemMst iM = ItemMst.findById(id);
 			render("@cf_item_edit", iM, sBalanceType);
 		}
@@ -463,7 +463,7 @@ public class Config extends Controller {
 	 */
 	public static void cf_item_out_edit(Long id) {
 		String sBalanceType = Messages.get("BalanceType.out");
-		if(id != null) {
+		if (id != null) {
 			ItemMst iM = ItemMst.findById(id);
 			render("@cf_item_edit", iM, sBalanceType);
 		}
@@ -475,7 +475,7 @@ public class Config extends Controller {
 	 * @param id
 	 */
 	public static void cf_parllet_edit(Long id) {
-		if(id != null) {
+		if (id != null) {
 			ParlletMst plM = ParlletMst.findById(id);
 			render(plM);
 		}
@@ -504,7 +504,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.handling_mst_save(id, hM_handling_name, hM_zero_hidden, hM_invalidity_flg, refHandlingMst, sHandlingType);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(hM);
 			render("@cf_handling_edit", hM, sHandlingType);
@@ -536,7 +536,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.handling_mst_save(id, hM_handling_name, hM_zero_hidden, hM_invalidity_flg, refHandlingMst, sHandlingType);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(hM);
 			render("@cf_handling_edit", hM, sHandlingType);
@@ -574,7 +574,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.handling_mst_save(id, hM_handling_name, false, hM_invalidity_flg, refHandlingMst, sHandlingType, hM_debit_bank, hM_cutoff_day, hM_debit_month, hM_debit_day);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(hM);
 			render("@cf_handling_edit", hM, sHandlingType);
@@ -602,7 +602,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.item_mst_save(id, iM_item_name, refItemMst, sBalanceType);
 		ItemMst iM = refItemMst.itemMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(iM);
 			render("@cf_item_edit", iM, sBalanceType);
@@ -630,7 +630,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.item_mst_save(id, iM_item_name, refItemMst, sBalanceType);
 		ItemMst iM = refItemMst.itemMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(iM);
 			render("@cf_item_edit", iM, sBalanceType);
@@ -658,7 +658,7 @@ public class Config extends Controller {
 		Integer iRtn = cmn.parllet_mst_save(id, plM_parllet_name, plM_zero_hidden, refItemMst);
 		ParlletMst plM = refItemMst.parlletMst;
 		
-		if(iRtn == 1) {
+		if (iRtn == 1) {
 			validation.clear();
 			validation.valid(plM);
 			render("@cf_parllet_edit", plM);
@@ -679,11 +679,11 @@ public class Config extends Controller {
 		// 削除
 		handlingMst.delete();
 
-		if(sHandlingType.equals(Messages.get("HandlingType.bank"))) {
+		if (sHandlingType.equals(Messages.get("HandlingType.bank"))) {
 			cf_bank_list();
-		} else if(sHandlingType.equals(Messages.get("HandlingType.creca"))) {
+		} else if (sHandlingType.equals(Messages.get("HandlingType.creca"))) {
 			cf_creca_list();
-		} else if(sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
+		} else if (sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
 			cf_emoney_list();
 		}
 	}
@@ -699,9 +699,9 @@ public class Config extends Controller {
 		// 削除
 		iM.delete();
 
-		if(sBalanceType.equals(Messages.get("BalanceType.in"))) {
+		if (sBalanceType.equals(Messages.get("BalanceType.in"))) {
 			cf_item_in_list();
-		} else if(sBalanceType.equals(Messages.get("BalanceType.out"))) {
+		} else if (sBalanceType.equals(Messages.get("BalanceType.out"))) {
 			cf_item_out_list();
 		}
 	}
@@ -732,24 +732,24 @@ public class Config extends Controller {
     		) {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
-			// 「取扱（実際）」データの読み出し
+			// 「取扱(実際)」データの読み出し
 			HandlingMst handlingMst = HandlingMst.findById(lngId);
 			// 編集
 			handlingMst.order_seq = intOrder.next();
 			// Validate
 			validation.valid(handlingMst);
-			if(validation.hasErrors()) {
+			if (validation.hasErrors()) {
 				break;
 		    }
 			// 保存
 			handlingMst.save();
 		}
 		
-		if(sHandlingType.equals(Messages.get("HandlingType.bank"))) {
+		if (sHandlingType.equals(Messages.get("HandlingType.bank"))) {
 			cf_bank_list();
-		} else if(sHandlingType.equals(Messages.get("HandlingType.creca"))) {
+		} else if (sHandlingType.equals(Messages.get("HandlingType.creca"))) {
 			cf_creca_list();
-		} else if(sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
+		} else if (sHandlingType.equals(Messages.get("HandlingType.emoney"))) {
 			cf_emoney_list();
 		}
 	}
@@ -773,16 +773,16 @@ public class Config extends Controller {
 			itemMst.order_seq = intOrder.next();
 			// Validate
 			validation.valid(itemMst);
-			if(validation.hasErrors()) {
+			if (validation.hasErrors()) {
 				break;
 		    }
 			// 保存
 			itemMst.save();
 		}
 		
-		if(sBalanceType.equals(Messages.get("BalanceType.in"))) {
+		if (sBalanceType.equals(Messages.get("BalanceType.in"))) {
 			cf_item_in_list();
-		} else if(sBalanceType.equals(Messages.get("BalanceType.out"))) {
+		} else if (sBalanceType.equals(Messages.get("BalanceType.out"))) {
 			cf_item_out_list();
 		}
 	}
@@ -798,13 +798,13 @@ public class Config extends Controller {
     		) {
 		Iterator<Integer> intOrder = order.iterator();
 		for (Long lngId : id) {
-			// 「取扱（実際）」データの読み出し
+			// 「取扱(実際)」データの読み出し
 			ParlletMst parlletMst = ParlletMst.findById(lngId);
 			// 編集
 			parlletMst.order_seq = intOrder.next();
 			// Validate
 			validation.valid(parlletMst);
-			if(validation.hasErrors()) {
+			if (validation.hasErrors()) {
 				break;
 		    }
 			// 保存
@@ -834,20 +834,20 @@ public class Config extends Controller {
 			) {
 		boolean bolEmailChg = false;
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
-		if(!haUser.email.equals(haUser_email))
+		if (!haUser.email.equals(haUser_email))
 			bolEmailChg = true;
 		haUser.email = haUser_email;
 		haUser.nickname = haUser_nickname;
 		haUser.fullname = haUser_fullname;
 		// Validate
 		validation.valid(haUser);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			render("@cf_hauser_edit", haUser);
 	    }
 		// 保存
 		haUser.save();
 		
-		if(bolEmailChg)
+		if (bolEmailChg)
 			session.put("username", haUser.email);
 		
 		cf_hauser_edit();
@@ -887,7 +887,7 @@ public class Config extends Controller {
 			String cancel
 			) {
 		/* キャンセルボタンが押されたら、前の画面に戻る */
-		if(cancel!=null) {
+		if (cancel!=null) {
 			cf_hauser_edit();
 			return;
 		}
@@ -900,35 +900,35 @@ public class Config extends Controller {
 //		#{/if}
 		
 		HaUser haUser = (HaUser)renderArgs.get("haUser");
-		if(haUser.pwSetFlg) {
+		if (haUser.pwSetFlg) {
 			
 //		}
-//		if(firstTime!=null || !firstTime.equals("true")) {
-			if(crt_password==null || crt_password.equals("")) {
+//		if (firstTime!=null || !firstTime.equals("true")) {
+			if (crt_password==null || crt_password.equals("")) {
 				validation.addError("crt_password", strReq);
 			}
 		}
-		if(haUser_password==null || haUser_password.equals("")) {
+		if (haUser_password==null || haUser_password.equals("")) {
 			validation.addError("haUser.password", strReq);
 		}
-		if(cnf_password==null || cnf_password.equals("")) {
+		if (cnf_password==null || cnf_password.equals("")) {
 			validation.addError("cnf_password", strReq);
 		}
-		if(validation.hasErrors())
+		if (validation.hasErrors())
 			render("@cf_hauser_pw_edit", firstTime);
 		
 //		HaUser haUser = (HaUser)renderArgs.get("haUser");
 		
 		/* 現在のパスワード */
-		if(!firstTime.equals("true")) {
-			if(!haUser.password.equals(crt_password)) {
+		if (!firstTime.equals("true")) {
+			if (!haUser.password.equals(crt_password)) {
 				validation.addError("crt_password", Messages.get("validation.crtPasswordError"));
 				render("@cf_hauser_pw_edit");
 			}
 		}
 		
 		/* 新しいパスワード */
-		if(!haUser_password.equals(cnf_password)) {
+		if (!haUser_password.equals(cnf_password)) {
 			validation.addError("cnf_password", Messages.get("validation.cnfPasswordError"));
 			render("@cf_hauser_pw_edit", firstTime);
 		}
@@ -936,7 +936,7 @@ public class Config extends Controller {
 		haUser.pwSetFlg = true;
 		// Validate
 		validation.valid(haUser);
-		if(validation.hasErrors()) {
+		if (validation.hasErrors()) {
 			render("@cf_hauser_pw_edit", firstTime);
 	    }
 		// 保存

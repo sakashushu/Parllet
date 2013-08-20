@@ -10,7 +10,20 @@
 <script type="text/javascript" src="@{'/public/javascripts/prtJsCommon.js'}" ></script>
 <!-- datepicker日本語化 -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+
+<!-- 
 <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
+ -->
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link media="only screen and (max-device-width:480px)" href="@{'/public/stylesheets/smart.css'}" type="text/css" rel="stylesheet" />
+<link media="screen and (min-device-width:481px)" href="@{'/public/stylesheets/main.css'}" type="text/css" rel="stylesheet" />
+<!--[if IE]>
+<link href="@{'/public/stylesheets/main.css'}" type="text/css" rel="stylesheet" />
+<![endif]-->
+
 <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
 <!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
 <style>

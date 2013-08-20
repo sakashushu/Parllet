@@ -14,24 +14,25 @@ jQuery(function() {
 	});
 	
 	jQuery('#signin').click(function(e) {
+		e.preventDefault();
+		
 		//支払いステータスチェック
 		strErrMsg = "Common.checkPplStatus";
-		var email = jQuery('#saUsername').val(),
-			password = jQuery('#saPassword').val(),
-			jqxhrPplChkStts = jQuery.post('@{Common.checkPplStatus}', {email: email, password: password});
+		var em = jQuery('#saUsername').val(),
+			pw = jQuery('#saPassword').val(),
+			jqxhrPplChkStts = jQuery.post('@{Common.checkPplStatus}', {email: em, password: pw});
 		jqxhrPplChkStts
 		.done(function(z) {
 			switch (z.intRslt) {
 				case 0:
+					jQuery('#fmAuthenticate').submit();
 					break;
 				case 99:
 					alert(z.strErr);
-					e.preventDefault();
 					break;
 				default:
 					strErrMsg += " result Error";
 					alert(strErrMsg);
-					e.preventDefault();
 			}
 		})
 		.fail(function() {
@@ -62,8 +63,8 @@ jQuery(function() {
 			</a>
 		</div>  <!-- loginSns -->
 		
-		#{form @authenticate(), id:'fmAuthenticate'}
 			<div id="loginOrg">
+		#{form @authenticate(), id:'fmAuthenticate'}
 				<p>&{'views.login.normal.title'}</p>
 				#{if flash.error}
 					<p class="error">
@@ -86,10 +87,11 @@ jQuery(function() {
 					<input type="password" name="password" id="saPassword" value="${flash.password}" />
 					<input type="password" id="saPassword2" class="invisible" />
 				</p>
+				<input type="submit" name="signin" style="display: none;" />
+		#{/form}
 				<p id="signin-field">
-					<input type="submit" id="signin" value="&{'secure.signin'}" name="signin" />
+					<input type="submit" id="signin" value="&{'secure.signin'}" />
 				</p>
 			</div>
-		#{/form}
 	</div>  <!-- box -->
 </div>  <!-- login -->

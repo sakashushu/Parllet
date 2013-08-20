@@ -399,7 +399,7 @@ public class Common extends Controller {
 		HandlingTypeMst htm;
 		ItemMst im;
 		
-		/** 取扱（実際） **/
+		/** 取扱(実際) **/
 		
 		//現金
 		htm = HandlingTypeMst.find("byHandling_type_name", HANDLING_TYPE_CASH).first();
@@ -497,40 +497,44 @@ public class Common extends Controller {
 	
 	/**
 	 * HandlingMstのIDから各項目を取得
-	 * @param lngId
+	 * @param lngHdlgId
 	 */
-	public static void getClmsHdlg(Long lngId) {
+	public static void getClmsHdlg(Long lngHdlgId) {
 		WkCmHdlgRslt wr = new WkCmHdlgRslt();
-		HandlingMst hM = HandlingMst.findById(lngId);
+		HandlingMst hM = HandlingMst.findById(lngHdlgId);
 		wr.setHlMst(hM);
 		renderJSON(wr);
 	}
 	
-	public static void getClmsPrlt(Long lngId) {
+	/**
+	 * ParlletMstのIDから各項目を取得
+	 * @param lngPrltId
+	 */
+	public static void getClmsPrlt(Long lngPrltId) {
 		WkCmPrltRslt wr = new WkCmPrltRslt();
-		ParlletMst plM = ParlletMst.findById(lngId);
+		ParlletMst plM = ParlletMst.findById(lngPrltId);
 		wr.setPlMst(plM);
 		renderJSON(wr);
 	}
 	
 	/**
 	 * ダイアログフォームからHandlingMstの更新
-	 * @param strType
+	 * @param strHdlgType
 	 * @param strName
 	 * @param bolZeroHddn
 	 */
-	public static void updateHdlg(String strType, String strName, Boolean bolZeroHddn, Boolean bolInvFlg, Long lngId) {
+	public static void updateHdlg(String strHdlgType, String strName, Boolean bolZeroHddn, Boolean bolInvFlg, Long lngHdlgId) {
 		WkCmHdlgRslt wr = new WkCmHdlgRslt();
-		String strHandlingType = "";
-		if (strType.equals(Messages.get("views.config.cf_bank"))) {
-			strHandlingType = HANDLING_TYPE_BANK;
-		}
-		if (strType.equals(Messages.get("views.config.cf_emoney"))) {
-			strHandlingType = HANDLING_TYPE_EMONEY;
-		}
+//		String strHandlingType = "";
+//		if (strHdlgType.equals(Messages.get("views.config.cf_bank"))) {
+//			strHandlingType = HANDLING_TYPE_BANK;
+//		}
+//		if (strHdlgType.equals(Messages.get("views.config.cf_emoney"))) {
+//			strHandlingType = HANDLING_TYPE_EMONEY;
+//		}
 		RefHandlingMst refHandlingMst = new RefHandlingMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.handling_mst_save(lngId, strName, bolZeroHddn, bolInvFlg, refHandlingMst, strHandlingType);
+		Integer iRtn = cmn.handling_mst_save(lngHdlgId, strName, bolZeroHddn, bolInvFlg, refHandlingMst, strHdlgType);
 		HandlingMst hM = refHandlingMst.handlingMst;
 		
 		if (iRtn == 1) {
@@ -551,11 +555,11 @@ public class Common extends Controller {
 	 * @param strName
 	 * @param bolZeroHddn
 	 */
-	public static void updatePrlt(String strName, boolean bolZeroHddn, Long lngId) {
+	public static void updatePrlt(String strName, boolean bolZeroHddn, Long lngPrltId) {
 		WkCmPrltRslt wr = new WkCmPrltRslt();
 		RefParlletMst refParlletMst = new RefParlletMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.parllet_mst_save(lngId, strName, bolZeroHddn, refParlletMst);
+		Integer iRtn = cmn.parllet_mst_save(lngPrltId, strName, bolZeroHddn, refParlletMst);
 		ParlletMst plM = refParlletMst.parlletMst;
 		
 		if (iRtn == 1) {
@@ -572,14 +576,14 @@ public class Common extends Controller {
 	
 	/**
 	 * ダイアログフォームからItemMstの作成
-	 * @param strBalanceType
+	 * @param strBType
 	 * @param strName
 	 */
-	public static void makeItem(String strBalanceType, String strName) {
+	public static void makeItem(String strBType, String strName) {
 		WkCmMkItemRslt wr = new WkCmMkItemRslt();
 		RefItemMst refItemMst = new RefItemMst();
 		Common cmn = new Common();
-		Integer iRtn = cmn.item_mst_save(null, strName, refItemMst, strBalanceType);
+		Integer iRtn = cmn.item_mst_save(null, strName, refItemMst, strBType);
 		ItemMst iM = refItemMst.itemMst;
 		
 		if (iRtn == 1) {
@@ -709,17 +713,17 @@ public class Common extends Controller {
 	
 	/**
 	 * ユーザの保持フラグの変更
-	 * @param strClm
+	 * @param strHuClm
 	 * @param bolFlg
 	 */
-	public static void updateHaUserFlg(String strClm, boolean bolFlg) {
+	public static void updateHaUserFlg(String strHuClm, boolean bolFlg) {
 		WkAjaxRsltMin wr = new WkAjaxRsltMin();
 		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
-		if (strClm.equals("zero_hidden_bkem"))
+		if (strHuClm.equals("zero_hidden_bkem"))
 			hU.zero_hidden_bkem = bolFlg;
-		if (strClm.equals("zero_hidden_prlt"))
+		if (strHuClm.equals("zero_hidden_prlt"))
 			hU.zero_hidden_prlt = bolFlg;
-		if (strClm.equals("inv_hidden_bkem"))
+		if (strHuClm.equals("inv_hidden_bkem"))
 			hU.inv_hidden_bkem = bolFlg;
 		validation.valid(hU);
 		if (validation.hasErrors()) {

@@ -11,12 +11,12 @@
 jQuery(function() {
 	%{
 		recCnt = 0
-		if(iM?.id) {
+		if (iM?.id) {
 			recCnt = models.Record.count("ha_user = ? and item_mst.item_name = ?", haUser, iM.item_name)
 		}
 	}%
 	jQuery('#cnf_del').click(function(e){
-		if(${recCnt}>0) {
+		if (${recCnt}>0) {
 			alert("&{'views.config.cf_handling_edit.del.alert', messages.get('views.config.cf_item'), messages.get('Record')}");
 			e.preventDefault();
 			return;
