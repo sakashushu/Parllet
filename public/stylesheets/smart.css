@@ -3,12 +3,11 @@ html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget te
 }
 
 body {
-//	word-wrap:break-word;
-	word-break:break-all;
+//	word-wrap:break-word;	//for smart
+	word-break:break-all;	//for smart
 	
 	margin: auto;
-//	font-size: 11pt;
-	font-size: 18pt;
+	font-size: 11pt;
 //	background: url(/public/images/background_test.jpg);
 //	background-attachment: fixed;
 	background: #e8cc8b;
@@ -139,6 +138,7 @@ a.aBtn:hover span{
 	padding: 10px;
 	text-align: left;
 	margin-top: 10px;
+	margin-left: 10px;
 	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
 }
 

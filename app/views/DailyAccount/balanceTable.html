@@ -140,6 +140,8 @@ jQuery(function() {
 	/* 左クリックか右クリックでメニュー表示 */
 	jQuery('.menu_cell').mousedown(function(e) {
 		if (e.which===1 || e.which===3) {
+			alert("${play.configuration.getProperty("testMsg")}");
+			
 			jQuery('#hHandlingId').val('');
 			jQuery('#idDlRiHdParlletId').val('');
 			bolDlgFrmUpdMstInsBkem = false;
