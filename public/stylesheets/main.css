@@ -1674,3 +1674,10 @@ label.fieldName {
 //	z-index: 100001;
 	z-index: 901;
 }
+
+#divForSmart {
+	display: none;
+}
+#main, #footer, #tools {
+
+}

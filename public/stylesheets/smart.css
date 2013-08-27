@@ -1673,3 +1673,10 @@ label.fieldName {
 //	z-index: 100001;
 	z-index: 901;
 }
+
+#divForSmart {
+	padding-top: 45px;
+}
+#main, #footer, #tools {
+	display: none;
+}

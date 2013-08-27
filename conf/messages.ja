@@ -4,6 +4,11 @@ views.genMain.tools.logo.pre1=sakashushu
 views.genMain.tools.logo.pre2=の
 views.genMain.tools.logo=アプリ準備室
 
+views.genMain.divForSmart1=Parlletにお越しいただきありがとうございます。
+views.genMain.divForSmart2=折角お越しいただいたのですが、現時点ではスマートフォン対応作業に時間を割くことができません。
+views.genMain.divForSmart3=あまりにも見た目と動きがボロボロ過ぎるので、一旦スマートフォンからのご利用は出来ないという形にさせて頂きました。
+views.genMain.divForSmart4=大変申し訳ございません。
+
 secure.username=Ｅメール:
 secure.password=パスワード:
 secure.signin=ログイン
