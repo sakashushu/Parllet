@@ -3,8 +3,8 @@ html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget te
 }
 
 body {
-//	word-wrap:break-word;	//for smart
-	word-break:break-all;	//for smart
+//	word-wrap:break-word;	/* for smart */
+	word-break:break-all;	/* for smart */
 	
 	margin: auto;
 	font-size: 11pt;
@@ -1675,8 +1675,11 @@ label.fieldName {
 }
 
 #divForSmart {
-	padding-top: 45px;
+	
 }
-#main, #footer, #tools {
+#prltMain, #footer, #tools {
 	display: none;
+}
+#main {
+	width: auto;
 }
