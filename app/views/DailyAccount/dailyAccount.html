@@ -5,17 +5,19 @@
 <!--
 jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
-	var daCate2MaxWidth;
-	if (jQuery('.da_cate2').length > 0)
-		daCate2MaxWidth = parseInt(jQuery('.da_cate2').css('max-width').replace("px", ""));
+//	var daCate2MaxWidth;
+//	if (jQuery('.da_cate2').length > 0)
+//		daCate2MaxWidth = parseInt(jQuery('.da_cate2').css('max-width').replace("px", ""));
+	var daCate2Width = ${play.configuration.getProperty('daCate2_Width')};
+	jQuery('.da_cate2').width(daCate2Width);
 	jQuery('.da_cate2').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
 			strThOrg = jTh.text(),
 			strThEllipse;
-		if (jTh.width()>daCate2MaxWidth) {
+		if (jTh.width()>daCate2Width) {
 			strTh = strTh.slice(0, strTh.length-1);
-			while(jTh.width()>daCate2MaxWidth) {
+			while(jTh.width()>daCate2Width) {
 				strTh = strTh.slice(0, strTh.length-1);
 				strThEllipse = strTh+"...";
 				jTh.text(strThEllipse);

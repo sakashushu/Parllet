@@ -27,16 +27,18 @@ var bolDlgFrmUpdMstInsBkem,
 	strItemNm;
 jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
-	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", "")),
+//	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", "")),
+	var btCateSmallWidth = ${play.configuration.getProperty('btCateSmall_Width')},
 		vYear, vMonth, vSelected;
+	jQuery('.bt_cate_small').width(btCateSmallWidth);
 	jQuery('.bt_cate_small').each(function() {
 		var jTh = jQuery(this),
 			strTh = jTh.text(),
 			strThOrg = jTh.text(),
 			strThEllipse;
-		if (jTh.width()>btCateSmallMaxWidth) {
+		if (jTh.width()>btCateSmallWidth) {
 			strTh = strTh.slice(0, strTh.length-1);
-			while(jTh.width()>btCateSmallMaxWidth) {
+			while(jTh.width()>btCateSmallWidth) {
 				strTh = strTh.slice(0, strTh.length-1);
 				strThEllipse = strTh+"...";
 				jTh.text(strThEllipse);
@@ -155,7 +157,11 @@ jQuery(function() {
 				bolDlgFrmUpdMstUpdBkem = true;
 				if (!jQuery(this).parent("li").hasClass('remBkemInv'))
 					bolDlgFrmUpdRecInsBkem = true;
-				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
+				if (jqLwdaSItem.children('span').size())
+					jqLwdaSItem = jqLwdaSItem.children('span');
+				strItemNm = jQuery.trim(jqLwdaSItem.text());
 				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
 				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
 				
@@ -166,7 +172,11 @@ jQuery(function() {
 			}
 			if (jQuery('.lParlletId', jQuery(this).parent("li")).val()!=undefined) {
 				bolDlgFrmUpdMstUpdPrlt = true;
-				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
+				if (jqLwdaSItem.children('span').size())
+					jqLwdaSItem = jqLwdaSItem.children('span');
+				strItemNm = jQuery.trim(jqLwdaSItem.text());
 				lngUpdId = parseInt(jQuery('.lParlletId', jQuery(this).parent("li")).val(), 10);
 				
 				//残高明細（Parllet）へジャンプする際の絞込項目セット
@@ -436,7 +446,10 @@ function drawChart() {
 			isStacked: true,
 //			backgroundColor: { fill:'transparent' },
 //			backgroundColor: "rgb(242,236,191)",
-			backgroundColor: "rgb(242,223,182)",
+//20130902~Start;
+//			backgroundColor: "rgb(242,223,182)",
+			backgroundColor: "rgb(245,245,245)",
+ //20130902~End;
 	}
 	
 	// 描画する

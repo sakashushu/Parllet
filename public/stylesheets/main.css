@@ -121,6 +121,16 @@ a.aBtn:hover span{
 
 /** index **/
 
+#logo_index {
+	width: 512px;
+	height: 266px;
+	float: left;
+}
+
+#logo_index img {
+	margin: 10px;
+}
+
 #sidebar_r {
 	float: right;
 	width: 400px;
@@ -135,11 +145,14 @@ a.aBtn:hover span{
 #sidebar_r .box {
 	border: 1px solid #aaa;
 	background: url(/public/images/white20.png);
-	padding: 10px;
 	text-align: left;
 	margin-top: 10px;
 	margin-left: 10px;
-	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない;
+	height: 246px;
+}
+#sidebar_r .box .box_inner {
+	padding: 10px;
 }
 
 #sidebar_r .box p {
@@ -793,8 +806,6 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-//	font-size: 80%;
-	font-size: 90%;
 }
 .da_tbl_all li {
 	clear: both;
@@ -820,7 +831,7 @@ fieldset {
 .da_tbl_lt li div.second {
 	display: table-cell;
 	border-right: 1px solid transparent;
-	height: 30px;
+	height: 40px;
 }
 
 /* .da_tbl_rt 日計表の枠固定の右上のテーブル */
@@ -843,7 +854,7 @@ fieldset {
 	border-right: 1px solid #transparent;
 */
 	border-bottom: 1px solid #aaa;
-	height: 30px;
+	height: 40px;
 }
 
 /* .da_tbl_lb 日計表の枠固定の左下のテーブル */
@@ -945,8 +956,6 @@ fieldset {
 }
 
 .da_cate2 {
-	width: 90px;
-	max-width: 90px;
 	border-bottom: 1px solid #aaa;
 	white-space: nowrap;
 }
@@ -1163,8 +1172,6 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin-top: 10px;
-//	font-size: 80%;
-	font-size: 90%;
 	width: 700px;
 //	width: 880px;
 	margin-right: auto;
@@ -1194,8 +1201,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-//	width: 320px;
-	width: 272px;
+	width: 292px;
 	display: table;
 	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
 }
@@ -1208,7 +1214,7 @@ fieldset {
 }
 
 .bt_cate_large {
-	width: 170px;
+	width: 190px;
 }
 
 .bt_cate_small_pre {
@@ -1216,8 +1222,7 @@ fieldset {
 }
 
 .bt_cate_small {
-	width: 150px;
-	max-width: 150px;
+//	width: 150px;
 }
 .bt_cate_small span {
 	display: none;
@@ -1255,7 +1260,7 @@ fieldset {
 //	overflow-y: auto;
 //}
 
-#dl_tblFrameHd {
+#FrameHd {
 	overflow: hidden;
 }
 
@@ -1302,7 +1307,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	font-size: 90%;
+//	font-size: 90%;
 }
 
 .dl_tbl li div {
