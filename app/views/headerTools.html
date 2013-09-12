@@ -94,8 +94,8 @@ jQuery(function() {
 		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
 		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
 	}%
-	var vSumCnt = ${htSumCnt},
-		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	var vRecCnt = ${htRecCnt},
+		vUsePercent = roundup(vRecCnt*100/${haUser.level_mst.rec_size}, 0);
 	jQuery('#htProgressBar').progressbar()
 							.progressbar("value", vUsePercent)
 							.each(function() {

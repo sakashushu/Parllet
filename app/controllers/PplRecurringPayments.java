@@ -131,6 +131,7 @@ public class PplRecurringPayments extends Controller {
 		
 		StackTraceElement ste = Thread.currentThread().getStackTrace()[1];
 		Logger.info(ste.getClassName() + "." + ste.getMethodName());
+		String strDomain = "http://" + Play.configuration.getProperty("site.domain");
 		String str = "" +
 				"METHOD=SetExpressCheckout" +
 				"&VERSION=95.0" +
@@ -141,8 +142,8 @@ public class PplRecurringPayments extends Controller {
 				"&PAYMENTREQUEST_0_CURRENCYCODE=JPY" +
 				"&PAYMENTREQUEST_0_PAYMENTACTION=Sale" +
 				"&NOSHIPPING=1" +
-				"&RETURNURL=" + Play.configuration.getProperty("paypal.API_returnurl") +
-				"&CANCELURL=" + Play.configuration.getProperty("paypal.API_cancelurl") +
+				"&RETURNURL=" + strDomain + Play.configuration.getProperty("paypal.API_returnurl") +
+				"&CANCELURL=" + strDomain + Play.configuration.getProperty("paypal.API_cancelurl") +
 				"&L_BILLINGTYPE0=RecurringPayments" +
 				"&L_BILLINGAGREEMENTDESCRIPTION0=" + Play.configuration.getProperty("paypal.API_l_billingagreementdescription0_pre") + " " + intAmt + Play.configuration.getProperty("paypal.API_l_billingagreementdescription0_suf") +
 				"";

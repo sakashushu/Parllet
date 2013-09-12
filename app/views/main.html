@@ -26,9 +26,10 @@
 	
 	
 	window.fbAsyncInit = function() {
+		var strChannelUrl = '//'+'${play.configuration.getProperty("site.domain")}'+'${play.configuration.getProperty("fb.channelUrl")}';
 		FB.init({
-			appId      : ${play.configuration.getProperty("fb.app_id")}, 		// App ID
-			channelUrl : '${play.configuration.getProperty("fb.channelUrl")}',	// Channel File
+			appId      : ${play.configuration.getProperty("fb.app_id")}, // App ID
+			channelUrl : strChannelUrl,	// Channel File
 			status     : true, // check login status
 			cookie     : true, // enable cookies to allow the server to access the session
 			xfbml      : true  // parse XFBML

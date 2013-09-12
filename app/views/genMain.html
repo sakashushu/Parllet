@@ -34,9 +34,9 @@
 			</div>
 			<div id="footer">
 				<div id="ftContents">
-					#{a @Application.index()}
-						${play.configuration.getProperty("fb.site_url.short")}
-					#{/a}
+					<a href="http://${play.configuration.getProperty('site.domain')}">
+						${play.configuration.getProperty("site.domain")}
+					</a>
 				</div>
 			</div>	<!-- footer -->
 		</div>

@@ -332,10 +332,14 @@ function addFigure(str) {
 			<!-- 枠固定の左上 -->
 			<ul class="da_tbl_lt">
 				<li>
+					<div class="da_tree first">
+					</div>
 					<div class="da_head first">
 					</div>
 				</li>
 				<li>
+					<div class="second da_tree">
+					</div>
 					<div class="da_hd_cate1_2 da_head second">
 					</div>
 					<div class="da_budget da_head second">
@@ -384,7 +388,7 @@ function addFigure(str) {
 						</div>
 					</li>
 					<li>
-						<div class="da_head second">
+						<div class="da_head second days5Move">
 							<a id="idPreDays" class="aBtn fontJura" tabindex="0"><<span>&{'views.dailyaccount.movetype.days.pre'}</span></a>
 						</div>
 				        %{count = 0}%
@@ -398,7 +402,7 @@ function addFigure(str) {
 							#{/if}
 							</div>
 						#{/list}
-						<div class="da_head second">
+						<div class="da_head second days5Move">
 							<a id="idNextDays" class="aBtn fontJura" tabindex="0">><span>&{'views.dailyaccount.movetype.days.next'}</span></a>
 						</div>
 					</li>
@@ -416,6 +420,8 @@ function addFigure(str) {
 				<ul class="da_tbl_lb">
 					#{list items:lWDA, as:'lwda'}
 						<li>
+							<div class="da_tree">
+							</div>
 							<!-- 予算あり -->
 							#{if lwda.bBudgetFlg}
 								<!-- 項目・Parllet　毎 -->
@@ -475,12 +481,16 @@ function addFigure(str) {
 						</li>
 						
 					#{/list}
+					<li>
+						<div class="da_bottom">
+						</div>
+					</li>
 				</ul>
 			</div>
 			</div>
 		</div>
 		<div class="da_tbl_all_div">
-			<div id="da_tbody" style="width:${iWidth<630 ? iWidth+16+2 : 630+16}px;">
+			<div id="da_tbody" style="width:${iWidth<630 ? iWidth+2 : 630+16}px;">
 			<div style="width:${iWidth+2}px">
 				<!-- 枠固定の右下 -->
 				<ul class="da_tbl_rb">
@@ -505,6 +515,10 @@ function addFigure(str) {
 						#{/list}
 					</li>
 					#{/list}
+					<li>
+						<div class="da_bottom">
+						</div>
+					</li>
 				</ul>
 			</div>
 			</div>

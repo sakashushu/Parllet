@@ -101,12 +101,22 @@ jQuery(function(){
 
 
 <div id="dlHeader">
+<div id="dlHeaderInner1">
 
 <!-- 家計簿編集へジャンプ用フォーム（非表示） -->
 #{include 'toRecordEdit_recordEdit.html' /}
 
 <!-- 明細表共通ヘッダー -->
 #{include 'DetailList/dl_header.html' /}
+
+</div>  <!-- dlHeaderInner1 -->
+<div id="dlHeaderInner2"></div>
+<div id="dlHeaderInner3"></div>
+</div>  <!-- dlHeader -->
+
+
+<div id="dlMain">
+<div id="dlMainInner">
 
 #{form @DetailList.dl_balance(), id:'frmDlBalance'}
 
@@ -230,11 +240,8 @@ jQuery(function(){
 </div>  <!-- dl_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
-</div>  <!-- dlHeader -->
 
 
-
-<div id="dlMain">
 <div id="dl_tblFrame">
 <div id="dl_tblContent">
   <ul class="dl_tbl">
@@ -348,6 +355,7 @@ jQuery(function(){
 </div>  <!-- dl_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
+</div>  <!-- dlMainInner -->
 </div>  <!-- dlMain -->
 
 <div id="dlFooter">

@@ -3,7 +3,8 @@
 # ~~~~
 
 # Home page
-GET	/									   		Application.index
+#GET	/									   		Application.index
+GET	/									   		PrltRt.index
 
 # Import CRUD routes
 # GET	/admin/?								Admin.index
@@ -15,7 +16,7 @@ GET	/									   		Application.index
 
 # Prlt
 GET		/prlt/?									PrltRt.index
-POST	/prlt/?								 	PrltRt.index
+#POST	/prlt/?								 	PrltRt.index
 
 # BalanceTable
 GET		/prlt/balanceTable/{intBasisDate}/?		DailyAccount.balanceTableDisp

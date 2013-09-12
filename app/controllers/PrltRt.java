@@ -6,6 +6,7 @@ import java.util.Date;
 import models.HaUser;
 import models.LevelMst;
 import models.WkSyEsFbUsRslt;
+import play.Play;
 import play.i18n.Messages;
 import play.mvc.*;
 
@@ -13,18 +14,21 @@ public class PrltRt extends Controller {
 
 	public static void index() {
 		if (LevelMst.count()==0L) {
-			LevelMst lM = new LevelMst(0, "LV0", 0, 100);
+			LevelMst lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.0")) , Play.configuration.getProperty("lvMst.lv.nm.0"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.0")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.0")));
 			lM.save();
-			lM = new LevelMst(1, "LV1", 100, 1000000);
+			lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.1")) , Play.configuration.getProperty("lvMst.lv.nm.1"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.1")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.1")));
 			lM.save();
-			lM = new LevelMst(3, "LV3", 300, 3000000);
+			lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.3")) , Play.configuration.getProperty("lvMst.lv.nm.3"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.3")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.3")));
 			lM.save();
-			lM = new LevelMst(5, "LV5", 500, 5000000);
+			lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.5")) , Play.configuration.getProperty("lvMst.lv.nm.5"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.5")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.5")));
 			lM.save();
-			lM = new LevelMst(10, "LV10", 1000, 10000000);
+			lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.10")) , Play.configuration.getProperty("lvMst.lv.nm.10"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.10")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.10")));
 			lM.save();
 		}
-		
+		String strDomain = Play.configuration.getProperty("site.domain");
+		if (!request.domain.equals(strDomain)) {
+			redirect("http://"+strDomain+"/");
+		}
 		render();
 	}
 	

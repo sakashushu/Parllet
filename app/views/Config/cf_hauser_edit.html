@@ -91,8 +91,8 @@ jQuery(function() {
 		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
 		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
 	}%
-	var vSumCnt = ${htSumCnt},
-		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	var vRecCnt = ${htRecCnt},
+		vUsePercent = roundup(vRecCnt*100/${haUser.level_mst.rec_size}, 0);
 	jQuery('#spnUsePrcnt').text(vUsePercent);
 	jQuery('#cfhuProgressBar').progressbar()
 							.progressbar("value", vUsePercent)
@@ -223,7 +223,7 @@ jQuery(function() {
 				<div class="upper">
 					${haUser.level_mst.level_name} (${haUser.level_mst.month_amount==0 ? messages.get('views.config.cf_hauser.lv_free') :
 						messages.get('views.config.cf_hauser.lv_monthAmount')+haUser.level_mst.month_amount.format('###,###')+messages.get('views.config.cf_hauser.lv_crncyCode')})<br>
-					<span id="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / ${haUser.level_mst.rec_size.format('###,###')} &{'views.common.data'}</span>
+					<span id="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htRecCnt.format('###,###')} / ${haUser.level_mst.rec_size.format('###,###')} &{'views.common.data'}</span>
 				</div>
 				<div id="cfhuProgressBar"></div>
 				<a class="aBtn" id="aChgLv" tabindex="0">&{'views.config.cf_hauser.chgLv'}</a>

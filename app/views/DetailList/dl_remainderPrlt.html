@@ -76,6 +76,7 @@ jQuery(function(){
 #{/set}
 
 <div id="dlHeader">
+<div id="dlHeaderInner1">
 
 <!-- 収支明細へジャンプ用フォーム（非表示） -->
 #{include 'toDetailList_dl_balance.html' /}
@@ -86,8 +87,16 @@ jQuery(function(){
 <!-- 明細表共通ヘッダー -->
 #{include 'DetailList/dl_header.html' /}
 
+</div>  <!-- dlHeaderInner1 -->
+<div id="dlHeaderInner2"></div>
+<div id="dlHeaderInner3"></div>
+</div>  <!-- dlHeader -->
 
-#{form @DetailList.dl_remainderPrlt()}
+
+<div id="dlMain">
+<div id="dlMainInner">
+
+#{form @DetailList.dl_remainderPrlt(), id:'frmDlRemainder'}
 
 <!-- 絞込のサブミット（非表示） -->
 <input type="submit" id="idSrch" name="dlRiSrch" class="invisible" />
@@ -164,9 +173,7 @@ jQuery(function(){
 </div>  <!-- dlRb_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
-</div>  <!-- dlHeader -->
 
-<div id="dlMain">
 <div id="dl_tblFrame">
 <div id="dlRb_tblContent" >
   <ul class="dl_tbl">
@@ -263,6 +270,7 @@ jQuery(function(){
 </div>  <!-- dlRb_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
+</div>  <!-- dlMainInner -->
 </div>  <!-- dlMain -->
 
 <div id="dlFooter">

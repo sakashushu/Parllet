@@ -23,8 +23,8 @@ jQuery(function() {
 		htBudgetCnt = models.Budget.count("ha_user = ?", haUser)
 		htSumCnt = htRecCnt+htHdlgCnt+htPrltCnt+htItemCnt+htBudgetCnt
 	}%
-	var vSumCnt = ${htSumCnt},
-		vUsePercent = roundup(vSumCnt*100/${haUser.level_mst.rec_size}, 0);
+	var vRecCnt = ${htRecCnt},
+		vUsePercent = roundup(vRecCnt*100/${haUser.level_mst.rec_size}, 0);
 	jQuery('#spnUsePrcntCrt, #spnUsePrcnt').text(vUsePercent);
 	jQuery('#cfhuProgressBar, #cfhuProgressBarCrt').progressbar()
 							.progressbar("value", vUsePercent)
@@ -38,7 +38,7 @@ jQuery(function() {
 	
 	jQuery('#level').change(function(e){
 		var jVal = jQuery(this).val();
-		if (vSumCnt>mapLvlRecSize[jVal]) {
+		if (vRecCnt>mapLvlRecSize[jVal]) {
 			alert(mapLvlName[jVal]+"の&{'rec_size'}("+mapLvlRecSize[jVal]+")を超えた&{'Records'}が既に作られています。\n"+
 					mapLvlName[jVal]+"に戻すには"+mapLvlRecSize[jVal]+"件以下になるまで&{'Records'}を削除する必要があります。");
 			e.preventDefault();
@@ -46,7 +46,7 @@ jQuery(function() {
 			return;
 		}
 		preLevel = jQuery('#level').val();
-		vUsePercent = roundup(vSumCnt*100/mapLvlRecSize[jVal], 0);
+		vUsePercent = roundup(vRecCnt*100/mapLvlRecSize[jVal], 0);
 		jQuery('.spnLvlRecSize').each(function() {
 			jQuery(this).text(addFigure(mapLvlRecSize[jVal]));
 		});
@@ -129,7 +129,7 @@ function addFigure(str) {
 					${lM.level_name} (${lM.month_amount==0 ? messages.get('views.config.cf_hauser.lv_free') : messages.get('views.config.cf_hauser.lv_monthAmount')+lM.month_amount.format('###,###')+messages.get('views.config.cf_hauser.lv_crncyCode')})<br>
 					<br>
 					&{'rec_size'}：<span>${haUser.level_mst.rec_size.format('###,###')}</span><br>
-					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcntCrt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / <span>${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
+					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcntCrt"></span>% &{'views.config.cf_hauser.used'} ： ${htRecCnt.format('###,###')} / <span>${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
 				</div>
 				<div id="cfhuProgressBarCrt"></div>
 			</div>
@@ -150,7 +150,7 @@ function addFigure(str) {
 					</select><br>
 					<br>
 					&{'rec_size'}：<span class="spnLvlRecSize">${haUser.level_mst.rec_size.format('###,###')}</span><br>
-					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htSumCnt.format('###,###')} / <span class="spnLvlRecSize">${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
+					<span class="spnUsed">&{'views.config.cf_hauser.about'}<span id="spnUsePrcnt"></span>% &{'views.config.cf_hauser.used'} ： ${htRecCnt.format('###,###')} / <span class="spnLvlRecSize">${haUser.level_mst.rec_size.format('###,###')}</span> &{'views.common.data'}</span>
 				</div>
 				<div id="cfhuProgressBar"></div>
 			</div>
