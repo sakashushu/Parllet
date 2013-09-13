@@ -15,6 +15,7 @@ body {
 	background: #efdeb4;
 	color: #612d00;
 	overflow-y: scroll;
+	min-width: 980px;
 }
 
 html, body{
@@ -246,6 +247,9 @@ a.aBtn:hover span{
 //	z-index: 9999;
 	z-index: 799;
 }
+#header #fill2 {
+	z-index: 799;
+}
 
 #hdContainer {
 	width: 980px;
@@ -256,14 +260,17 @@ a.aBtn:hover span{
 }
 
 #dlHeader {
-	position: fixed;
-	margin-top: 36px;
+//	position: fixed;
 	width: 980px;
 //	background: url(/public/images/brown3_90.png);
 //	background: url(/public/images/brown7_90.png);
 //	z-index: 9998;
 	z-index: 798;
-	top: 0;
+//	top: 0;
+//	margin-top: 36px;
+//	top: 36px;
+	margin-right: auto;
+	margin-left: auto;
 }
 #dlHeaderInner1 {
 	background: url(/public/images/brown7_90.png);
@@ -276,7 +283,10 @@ a.aBtn:hover span{
 	height: 10px;
 	background: #f6f5d1;
 }
-
+#dlHeaderInner4 {
+	padding-right: 10px;
+	padding-left: 10px;
+}
 
 #cfHeader {
 	position: fixed;
@@ -294,11 +304,16 @@ a.aBtn:hover span{
 
 #footer {
 	position: absolute;
-	bottom: 0px;
+	bottom: 0;
 	height: 30px;
-	width: 100%;
+//	width: 100%;
+	left: 0;
+	right: 0;
 	text-align: right;
-	background: url(/public/images/brown7_90.png)
+	background: url(/public/images/brown7_90.png);
+}
+#footer .fill {
+	z-index: 799;
 }
 
 #ftContents {
@@ -307,6 +322,9 @@ a.aBtn:hover span{
 	width: 980px;
 	margin: auto;
 	font-size: 80%;
+}
+#ftContents a {
+	padding-right: 10px;
 }
 
 
@@ -1339,7 +1357,7 @@ fieldset {
 //}
 
 #frmDlBalance, #frmDlRemainder {
-	position: fixed;
+//	position: fixed;
 	width: 960px;
 	overflow: hidden;
 }

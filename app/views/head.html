@@ -37,9 +37,9 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     margin-left: 1em;    /* ちょっと離す */
 }
 </style>
-<noscript>このページは javascript が有効になっている必要があります。</noscript>
 #{get 'moreScripts' /}
 <script type="text/javascript">
+<!--
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-11312949-3']);
   _gaq.push(['_trackPageview']);
@@ -49,4 +49,16 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
+// -->
 </script>
+
+<script type="text/javascript" src="@{'/public/javascripts/jquery.gpfloat-1.0.js'}" ></script>
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	jQuery('#header').gpFloatX();
+});
+// -->
+</script>
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>

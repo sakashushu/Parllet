@@ -13,6 +13,7 @@ body {
 	background: #e8cc8b;
 	color: #612d00;
 	overflow-y: scroll;
+	min-width: 980px;
 }
 
 html, body{
@@ -265,11 +266,15 @@ a.aBtn:hover span{
 
 #footer {
 	position: absolute;
-	bottom: 0px;
+	bottom: 0;
 	height: 30px;
 	width: 100%;
 	text-align: right;
-	background: url(/public/images/brown7_90.png)
+	background: url(/public/images/brown7_90.png);
+	left: 0;
+}
+#footer .fill {
+	z-index: 799;
 }
 
 #ftContents {
@@ -278,6 +283,9 @@ a.aBtn:hover span{
 	width: 980px;
 	margin: auto;
 	font-size: 80%;
+}
+#ftContents a {
+	padding-right: 10px;
 }
 
 
@@ -1695,15 +1703,27 @@ label.fieldName {
 	z-index: 901;
 }
 
+//#divForSmart {
+//	padding-top: 45px;
+//}
+//#prltMain {
+//	
+//}
+//#prltMain, #footer, #tools {
+//	display: none;
+//}
+//#main {
+//	width: auto;
+//}
 #divForSmart {
-	padding-top: 45px;
-}
-#prltMain {
-	
-}
-#prltMain, #footer, #tools {
 	display: none;
 }
+#prltMain {
+	padding-top: 45px;
+}
+#prltMain, #footer, #tools {
+	
+}
 #main {
-	width: auto;
+	
 }

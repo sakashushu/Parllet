@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
+	<head>
 		#{include 'head.html' /}
-    </head>
-    <body>
+	</head>
+	<body>
 		#{get 'fbScript' /}
 		<div id="container">
-	    	<div id="header">
-	    		<div class="fill">
-			    	<div id="hdContainer">
-			    		<ul id="ltBlocks">
-			    			<li>
+			<div id="header">
+				<div class="fill">
+					<div id="hdContainer">
+						<ul id="ltBlocks">
+							<li>
 								<ul id="logo">
 									<li id="logo-pre">
 										#{get 'logoPre' /}
@@ -22,23 +22,26 @@
 								</ul>
 							</li>
 							#{get 'moreMenu' /}
-			    		</ul>
+						</ul>
 						<ul id="tools">
 							#{get 'headerTools' /}
 						</ul>
-			    	</div>
-	    		</div>
+					</div>
+				</div>
+				#{get 'moreHeader' /}
 			</div>
 			<div id="main">
 				#{doLayout /}
 			</div>
 			<div id="footer">
+			<div class="fill">
 				<div id="ftContents">
 					<a href="http://${play.configuration.getProperty('site.domain')}">
 						${play.configuration.getProperty("site.domain")}
 					</a>
 				</div>
+			</div>
 			</div>	<!-- footer -->
 		</div>
-    </body>
+	</body>
 </html>

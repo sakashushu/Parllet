@@ -75,27 +75,22 @@ jQuery(function(){
 	#{include 'headerTools.html' /}
 #{/set}
 
-<div id="dlHeader">
-<div id="dlHeaderInner1">
-
-<!-- 収支明細へジャンプ用フォーム（非表示） -->
-#{include 'toDetailList_dl_balance.html' /}
-
-<!-- 家計簿編集へジャンプ用フォーム（非表示） -->
-#{include 'toRecordEdit_recordEdit.html' /}
-
-<!-- 明細表共通ヘッダー -->
-#{include 'DetailList/dl_header.html' /}
-
-</div>  <!-- dlHeaderInner1 -->
-<div id="dlHeaderInner2"></div>
-<div id="dlHeaderInner3"></div>
-</div>  <!-- dlHeader -->
-
-
-<div id="dlMain">
-<div id="dlMainInner">
-
+#{set 'moreHeader'}
+<div id="fill2">
+	<div id="dlHeader">
+		<div id="dlHeaderInner1">
+			<!-- 収支明細へジャンプ用フォーム（非表示） -->
+			#{include 'toDetailList_dl_balance.html' /}
+			
+			<!-- 家計簿編集へジャンプ用フォーム（非表示） -->
+			#{include 'toRecordEdit_recordEdit.html' /}
+			
+			<!-- 明細表共通ヘッダー -->
+			#{include 'DetailList/dl_header.html' /}
+		</div>  <!-- dlHeaderInner1 -->
+		<div id="dlHeaderInner2"></div>
+		<div id="dlHeaderInner3"></div>
+<div id="dlHeaderInner4">
 #{form @DetailList.dl_remainderPrlt(), id:'frmDlRemainder'}
 
 <!-- 絞込のサブミット（非表示） -->
@@ -173,6 +168,15 @@ jQuery(function(){
 </div>  <!-- dlRb_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
+</div>  <!-- dlHeaderInner4 -->
+		
+	</div>  <!-- dlHeader -->
+	
+</div>  <!-- fill2 -->
+#{/set}
+
+<div id="dlMain">
+<div id="dlMainInner">
 
 <div id="dl_tblFrame">
 <div id="dlRb_tblContent" >
