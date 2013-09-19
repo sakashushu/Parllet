@@ -40,7 +40,8 @@ jQuery(function() {
 	#{/if}
 	#{else}
 		/* 枠固定の左右の動き */
-	    jQuery('#dl_tblFrame').scroll(function() {
+	    jQuery('#dl_tblFrameFt').scroll(function() {
+	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
 	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
 	    });
 	#{/else}

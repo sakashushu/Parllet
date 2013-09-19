@@ -288,7 +288,32 @@ jQuery(function(){
 <div id="dlFooter">
 <div id="dl_tblFrameFt">
 <div id="dlRb_tblContentFt">
-　
+  <ul class="dl_tbl">
+	<li>
+		#{if session.get('actionMode')!='View'}
+			<!-- 非公開フラグ -->
+			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft" ></div>
+		#{/if}
+		<!-- 引落日 -->
+		<div class="${clDlRbDebitDateHd}"></div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date dl_head"></div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type dl_head"></div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column dl_head"></div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column dl_head"></div>
+		<!-- 引出 -->
+		<div class="dl_amount dl_head"></div>
+		<!-- 預入 -->
+		<div class="dl_amount dl_head"></div>
+		<!-- お店 -->
+		<div class="dl_common_column dl_head"></div>
+		<!-- 残高 -->
+		<div class="dlRb_remainder dl_head"></div>
+	</li>
+  </ul>
 </div>  <!-- dlRb_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">

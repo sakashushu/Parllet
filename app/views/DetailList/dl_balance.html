@@ -362,7 +362,73 @@ jQuery(function(){
 <div id="dlFooter">
 <div id="dl_tblFrameFt">
 <div id="dl_tblContentFt">
-　
+  <ul class="dl_tbl">
+	<!-- 編集ボタン -->
+	<div class="dl_srch_edit invisible" >
+	</div>
+	<li>
+		#{if session.get('actionMode')!='View'}
+			<!-- 非公開フラグ -->
+			<div class="dl_secret_rec_flg dl_borderLeft menu_cell">
+			</div>
+		#{/if}
+		<!-- 支払日 -->
+		<div class="${clDlPaymenttDateHd}">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 項目 -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 金額 -->
+		<div class="dl_amount menu_cell">
+		  <span class="padR4">
+		  </span>
+		</div>
+		<!-- 引落日 -->
+		<div class="dl_payment_date menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 内容 -->
+		<div class="dl_content menu_cell">
+		</div>
+		<!-- お店 -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		<!-- 備考 -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+		  </span>
+		</div>
+		#{if session.get('actionMode')!='View'}
+			<!-- 備考(非公開) -->
+			<div class="dl_common_column menu_cell">
+			  <span class="dl_string">
+			  </span>
+			</div>
+		#{/if}
+	</li>
+  </ul>
 </div>  <!-- dl_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">

@@ -26,11 +26,6 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 		name.val("");
 		zeroHddn.attr("checked", false);
 		invFlg.attr("checked", false);
-//		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}") {
-//			jQuery('#dspZeroHddn').addClass("invisible");
-//		} else {
-//			jQuery('#dspZeroHddn').removeClass("invisible");
-//		}
 		if (strType=="&{'views.dialogConfirm.case.itemIn'}" || strType=="&{'views.dialogConfirm.case.itemOut'}" ||
 				strType=="&{'PrltType.prlt'}" ||
 				lngId==null) {
@@ -54,22 +49,6 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 					strErrMsg += " Failed";
 					alert(strErrMsg);
 				});
-//				jQuery.each(subCatHdlgtypeToHdlg[strType], function(key,value){
-//					if (String(lngId)===value["key"]) {
-//						var bolInvFlg = new Boolean(value["invalidity_flg"]);
-//						name.val(value["handling_name"]);
-//						zeroHddn.attr('checked', Boolean.valueOf(value["zero_hidden"]));
-//						invFlg.attr('checked', bolInvFlg);
-//					}
-//				});
-
-//				#{list items:models.HandlingMst.find("byHa_user", haUser).fetch(), as:'handlingMst'}
-//					if (lngId===${handlingMst.id}) {
-//						name.val("${handlingMst.handling_name}");
-//						zeroHddn.attr('checked', ${handlingMst.zero_hidden});
-//						invFlg.attr('checked', ${handlingMst.invalidity_flg});
-//					}
-//				#{/list}
 			}
 			if (strType=="&{'PrltType.prlt'}") {
 				strErrMsg = "Common.getClmsPrlt";

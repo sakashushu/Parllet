@@ -68,6 +68,7 @@
 			// ツールチップの class="invisible" を削除
 			jQuery('p'+targetNote).removeClass('invisible');
 			
+			return false;	// アドレスバーに「URL#・・・」と表示されないようにする
 		});
 		
 		// 表示されたツールチップを隠す処理（「out」の時はマウスクリックで隠す）
