@@ -11,6 +11,7 @@
 	HANDLING_TYPE_EMONEY = messages.get('HandlingType.emoney')
 	HANDLING_TYPE_CRECA = messages.get('HandlingType.creca')
 	PRLT_TYPE_PRLT = messages.get('PrltType.prlt')
+	lngBtIdOut = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.out')).first().id
 	lngBtIdBankIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
 	lngBtIdPrltIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.parllet_in')).first().id
 }%
@@ -153,8 +154,7 @@ jQuery(function() {
 			strItemNm = "";
 			%{vStrItemNm = ''}%
 			
-			if (jQuery('.lHandlingId', jQuery(this).parent("li")).val()!=undefined) {
-				bolDlgFrmUpdMstUpdBkem = true;
+			if (jQuery(this).parent("li").children('.lHandlingId').val()!==undefined) {
 				if (!jQuery(this).parent("li").hasClass('remBkemInv'))
 					bolDlgFrmUpdRecInsBkem = true;
 //				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
@@ -165,12 +165,15 @@ jQuery(function() {
 				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
 				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
 				
-				//残高明細（口座系）へジャンプする際の絞込項目セット
-				jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
-				jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
-				jQuery('#hHandlingId').val(jQuery('.lHandlingId', jQuery(this).parent("li")).val());
+				if (jQuery(this).parent("li").children('.strTypeName').val()!=="${HANDLING_TYPE_CASH}") {
+					bolDlgFrmUpdMstUpdBkem = true;
+					//残高明細（口座系）へジャンプする際の絞込項目セット
+					jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+					jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+					jQuery('#hHandlingId').val(jQuery('.lHandlingId', jQuery(this).parent("li")).val());
+				}
 			}
-			if (jQuery('.lParlletId', jQuery(this).parent("li")).val()!=undefined) {
+			if (jQuery('.lParlletId', jQuery(this).parent("li")).val()!==undefined) {
 				bolDlgFrmUpdMstUpdPrlt = true;
 //				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
 				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
@@ -185,9 +188,9 @@ jQuery(function() {
 				jQuery('#idDlRiHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
 			}
 			
-			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!=undefined)
+			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!==undefined)
 				bolDlgFrmUpdMstInsBkem = true;
-			if (jQuery('.bolRemPrlt', jQuery(this).parent("li")).val()!=undefined)
+			if (jQuery('.bolRemPrlt', jQuery(this).parent("li")).val()!==undefined)
 				bolDlgFrmUpdMstInsPrlt = true;
 			
 			e.preventDefault();
@@ -203,7 +206,7 @@ jQuery(function() {
 				callback: function(key, options) {
 					if (key==="dialogFrmInsRecBank") {
 						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}", false),
-							dfurFvBType = new DfurFlgVal(true, ${lngBtIdBankIn}, true),
+							dfurFvBType = new DfurFlgVal(true, strTypeName==="${HANDLING_TYPE_CASH}" ? ${lngBtIdOut} : ${lngBtIdBankIn}, true),
 							dfurFvHdlg = new DfurFlgVal(false, lngUpdId, false),
 							dfurFvPrlt = new DfurFlgVal(false, 0, true),
 							dfurFvItem = new DfurFlgVal(false, 0, true),
@@ -291,9 +294,9 @@ jQuery(function() {
 				options.items.dialogFrmInsRecPrlt = {name: strItemNm+"&{'views.contextMenu.insRec'}"};
 				options.items.dialogFrmUpdMstUpdPrlt = {name: "&{'views.contextMenu.upd', PRLT_TYPE_PRLT}"};
 			}
-			if (jQuery('#hHandlingId').val()!='')
+			if (jQuery('#hHandlingId').val()!=='')
 				options.items.toDlRemainderBank = {name: "&{'views.common.menu.toDlRemainderBank'}"};
-			if (jQuery('#idDlRiHdParlletId').val()!='')
+			if (jQuery('#idDlRiHdParlletId').val()!=='')
 				options.items.toDlRemainderPrlt = {name: "&{'views.common.menu.toDlRemainderPrlt'}"};
 			return options;
 		}
@@ -354,7 +357,7 @@ jQuery(function() {
 /* 文字列を3桁区切りにする関数 */
 function addFigure(str) {
 	var num = new String(str).replace(/,|\n| |\t/g, "");
-//	while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+//	while(num !== (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
 	return num;
 }
@@ -739,10 +742,10 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 								<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
  -->
 								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${vMenuCell} lwdaSItem">
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small menu_cell lwdaSItem">
 									${lwda.sItem}
 								</div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric ${vMenuCell}">
+								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
 									<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 								</div>
 							#{/else}

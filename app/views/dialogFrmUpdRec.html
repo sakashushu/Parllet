@@ -9,13 +9,15 @@
 /**
  * 収支データ更新用ダイアログ
  */
-var preBType,
-	preHdlg,
+var gPreBType,
+	gPreHdlg,
+	gPrePrlt,
 	STR80 = "90%",
 	STR100 = "100%",
 	STR150 = "150%",
-	dfurRec,
-	vGroup,
+	gDfurRec,
+	gEditingHdlgFlg,	//取扱(実際)編集中フラグ
+	gEditingPrltFlg,	//取扱(Parllet)編集中フラグ
 	BTYPE_GROUP = {
 	#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 		${bType.id}:${bType.balance_type_name==messages.get('BalanceType.in') || bType.balance_type_name==messages.get('BalanceType.out') ? 1 : (
@@ -48,27 +50,29 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 			allFields = jQuery([]).add(dfurPayDate.children('input')),
 			tips = jQuery(".validateTips"),
 			intRslt = 0,
-			strErrMsg;
+			strErrMsg,
+			gEditingHdlgFlg = false
+			gEditingPrltFlg = false;
 		
-		dfurRec = pDfurRec;
+		gPreBType = '';
+		gPreHdlg = '';
+		gPrePrlt = '';
+		gDfurRec = pDfurRec;
 		
 		// 「収支種類」のリスト再作成
 		remakeList_BType(strType, dfurBType.children('select'));
 		
 		/* 要素の初期化 */
-		initElem(dfurRec);
+		initElem();
 		
 		/* 起動時のdatepickerの選択可能範囲絞込 */
-		if (ckDate(dfurRec.payment_date.val))
-			jQuery("#to").datepicker("option", "minDate", dfurRec.payment_date.val);
-//		if (ckDate(dfurRec.debit_date.val))
-//			jQuery("#from").datepicker("option", "maxDate", dfurRec.debit_date.val);
+		if (ckDate(gDfurRec.payment_date.val))
+			jQuery("#to").datepicker("option", "minDate", gDfurRec.payment_date.val);
+//		if (ckDate(gDfurRec.debit_date.val))
+//			jQuery("#from").datepicker("option", "maxDate", gDfurRec.debit_date.val);
 		
 		// 「取扱(実際)」のリスト再作成
 		remakeList_Handling();
-		
-		preBType = dfurBType.children('select').val();
-		preHdlg = dfurHdlg.children('select').val();
 		
 		allFields.removeClass("ui-state-error");
 		tips
@@ -87,20 +91,20 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 				intRslt = 1;
 				var sel;
 				
-				dfurRec.payment_date = dfurPayDate.children('input').val();
+				gDfurRec.payment_date = dfurPayDate.children('input').val();
 				sel = dfurBType.children('select').val();
-				dfurRec.balance_type_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
+				gDfurRec.balance_type_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
 				sel = dfurHdlg.children('select').val();
-				dfurRec.handling_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
+				gDfurRec.handling_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
 				sel = dfurPrlt.children('select').val();
-				dfurRec.parllet_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
+				gDfurRec.parllet_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
 				sel = dfurItem.children('select').val();
-				dfurRec.item_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
-				dfurRec.amount = parseInt(dfurAmnt.children('input').val());
-				dfurRec.debit_date = dfurDebDate.children('input').val();
-				dfurRec.content = dfurCntnt.children('input').val();
-				dfurRec.store = dfurStore.children('input').val();
-				dfurRec.remarks = dfurRmrks.children('textarea').val();
+				gDfurRec.item_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
+				gDfurRec.amount = parseInt(dfurAmnt.children('input').val());
+				gDfurRec.debit_date = dfurDebDate.children('input').val();
+				gDfurRec.content = dfurCntnt.children('input').val();
+				gDfurRec.store = dfurStore.children('input').val();
+				gDfurRec.remarks = dfurRmrks.children('textarea').val();
 				
 				jQuery(this).dialog("close");
 			}
@@ -132,19 +136,19 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 			updateTips(s);
 		}
 		/* 画面の各要素の初期化 */
-		function initElem(dfurRec) {
-			chgElem(dfurPayDate, dfurRec.payment_date, 'input', null);
-			chgElem(dfurBType, dfurRec.balance_type_mst_id, 'select', dfurPayDate);
+		function initElem() {
+			chgElem(dfurPayDate, gDfurRec.payment_date, 'input', null);
+			chgElem(dfurBType, gDfurRec.balance_type_mst_id, 'select', dfurPayDate);
 			dfurBType.children('select').change();
-			chgElem(dfurHdlg, dfurRec.handling_mst_id, 'select', dfurBType);
-			chgElem(dfurPrlt, dfurRec.parllet_mst_id, 'select', dfurHdlg);
+			chgElem(dfurHdlg, gDfurRec.handling_mst_id, 'select', dfurBType);
+			chgElem(dfurPrlt, gDfurRec.parllet_mst_id, 'select', dfurHdlg);
 //			jQuery('#dfurPrlt').children('a, label').css('cursor', 'default');
-			chgElem(dfurItem, dfurRec.item_mst_id, 'select', dfurPrlt);
-			chgElem(dfurAmnt, dfurRec.amount, 'input', dfurItem);
-			chgElem(dfurDebDate, dfurRec.debit_date, 'input', dfurAmnt);
-			chgElem(dfurCntnt, dfurRec.content, 'input', dfurDebDate);
-			chgElem(dfurStore, dfurRec.store, 'input', dfurCntnt);
-			chgElem(dfurRmrks, dfurRec.remarks, 'textarea', dfurStore);
+			chgElem(dfurItem, gDfurRec.item_mst_id, 'select', dfurPrlt);
+			chgElem(dfurAmnt, gDfurRec.amount, 'input', dfurItem);
+			chgElem(dfurDebDate, gDfurRec.debit_date, 'input', dfurAmnt);
+			chgElem(dfurCntnt, gDfurRec.content, 'input', dfurDebDate);
+			chgElem(dfurStore, gDfurRec.store, 'input', dfurCntnt);
+			chgElem(dfurRmrks, gDfurRec.remarks, 'textarea', dfurStore);
 			
 			dfurItem.children('label').css('clear', 'both');
 			dfurStore.children('label').css('clear', 'both');
@@ -159,9 +163,9 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 			closeOnEscape: false,
 			buttons: buttons,
 			close: function() {
-//				dfurRec.payment_date = dfurPayDate.children('input').text();
+//				gDfurRec.payment_date = dfurPayDate.children('input').text();
 				//ダイアログクローズ時の処理は呼び出し元で行う
-				whenDialogFrmUpdRecClosed(intRslt, dfurRec);
+				whenDialogFrmUpdRecClosed(intRslt, gDfurRec);
 			}
 		});
 		jQuery("#dialog-updRec").dialog("open");
@@ -216,39 +220,42 @@ jQuery(function() {
 			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
 			
 		} else {
-			if (BTYPE_GROUP[preBType]!==BTYPE_GROUP[jVal]) {
+			if (BTYPE_GROUP[gPreBType]!==BTYPE_GROUP[jVal]) {
 				//「取扱(Parllet)」のリスト再作成
 				remakeList_Parllet();
 				//「取扱(実際)」のリスト再作成
 				remakeList_Handling();
-				//再作成したリストに同じものがあればそれをセット
-				jQuery('#dfurHdlg').children('select').val(preHdlg);
-//				if (jQuery('#dfurHdlg').children('select').val()!==null &&jQuery('#dfurHdlg').children('select').val()!==preHdlg)
-//				if (jQuery('#dfurHdlg').children('select').val()!==preHdlg)
-//					preHdlg = jQuery('#dfurHdlg').children('select').val();
-				jHdlgVal = jQuery('#dfurHdlg').children('select').val();
-				dfurRec.handling_mst_id.val = jHdlgVal===null ? 0 : parseInt(jHdlgVal);
+				//再作成したリストに前回値があればそれをセット
+				jQuery('#dfurHdlg').children('select').val(gPreHdlg);
+				
+				var jHdlgVal = jQuery('#dfurHdlg').children('select').val();
+				gDfurRec.handling_mst_id.val = jHdlgVal===null ? 0 : parseInt(jHdlgVal);
 				
 				//「取扱(実際)」の状態調整
-				conditionAdjust_Hdlg(jQuery('#dfurBType option:selected').text(), dfurRec, jQuery('#dfurHdlg'), jQuery('#dfurBType'), dfurRec.handling_mst_id.flg);
+				conditionAdjust_Hdlg(jQuery('#dfurBType option:selected').text(), jQuery('#dfurHdlg'), jQuery('#dfurBType'), gDfurRec.handling_mst_id.flg);
 			}
 			
 			//「取扱(Parllet)」の状態調整
 			if (jText==="&{'BalanceType.bank_in'}" ||
 					jText==="&{'BalanceType.bank_out'}") {
-				conditionAdjust_Prlt(jQuery('#dfurBType option:selected').text(), dfurRec, jQuery('#dfurPrlt'), jQuery('#dfurHdlg'));
+				conditionAdjust_Prlt(jQuery('#dfurBType option:selected').text(), jQuery('#dfurPrlt'), jQuery('#dfurHdlg'));
+			} else {
+				//前回値があればそれをセット
+				jQuery('#dfurPrlt').children('select').val(gPrePrlt);
+				var jPrltVal = jQuery('#dfurPrlt').children('select').val();
+				gDfurRec.parllet_mst_id.val = jPrltVal===null ? 0 : parseInt(jPrltVal);
 			}
 			
-			preBType = jVal;
+			gPreBType = jVal;
 			
 			//「項目」のリスト再作成
 			remakeList_Item(jQuery('#dfurBType option:selected').text(), jVal, jQuery('#dfurItem').children('select'));
 			
 			//「項目」の状態調整
-			conditionAdjust_Item(jQuery('#dfurBType option:selected').text(), dfurRec, jQuery('#dfurItem'), jQuery('#dfurPrlt'));
+			conditionAdjust_Item(jQuery('#dfurBType option:selected').text(), jQuery('#dfurItem'), jQuery('#dfurPrlt'));
 			
 			//「Parllet」の<a>の状態調整
-//			if (dfurRec.parllet_mst_id.modifiable) {
+//			if (gDfurRec.parllet_mst_id.modifiable) {
 				var aId = jQuery('#dfurPrlt').children('a').attr('id');
 				if (jText==="&{'BalanceType.bank_in'}" ||
 						jText==="&{'BalanceType.bank_out'}") {
@@ -260,7 +267,8 @@ jQuery(function() {
 					
 					// Parllet預入・引出の時はParlletを入力状態に
 					if (jText==="&{'BalanceType.parllet_in'}" ||
-							jText==="&{'BalanceType.parllet_out'}") {
+							jText==="&{'BalanceType.parllet_out'}" ||
+							gPrePrlt!=="") {
 						jQuery('#dfurPrlt a').click();
 						jQuery(this).focus();
 					}
@@ -274,26 +282,34 @@ jQuery(function() {
 	/* 「収支種類」・「支払日」・「取扱(実際)」の選択変更イベント */
 	jQuery('#dfurBType, #dfurHdlg, #dfurPayDate').children('select, input').change(function(){
 		if (jQuery(this).parent().attr('id')==='dfurPayDate' ||
-				HTYPE_GROUP[preHdlg]!==HTYPE_GROUP[jQuery('#dfurHdlg').children('select').val()])
+				HTYPE_GROUP[gPreHdlg]!==HTYPE_GROUP[jQuery('#dfurHdlg').children('select').val()])
 			//「引落日」の入力可・不可とデフォルト日付の調整
 			conditionDefDateAdjust_DebitDate(jQuery('#dfurDebDate'), jQuery('#dfurAmnt'));
 		
 		if (jQuery(this).parent().attr('id')==='dfurPayDate')
 			jQuery("#to").datepicker("option", "minDate", jQuery(this).val());
 		
-		var jVal = jQuery('#dfurHdlg').children('select').val();
-		if (preHdlg!==jVal)
-			preHdlg = jVal===null ? '' : jVal;
+//		var jVal = jQuery('#dfurHdlg').children('select').val();
+//		if (gPreHdlg!==jVal)
+//			gPreHdlg = jVal===null ? '' : jVal
+		// ユーザが取扱(実際)を変えた場合は前回値としてセット
+		if (gEditingHdlgFlg &&
+				jQuery(this).parent().attr('id')==='dfurHdlg') {
+			gPreHdlg = jQuery(this).val();
+		}
 	});
 	
 	/* 「取扱(実際)」の選択変更イベント */
 	jQuery('#dfurHdlg').children('select').change(function(e){
-//		preHdlg = jQuery(this).val();
+//		gPreHdlg = jQuery(this).val();
 	});
 	
 	/* 「Parllet」の選択変更イベント */
 	jQuery('#dfurPrlt').children('select').change(function(e){
-		
+		// ユーザが取扱(Parllet)を変えた場合は前回値としてセット
+		if (gEditingPrltFlg) {
+			gPrePrlt = jQuery(this).val();
+		}
 	});
 	
 	/* クリックで編集 */
@@ -339,12 +355,12 @@ jQuery(function() {
 	});
 	/* クリックで編集（取扱(実際)）*/
 	jQuery('#dfurHdlg').children('a, label').click(function(e) {
-		conditionAdjust_Hdlg(jQuery('#dfurBType option:selected').text(), dfurRec, jQuery('#dfurHdlg'), jQuery('#dfurBType'), true);
+		conditionAdjust_Hdlg(jQuery('#dfurBType option:selected').text(), jQuery('#dfurHdlg'), jQuery('#dfurBType'), true);
 		jQuery('#dfurHdlg').children('select').focus();
 	});
 	/* クリックで編集（取扱(Parllet)）*/
 	jQuery('#dfurPrlt').children('a, label').click(function(e) {
-		conditionAdjust_Prlt(jQuery('#dfurBType option:selected').text(), dfurRec, jQuery('#dfurPrlt'), jQuery('#dfurHdlg'));
+		conditionAdjust_Prlt(jQuery('#dfurBType option:selected').text(), jQuery('#dfurPrlt'), jQuery('#dfurHdlg'));
 		jQuery('#dfurPrlt').children('select').focus();
 	});
 	
@@ -443,27 +459,31 @@ function chgElem(jqSelector, dfurFlgValCrnt, strInput, jqSelPrev) {
 }
 
 /* 「項目」の状態調整 */
-function conditionAdjust_Item(strBTypeText, dfurRec, dfurItem, dfurPrlt) {
+function conditionAdjust_Item(strBTypeText, dfurItem, dfurPrlt) {
 	//「収支種類」が収入・支出の時は「項目」は選択可能
-	dfurRec.item_mst_id.flg = false;
+	gDfurRec.item_mst_id.flg = false;
 	if (strBTypeText==="&{'BalanceType.in'}" ||
 			strBTypeText==="&{'BalanceType.out'}"
 			)
-		dfurRec.item_mst_id.flg = true;
-	chgElem(dfurItem, dfurRec.item_mst_id, 'select', dfurPrlt);
+		gDfurRec.item_mst_id.flg = true;
+	chgElem(dfurItem, gDfurRec.item_mst_id, 'select', dfurPrlt);
 }
 /* 「取扱(実際)」の状態調整 */
-function conditionAdjust_Hdlg(strBTypeText, dfurRec, dfurHdlg, dfurBType, bolOpen) {
-//	if (!dfurRec.handling_mst_id.modifiable) return;
+function conditionAdjust_Hdlg(strBTypeText, dfurHdlg, dfurBType, bolOpen) {
+//	if (!gDfurRec.handling_mst_id.modifiable) return;
 	
 	//「収支種類」がParllet預入・Parllet引出の時は「取扱(実際)」は選択不可
-	dfurRec.handling_mst_id.flg = bolOpen;
+	gDfurRec.handling_mst_id.flg = bolOpen;
 	if (strBTypeText==="&{'BalanceType.parllet_in'}" ||
 			strBTypeText==="&{'BalanceType.parllet_out'}"
 			) {
-		dfurRec.handling_mst_id.flg = false;
+		gDfurRec.handling_mst_id.flg = false;
 	}
-	chgElem(dfurHdlg, dfurRec.handling_mst_id, 'select', dfurBType);
+	chgElem(dfurHdlg, gDfurRec.handling_mst_id, 'select', dfurBType);
+	// 取扱(実際)が編集可能になったら編集中フラグを立てる
+	gEditingHdlgFlg = false;
+	if (gDfurRec.handling_mst_id.flg)
+		gEditingHdlgFlg = true;
 	
 	//「取扱(実際)」の<a>の状態調整
 	var aId = jQuery('#dfurHdlg').children('a').attr('id');
@@ -478,18 +498,22 @@ function conditionAdjust_Hdlg(strBTypeText, dfurRec, dfurHdlg, dfurBType, bolOpe
 }
 
 /* 「Parllet」の状態調整 */
-function conditionAdjust_Prlt(strBTypeText, dfurRec, dfurPrlt, dfurHdlg) {
-//	if (!dfurRec.parllet_mst_id.modifiable) return;
+function conditionAdjust_Prlt(strBTypeText, dfurPrlt, dfurHdlg) {
+//	if (!gDfurRec.parllet_mst_id.modifiable) return;
 	
 	//「収支種類」が口座預入・口座引出の時は「Parllet」は選択不可
-	dfurRec.parllet_mst_id.flg = true;
+	gDfurRec.parllet_mst_id.flg = true;
 	if (strBTypeText==="&{'BalanceType.bank_in'}" ||
 			strBTypeText==="&{'BalanceType.bank_out'}"
 			) {
-		dfurRec.parllet_mst_id.flg = false;
+		gDfurRec.parllet_mst_id.flg = false;
 		dfurPrlt.children('select').val('');	// (なし) を選択
 	}
-	chgElem(dfurPrlt, dfurRec.parllet_mst_id, 'select', dfurHdlg);
+	chgElem(dfurPrlt, gDfurRec.parllet_mst_id, 'select', dfurHdlg);
+	// 取扱(Parllet)が編集可能になったら編集中フラグを立てる
+	gEditingPrltFlg = false;
+	if (gDfurRec.parllet_mst_id.flg)
+		gEditingPrltFlg = true;
 }
 
 /* 「収支種類」のリスト再作成 */
@@ -513,7 +537,7 @@ function remakeList_BType(strType, jqBType) {
 /* 「取扱(実際)」のリスト再作成 */
 function remakeList_Handling() {
 	//「取扱(実際)」が編集可能な時
-//	if (dfurRec.handling_mst_id.modifiable) {
+//	if (gDfurRec.handling_mst_id.modifiable) {
 		jQuery('#dfurHdlg').children('select').empty();
 		
 		//「収支種類」が収入・支出・口座預入・口座引出の時は「取扱(実際)」のリストを再作成
@@ -574,58 +598,46 @@ function conditionDefDateAdjust_DebitDate(dfurDebDate, dfurAmnt) {
 		aId = jQuery('#dfurDebDate').children('a').attr('id'),
 		aCursor = 'default',
 		aTabIndex = -1;
-	dfurRec.debit_date.flg = false;
+	gDfurRec.debit_date.flg = false;
 	//「取扱(実際)」が現金、または「収支種類」がParllet預入・Parllet引出の時は、「引落日」は「支払日」と同じ日とし、選択不可
 	if (jQuery('#dfurHdlg').children('select').children(':selected').text()==="&{'HandlingType.cash'}" ||
 			(jQuery('#dfurBTypeSel').children(':selected').text()==="&{'BalanceType.parllet_in'}" ||
 				jQuery('#dfurBTypeSel').children(':selected').text()==="&{'BalanceType.parllet_out'}")) {
-		dfurRec.debit_date.val = ckDate(sDate)===true ? sDate : '';
-		chgElem(dfurDebDate, dfurRec.debit_date, 'input', dfurAmnt);
+		gDfurRec.debit_date.val = ckDate(sDate)===true ? sDate : '';
+		chgElem(dfurDebDate, gDfurRec.debit_date, 'input', dfurAmnt);
 		
 		if (jQuery('#dfurDebDate').children('label, a').hasClass('editable'))
 			jQuery('#dfurDebDate').children('label, a').removeClass('editable');
 		
 	//上記以外の時
 	} else {
-//		//「収支種類」がParllet預入・Parllet引出の時は「引落日」は選択不可
-//		if (jQuery('#dfurBTypeSel').children(':selected').text()==="&{'BalanceType.parllet_in'}" ||
-//				jQuery('#dfurBTypeSel').children(':selected').text()==="&{'BalanceType.parllet_out'}"
-//				) {
-//			chgElem(dfurDebDate, dfurRec.debit_date, 'input', dfurAmnt);
-//			
-//			if (jQuery('#dfurDebDate').children('label, a').hasClass('editable'))
-//				jQuery('#dfurDebDate').children('label, a').removeClass('editable');
-//			
-//		//「収支種類」が上記以外の時は「引落日」は選択可能で、デフォルト日付を表示
-//		} else {
-			#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
-			  if ("${handling?.handling_name}"===jQuery('#dfurHdlg').children('select').children(':selected').text())
-				//支払日が正しく入っている時
-				if (ckDate(sDate)) {
-					//「取扱(実際)」がクレジットカードの場合
-					if ("${handling?.handling_type_mst?.handling_type_name}"==="&{'HandlingType.creca'}") {
-						var dateFormat = new DateFormat("yyyy/MM/dd");
-						var vYear = sDate.substr(0, 4) - 0;
-						var vMonth = sDate.substr(5, 2) - 1;
-						var vDay = sDate.substr(8, 2) - 0;
-						var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
-						var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
-						dfurRec.debit_date.val = dateFormat.format(rDate);
-						
-					//「取扱(実際)」がクレジットカード以外の場合
-					} else {
-						//引落日に支払日をセット
-						dfurRec.debit_date.val = sDate;
-					}
-					chgElem(dfurDebDate, dfurRec.debit_date, 'input', dfurAmnt);
+		#{list items:models.HandlingMst.find("ha_user = ${haUser.id}").fetch(), as:'handling'}
+		  if ("${handling?.handling_name}"===jQuery('#dfurHdlg').children('select').children(':selected').text())
+			//支払日が正しく入っている時
+			if (ckDate(sDate)) {
+				//「取扱(実際)」がクレジットカードの場合
+				if ("${handling?.handling_type_mst?.handling_type_name}"==="&{'HandlingType.creca'}") {
+					var dateFormat = new DateFormat("yyyy/MM/dd");
+					var vYear = sDate.substr(0, 4) - 0;
+					var vMonth = sDate.substr(5, 2) - 1;
+					var vDay = sDate.substr(8, 2) - 0;
+					var dPaymentDate = new Date(sDate.substr(0, 4), sDate.substr(5, 2)-1, sDate.substr(8, 2));
+					var rDate = fDebitDate(dPaymentDate,"${handling?.cutoff_day}","${handling?.debit_month}","${handling?.debit_day}");
+					gDfurRec.debit_date.val = dateFormat.format(rDate);
 					
-					if (!jQuery('#dfurDebDate').children('label, a').hasClass('editable'))
-						jQuery('#dfurDebDate').children('label, a').addClass('editable');
+				//「取扱(実際)」がクレジットカード以外の場合
+				} else {
+					//引落日に支払日をセット
+					gDfurRec.debit_date.val = sDate;
 				}
-			#{/list}
-			aCursor = 'pointer';
-			aTabIndex = 0;
-//		}
+				chgElem(dfurDebDate, gDfurRec.debit_date, 'input', dfurAmnt);
+				
+				if (!jQuery('#dfurDebDate').children('label, a').hasClass('editable'))
+					jQuery('#dfurDebDate').children('label, a').addClass('editable');
+			}
+		#{/list}
+		aCursor = 'pointer';
+		aTabIndex = 0;
 	}
 	
 	//「引落日」の<a>の状態調整
@@ -663,7 +675,7 @@ function fDebitDate(dBasic,cutoffDay,debitMonth,debitDay){
 function whenDialogConfirmClosed(intRslt) {
 	switch (intRslt) {
 		case 0:
-			jQuery('#dfurBType').children('select').val(preBType).change().focus();
+			jQuery('#dfurBType').children('select').val(gPreBType).change().focus();
 			break;
 		case 1:
 			//口座更新フォームを開く
