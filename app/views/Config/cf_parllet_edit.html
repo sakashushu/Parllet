@@ -7,7 +7,7 @@
 <script type="text/javascript">
 <!--
 //var myObj = new Object();
-//myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+//myObj.strMsg = "&{'dialog.message.del.confirm'}";
 jQuery(function() {
 	%{
 		recCnt = 0
@@ -21,7 +21,7 @@ jQuery(function() {
 			e.preventDefault();
 			return;
 		}
-		return confirm("&{'views.config.cf_handling_edit.del.confirm'}");
+		return confirm("&{'dialog.message.del.confirm'}");
 	});
 });
 // -->
@@ -36,10 +36,10 @@ jQuery(function() {
 <div id="crudShow">
 
 	#{ifnot plM?.id}
-		<h3><span>&{'insupd.add', messages.get('PrltType.prlt')}</span></h3>
+		<h3><span>&{'insupd.addThe', messages.get('PrltType.prlt')}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'insupd.edit', messages.get('PrltType.prlt')}</span></h3>
+		<h3><span>&{'insupd.editThe', messages.get('PrltType.prlt')}</span></h3>
 	#{/else}
 
     <div class="objectForm">
@@ -73,7 +73,7 @@ jQuery(function() {
 	#{if plM?.id}
 		#{form @cf_parllet_del(plM?.id)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'insupd.delete', messages.get('PrltType.prlt')}" id="cnf_del" />
+		        <input type="submit" value="&{'insupd.deleteThe', messages.get('PrltType.prlt')}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

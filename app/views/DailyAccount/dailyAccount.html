@@ -5,9 +5,6 @@
 <!--
 jQuery(function() {
 	/* table-cell内の文字列が入りきらない場合の調整 */
-//	var daCate2MaxWidth;
-//	if (jQuery('.da_cate2').length > 0)
-//		daCate2MaxWidth = parseInt(jQuery('.da_cate2').css('max-width').replace("px", ""));
 	var daCate2Width = ${play.configuration.getProperty('daCate2_Width')};
 	jQuery('.da_cate2').width(daCate2Width);
 	jQuery('.da_cate2').each(function() {
@@ -162,9 +159,6 @@ jQuery(function() {
 		jQuery('body').attr("disabled", "disabled");
 	});
 	
-	/* 3桁区切りの数値入力フィールドとして設定 */
-	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
-	
 	/* 表示金額を3桁区切りに */
 //	jQuery('.num3').each(function(i) {
 //		var numStr = addFigure(jQuery(this).html());
@@ -208,8 +202,12 @@ jQuery(function() {
 			jQuery('#hItemId').val(jQuery('.ToDlItemId',this).val());
 			
 			//家計簿入力へジャンプする際の絞込項目セット
-			jQuery('#dfPaymentDate').val(jQuery('.ToDlPaymentDateFr',this).val()+' 00:00');
+//			jQuery('#dfPaymentDate').val(jQuery('.ToDlPaymentDateFr',this).val()+' 00:00');
+			jQuery('#dfPaymentDate').val(jQuery('.ToDlPaymentDateFr',this).val());
 			jQuery('#dfBalanceTypeId').val(jQuery('.ToDlBalanceTypeId',this).val());
+			if (jQuery('.ToDlgUpdRecCate',this).val()==="&{'BalanceType.parllet_inOut'}") {
+				jQuery('#dfBalanceTypeId').val(${models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.parllet_in')).first().id})
+			}
 			jQuery('#dfParlletId').val(jQuery('.ToDlParlletId',this).val());
 			jQuery('#dfItemId').val(jQuery('.ToDlItemId',this).val());
 			jQuery('#dfDebitDate').val(jQuery('.ToDlPaymentDateFr',this).val());
@@ -224,21 +222,42 @@ jQuery(function() {
 		callback: function(key, options) {
 //			var m = "clicked: " + key;
 //			window.console && console.log(m) || alert(m);
-			if (key=="toDlBalance")
-				jQuery('#submitDlBalance').click();
-			if (key=="toRecordAdd")
-				jQuery('#submitRecordEdit').click();
-			jQuery('body').attr("disabled", "disabled");
+			if (key=="toDlBalance") {
+//				jQuery('#frmToDlBalance').submit();
+				jQuery('#submitDlBalance').click();	// .submit() だと、srch=nullになるため .click() でサブミットする
+				jQuery('body').attr("disabled", "disabled");
+			}
+			if (key=="toRecordAdd") {
+//				jQuery('#submitRecordEdit').click();
+				var dfurFvPayDate = new DfurFlgVal(false, jQuery('#dfPaymentDate').val(), false),
+					dfurFvBType = new DfurFlgVal(true, jQuery('#dfBalanceTypeId').val(), true),
+					dfurFvHdlg = new DfurFlgVal(false, null, false),
+					dfurFvPrlt = new DfurFlgVal(false, jQuery('#dfParlletId').val(), true),
+					dfurFvItem = new DfurFlgVal(false, jQuery('#dfItemId').val(), true),
+					dfurFvAmnt = new DfurFlgVal(true, null, true),
+					dfurFvDebDate = new DfurFlgVal(false, jQuery('#dfDebitDate').val(), false),
+					dfurFvCntnt = new DfurFlgVal(false, "", true),
+					dfurFvStore = new DfurFlgVal(false, "", true),
+					dfurFvRmrks = new DfurFlgVal(false, "", true),
+					dfurRec = new DfurRec(
+						null,
+						dfurFvPayDate,
+						dfurFvBType,
+						dfurFvHdlg,
+						dfurFvPrlt,
+						dfurFvItem,
+						dfurFvAmnt,
+						dfurFvDebDate,
+						dfurFvCntnt,
+						dfurFvStore,
+						dfurFvRmrks);
+				//家計簿入力フォームを開く
+				openDialogFrmUpdRec(dfurRec);
+			}
 		},
 		items: {
 			"toDlBalance": {name: "&{'views.common.menu.toDlBalance'}"},
-			"toRecordAdd": {name: "&{'views.common.menu.toRecordAdd'}"},
-//			"cut": {name: "Cut", icon: "cut"},
-//			"copy": {name: "Copy", icon: "copy"},
-//			"paste": {name: "Paste", icon: "paste"},
-//			"delete": {name: "Delete", icon: "delete"},
-//			"sep1": "---------",
-//			"quit": {name: "Quit", icon: "quit"}
+			"toRecordAdd": {name: "&{'views.common.menu.toRecordAdd'}"}
 		}
 	});
 	
@@ -272,7 +291,6 @@ function addFigure(str) {
 </script>
 
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
@@ -509,6 +527,7 @@ function addFigure(str) {
 							<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
 							<input type="hidden" class="ToDlParlletId" value="${wdtd?.lParlletId}" />
 							<input type="hidden" class="ToDlItemId" value="${wdtd?.lItemId}" />
+							<input type="hidden" class="ToDlgUpdRecCate" value="${lwda?.sLargeCategory}" />
 							<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 						</div>
 						%{leftFlg = 0}%

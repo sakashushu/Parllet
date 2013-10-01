@@ -227,8 +227,8 @@ jQuery(function() {
 								dfurFvCntnt,
 								dfurFvStore,
 								dfurFvRmrks);
-						//家計簿入力フォームを開く（口座系）
-						openDialogFrmUpdRec(strTypeName, dfurRec, lngUpdId);
+						//家計簿入力フォームを開く
+						openDialogFrmUpdRec(dfurRec);
 					}
 					if (key==="dialogFrmInsRecPrlt") {
 						var dfurFvPayDate = new DfurFlgVal(false, "${sBasisDate}", false),
@@ -253,8 +253,8 @@ jQuery(function() {
 								dfurFvCntnt,
 								dfurFvStore,
 								dfurFvRmrks);
-						//家計簿入力フォームを開く（Parllet）
-						openDialogFrmUpdRec("${PRLT_TYPE_PRLT}", dfurRec, lngUpdId);
+						//家計簿入力フォームを開く
+						openDialogFrmUpdRec(dfurRec);
 					}
 					if (key==="dialogFrmUpdMstInsBank" || key==="dialogFrmUpdMstUpdBank")
 						//口座更新フォームを開く
@@ -464,7 +464,6 @@ function drawChart() {
 // -->
 </script>
 
-<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
@@ -508,59 +507,6 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 							//画面を再表示
 							window.location.reload(true);
 						}
-						break;
-					case 99:
-						alert(z.strErr);
-						break;
-					default:
-						strErrMsg += " result Error";
-						alert(strErrMsg);
-				}
-			})
-			.fail(function() {
-				strErrMsg += " Failed";
-				alert(strErrMsg);
-			});
-			break;
-		default:
-			alert("dialogFrmUpdMst return value error");
-	}
-}
-// -->
-</script>
-
-#{include 'dialogFrmUpdRec.html' /}
-<script type="text/javascript">
-<!--
-/* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
-	var strErrMsg;
-	if (dfurRec.id===null) dfurRec.id=undefined;
-	strErrMsg = "Common.updateRec";
-	switch (intRslt) {
-		case 0:
-			break;
-		case 1:
-			var jqxhrUpdRec = jQuery.post('@{Common.updateRec}', {
-				id: dfurRec.id,
-				payment_date: dfurRec.payment_date,
-				balance_type_mst: dfurRec.balance_type_mst_id,
-				handling_mst: dfurRec.handling_mst_id,
-				parllet_mst: dfurRec.parllet_mst_id,
-				item_mst: dfurRec.item_mst_id,
-				amount: dfurRec.amount,
-				debit_date: dfurRec.debit_date,
-				content: dfurRec.content,
-				store: dfurRec.store,
-				remarks: dfurRec.remarks,
-				secret_remarks: dfurRec.secret_remarks,
-				secret_rec_flg: dfurRec.secret_rec_flg});
-			jqxhrUpdRec
-			.done(function(z) {
-				switch (z.intRslt) {
-					case 0:
-						//画面を再表示
-						window.location.reload(true);
 						break;
 					case 99:
 						alert(z.strErr);

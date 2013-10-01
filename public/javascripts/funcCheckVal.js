@@ -4,8 +4,10 @@
 * 戻り値： 正：true　不正：false
 ****************************************************************/
 function ckDate(datestr) {
+	if (datestr===null)
+		return false;
     // 正規表現による書式チェック
-    if(!datestr.match(/^\d{4}\/\d{2}\/\d{2}$/)){
+    if (!datestr.match(/^\d{4}\/\d{2}\/\d{2}$/)){
         return false;
     }
     var vYear = datestr.substr(0, 4) - 0;

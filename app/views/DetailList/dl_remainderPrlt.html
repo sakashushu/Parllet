@@ -29,16 +29,23 @@ jQuery(function(){
 		build: function($trigger, e) {
 			var options = {
 				callback: function(key, options) {
-					if (key=="toRecordEdit")
-						jQuery('#submitRecordEdit').click();
-					if (key=="toDlBalance")
-						jQuery('#submitDlBalance').click();
-					jQuery('body').attr("disabled", "disabled");
+					if (key=="toRecordEdit") {
+//						jQuery('#submitRecordEdit').click();
+						dl_recordEdit(parseInt(jQuery('#idRecordEdit').val()));
+					}
+					if (key=="toRecordDel") {
+						dl_recordDel(parseInt(jQuery('#idRecordEdit').val()));
+					}
+					if (key=="toDlBalance") {
+						jQuery('#submitDlBalance').click();	// .submit() だと、srch=nullになるため .click() でサブミットする
+						jQuery('body').attr("disabled", "disabled");
+					}
 				},
 				items: {}
 			};
 			if (jQuery('#idRecordEdit').val()!=0) {
 				options.items.toRecordEdit = {name: "&{'views.common.menu.toRecordEdit'}"};
+				options.items.toRecordDel = {name: "&{'views.common.menu.toRecordDel'}"};
 			} else {
 				options.items.toDlBalance = {name: "&{'views.common.menu.toDlBalance'}"};
 			}

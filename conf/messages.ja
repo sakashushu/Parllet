@@ -46,6 +46,7 @@ views.common.menu.toDlRemainderBank=残高明細（口座系）へ
 views.common.menu.toDlRemainderPrlt=残高明細（Parllet）へ
 views.common.menu.toRecordAdd=新規家計簿入力
 views.common.menu.toRecordEdit=このデータを編集
+views.common.menu.toRecordDel=このデータを削除
 views.common.btn.cancel=キャンセル
 views.common.lbl.name=名
 views.common.lbl.make=作成
@@ -115,7 +116,6 @@ views.config.cf_item=項目
 views.config.cf_creca.day=日
 views.config.cf_creca.lastday=末日
 views.config.cf_handling_edit.del.alert=この&{%s}を使用して作られた&{%s}があるため削除できません
-views.config.cf_handling_edit.del.confirm=削除してよろしいですか？
 views.config.cf_io=データ入出力
 views.config.cf_actionMode=実行モード
 views.config.cf_actionModeEdit=編集モード
@@ -184,7 +184,6 @@ views.pplRecurringPayments.confirm.btn.return=会員情報に戻る
 views.unsubscribed.title=退会処理を完了しました
 views.unsubscribed.text1=今まで Parllet をご利用いただき、ありがとうございました。
 
-
 views.dialogConfirm.case.bkem=口座か電子マネー
 views.dialogConfirm.case.prlt=取扱（Parllet）
 views.dialogConfirm.case.itemIn=項目（収入）
@@ -197,8 +196,9 @@ views.dialogConfirm.suffix.text3=を作成しますか？
 views.dialogConfirm.suffix.btn=を作成
 views.dialogConfirm.bkem.btn.makeBank=口座を作成
 views.dialogConfirm.bkem.btn.makeEmoney=電子マネーを作成
-views.dialogFrmUpdRec.title.ins=家計簿入力
-views.dialogFrmUpdRec.title.upd=家計簿編集
+views.dialogFrmUpdRec.title.ins=家計データ入力
+views.dialogFrmUpdRec.title.upd=家計データ編集
+views.dialogFrmUpdRec.title.del=家計データ削除
 
 views.contextMenu.insRec=の家計簿を入力
 
@@ -207,6 +207,9 @@ views.contextMenu.upd=&{%s}を編集
 
 views.tooltip.oneMonthLater.text1=・支払を確定した日が１～２７日の場合は、１ヶ月後（次の月の同じ日）。
 views.tooltip.oneMonthLater.text2=・支払を確定した日が２８日以降の場合は、次の月の２７日。
+
+dialog.message.del.confirm=削除してよろしいですか？
+dialog.message.info.del.text1=以下のデータが削除されます。
 
 
 # テーブル
@@ -351,10 +354,11 @@ validation.anErrorOccured=エラーが発生しました
 
 
 #crudを真似
-insupd.add=追加  [ &{%s} ]
-insupd.edit=編集  [ &{%s} ]
-insupd.delete=削除  [ &{%s} ]
+insupd.addThe=追加  [ &{%s} ]
+insupd.editThe=編集  [ &{%s} ]
+insupd.deleteThe=削除  [ &{%s} ]
 insupd.save=保存
+insupd.delete=削除
 
 #エラー
 err.unanticipated=&{%s} で予期せぬエラーが発生しました。管理者に連絡してください。

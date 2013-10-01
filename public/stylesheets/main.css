@@ -3,8 +3,9 @@ html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget te
 }
 
 body {
-//	word-wrap:break-word;
-	word-break:break-all;
+//	word-wrap: break-word;
+	word-break: break-all;
+	
 	
 	margin: auto;
 	font-size: 11pt;
@@ -200,7 +201,7 @@ a.aBtn:hover span{
 }
 .dfurElem {
 	min-height: 32px;
-	min-width: 200px;
+	min-width: 180px;
 }
 .dfurElem label {
 	display: block;
@@ -1519,6 +1520,16 @@ fieldset {
 //	background: url(/public/images/brown4_60.png);
 	background: url(/public/images/brown3_90.png);
 	color: #e6be83;
+}
+
+#dialog-delRec .lblDlgDelRec {
+	display: block;
+	width: 40%;
+	float: left;
+	text-align: right;
+}
+#dialog-delRec #pConfirm {
+	font-weight: bold;
 }
 
 

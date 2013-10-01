@@ -12,7 +12,7 @@
 var gPreBType,
 	gPreHdlg,
 	gPrePrlt,
-	STR80 = "90%",
+	STR90 = "90%",
 	STR100 = "100%",
 	STR150 = "150%",
 	gDfurRec,
@@ -33,7 +33,7 @@ var gPreBType,
 	#{/list}
 	};
 	
-function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
+function openDialogFrmUpdRec(pDfurRec) {
 	jQuery(function() {
 		var dfurPayDate = jQuery("#dfurPayDate"),
 			dfurBType = jQuery("#dfurBType"),
@@ -45,12 +45,11 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 			dfurCntnt = jQuery('#dfurCntnt'),
 			dfurStore = jQuery('#dfurStore'),
 			dfurRmrks = jQuery('#dfurRmrks'),
-			title = (pDfurRec.id===null ? "&{'views.dialogFrmUpdRec.title.ins'}" : "&{'views.dialogFrmUpdRec.title.upd'}")+"（"+strType+"）",
+			title = pDfurRec.id===null ? "&{'views.dialogFrmUpdRec.title.ins'}" : "&{'views.dialogFrmUpdRec.title.upd'}",
 			buttons = {},
 			allFields = jQuery([]).add(dfurPayDate.children('input')),
 			tips = jQuery(".validateTips"),
 			intRslt = 0,
-			strErrMsg,
 			gEditingHdlgFlg = false
 			gEditingPrltFlg = false;
 		
@@ -60,7 +59,7 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 		gDfurRec = pDfurRec;
 		
 		// 「収支種類」のリスト再作成
-		remakeList_BType(strType, dfurBType.children('select'));
+		remakeList_BType(dfurBType.children('select'));
 		
 		/* 要素の初期化 */
 		initElem();
@@ -70,9 +69,6 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 			jQuery("#to").datepicker("option", "minDate", gDfurRec.payment_date.val);
 //		if (ckDate(gDfurRec.debit_date.val))
 //			jQuery("#from").datepicker("option", "maxDate", gDfurRec.debit_date.val);
-		
-		// 「取扱(実際)」のリスト再作成
-		remakeList_Handling();
 		
 		allFields.removeClass("ui-state-error");
 		tips
@@ -100,7 +96,7 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 				gDfurRec.parllet_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
 				sel = dfurItem.children('select').val();
 				gDfurRec.item_mst_id = (sel==null || sel=="") ? undefined : parseInt(sel);
-				gDfurRec.amount = parseInt(dfurAmnt.children('input').val());
+				gDfurRec.amount = parseInt(dfurAmnt.children('input').val().replace(/^\s+|\s+$|,/g, ""));	//スペースとカンマを除去してから数値化
 				gDfurRec.debit_date = dfurDebDate.children('input').val();
 				gDfurRec.content = dfurCntnt.children('input').val();
 				gDfurRec.store = dfurStore.children('input').val();
@@ -139,7 +135,8 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 		function initElem() {
 			chgElem(dfurPayDate, gDfurRec.payment_date, 'input', null);
 			chgElem(dfurBType, gDfurRec.balance_type_mst_id, 'select', dfurPayDate);
-			dfurBType.children('select').change();
+			dfurBType.children('select').change();	//「収支種類」の選択変更イベント
+			remakeList_Handling();					//「取扱(実際)」のリスト再作成
 			chgElem(dfurHdlg, gDfurRec.handling_mst_id, 'select', dfurBType);
 			chgElem(dfurPrlt, gDfurRec.parllet_mst_id, 'select', dfurHdlg);
 //			jQuery('#dfurPrlt').children('a, label').css('cursor', 'default');
@@ -168,7 +165,7 @@ function openDialogFrmUpdRec(strType, pDfurRec, lngMstId) {
 				whenDialogFrmUpdRecClosed(intRslt, gDfurRec);
 			}
 		});
-		jQuery("#dialog-updRec").dialog("open");
+		jQuery('#dialog-updRec').dialog("open");
 		
 		jQuery('#dfurBTypeSel').focus();
 		/* Enterキーでのサブミット防止 */
@@ -226,7 +223,7 @@ jQuery(function() {
 				//「取扱(実際)」のリスト再作成
 				remakeList_Handling();
 				//再作成したリストに前回値があればそれをセット
-				jQuery('#dfurHdlg').children('select').val(gPreHdlg);
+				jQuery('#dfurHdlg').children('select').val(gPreHdlg!=='' ? gPreHdlg : String(gDfurRec.handling_mst_id.val));
 				
 				var jHdlgVal = jQuery('#dfurHdlg').children('select').val();
 				gDfurRec.handling_mst_id.val = jHdlgVal===null ? 0 : parseInt(jHdlgVal);
@@ -241,7 +238,7 @@ jQuery(function() {
 				conditionAdjust_Prlt(jQuery('#dfurBType option:selected').text(), jQuery('#dfurPrlt'), jQuery('#dfurHdlg'));
 			} else {
 				//前回値があればそれをセット
-				jQuery('#dfurPrlt').children('select').val(gPrePrlt);
+				jQuery('#dfurPrlt').children('select').val(gPrePrlt!=='' ? gPrePrlt : String(gDfurRec.parllet_mst_id.val));
 				var jPrltVal = jQuery('#dfurPrlt').children('select').val();
 				gDfurRec.parllet_mst_id.val = jPrltVal===null ? 0 : parseInt(jPrltVal);
 			}
@@ -326,7 +323,8 @@ jQuery(function() {
 			jQuery(this).next('a').css('display', 'none');
 		
 		var jNextInput = jQuery(this).nextAll('input'),
-			jNextTextArea = jQuery(this).nextAll('textarea');
+			jNextTextArea = jQuery(this).nextAll('textarea'),
+			jNextSelect = jQuery(this).nextAll('select');
 		//兄弟要素にinputがある場合
 		if (jNextInput.is('input')) {
 			//inputを表示
@@ -351,6 +349,17 @@ jQuery(function() {
 											.css('background', 'white')
 											.css('margin-right', '10px')
 											.focus();
+			
+		//兄弟要素にselectがある場合
+		} else if (jNextSelect.is('select')) {
+			//selectを表示
+			if (jNextSelect.hasClass('invisible'))
+				jNextSelect.removeClass('invisible');
+			jNextSelect.css('font-size', '80%')
+										.css('width', '90px')
+										.css('float', 'left')
+										.css('margin-right', '10px')
+										.focus();
 		}
 	});
 	/* クリックで編集（取扱(実際)）*/
@@ -418,6 +427,10 @@ function chgElem(jqSelector, dfurFlgValCrnt, strInput, jqSelPrev) {
 		});
 	} else {
 		jqSelector.children(strInput).val(dfurFlgValCrnt.val);
+		//inputでnumericの時はautoNumericの機能で3桁区切り
+		if (strInput==='input' && jqSelector.children(strInput).hasClass('numeric')) {
+			jqSelector.children(strInput).blur();
+		}
 	}
 	
 	//aのテキストをinputに合わせる
@@ -446,7 +459,7 @@ function chgElem(jqSelector, dfurFlgValCrnt, strInput, jqSelPrev) {
 		//ラベル前を詰める
 		jqSelector.children('label').css('float', 'left');
 		jqSelector.children('label').css('clear', 'none');
-		jqSelector.children('label').css('font-size', STR80);
+		jqSelector.children('label').css('font-size', STR90);
 		jqSelector.css('float', 'left');
 		jqSelector.css('clear', 'none');
 		
@@ -517,19 +530,8 @@ function conditionAdjust_Prlt(strBTypeText, dfurPrlt, dfurHdlg) {
 }
 
 /* 「収支種類」のリスト再作成 */
-function remakeList_BType(strType, jqBType) {
+function remakeList_BType(jqBType) {
 	jqBType.empty();
-//	if (strType==="&{'HandlingType.bank'}" || strType==="&{'HandlingType.emoney'}") {
-//		#{list items:models.BalanceTypeMst.find("balance_type_name != ? and balance_type_name != ? order by id", messages.get('BalanceType.parllet_in'), messages.get('BalanceType.parllet_out')).fetch(), as:'bType'}
-//			jqBType.append("<option value=${bType.id}>${bType.balance_type_name}</option>");
-//		#{/list}
-//	} else if (strType==="&{'PrltType.prlt'}") {
-//		#{list items:models.BalanceTypeMst.find("balance_type_name != ? and balance_type_name != ? order by id", messages.get('BalanceType.bank_in'), messages.get('BalanceType.bank_out')).fetch(), as:'bType'}
-//			jqBType.append("<option value=${bType.id}>${bType.balance_type_name}</option>");
-//		#{/list}
-//	} else {
-//		alert('c');
-//	}
 	#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 		jqBType.append("<option value=${bType.id}>${bType.balance_type_name}</option>");
 	#{/list}
@@ -805,22 +807,22 @@ function whenDialogFrmUpdMstClosedDfur(intRslt, strType, nameVal, zeroHddnChkd) 
 		</div>
 		
 		<div id="dfurBType" class="dfurElem">
-			<label>&{'balance_type_mst'}:</label>
-			<a class="ui-widget-content"></a>
+			<label class="_editable">&{'balance_type_mst'}:</label>
+			<a class="ui-widget-content _editable"></a>
 			<select id="dfurBTypeSel">
 			</select>
 		</div>
 		
 		<div id="dfurHdlg" class="dfurElem">
-			<label>&{'handling_mst'}:</label>
-			<a class="ui-widget-content" id="dfurHdlgA"></a>
+			<label class="_editable">&{'handling_mst'}:</label>
+			<a class="ui-widget-content _editable" id="dfurHdlgA"></a>
 			<select>
 			</select>
 		</div>
 		
 		<div id="dfurPrlt" class="dfurElem">
-			<label>&{'parllet_mst'}:</label>
-			<a class="ui-widget-content" id="dfurPrltA"></a>
+			<label class="_editable">&{'parllet_mst'}:</label>
+			<a class="ui-widget-content _editable" id="dfurPrltA"></a>
 			<select>
 			</select>
 		</div>

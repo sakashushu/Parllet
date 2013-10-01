@@ -192,6 +192,104 @@ function whenDialogConfirmClosed(intRslt) {
 function openDialogFrmUpdMstDh(strMst) {
 	openDialogFrmUpdMst(strMst, "&{'views.name.dlHeader'}");
 }
+function dl_recordEdit(lngId) {
+	var dateFormat = new DateFormat("yyyy/MM/dd"),
+		strErrMsg = "Common.getClmsRec",
+		jqxhrGetClms = jQuery.post('@{Common.getClmsRec}', {lngRecId: lngId});
+	jqxhrGetClms
+	.done(function(z) {
+		var dfurFvPayDate = new DfurFlgVal(false, dateFormat.format(new Date(z.rec.payment_date)), false),
+			dfurFvBType = new DfurFlgVal(true, z.rec.balance_type_mst.id, true),
+			dfurFvHdlg = new DfurFlgVal(false, z.rec.handling_mst===undefined ? null : z.rec.handling_mst.id, false),
+			dfurFvPrlt = new DfurFlgVal(false, z.rec.parllet_mst===undefined ? null : z.rec.parllet_mst.id, true),
+			dfurFvItem = new DfurFlgVal(false, z.rec.item_mst===undefined ? null : z.rec.item_mst.id, true),
+			dfurFvAmnt = new DfurFlgVal(true, z.rec.amount, true),
+			dfurFvDebDate = new DfurFlgVal(false, dateFormat.format(new Date(z.rec.debit_date)), false),
+			dfurFvCntnt = new DfurFlgVal(false, z.rec.content, true),
+			dfurFvStore = new DfurFlgVal(false, z.rec.store, true),
+			dfurFvRmrks = new DfurFlgVal(false, z.rec.remarks, true),
+			dfurRec = new DfurRec(
+				lngId,
+				dfurFvPayDate,
+				dfurFvBType,
+				dfurFvHdlg,
+				dfurFvPrlt,
+				dfurFvItem,
+				dfurFvAmnt,
+				dfurFvDebDate,
+				dfurFvCntnt,
+				dfurFvStore,
+				dfurFvRmrks);
+		//家計簿入力フォームを開く
+		openDialogFrmUpdRec(dfurRec);
+	})
+	.fail(function() {
+		strErrMsg += " Failed";
+		alert(strErrMsg);
+	});
+}
+function dl_recordDel(lngId) {
+	var strErrMsg;
+	if (lngId===null) lngId=undefined;
+	jQuery(function() {
+		jQuery("#dialog-delRec").dialog({
+			autoOpen: false,
+			resizable: false,
+			width:380,
+			modal: true,
+			title: "&{'views.dialogFrmUpdRec.title.del'}",
+			closeOnEscape: false,
+			buttons: {
+				"&{'insupd.delete'}": function() {
+					var jqxhrDelRec = jQuery.post('@{Common.deleteRec}', {id: lngId});
+					strErrMsg = "Common.deleteRec";
+					jqxhrDelRec
+					.done(function(z) {
+						switch (z.intRslt) {
+							case 0:
+								//画面を再表示
+								window.location.reload(true);
+								break;
+							default:
+								strErrMsg += " result Error";
+								alert(strErrMsg);
+						}
+					})
+					.fail(function() {
+						strErrMsg += " Failed";
+						alert(strErrMsg);
+					});
+					jQuery(this).dialog("close");
+				},
+				"&{'views.common.btn.cancel'}": function() {
+					jQuery(this).dialog("close");
+				}
+			}
+		});
+		strErrMsg = "Common.getClmsRec";
+		var dateFormat = new DateFormat("yyyy/MM/dd"),
+			jqxhrGetClms = jQuery.post('@{Common.getClmsRec}', {lngRecId: lngId});
+		jqxhrGetClms
+		.done(function(z) {
+			jQuery('#spnPayDate').text(dateFormat.format(new Date(z.rec.payment_date)));
+			jQuery('#spnBType').text(z.rec.balance_type_mst.balance_type_name);
+			jQuery('#spnHdlg').text(z.rec.handling_mst===undefined ? '' : z.rec.handling_mst.handling_name);
+			jQuery('#spnPrlt').text(z.rec.parllet_mst===undefined ? '' : z.rec.parllet_mst.parllet_name);
+			jQuery('#spnItem').text(z.rec.item_mst===undefined ? '' : z.rec.item_mst.item_name);
+			jQuery('#spnAmnt').text(addFigure(z.rec.amount));
+			jQuery('#spnDebDate').text(z.rec.debit_date===undefined ? '' : dateFormat.format(new Date(z.rec.debit_date)));
+			jQuery('#spnCntnt').text(z.rec.content);
+			jQuery('#spnStore').text(z.rec.store);
+			jQuery('#spnRmrks').text(z.rec.remarks);
+			//家計簿削除フォームを開く
+			jQuery('#dialog-delRec').dialog("open");
+		})
+		.fail(function() {
+			strErrMsg += " Failed";
+			alert(strErrMsg);
+		});
+	});
+}
 // -->
 </script>
 
@@ -249,6 +347,21 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 }
 // -->
 </script>
+
+<div id="dialog-delRec" class="invisible">
+	<p><span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 5px 0;"></span>&{'dialog.message.info.del.text1'}</p>
+	<label class="lblDlgDelRec">&{'payment_date'}</label>&nbsp;：&nbsp;<span id="spnPayDate"></span><br>
+	<label class="lblDlgDelRec">&{'balance_type_mst'}</label>&nbsp;：&nbsp;<span id="spnBType"></span><br>
+	<label class="lblDlgDelRec">&{'handling_mst'}</label>&nbsp;：&nbsp;<span id="spnHdlg"></span><br>
+	<label class="lblDlgDelRec">&{'parllet_mst'}</label>&nbsp;：&nbsp;<span id="spnPrlt"></span><br>
+	<label class="lblDlgDelRec">&{'item_mst'}</label>&nbsp;：&nbsp;<span id="spnItem"></span><br>
+	<label class="lblDlgDelRec">&{'amount'}</label>&nbsp;：&nbsp;<span id="spnAmnt"></span><br>
+	<label class="lblDlgDelRec">&{'debit_date'}</label>&nbsp;：&nbsp;<span id="spnDebDate"></span><br>
+	<label class="lblDlgDelRec">&{'content'}</label>&nbsp;：&nbsp;<span id="spnCntnt"></span><br>
+	<label class="lblDlgDelRec">&{'store'}</label>&nbsp;：&nbsp;<span id="spnStore"></span><br>
+	<label class="lblDlgDelRec">&{'remarks'}</label>&nbsp;：&nbsp;<span id="spnRmrks"></span><br>
+	<p id="pConfirm">&{'dialog.message.del.confirm'}</p>
+</div>  <!-- dialog-form -->
 
 <!-- 残高明細（口座系）へジャンプ用フォーム（非表示） -->
 #{form @DetailList.dl_remainderBank(), id:'frmDlRemainderBank'}

@@ -16,11 +16,10 @@
 <script type="text/javascript">
 <!--
 var myObj = new Object();
-myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+myObj.strMsg = "&{'dialog.message.del.confirm'}";
 // -->
 </script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/autoNumeric-1.7.5.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
 #{include 'subCategory.html' /}
@@ -121,9 +120,6 @@ jQuery(function() {
 		//「引落日」の入力可・不可とデフォルト日付の調整
 		conditionDefDateAdjust_DebitDate();
 	});
-	
-	/* 3桁区切りの数値入力フィールドとして設定 */
-	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
 	
 	/* 金額を3桁区切りに(初期表示) */
 	jQuery('input.numeric').each(function(i) {
@@ -450,10 +446,10 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 <div id="crudShow">
 
 #{ifnot record?.id}
-	<h3><span>&{'insupd.add', messages.get('Record')}</span></h3>
+	<h3><span>&{'insupd.addThe', messages.get('Record')}</span></h3>
 #{/ifnot}
 #{else}
-	<h3><span>&{'insupd.edit', messages.get('Record')}</span></h3>
+	<h3><span>&{'insupd.editThe', messages.get('Record')}</span></h3>
 #{/else}
 
 %{
@@ -641,7 +637,7 @@ function whenDialogFrmUpdMstClosedRe(intRslt, strType, nameVal, zeroHddnChkd) {
 	#{form @del_rec(record?.id)}
 		<input type="text" name="calledFrom" value="${calledFrom}" class="invisible" />
 		<p class="crudDelete">
-			<input type="submit" value="&{'insupd.delete', messages.get('Record')}" id="cnf_del" />
+			<input type="submit" value="&{'insupd.deleteThe', messages.get('Record')}" id="cnf_del" />
 		</p>
 	#{/form}
 #{/if}

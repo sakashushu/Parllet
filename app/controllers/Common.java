@@ -30,6 +30,7 @@ import models.WkAjaxRsltMin;
 import models.WkCmHdlgRslt;
 import models.WkCmMkItemRslt;
 import models.WkCmPrltRslt;
+import models.WkCmRecRslt;
 import play.Logger;
 import play.Play;
 import play.db.jpa.JPA;
@@ -518,6 +519,17 @@ public class Common extends Controller {
 	}
 	
 	/**
+	 * RecordのIDから各項目を取得
+	 * @param lngRecId
+	 */
+	public static void getClmsRec(Long lngRecId) {
+		WkCmRecRslt wr = new WkCmRecRslt();
+		Record rec = Record.findById(lngRecId);
+		wr.setRec(rec);
+		renderJSON(wr);
+	}
+	
+	/**
 	 * ダイアログフォームからHandlingMstの更新
 	 * @param strHdlgType
 	 * @param strName
@@ -618,7 +630,7 @@ public class Common extends Controller {
 			String remarks,
 			String secret_remarks,
 			Boolean secret_rec_flg) {
-		WkCmPrltRslt wr = new WkCmPrltRslt();
+		WkCmRecRslt wr = new WkCmRecRslt();
 
 		Record record = null;
 		Date paymentDate = null;
@@ -706,6 +718,26 @@ public class Common extends Controller {
 		}
 		// 保存
 		record.save();
+		
+		wr.setIntRslt(0);
+		renderJSON(wr);
+	}
+	
+	/**
+	 * ダイアログフォームからRecordの削除
+	 * @param strType
+	 * @param strName
+	 * @param bolZeroHddn
+	 */
+	public static void deleteRec(
+			Long id) {
+		WkCmRecRslt wr = new WkCmRecRslt();
+		wr.setIntRslt(-1);
+
+		// 収支データの読み出し
+		Record record = Record.findById(id);
+		// 削除
+		record.delete();
 		
 		wr.setIntRslt(0);
 		renderJSON(wr);

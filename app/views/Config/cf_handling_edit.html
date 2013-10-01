@@ -7,7 +7,7 @@
 <script type="text/javascript">
 <!--
 //var myObj = new Object();
-//myObj.strMsg = "&{'views.config.cf_handling_edit.del.confirm'}";
+//myObj.strMsg = "&{'dialog.message.del.confirm'}";
 // -->
 </script>
 
@@ -33,7 +33,7 @@ jQuery(function() {
 			e.preventDefault();
 			return;
 		}
-		return confirm("&{'views.config.cf_handling_edit.del.confirm'}");
+		return confirm("&{'dialog.message.del.confirm'}");
 	});
 	
 	/* 起動時に日選択コンボの選択肢を作成 */
@@ -86,10 +86,10 @@ jQuery(function() {
 <div id="crudShow">
 
 	#{ifnot hM?.id}
-		<h3><span>&{'insupd.add', sHandlingType}</span></h3>
+		<h3><span>&{'insupd.addThe', sHandlingType}</span></h3>
 	#{/ifnot}
 	#{else}
-		<h3><span>&{'insupd.edit', sHandlingType}</span></h3>
+		<h3><span>&{'insupd.editThe', sHandlingType}</span></h3>
 	#{/else}
 
     <div class="objectForm">
@@ -185,7 +185,7 @@ jQuery(function() {
 	#{if hM?.id}
 		#{form @cf_handling_del(hM?.id, sHandlingType)}
 		    <p class="crudDelete">
-		        <input type="submit" value="&{'insupd.delete', sHandlingType}" id="cnf_del" />
+		        <input type="submit" value="&{'insupd.deleteThe', sHandlingType}" id="cnf_del" />
 		    </p>
 		#{/form}
 	#{/if}

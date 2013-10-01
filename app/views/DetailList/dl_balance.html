@@ -20,12 +20,21 @@ jQuery(function(){
 	jQuery.contextMenu({
 		selector: '.menu_cell',
 		trigger: 'none',
-		callback: function(key, options) {
-			jQuery('#submitRecordEdit').click();
-			jQuery('body').attr("disabled", "disabled");
-		},
-		items: {
-			"dl_remainderBank": {name: "&{'views.common.menu.toRecordEdit'}"},
+		build: function($trigger, e) {
+			var options = {
+				callback: function(key, options) {
+					if (key=="toRecordEdit") {
+						dl_recordEdit(parseInt(jQuery('#idRecordEdit').val()));
+					}
+					if (key=="toRecordDel") {
+						dl_recordDel(parseInt(jQuery('#idRecordEdit').val()));
+					}
+				},
+				items: {}
+			};
+			options.items.toRecordEdit = {name: "&{'views.common.menu.toRecordEdit'}"};
+			options.items.toRecordDel = {name: "&{'views.common.menu.toRecordDel'}"};
+			return options;
 		}
 	});
 	
