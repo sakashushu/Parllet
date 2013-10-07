@@ -105,7 +105,7 @@ jQuery(function(){
 
 <div id="dl_tblFrameHd">
 
-<div id="dlRb_tblContentHd" >
+<div id="dlRm_tblContentHd" >
   <ul class="dl_tbl">
 	<!-- ヘッダー行 -->
 	<li>
@@ -122,12 +122,12 @@ jQuery(function(){
 		#{/if}
 		<!-- 引落日 -->
 		%{
-			clDlRbDebitDateHd = 'dlRb_debit_date dl_head'
+			clDlRmDebitDateHd = 'dlRm_debit_date dl_head'
             if (session.get('actionMode')=='View'){
-                clDlRbDebitDateHd += ' dl_borderLeft'
+                clDlRmDebitDateHd += ' dl_borderLeft'
             }
 		}%
-		<div class="${clDlRbDebitDateHd}">
+		<div class="${clDlRmDebitDateHd}">
 			&{'debit_date'}<br>
 			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="dlRiHdDebitDateFr" value="${dlRiHdDebitDateFr}" />
 			<br><label for="to">～</label><br>
@@ -155,11 +155,11 @@ jQuery(function(){
 			&{'handling_mst'}<br>
 		</div>
 		<!-- 引出 -->
-		<div class="dl_amount dl_head">
+		<div class="dlRm_amount dl_head">
 			&{'views.detaillist.remainderCommon.out'}<br>
 		</div>
 		<!-- 預入 -->
-		<div class="dl_amount dl_head">
+		<div class="dlRm_amount dl_head">
 			&{'views.detaillist.remainderCommon.in'}<br>
 		</div>
 		<!-- お店 -->
@@ -167,12 +167,12 @@ jQuery(function(){
 			&{'store'}<br>
 		</div>
 		<!-- 残高 -->
-		<div class="dlRb_remainder dl_head">
+		<div class="dlRm_remainder dl_head">
 			&{'views.detaillist.remainder'}<br>
 		</div>
 	</li>
   </ul>
-</div>  <!-- dlRb_tblContentHd -->
+</div>  <!-- dlRm_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 #{/form}
 </div>  <!-- dlHeaderInner4 -->
@@ -186,7 +186,7 @@ jQuery(function(){
 <div id="dlMainInner">
 
 <div id="dl_tblFrame">
-<div id="dlRb_tblContent" >
+<div id="dlRm_tblContent" >
   <ul class="dl_tbl">
 	<!-- 明細行 -->
 	#{if lWDRR?.size() > 0}
@@ -207,13 +207,13 @@ jQuery(function(){
 		#{/if}
 		<!-- 引落日 -->
 		%{
-			clDlRbDebitDate = 'dlRb_debit_date'
-			clDlRbDebitDate += wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'
+			clDlRmDebitDate = 'dlRm_debit_date'
+			clDlRmDebitDate += wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'
             if (session.get('actionMode')=='View'){
-                clDlRbDebitDate += ' dl_borderLeft'
+                clDlRmDebitDate += ' dl_borderLeft'
             }
 		}%
-		<div class="${clDlRbDebitDate}">
+		<div class="${clDlRmDebitDate}">
 		  <span class="dl_string">
 			${wdrr?.strDebitDate}
 		  </span>
@@ -251,13 +251,13 @@ jQuery(function(){
 		  </span>
 		</div>
 		<!-- 引出 -->
-		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
+		<div class="dlRm_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="padR4">
 			${wdrr?.strBalanceTypeName==messages.get('BalanceType.out') || wdrr?.strBalanceTypeName==messages.get('BalanceType.parllet_out') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
 		</div>
 		<!-- 預入 -->
-		<div class="dl_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
+		<div class="dlRm_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="padR4">
 			${wdrr?.strBalanceTypeName==messages.get('BalanceType.in') || wdrr?.strBalanceTypeName==messages.get('BalanceType.parllet_in') ? wdrr?.lngAmount.format('###,###') : ''}
 		  </span>
@@ -269,7 +269,7 @@ jQuery(function(){
 		  </span>
 		</div>
 		<!-- 残高 -->
-		<div class="dlRb_remainder${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
+		<div class="dlRm_remainder${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}">
 		  <span class="padR4">
 			${wdrr?.lngRemainder.format('###,###')}
 		  </span>
@@ -278,17 +278,20 @@ jQuery(function(){
 	#{/list}
 	#{/if}
   </ul>
-</div>  <!-- dlRb_tblContent -->
+</div>  <!-- dlRm_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
 </div>  <!-- dlMainInner -->
 </div>  <!-- dlMain -->
 
 <div id="dlFooter">
+<div id="dlRmChartFrame">
+<div id="dlRmChart"></div>
+</div>
 <div id="dl_tblFrameFt">
-<div id="dlRb_tblContentFt">
+<div id="dl_tblContentFt">
 　
-</div>  <!-- dlRb_tblContentFt -->
+</div>  <!-- dl_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_remainder_prlt.pagination /}

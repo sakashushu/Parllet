@@ -10,55 +10,78 @@
 
 /* 「収支種類」ごとの「項目」のサブカテゴリー */
 var subCatItem = {
+  %{vCntBType=0}%
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
 		bType.balance_type_name==messages.get('BalanceType.out')}
+	  #{if vCntBType>0},#{/if}
 	  "${bType.id}":[
+		%{vCntItem=0}%
 		#{list items:models.ItemMst.find("ha_user = '${haUser.id}' and balance_type_mst = " + bType.id + " order by id").fetch(), as:'item'}
+		  #{if vCntItem>0},#{/if}
 		  {
 			"key":"${item.id}",
 			"value":"${item.item_name}"
-		  },
+		  }
+		  %{vCntItem++}%
 		#{/list}
-	  ],
+	  ]
+	%{vCntBType++}%
 	#{/if}
   #{/list}
 },
 /* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（大分類） */
 subCatHdlgLarge = {
+  %{vCntBType=0}%
   #{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
 	#{if bType.balance_type_name==messages.get('BalanceType.in') ||
-		bType.balance_type_name==messages.get('BalanceType.out')}
-	  "${bType.id}":"ALL",
-	#{/if}
-	#{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
+		bType.balance_type_name==messages.get('BalanceType.out') ||
+		bType.balance_type_name==messages.get('BalanceType.bank_in') ||
 		bType.balance_type_name==messages.get('BalanceType.bank_out')}
-	  "${bType.id}":"BANK",
+	  #{if vCntBType>0},#{/if}
+	  #{if bType.balance_type_name==messages.get('BalanceType.in') ||
+		bType.balance_type_name==messages.get('BalanceType.out')}
+		  "${bType.id}":"ALL"
+	  #{/if}
+	  #{if bType.balance_type_name==messages.get('BalanceType.bank_in') ||
+		bType.balance_type_name==messages.get('BalanceType.bank_out')}
+	  	  "${bType.id}":"BANK"
+	  #{/if}
+	  %{vCntBType++}%
 	#{/if}
   #{/list}
 },
 /* 「収支種類」ごとの「取扱(実際)」のサブカテゴリー（小分類） */
 subCatHdlgSmall = {
   "ALL":[
-	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and (invalidity_flg = false ${invalidityRecEdit} ) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	%{vCntHdlg=0}%
+	#{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and (invalidity_flg = false ${invalidityRecEdit} ) order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	  #{if vCntHdlg>0},#{/if}
 	  {
 		"key":"${handling.id}",
 		"value":"${handling.handling_name}"
-	  },
-	  #{/list}
+	  }
+	  %{vCntHdlg++}%
+	#{/list}
   ],
   "BANK":[
-	  #{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	%{vCntHdlg=0}%
+	#{list items:models.HandlingMst.find("ha_user = '${haUser.id}' and invalidity_flg = false and handling_type_mst.handling_type_name IN('" + messages.get('HandlingType.bank') + "','" + messages.get('HandlingType.emoney') + "') order by handling_type_mst.handling_type_order, order_seq").fetch(), as:'handling'}
+	  #{if vCntHdlg>0},#{/if}
 	  {
 		"key":"${handling.id}",
 		"value":"${handling.handling_name}"
-	  },
-	  #{/list}
-  ],
+	  }
+	  %{vCntHdlg++}%
+	#{/list}
+  ]
 },
 subCatPrlt = {
+  %{vCntPrlt=0}%
   #{list items:models.ParlletMst.find("ha_user = '${haUser.id}' order by order_seq").fetch(), as:'parllet'}
-	${parllet.id}:"${parllet.parllet_name}",
+	#{if vCntPrlt>0},#{/if}
+	${parllet.id}:"${parllet.parllet_name}"
+	%{vCntPrlt++}%
   #{/list}
 };
 // -->

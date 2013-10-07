@@ -1383,10 +1383,6 @@ fieldset {
 	height: 0;
 }
 
-#dlRb_tblContentFt {
-	height: 0;
-}
-
 .dl_tbl {
 	list-style: none;
 	padding: 0;
@@ -1489,23 +1485,30 @@ fieldset {
 	vertical-align: middle;
 }
 
-.dlRb_debit_date {
+.dlRm_debit_date {
 	width:90px;
 	min-width:90px;
 	vertical-align: middle;
 	padding: 4px 0px;
 }
 
-.dlRb_secret_rec_flg {
+.dlRm_secret_rec_flg {
 	width:45px;
 	border-left: 1px solid #aaa;
 	text-align: center;
 	vertical-align: middle;
 }
 
-.dlRb_remainder {
+.dlRm_remainder {
 	width:110px;
 	min-width:110px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.dlRm_amount {
+	width:100px;
+	min-width:100px;
 	text-align: right;
 	vertical-align: middle;
 }
@@ -1520,6 +1523,15 @@ fieldset {
 //	background: url(/public/images/brown4_60.png);
 	background: url(/public/images/brown3_90.png);
 	color: #e6be83;
+}
+
+#dlRmChartFrame {
+	width: 960px;
+	border: 1px solid #aaa;
+	overflow: hidden;
+}
+#dlRmChart {
+	margin-left: -10px;
 }
 
 #dialog-delRec .lblDlgDelRec {

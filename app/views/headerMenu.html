@@ -63,7 +63,7 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 				switch (z.intRslt) {
 					case 0:
 						//画面を再表示
-						window.location.reload(true);
+						location.replace(location.href);
 						break;
 					case 99:
 						alert(z.strErr);
@@ -95,14 +95,11 @@ function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
 					strTableType == messages.get('views.dailyaccount.dailyaccount') ? 'selected' : ''}">
 			<a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a>
 		</li>
-		<li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
-<!-- 
-			<a href="@{RecordEdit.recordEdit()}">&{'views.login.recordEdit'}</a>
- -->
-			<a href="#" id="aRecEdit">&{'views.login.recordEdit'}</a>
-		</li>
 		<li class="${request.controller == 'DetailList' ? 'selected' : ''}">
 			<a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a>
+		</li>
+		<li class="${request.controller == 'RecordEdit' ? 'selected' : ''}">
+			<a href="#" id="aRecEdit">&{'views.login.recordEdit'}</a>
 		</li>
 		<li class="${request.controller == 'Config' ? 'selected' : '' ||
 					request.controller == 'PplRecurringPayments' ? 'selected' : ''}">

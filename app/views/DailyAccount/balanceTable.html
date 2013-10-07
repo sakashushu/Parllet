@@ -393,52 +393,52 @@ function drawChart() {
 			#{list items:lWDA, as:'lwda'}
 			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 					lwda.sItem==''}
-				${lwda.lstWdtd[0].lAmount}, "${REMAINDER_TYPE_TOTAL} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+				${lwda.lstWdtd[0].lAmount}, "${REMAINDER_TYPE_TOTAL} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
 			  #{/if}
 			#{/list}
 			#{list items:lWDA, as:'lwda'}
 			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 					lwda.sItem!='' &&
 					lwda.lstWdtd[0].lAmount!=0}
-				0, "",
+				, 0, ""
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
 					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
-				0, "",
+				, 0, ""
 			  #{/if}
 			#{/list}
 		],
 		["${REMAINDER_TYPE_REAL}",
-			0, "",
+			0, ""
 			#{list items:lWDA, as:'lwda'}
 			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 					lwda.sItem!='' &&
 					lwda.lstWdtd[0].lAmount!=0}
-				${lwda.lstWdtd[0].lAmount}, "${lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+				, ${lwda.lstWdtd[0].lAmount}, "${lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
 					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
-				0, "",
+				, 0, ""
 			  #{/if}
 			#{/list}
 		],
 		["${REMAINDER_TYPE_PARLLET}",
-			0, "",
+			0, ""
 			#{list items:lWDA, as:'lwda'}
 			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
 					lwda.sItem!='' &&
 					lwda.lstWdtd[0].lAmount!=0}
-				0, "",
+				, 0, ""
 			  #{/if}
 			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
 					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
 					lwda.lstWdtd[0].lAmount!=0}
-				${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}",
+				, ${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
 			  #{/if}
 			#{/list}
-		],
+		]
 	]);
 	
 	// グラフのオプションを指定する
@@ -447,14 +447,8 @@ function drawChart() {
 			width: 980,
 			height: 150,
 			isStacked: true,
-//			backgroundColor: { fill:'transparent' },
-//			backgroundColor: "rgb(242,236,191)",
-//20130902~Start;
-//			backgroundColor: "rgb(242,223,182)",
-			backgroundColor: "rgb(245,245,245)",
- //20130902~End;
- 
- 			backgroundColor: "rgb(244,233,207)",
+//			backgroundColor: { fill:'transparent' }
+ 			backgroundColor: "rgb(244,233,207)"
 	}
 	
 	// 描画する

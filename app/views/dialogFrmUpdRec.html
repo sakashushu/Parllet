@@ -19,17 +19,23 @@ var gPreBType,
 	gEditingHdlgFlg,	//取扱(実際)編集中フラグ
 	gEditingPrltFlg,	//取扱(Parllet)編集中フラグ
 	BTYPE_GROUP = {
+	%{vCntBType=0}%
 	#{list items:models.BalanceTypeMst.find("order by id").fetch(), as:'bType'}
+		#{if vCntBType>0},#{/if}
 		${bType.id}:${bType.balance_type_name==messages.get('BalanceType.in') || bType.balance_type_name==messages.get('BalanceType.out') ? 1 : (
 						bType.balance_type_name==messages.get('BalanceType.bank_in') || bType.balance_type_name==messages.get('BalanceType.bank_out') ? 2 : (
 							bType.balance_type_name==messages.get('BalanceType.parllet_in') || bType.balance_type_name==messages.get('BalanceType.parllet_out') ? 3 : 'bType error'
 						)
-					)},
+					)}
+		%{vCntBType++}%
 	#{/list}
 	},
 	HTYPE_GROUP = {
+	%{vCntHdlg=0}%
 	#{list items:models.HandlingMst.find("order by id").fetch(), as:'hdlg'}
-		${hdlg.id}:${hdlg.handling_type_mst.id},
+		#{if vCntHdlg>0},#{/if}
+		${hdlg.id}:${hdlg.handling_type_mst.id}
+		%{vCntHdlg++}%
 	#{/list}
 	};
 	

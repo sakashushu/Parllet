@@ -3,7 +3,7 @@ package models;
 import java.math.BigInteger;
 import java.util.Date;
 
-public class WkDlRbRec {
+public class WkDlRmRec {
 	private Long lngId;
 	private Boolean bolSecretRecFlg;
 	private String strDebitDate;
