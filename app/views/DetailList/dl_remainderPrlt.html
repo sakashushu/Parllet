@@ -101,7 +101,7 @@ jQuery(function(){
 #{form @DetailList.dl_remainderPrlt(), id:'frmDlRemainder'}
 
 <!-- 絞込のサブミット（非表示） -->
-<input type="submit" id="idSrch" name="dlRiSrch" class="invisible" />
+<input type="submit" id="idSrch" name="dlRpSrch" class="invisible" />
 
 <div id="dl_tblFrameHd">
 
@@ -113,10 +113,10 @@ jQuery(function(){
 			<!-- 非公開フラグ -->
 			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft" >
 				公<br>開<br>
-				<select class="dl_tbl_content" name="dlRiHdSecretRecFlg">
-					<option value="0"${dlRiHdSecretRecFlg==0 ? ' selected' : ''}>--</option>
-					<option value="1"${dlRiHdSecretRecFlg==1 ? ' selected' : ''}>公</option>
-					<option value="2"${dlRiHdSecretRecFlg==2 ? ' selected' : ''}>非</option>
+				<select class="dl_tbl_content" name="dlRpHdSecretRecFlg">
+					<option value="0"${dlRpHdSecretRecFlg==0 ? ' selected' : ''}>--</option>
+					<option value="1"${dlRpHdSecretRecFlg==1 ? ' selected' : ''}>公</option>
+					<option value="2"${dlRpHdSecretRecFlg==2 ? ' selected' : ''}>非</option>
 				</select>
 			</div>
 		#{/if}
@@ -129,9 +129,9 @@ jQuery(function(){
 		}%
 		<div class="${clDlRmDebitDateHd}">
 			&{'debit_date'}<br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="dlRiHdDebitDateFr" value="${dlRiHdDebitDateFr}" />
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="dlRpHdDebitDateFr" value="${dlRpHdDebitDateFr}" />
 			<br><label for="to">～</label><br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="dlRiHdDebitDateTo" value="${dlRiHdDebitDateTo}" />
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="dlRpHdDebitDateTo" value="${dlRpHdDebitDateTo}" />
 		</div>
 		<!-- 支払日 -->
 		<div class="dl_payment_date dl_head">
@@ -144,9 +144,9 @@ jQuery(function(){
 		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column dl_head">
 			&{'parllet_mst'}<br>
-			<select id="dlCmbHdParllet" class="dl_tbl_content" name="dlRiHdParlletId">
+			<select id="dlCmbHdParllet" class="dl_tbl_content" name="dlRpHdParlletId">
 				#{list items:prlts, as:'prlt'}
-				<option value="${prlt.id}"${dlRiHdParlletId==prlt.id ? ' selected' : ''}>${prlt.parllet_name}</option>
+				<option value="${prlt.id}"${dlRpHdParlletId==prlt.id ? ' selected' : ''}>${prlt.parllet_name}</option>
 				#{/list}
 			</select>
 		</div>

@@ -4,6 +4,7 @@ import java.util.*;
 
 import models.*;
 
+import play.Play;
 import play.db.Model;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -131,9 +132,9 @@ public class DetailList extends Controller {
 		List<ItemMst> itemsIn = null;
 		List<ItemMst> itemsOut = null;
 		
-		long count = 0L;		//レコード数
-		int iLinage = 30;		//１ページあたりの行数
-		int nbPages = 0;		//ページ数
+		long count = 0L;	//レコード数
+		int iLinage = Integer.parseInt(Play.configuration.getProperty("dl.iLinage"));	//１ページあたりの行数
+		int nbPages = 0;	//ページ数
 		
 		// 「保存」ボタンが押された場合
 		if (save != null) {
@@ -346,7 +347,7 @@ public class DetailList extends Controller {
 			}
 			sqlSrchRec += " order by payment_date, id";
 			records = Record.find(
-					sqlSrchRec).from(0).fetch(page, 30);
+					sqlSrchRec).from(0).fetch(page, iLinage);
 		}
 		
 		render(bTypes, handlings, prlts, itemsIn, itemsOut, records, h_secret_rec_flg, h_payment_date_fr, h_payment_date_to, h_balance_type_id, h_handling_id, h_parllet_id, h_item_id, h_debit_date_fr, h_debit_date_to, count, nbPages, page);
@@ -401,9 +402,9 @@ public class DetailList extends Controller {
 		List<Record> records = null;
 		List<HandlingMst> handlings = null;
 		
-		long count = 0L;		//レコード数
-		int iLinage = 30;		//１ページあたりの行数
-		int nbPages = 0;		//ページ数
+		long count = 0L;	//レコード数
+		int iLinage = Integer.parseInt(Play.configuration.getProperty("dl.iLinage"));	//１ページあたりの行数
+		int nbPages = 0;	//ページ数
 		
 		//引数の型等チェック
 		Common cm = new Common();
@@ -775,9 +776,9 @@ public class DetailList extends Controller {
 		List<ParlletMst> prlts = null;
 		
 		
-		long count = 0L;		//レコード数
-		int iLinage = 30;		//１ページあたりの行数
-		int nbPages = 0;		//ページ数
+		long count = 0L;	//レコード数
+		int iLinage = Integer.parseInt(Play.configuration.getProperty("dl.iLinage"));	//１ページあたりの行数
+		int nbPages = 0;	//ページ数
 		
 		//引数の型等チェック
 		Common cm = new Common();

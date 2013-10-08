@@ -116,10 +116,10 @@ jQuery(function() {
 			jQuery("#frJump").datepicker("option", "maxDate", "${h_debit_date_to}");
 	#{/if}
 	#{if request.actionMethod=='dl_remainderPrlt'}
-		if (ckDate("${dlRiHdDebitDateFr}"))
-			jQuery("#toJump").datepicker("option", "minDate", "${dlRiHdDebitDateFr}");
-		if (ckDate("${dlRiHdDebitDateTo}"))
-			jQuery("#frJump").datepicker("option", "maxDate", "${dlRiHdDebitDateTo}");
+		if (ckDate("${dlRpHdDebitDateFr}"))
+			jQuery("#toJump").datepicker("option", "minDate", "${dlRpHdDebitDateFr}");
+		if (ckDate("${dlRpHdDebitDateTo}"))
+			jQuery("#frJump").datepicker("option", "maxDate", "${dlRpHdDebitDateTo}");
 	#{/if}
 	
 	/* Enterキーでのサブミット防止 */

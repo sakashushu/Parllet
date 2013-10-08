@@ -144,7 +144,7 @@ jQuery(function() {
 	jQuery('.menu_cell').mousedown(function(e) {
 		if (e.which===1 || e.which===3) {
 			jQuery('#hHandlingId').val('');
-			jQuery('#idDlRiHdParlletId').val('');
+			jQuery('#idDlRpHdParlletId').val('');
 			bolDlgFrmUpdMstInsBkem = false;
 			bolDlgFrmUpdMstInsPrlt = false;
 			bolDlgFrmUpdMstUpdBkem = false;
@@ -183,9 +183,9 @@ jQuery(function() {
 				lngUpdId = parseInt(jQuery('.lParlletId', jQuery(this).parent("li")).val(), 10);
 				
 				//残高明細（Parllet）へジャンプする際の絞込項目セット
-				jQuery('#idDlRiHdDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
-				jQuery('#idDlRiHdDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
-				jQuery('#idDlRiHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
+				jQuery('#idDlRpHdDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+				jQuery('#idDlRpHdDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+				jQuery('#idDlRpHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
 			}
 			
 			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!==undefined)
@@ -296,7 +296,7 @@ jQuery(function() {
 			}
 			if (jQuery('#hHandlingId').val()!=='')
 				options.items.toDlRemainderBank = {name: "&{'views.common.menu.toDlRemainderBank'}"};
-			if (jQuery('#idDlRiHdParlletId').val()!=='')
+			if (jQuery('#idDlRpHdParlletId').val()!=='')
 				options.items.toDlRemainderPrlt = {name: "&{'views.common.menu.toDlRemainderPrlt'}"};
 			return options;
 		}
@@ -543,11 +543,11 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 
 <!-- 残高明細（Parllet）へジャンプ用フォーム（非表示） -->
 #{form @DetailList.dl_remainderPrlt(), class:'invisible'}
-	<input type="text" name="dlRiHdSecretRecFlg" id="idDlRiHdSecretRecFlg" value="0" />
-	<input type="text" name="dlRiHdDebitDateFr" id="idDlRiHdDebitDateFr" />
-	<input type="text" name="dlRiHdDebitDateTo" id="idDlRiHdDebitDateTo" />
-	<input type="text" name="dlRiHdParlletId" id="idDlRiHdParlletId" />
-	<input type="submit" name="dlRiSrch" id="submitDlRemainderPrlt" />
+	<input type="text" name="dlRpHdSecretRecFlg" id="idDlRpHdSecretRecFlg" value="0" />
+	<input type="text" name="dlRpHdDebitDateFr" id="idDlRpHdDebitDateFr" />
+	<input type="text" name="dlRpHdDebitDateTo" id="idDlRpHdDebitDateTo" />
+	<input type="text" name="dlRpHdParlletId" id="idDlRpHdParlletId" />
+	<input type="submit" name="dlRpSrch" id="submitDlRemainderPrlt" />
 #{/form}
 
 
