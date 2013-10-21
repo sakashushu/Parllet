@@ -151,12 +151,60 @@ public class DailyAccount extends Controller {
 		WkDailyAccountRender wkDAR = makeWkDAR(sBasisDate, strTableType);
 		
 		int month = wkDAR.getIntMonth();
-		sBasisDate = wkDAR.getStrBasisDate();
-		String[] sAryDays = wkDAR.getStrAryDays();
+//		sBasisDate = wkDAR.getStrBasisDate();
+//		String[] sAryDays = wkDAR.getStrAryDays();
 		List<WkDailyAccount> lWDA = wkDAR.getlWDA();
-		int iWidth = wkDAR.getIntWidth();
+//		int iWidth = wkDAR.getIntWidth();
+		long lngSumAmnt = da.getLngSumAmnt(lWDA);
+		List<WkDailyAccount> lWDA_R = da.makeLwdaReal(lWDA);
+		List<WkDailyAccount> lWDA_P = da.makeLwdaPrlt(lWDA);
 		
-		render("@balanceTable",  month, sBasisDate, strTableType, sAryDays, lWDA, iWidth);
+		render("@balanceTable",  month, sBasisDate, strTableType, lngSumAmnt, lWDA_R, lWDA_P);
+	}
+	
+	/**
+	 * 残高合計取得
+	 * @param lWDA
+	 * @return
+	 */
+	private long getLngSumAmnt(List<WkDailyAccount> lWDA) {
+		for (WkDailyAccount wDa : lWDA) {
+			if (wDa.getsLargeCategory().equals(Common.REMAINDER_TYPE_REAL) &&
+					wDa.getsItem().equals("")) {
+				return wDa.getLstWdtd().get(0).getlAmount();
+			}
+		}
+		return 0L;
+	}
+	
+	/**
+	 * 残高表の実際の残高の行に相当するリストの作成
+	 * @param lWDA
+	 * @return
+	 */
+	private List<WkDailyAccount> makeLwdaReal(List<WkDailyAccount> lWDA) {
+		List<WkDailyAccount> lWDA_R = new ArrayList<WkDailyAccount>();
+		for (WkDailyAccount wDa : lWDA) {
+			if (wDa.getsLargeCategory().equals(Common.REMAINDER_TYPE_REAL) && !wDa.getsItem().equals("")) {
+				lWDA_R.add(wDa);
+			}
+		}
+		return lWDA_R;
+	}
+	
+	/**
+	 * 残高表のParlletの残高の行に相当するリストの作成
+	 * @param lWDA
+	 * @return
+	 */
+	private List<WkDailyAccount> makeLwdaPrlt(List<WkDailyAccount> lWDA) {
+		List<WkDailyAccount> lWDA_P = new ArrayList<WkDailyAccount>();
+		for (WkDailyAccount wDa : lWDA) {
+			if (wDa.getsLargeCategory().equals(Common.REMAINDER_TYPE_PARLLET)) {
+				lWDA_P.add(wDa);
+			}
+		}
+		return lWDA_P;
 	}
 	
 	/**

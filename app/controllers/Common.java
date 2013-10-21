@@ -28,6 +28,7 @@ import models.ParlletMst;
 import models.Record;
 import models.WkAjaxRsltMin;
 import models.WkCmHdlgRslt;
+import models.WkCmHuRslt;
 import models.WkCmMkItemRslt;
 import models.WkCmPrltRslt;
 import models.WkCmRecRslt;
@@ -749,7 +750,7 @@ public class Common extends Controller {
 	 * @param bolFlg
 	 */
 	public static void updateHaUserFlg(String strHuClm, boolean bolFlg) {
-		WkAjaxRsltMin wr = new WkAjaxRsltMin();
+		WkCmHuRslt wr = new WkCmHuRslt();
 		HaUser hU = HaUser.find("byEmail", Security.connected()).first();
 		if (strHuClm.equals("zero_hidden_bkem"))
 			hU.zero_hidden_bkem = bolFlg;
@@ -765,6 +766,7 @@ public class Common extends Controller {
 		}
 		hU.save();
 		wr.setIntRslt(0);
+		wr.setHU(hU);
 		renderJSON(wr);
 	}
 	

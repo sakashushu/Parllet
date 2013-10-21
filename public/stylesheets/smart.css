@@ -312,13 +312,16 @@ a.aBtn:hover span{
 }
 
 .daMainInner {
-//	width: 860px;
-	width: 960px;
+	width: 980px;
+	background: #f6f5d1;
 }
 
 .btMainInner {
-	width: 800px;
-	background: #ecd6a2;
+	width: 980px;
+//	background: #f2e4c3;
+//	background: #f4e9cf;
+//	background: #f6edd8;
+	background: #f6f5d1;
 }
 
 #dlMain {
@@ -794,6 +797,16 @@ fieldset {
 	border-top: 1px solid #aaa;
 }
 
+/* 下の線を表示 */
+.b_Line {
+	border-bottom: 1px solid #aaa;
+}
+
+/* 左の線を表示 */
+.l_Line {
+	border-left: 1px solid #aaa;
+}
+
 /* すべての線を表示(色なし) */
 .allLineTransparence {
 	border: 1px;
@@ -1151,8 +1164,9 @@ fieldset {
 #btRemTotal {
 	margin-left: auto;
 	margin-right: auto;
-	width: 700px;
+	width: 920px;
 	font-size: 150%;
+	background: white;
 }
 #btRemTotal ul {
 	list-style: none;
@@ -1165,7 +1179,7 @@ fieldset {
 	display: table-cell;
 	vertical-align: middle;
 	white-space: nowrap;
-	width: 350px;
+	width: 459px;
 	height: 40px;
  }
 
@@ -1174,35 +1188,66 @@ fieldset {
 	 height: 30px;
 }
 
-/* .bt_tbl_all 残高表の大枠のテーブル */
-#bt_tbl_all {
-	list-style: none;
-	padding: 0;
+#bt_tbl_flm {
 	margin-top: 10px;
-//	font-size: 80%;
-	font-size: 90%;
-	width: 700px;
-//	width: 880px;
+	width: 920px;
 	margin-right: auto;
 	margin-left: auto;
+	position: relative;
+	overflow: hidden;
 }
-#bt_tbl_all li {
-	clear: both;
+
+#divBtTblRealFlm, #divBtTblPrltFlm {
+	width: 292px;
 }
-#bt_tbl_all li div.bt_tbl_all_l {
-	display: table-cell;
-//	display: block;
+
+#divBtTblRealFlm, #divBtSvgReal, #divBtStkdReal, #divBtStkdPrlt {
 	float: left;
 }
 
-#bt_tbl_all li div.bt_tbl_all_r {
-	display: table-cell;
-//	display: block;
-	float: right;
+#divBtStkdReal div, #divBtStkdPrlt div {
+	width: 116px;
+	border-left: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+#divBtStkdReal .title, #divBtStkdPrlt .title {
+	height: 26px;
+	line-height: 26px;
+	background: white;
+	border-top: 1px solid #aaa;
+}
+#divBtStkdPrlt div {
+	border-right: 1px solid #aaa;
 }
 
-#bt_tcol {
-	overflow: hidden;	//親要素の高さを取り戻すおまじない？
+#divBtSvgReal {
+	width: 50px;
+	height: 100px;
+//	position: absolute;
+//	top: 0;
+//	left: 292px;
+}
+
+#divBtStkdReal {
+//	position: absolute;
+//	top: 0;
+//	left: 342px;
+}
+
+#divBtStkdPrlt {
+//	position: absolute;
+//	top: 0;
+//	left: 459px;
+}
+
+#divBtSvgPrlt {
+	position: absolute;
+	top: 26px;
+	left: 577px;
+}
+
+#divBtTblPrltFlm {
+	float: right;
 }
 
 /* .bt_tbl_each 残高表の各々(実残高、Parllet・・・) */
@@ -1210,8 +1255,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-//	width: 320px;
-	width: 272px;
+	width: 292px;
 	display: table;
 	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
 }
@@ -1251,6 +1295,31 @@ fieldset {
 	width: 99px;
 }
 
+.bt_midChrt {
+	width: 116px;
+	height: 26px;
+	line-height: 26px;
+	background: white;
+}
+
+#bt_tbl_mdl_hd {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: table;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
+}
+
+#bt_tbl_mdl_hd li div {
+	display: table-cell;
+	height: 26px;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.remBkemInv .lrb_Line {
+	background: #777;
+}
 
 /*
  * RecordEdit
@@ -1692,6 +1761,33 @@ label.fieldName {
 //	z-index: 100001;
 	z-index: 901;
 }
+
+.btBgReal0 {
+	background: #7fbfff;
+}
+.btBgReal1 {
+	background: #7f7fff;
+}
+.btBgReal2 {
+	background: #bf7fff;
+}
+.btBgPrltNot {
+	background: #eee;
+}
+.btBgPrlt0 {
+	background: #7fff7f;
+}
+.btBgPrlt1 {
+	background: #bfff7f;
+}
+.btBgPrlt2 {
+	background: #ffff7f;
+}
+
+.btBgMinus {
+	background: #ff7f7f;
+}
+
 
 #divForSmart {
 	padding-top: 45px;

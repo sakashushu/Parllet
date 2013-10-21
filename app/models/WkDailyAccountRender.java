@@ -4,10 +4,10 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class WkDailyAccountRender {
-	private int intMonth;   		  
-	private String strBasisDate;	  
-	private String strTableType;	  
-	private String[] strAryDays;	  
+	private int intMonth;
+	private String strBasisDate;
+	private String strTableType;
+	private String[] strAryDays;
 	private List<WkDailyAccount> lWDA;
 	private int intWidth;
 	public int getIntMonth() {

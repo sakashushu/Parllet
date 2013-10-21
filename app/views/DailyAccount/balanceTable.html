@@ -14,6 +14,11 @@
 	lngBtIdOut = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.out')).first().id
 	lngBtIdBankIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
 	lngBtIdPrltIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.parllet_in')).first().id
+	hU = models.HaUser.find("byEmail", session.username).first()
+	vBgSizeReal = 3
+	vBgSizePrlt = 3
+	intHdlgInvCnt=models.HandlingMst.count("ha_user = ? and handling_type_mst.handling_type_name != ? and invalidity_flg = true", hU, HANDLING_TYPE_CRECA)
+	intHdlgZeroExist=false
 }%
 
 <script type="text/javascript">
@@ -25,8 +30,62 @@ var bolDlgFrmUpdMstInsBkem,
 	bolDlgFrmUpdRecInsBkem,
 	strTypeName,
 	lngUpdId,
-	strItemNm;
+	strItemNm,
+	intDivBtStkdHtInit = 400 * 100,	//javascriptの小数点計算の誤差（バグ）回避のため100倍
+	intDivBtStkdHt,
+	aryLwdar = [],
+	aryLwdap = [],
+	intDivBtStkdRealSumAmnt = 0,
+	intDivBtStkdPrltSumAmnt = 0
+	intBgSizeReal = ${vBgSizeReal},
+	intBgSizePrlt = ${vBgSizePrlt};
+
+/* lWDA系格納用クラス */
+function ClsLwda (
+		strItem,
+		lngAmount,
+		strTypeNm,
+		bolInvFlg,
+		IntHt
+		) {
+	this.strItem = strItem;
+	this.lngAmount = lngAmount;
+	this.strTypeNm = strTypeNm;
+	this.bolInvFlg = bolInvFlg;
+	this.IntHt = IntHt;
+}
+
 jQuery(function() {
+	%{vCnt = 0}%
+	#{list items:lWDA_R, as:'lwdar'}
+		var clsLwda = new ClsLwda(
+				"${lwdar.sItem}",
+				${lwdar.lstWdtd[0].lAmount},
+				"${lwdar.strTypeNm}",
+				${lwdar.bolInvFlg},
+				0);
+		aryLwdar[${vCnt}] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(${lwdar.lstWdtd[0].lAmount})
+		%{vCnt++}%
+		
+		#{if lwdar.sItem!=HANDLING_TYPE_CASH && lwdar.lstWdtd[0].lAmount==0}
+			%{intHdlgZeroExist = true}%
+		#{/if}
+	#{/list}
+	
+	%{vCnt = 0}%
+	#{list items:lWDA_P, as:'lwdap'}
+		var clsLwda = new ClsLwda(
+				"${lwdap.sItem}",
+				${lwdap.lstWdtd[0].lAmount},
+				"${lwdap.strTypeNm}",
+				${lwdap.bolInvFlg},
+				0);
+		aryLwdap[${vCnt}] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(${lwdap.lstWdtd[0].lAmount})
+		%{vCnt++}%
+	#{/list}
+	
 	/* table-cell内の文字列が入りきらない場合の調整 */
 //	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", "")),
 	var btCateSmallWidth = ${play.configuration.getProperty('btCateSmall_Width')},
@@ -52,14 +111,6 @@ jQuery(function() {
 			.css('top', jQuery(this).parent().position().top+10)
 			.css('left', jQuery(this).parent().position().left+10);
 	});
-	
-	/* 起動時の日毎の部分の幅と高さを調整 */
-//	jQuery('#bt_tcol').height(jQuery(window).innerHeight()-160);
-	
-	/* ウィンドウリサイズ時の日毎の部分の幅と高さを調整 */
-//	jQuery(window).resize(function() {
-//		jQuery('#bt_tcol').height(jQuery(this).innerHeight()-160);
-//	});
 	
 	/* 年コンボボックスのリスト作成 */
 	%{year = sBasisDate.substring(0,4)}%
@@ -305,7 +356,7 @@ jQuery(function() {
 		openDialogFrmUpdMst(strMst, "&{'views.name.balanceTable'}", lngUpdId)
 	}
 	
-	
+	/* チェックで隠すもの */
 	jQuery('#zeroHddnBkem, #zeroHddnPrlt, #invHddnBkem').click(function() {
 		var strErrMsg = "Common.updateHaUserFlg",
 			jqxhr,
@@ -338,6 +389,11 @@ jQuery(function() {
 					} else {
 						jqChgInvisible.removeClass(strInvisible);
 					}
+					// divBtStkdRealEach , divBtStkdPrltEach の表示
+					dspBtStkd();
+					// svgReal , svgPrlt の再表示
+					dspSvgReal(z.hU.zero_hidden_bkem, z.hU.inv_hidden_bkem);
+					dspSvgPrlt(z.hU.zero_hidden_prlt);
 					break;
 				case 99:
 					alert(z.strErr);
@@ -352,7 +408,205 @@ jQuery(function() {
 			alert(strErrMsg);
 		});
 	});
+	
+	// divBtStkdRealEach , divBtStkdPrltEach の表示
+	dspBtStkd();
+	
+	// svgReal , svgPrlt の初期表示
+	dspSvgReal(${hU?.zero_hidden_bkem}, ${hU?.inv_hidden_bkem});
+	dspSvgPrlt(${hU?.zero_hidden_prlt});
 });
+
+/* divBtStkdRealEach , divBtStkdPrltEach の表示処理 */
+function dspBtStkd() {
+	var jqHt,
+		jqHtReal = jQuery('#divBtTblRealFlm').height() - jQuery('#divBtStkdReal').children('.title').height() - 2,
+		jqHtPrlt = jQuery('#divBtTblPrltFlm').height() - jQuery('#divBtStkdPrlt').children('.title').height() - 2;
+	jqHt = jqHtReal > jqHtPrlt ? jqHtReal : jqHtPrlt;
+	
+	intDivBtStkdHt = intDivBtStkdHtInit;
+	if (jqHt * 100 > intDivBtStkdHtInit)
+		intDivBtStkdHt = jqHt * 100;
+	dspDivBtStkdRealEach();
+	dspDivBtStkdPrltEach();
+}
+
+/* divBtStkdRealEach の表示処理 */
+function dspDivBtStkdRealEach() {
+	var aryIntHt = [],
+		intSumHt = 0,
+		intMaxHt = 0,
+		intMaxHtIdx = 0,
+		anyHtExistFlg = false,
+		intBgCnt = 0;
+	
+	for (i=0; i < ${lWDA_R.size}; i++) {
+		var intHt = (intDivBtStkdRealSumAmnt * intDivBtStkdHt)===0 ? 0 : Math.abs(aryLwdar[i].lngAmount) / intDivBtStkdRealSumAmnt * intDivBtStkdHt,
+				strHt = intHt.toFixed(0);
+		intHt = parseInt(strHt);
+		
+		if (intHt!==0) anyHtExistFlg = true;
+		
+		if (intMaxHt < intHt) {
+			intMaxHt = intHt;
+			intMaxHtIdx = i;
+		}
+		
+		aryIntHt[i] = intHt;
+		intSumHt += intHt;
+		
+		if (aryLwdar[i].lngAmount < 0) {
+			jQuery("#divBtStkdRealEach_" + i).css('background', jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdar[i].bolInvFlg) {
+				jQuery("#divBtStkdRealEach_" + i).css('background', jQuery(".remBkemInv").children('.lrb_Line').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizeReal)
+					intBgCnt = 0;
+				jQuery("#divBtStkdRealEach_" + i).css('background', jQuery(".btBgReal" + intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+		jQuery("#divBtStkdRealEach_" + i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdRealEach_" + i).children('div').height(aryIntHt[i] / 100);
+	}
+	
+	
+	// 誤差を最大幅のセルに寄せる
+	if (anyHtExistFlg) {
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHt - intSumHt;
+		jQuery("#divBtStkdRealEach_" + intMaxHtIdx).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdRealEach_" + intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+	}
+}
+
+/* divBtStkdPrltEach の表示処理 */
+function dspDivBtStkdPrltEach() {
+	var aryIntHt = [],
+		intSumHt = 0,
+		intMaxHt = 0,
+		intMaxHtIdx = 0,
+		anyHtExistFlg = false,
+		intBgCnt = 0;
+	
+	for (i=0; i < ${lWDA_P.size}; i++) {
+		var intHt = (intDivBtStkdPrltSumAmnt * intDivBtStkdHt)===0 ? 0 : Math.abs(aryLwdap[i].lngAmount) / intDivBtStkdPrltSumAmnt * intDivBtStkdHt,
+			strHt = intHt.toFixed(0);
+		intHt = parseInt(strHt);
+		
+		if (intHt!==0) anyHtExistFlg = true;
+		
+		if (intMaxHt < intHt) {
+			intMaxHt = intHt;
+			intMaxHtIdx = i;
+		}
+		
+		aryIntHt[i] = intHt;
+		intSumHt += intHt;
+		
+		if (aryLwdap[i].lngAmount < 0) {
+			jQuery("#divBtStkdPrltEach_" + i).css('background', jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdap[i].strItem==="&{'RemainderType.not_parllet'}") {
+				jQuery("#divBtStkdPrltEach_" + i).css('background','#eee');
+			} else {
+				if (intBgCnt===intBgSizePrlt)
+					intBgCnt = 0;
+				jQuery("#divBtStkdPrltEach_" + i).css('background', jQuery(".btBgPrlt" + intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+		jQuery("#divBtStkdPrltEach_" + i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdPrltEach_" + i).children('div').height(aryIntHt[i] / 100);
+	}
+	
+	// 誤差を最大幅のセルに寄せる
+	if (anyHtExistFlg) {
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHt - intSumHt;
+		jQuery("#divBtStkdPrltEach_" + intMaxHtIdx).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdPrltEach_" + intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+	} 
+}
+
+/* svgRealの（再）表示処理 */
+function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
+	var btTblEachHt = jQuery('#divBtTblReal_0').position().top - jQuery('#divBtTblReal_ttl').position().top,
+		yTop1 = jQuery('#divBtTblReal_0').position().top - jQuery('#divBtTblRealFlm').position().top,
+		yBtm1 = yTop1,
+		yTop2,
+		yBtm2,
+		strPoints,
+		svgRealWid = jQuery('#svgReal').width(),
+		intBgCnt = 0;
+	jQuery('#divBtSvgReal').height(jQuery('#bt_tbl_flm').height());
+	
+	for (i=0; i < ${lWDA_R.size}; i++) {
+		var obj = document.getElementById("plgnReal_" + i);
+		yBtm1 = jQuery("#divBtTblReal_" + i).position().top - jQuery('#divBtTblRealFlm').position().top + btTblEachHt;
+		if ((bolZeroHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_" + i).attr('class')).hasClass('remBkemZero')) ||
+				(bolInvHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_" + i).attr('class')).hasClass('remBkemInv'))) {
+			yBtm1 = yTop1;
+		}
+		yTop2 = jQuery("#divBtStkdRealEach_" + i).position().top;
+		yBtm2 = jQuery("#divBtStkdRealEach_" + i).position().top + jQuery("#divBtStkdRealEach_" + i).height();
+		strPoints = "0," + yTop1 + " 0," + yBtm1 + " " + svgRealWid + "," + yBtm2 + " " + svgRealWid + "," + yTop2;
+		obj.setAttribute("points",strPoints);
+		yTop1 = yBtm1;
+		
+		
+		if (aryLwdar[i].lngAmount < 0) {
+			obj.setAttribute("fill", jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdar[i].bolInvFlg) {
+				obj.setAttribute("fill", jQuery('.remBkemInv').children('.lrb_Line').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizeReal)
+					intBgCnt = 0;
+				obj.setAttribute("fill", jQuery(".btBgReal" + intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+	}
+}
+
+/* svgPrltの（再）表示処理 */
+function dspSvgPrlt(bolZeroHddnPrlt) {
+	var btTblEachHt = jQuery('#divBtTblPrlt_0').position().top - jQuery('#divBtTblPrlt_ttl').position().top,
+		btStkdPrltTtlHt = jQuery('#divBtStkdPrlt').children('.title').height(),
+		yTop1 = jQuery('#divBtTblPrlt_0').position().top - jQuery('#divBtTblPrltFlm').position().top - btStkdPrltTtlHt,
+		yBtm1 = yTop1,
+		yTop2,
+		yBtm2,
+		strPoints,
+		svgPrltWid = jQuery('#svgPrlt').width(),
+		intBgCnt = 0;
+	jQuery('#divBtSvgPrlt').height(jQuery('#bt_tbl_flm').height() - btStkdPrltTtlHt);
+	
+	for (i=0; i < ${lWDA_P.size}; i++) {
+		var obj = document.getElementById("plgnPrlt_" + i);
+		yBtm1 = jQuery("#divBtTblPrlt_" + i).position().top - jQuery('#divBtTblPrltFlm').position().top + btTblEachHt - btStkdPrltTtlHt;
+		if (bolZeroHddnPrlt && jQuery('<b></b>').addClass(jQuery("#plgnPrlt_" + i).attr('class')).hasClass('remPrltZero')) {
+			yBtm1 = yTop1;
+		}
+		yTop2 = jQuery("#divBtStkdPrltEach_" + i).position().top - btStkdPrltTtlHt;
+		yBtm2 = jQuery("#divBtStkdPrltEach_" + i).position().top - btStkdPrltTtlHt + jQuery("#divBtStkdPrltEach_" + i).height();
+		strPoints = svgPrltWid + "," + yTop1 + " " + svgPrltWid + "," + yBtm1 + " 0," + yBtm2 + " 0," + yTop2;
+		obj.setAttribute("points",strPoints);
+		yTop1 = yBtm1;
+		if (aryLwdap[i].lngAmount < 0) {
+			obj.setAttribute("fill", jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdap[i].strItem==="&{'RemainderType.not_parllet'}") {
+				jQuery("#divBtStkdPrltEach_" + i).css('background','#eee');
+			} else {
+				if (intBgCnt===intBgSizePrlt)
+					intBgCnt = 0;
+				obj.setAttribute("fill", jQuery(".btBgPrlt" + intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+	}
+}
 
 /* 文字列を3桁区切りにする関数 */
 function addFigure(str) {
@@ -360,100 +614,6 @@ function addFigure(str) {
 //	while(num !== (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
 	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
 	return num;
-}
-
-google.load('visualization', '1', {'packages':['corechart']});
-google.setOnLoadCallback(drawChart);
-function drawChart() {
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'type');
-	
-	data.addColumn('number', "${REMAINDER_TYPE_TOTAL}");
-	data.addColumn({type: 'string', role: 'tooltip'});
-	#{list items:lWDA, as:'lwda'}
-	  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-			lwda.sItem!='' &&
-			lwda.lstWdtd[0].lAmount!=0}
-		data.addColumn('number', '${lwda.sItem}');
-		data.addColumn({type: 'string', role: 'tooltip'});
-	  #{/if}
-	#{/list}
-	
-	#{list items:lWDA, as:'lwda'}
-	  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-			(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
-			lwda.lstWdtd[0].lAmount!=0}
-		data.addColumn('number', '${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem}');
-		data.addColumn({type: 'string', role: 'tooltip'});
-	  #{/if}
-	#{/list}
-	
-	data.addRows([
-		["${REMAINDER_TYPE_TOTAL}",
-			#{list items:lWDA, as:'lwda'}
-			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-					lwda.sItem==''}
-				${lwda.lstWdtd[0].lAmount}, "${REMAINDER_TYPE_TOTAL} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
-			  #{/if}
-			#{/list}
-			#{list items:lWDA, as:'lwda'}
-			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-					lwda.sItem!='' &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, 0, ""
-			  #{/if}
-			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, 0, ""
-			  #{/if}
-			#{/list}
-		],
-		["${REMAINDER_TYPE_REAL}",
-			0, ""
-			#{list items:lWDA, as:'lwda'}
-			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-					lwda.sItem!='' &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, ${lwda.lstWdtd[0].lAmount}, "${lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
-			  #{/if}
-			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, 0, ""
-			  #{/if}
-			#{/list}
-		],
-		["${REMAINDER_TYPE_PARLLET}",
-			0, ""
-			#{list items:lWDA, as:'lwda'}
-			  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-					lwda.sItem!='' &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, 0, ""
-			  #{/if}
-			  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					(lwda.sItem!='' || lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET) &&
-					lwda.lstWdtd[0].lAmount!=0}
-				, ${lwda.lstWdtd[0].lAmount}, "${lwda.sLargeCategory==REMAINDER_TYPE_NOT_PARLLET ? lwda.sLargeCategory : lwda.sItem} : "+"${lwda.lstWdtd[0].lAmount.format('###,###')}"
-			  #{/if}
-			#{/list}
-		]
-	]);
-	
-	// グラフのオプションを指定する
-	var options = {
-//			title: '業績推移',
-			width: 980,
-			height: 150,
-			isStacked: true,
-//			backgroundColor: { fill:'transparent' }
- 			backgroundColor: "rgb(244,233,207)"
-	}
-	
-	// 描画する
-	var chart = new google.visualization.BarChart(document.getElementById('btChart'));
-	chart.draw(data, options);
 }
 // -->
 </script>
@@ -574,14 +734,15 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 	<input type="submit" name="move" id="idMove" />
 #{/form}
 
+<!-- 
 <div id="btChart"></div>
+ -->
 
 <div id="mainInner" class="btMainInner">
 
 <div id="btBasisDate">
 	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
 	<span id="daPaddingYearMonth">
-	
 		<select id="idYear">
 		</select>
 		&{'year'}
@@ -598,7 +759,6 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 			<input type="text" class="datepickerJump invisible dpClImg"
 				value="${sBasisDate}" />
 		</div>
-		
 	</span>
 	
 	<a id="idNextMonth" class="aBtn fontJura" tabindex="0">><span>&{'views.dailyaccount.movetype.month.next'}</span></a>
@@ -611,170 +771,229 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 				${REMAINDER_TYPE_TOTAL}
 			</div>
 			<div class="t_Line lrb_Line padR4 numeric">
-				#{list items:lWDA, as:'lwda'}
-				  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-						lwda.sItem==''}
-					${lwda.lstWdtd[0].lAmount.format('###,###')}
-				  #{/if}
-				#{/list}
+				${lngSumAmnt.format('###,###')}
 			</div>
 		</li>
 	</ul>
 </div>
 
-<ul id="bt_tbl_all">
-	<li>
-		<div id="bt_tcol">
-			<div class="bt_tbl_all_l">
-				<div>
-					%{
-						hU=models.HaUser.find("byEmail", session.username).first()
-						intHdlgInvCnt=models.HandlingMst.count("ha_user = ? and handling_type_mst.handling_type_name != ? and invalidity_flg = true", hU, HANDLING_TYPE_CRECA)
-						intHdlgZeroExist=false
-					}%
-					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-					  		lwda.sItem!='' &&
-					  		lwda.sItem!=HANDLING_TYPE_CASH &&
-					  		lwda.lstWdtd[0].lAmount==0}
-						%{intHdlgZeroExist = true}%
-					  #{/if}
-					#{/list}
-					<div class="btHddnChkBox">
-					#{if intHdlgZeroExist}
-						<input type="checkbox" id="zeroHddnBkem" ${hU?.zero_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
-					#{/if}
-					#{if intHdlgInvCnt!=0}
-						<input type="checkbox" id="invHddnBkem" ${hU?.inv_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.invalid_hidden'}
-					#{/if}
-					</div>
-				</div>
-				
-				<ul class="bt_tbl_each">
-					%{topFlg = 1}%
-					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL}
-					  	%{
-					  		wdtd = lwda.lstWdtd[0]
-					  		vRemBkemZero = (lwda.sItem!='' && lwda.sItem!=HANDLING_TYPE_CASH && wdtd.lAmount==0) ? 'remBkemZero' : ''
-					  		vInvisible = (hU?.zero_hidden_bkem && lwda.lstWdtd[0].lAmount==0) ? 'invisible' : ''
-					  		vRemBkemInv = (lwda.sItem!='' && lwda.sItem!=HANDLING_TYPE_CASH && lwda.bolInvFlg) ? 'remBkemInv' : ''
-					  		vInvisible2 = (hU?.inv_hidden_bkem && lwda.bolInvFlg) ? 'invisible2' : ''
-							vMenuCell = lwda.sItem==HANDLING_TYPE_CASH ? '' : 'menu_cell'
-					  	}%
-						<li class="${vRemBkemZero} ${vInvisible} ${vRemBkemInv} ${vInvisible2}">
-							#{if lwda.sItem == ''}
-								<input type="hidden" class="bolRemReal" value="${lwda.sLargeCategory}" />
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large menu_cell">
-									${lwda.sLargeCategory}
-								</div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
-									<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
-								</div>
-							#{/if}
-							#{else}
-								<input type="hidden" class="lHandlingId" value="${wdtd.lHandlingId}" />
-								<input type="hidden" class="strTypeName" value="${lwda.strTypeNm}" />
-								
-								<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
-								<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
-<!-- 
-								<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
- -->
-								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small menu_cell lwdaSItem">
-									${lwda.sItem}
-								</div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_ary_day numeric menu_cell">
-									<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
-								</div>
-							#{/else}
-						</li>
-						%{topFlg = 0}%
-					  #{/if}
-					#{/list}
-				</ul>
-			</div>
-			
-			<div class="bt_tbl_all_r">
-				<div>
-					%{
-						intPrltZeroExist=false
-					}%
-					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL &&
-					  		lwda.sItem!='' &&
-					  		lwda.lstWdtd[0].lAmount==0}
-						%{intPrltZeroExist = true}%
-					  #{/if}
-					#{/list}
-					<div class="btHddnChkBox">
-					#{if intPrltZeroExist}
-						<input type="checkbox" id="zeroHddnPrlt" ${hU?.zero_hidden_prlt ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
-					#{/if}
-					</div>
-				</div>
-				
-				<ul class="bt_tbl_each">
-					%{topFlg = 1}%
-					<li>
-						#{list items:lWDA, as:'lwda'}
-						  #{if lwda.sLargeCategory==REMAINDER_TYPE_REAL &&
-								lwda.sItem==''}
-							<input type="hidden" class="bolRemPrlt" value="${REMAINDER_TYPE_PARLLET}" />
-							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large menu_cell">
-								${REMAINDER_TYPE_PARLLET}
-							</div>
-							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric menu_cell">
-								<span class="padR4">${lwda.lstWdtd[0].lAmount.format('###,###')}</span>
-							</div>
-						  #{/if}
-						#{/list}
-					</li>
-					
-					%{topFlg = 0}%
-					
-					#{list items:lWDA, as:'lwda'}
-					  #{if lwda.sLargeCategory!=REMAINDER_TYPE_REAL}
-					  	%{
-							wdtd = lwda.lstWdtd[0]
-					  		vRemPrltZero = (lwda.sItem!='' && lwda.lstWdtd[0].lAmount==0) ? 'remPrltZero' : ''
-					  		vInvisible = (hU?.zero_hidden_prlt && lwda.lstWdtd[0].lAmount==0) ? 'invisible' : ''
-					  	}%
-						<li class="${vRemPrltZero} ${vInvisible}">
-							<input type="hidden" class="lParlletId" value="${wdtd.lParlletId}" />
-							
-							<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
-							<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
-<!-- 
-							<input type="hidden" class="ToDlParlletId" value="${wdtd?.lParlletId}" />
- -->
-							#{if lwda.sItem==''}
-								%{vMenuCell = lwda.sLargeCategory==REMAINDER_TYPE_PARLLET ? 'menu_cell' : ''}%
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_large ${vMenuCell}">
-									${lwda.sLargeCategory}
-								</div>
-							#{/if}
-							#{else}
-								%{vMenuCell = lwda.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}%
-								<div class="bt_cate_small_pre"></div>
-								<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line bt_cate_small ${vMenuCell} lwdaSItem">
-									${lwda.sItem}
-								</div>
-							#{/else}
-							<div class="${topFlg==1 ? 't_Line ' : ''}lrb_Line da_ary_day numeric${vMenuCell}">
-								<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
-							</div>
-							%{leftFlg = 0}%
-						</li>
-						%{topFlg = 0}%
-					  #{/if}
-					#{/list}
-				</ul>
+<div id="bt_tbl_flm">
+	<div id="divBtTblRealFlm">
+		<div>
+			<div class="btHddnChkBox">
+			#{if intHdlgZeroExist}
+				<input type="checkbox" id="zeroHddnBkem" ${hU?.zero_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
+			#{/if}
+			#{if intHdlgInvCnt!=0}
+				<input type="checkbox" id="invHddnBkem" ${hU?.inv_hidden_bkem ? 'checked' : ''} />&{'views.balancetable.lbl.invalid_hidden'}
+			#{/if}
 			</div>
 		</div>
-	</li>
-</ul>  <!-- bt_tbl_all -->
+		
+		<ul class="bt_tbl_each">
+			<li>
+				<input type="hidden" class="bolRemReal" value="${REMAINDER_TYPE_REAL}" />
+				<div class="t_Line lrb_Line bt_cate_large menu_cell">
+					${REMAINDER_TYPE_REAL}
+				</div>
+				<div class="t_Line lrb_Line da_ary_day numeric menu_cell" id="divBtTblReal_ttl">
+					<span class="padR4">${lngSumAmnt.format('###,###')}</span>
+				</div>
+			</li>
+			
+			%{
+				vCnt = 0
+				vBgCnt = 0
+			}%
+			#{list items:lWDA_R, as:'lwdar'}
+			  	%{
+			  		wdtd = lwdar.lstWdtd[0]
+			  		vRemBkemZero = (lwdar.sItem!=HANDLING_TYPE_CASH && wdtd.lAmount==0) ? 'remBkemZero' : ''
+			  		vInvisible = (hU?.zero_hidden_bkem && wdtd.lAmount==0) ? 'invisible' : ''
+			  		vRemBkemInv = (lwdar.sItem!=HANDLING_TYPE_CASH && lwdar.bolInvFlg) ? 'remBkemInv' : ''
+			  		vInvisible2 = (hU?.inv_hidden_bkem && lwdar.bolInvFlg) ? 'invisible2' : ''
+					vMenuCell = lwdar.sItem==HANDLING_TYPE_CASH ? '' : 'menu_cell'
+					vBtBgReal = ''
+			  	}%
+			  	
+				#{if lwdar.lstWdtd[0].lAmount < 0}
+					%{vBtBgReal = 'btBgMinus'}%
+				#{/if}
+				#{else}
+					#{if !lwdar.bolInvFlg}
+						#{if vBgCnt==vBgSizeReal}
+							%{vBgCnt = 0}%
+						#{/if}
+						%{
+							vBtBgReal = 'btBgReal' + vBgCnt
+							vBgCnt++
+						}%
+					#{/if}
+				#{/else}
+				<li class="${vRemBkemZero} ${vInvisible} ${vRemBkemInv} ${vInvisible2}">
+					<input type="hidden" class="lHandlingId" value="${wdtd.lHandlingId}" />
+					<input type="hidden" class="strTypeName" value="${lwdar.strTypeNm}" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
+					<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem ${vBtBgReal}">
+						${lwdar.sItem}
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell ${vBtBgReal}" id="divBtTblReal_${vCnt}">
+						<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
+					</div>
+				</li>
+			  	%{vCnt++}%
+			#{/list}
+		</ul>
+	</div>  <!-- divBtTblRealFlm -->
+
+	<div id="divBtSvgReal">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svgReal" width="50">
+		%{vCnt=0}%
+		#{list items:lWDA_R, as:'lwdar'}
+		  	%{
+		  		wdtd = lwdar.lstWdtd[0]
+		  		vRemBkemZero = (lwdar.sItem!=HANDLING_TYPE_CASH && wdtd.lAmount==0) ? 'remBkemZero' : ''
+		  		vRemBkemInv = (lwdar.sItem!=HANDLING_TYPE_CASH && lwdar.bolInvFlg) ? 'remBkemInv' : ''
+		  	}%
+			<polygon points="0,0" fill="#aaa" id="plgnReal_${vCnt}" class="${vRemBkemZero} ${vRemBkemInv}">
+			</polygon>
+			%{vCnt++}%
+		#{/list}
+		</svg>
+	</div>  <!-- divBtSvgReal -->
+	
+	<div id="divBtStkdReal">
+		<div class="title child">
+			${REMAINDER_TYPE_REAL}
+		</div>
+		<div class="child">
+			%{vCnt=0}%
+			#{list items:lWDA_R, as:'lwdar'}
+				<div id="divBtStkdRealEach_${vCnt}">
+					<div>
+						${lwdar.sItem}
+					</div>
+				</div>
+				%{vCnt++}%
+			#{/list}
+		</div>
+	</div>  <!-- divBtStkdReal -->
+	
+	<div id="divBtStkdPrlt">
+		<div class="title child">
+			${REMAINDER_TYPE_PARLLET}
+		</div>
+		<div class="child">
+			%{vCnt=0}%
+			#{list items:lWDA_P, as:'lwdap'}
+				<div id="divBtStkdPrltEach_${vCnt}">
+					<div>
+						${lwdap.sItem}
+					</div>
+				</div>
+				%{vCnt++}%
+			#{/list}
+		</div>
+	</div>  <!-- divBtStkdPrlt -->
+	
+	<div id="divBtTblPrltFlm">
+		<div>
+			%{
+				intPrltZeroExist=false
+			}%
+			#{list items:lWDA_P, as:'lwdap'}
+			  #{if lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET &&
+			  		lwdap.lstWdtd[0].lAmount==0}
+				%{intPrltZeroExist = true}%
+			  #{/if}
+			#{/list}
+			<div class="btHddnChkBox">
+			#{if intPrltZeroExist}
+				<input type="checkbox" id="zeroHddnPrlt" ${hU?.zero_hidden_prlt ? 'checked' : ''} />&{'views.balancetable.lbl.zero_hidden'}
+			#{/if}
+			</div>
+		</div>
+		
+		<ul class="bt_tbl_each">
+			<li>
+				<input type="hidden" class="bolRemPrlt" value="${REMAINDER_TYPE_PARLLET}" />
+				<div class="t_Line lrb_Line bt_cate_large menu_cell">
+					${REMAINDER_TYPE_PARLLET}
+				</div>
+				<div class="t_Line lrb_Line da_ary_day numeric menu_cell" id="divBtTblPrlt_ttl">
+					<span class="padR4">${lngSumAmnt.format('###,###')}</span>
+				</div>
+			</li>
+			
+			%{
+				vCnt = 0
+				vBgCnt = 0
+			}%
+			#{list items:lWDA_P, as:'lwdap'}
+			  	%{
+					wdtd = lwdap.lstWdtd[0]
+			  		vRemPrltZero = (lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET && wdtd.lAmount==0) ? 'remPrltZero' : ''
+			  		vInvisible = (hU?.zero_hidden_prlt && wdtd.lAmount==0) ? 'invisible' : ''
+					vBtBgPrlt = 'btBgPrltNot'
+			  	}%
+				#{if lwdap.lstWdtd[0].lAmount < 0}
+					%{vBtBgPrlt = 'btBgMinus'}%
+				#{/if}
+				#{else}
+					#{if lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET}
+						#{if vBgCnt==vBgSizePrlt}
+							%{vBgCnt = 0}%
+						#{/if}
+						%{
+							vBtBgPrlt = 'btBgPrlt' + vBgCnt
+							vBgCnt++
+						}%
+					#{/if}
+				#{/else}
+				<li class="${vRemPrltZero} ${vInvisible}">
+					<input type="hidden" class="lParlletId" value="${wdtd.lParlletId}" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="${wdtd?.sDebitDateFr}" />
+					<input type="hidden" class="ToDlDebitDateTo" value="${wdtd?.sDebitDateTo}" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="${wdtd?.lParlletId}" />
+ -->
+					%{vMenuCell = lwdap.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}%
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small ${vMenuCell} lwdaSItem ${vBtBgPrlt}">
+						${lwdap.sItem}
+					</div>
+					<div class="lrb_Line da_ary_day numeric${vMenuCell} ${vBtBgPrlt}" id="divBtTblPrlt_${vCnt}">
+						<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
+					</div>
+				</li>
+				%{vCnt++}%
+			#{/list}
+		</ul>
+	</div>  <!-- divBtTblPrltFlm -->
+	
+	<div id="divBtSvgPrlt">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svgPrlt" width="71">
+		%{vCnt=0}%
+		#{list items:lWDA_P, as:'lwdap'}
+			%{
+				wdtd = lwdap.lstWdtd[0]
+		  		vRemPrltZero = (lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET && wdtd.lAmount==0) ? 'remPrltZero' : ''
+			}%
+			<polygon points="0,0" fill="#eee" id="plgnPrlt_${vCnt}" class="${vRemPrltZero}">
+			</polygon>
+			%{vCnt++}%
+		#{/list}
+		</svg>
+	</div>
+	
+</div>  <!-- bt_tbl_flm -->
 
 <div id="mainInnerBtm"></div>
 
