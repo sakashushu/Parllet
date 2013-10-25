@@ -1290,12 +1290,15 @@ fieldset {
 	float: left;
 }
 
-#divBtStkdReal .child, #divBtStkdPrlt .child {
-	border-left: 1px solid #aaa;
+#divBtStkdReal .title, #divBtStkdPrlt .title {
 	border-bottom: 1px solid #aaa;
 }
-#divBtStkdReal .child div, #divBtStkdPrlt .child div {
+#divBtStkdReal .child, #divBtStkdPrlt .child {
+	border-left: 1px solid #aaa;
+}
+#divBtStkdReal .child>div, #divBtStkdPrlt .child>div {
 	overflow: hidden;
+	border-bottom: 1px solid #aaa;
 }
 #divBtStkdReal .child div div, #divBtStkdPrlt .child div div {
 	width: 116px;
@@ -1892,16 +1895,15 @@ label.fieldName {
 //	background: #bf7fff;
 //}
 .btBgReal0 {
-	background: #7f7fff;
+	background: #a8a8ff;
 }
 .btBgReal1 {
-	background: #9e9eff;
+	background: #a8d3ff;
 }
-.btBgReal2 {
-	background: #bcbcff;
-}
+
+
 .btBgPrltNot {
-	background: #eee;
+	background: transparent;
 }
 //.btBgPrlt0 {
 //	background: #7fff7f;
@@ -1912,21 +1914,26 @@ label.fieldName {
 //.btBgPrlt2 {
 //	background: #ffff7f;
 //}
+
+//.btBgPrlt0 {
+//	background: #bfff7f;
+//}
+//.btBgPrlt1 {
+//	background: #7fff7f;
+//}
+//.btBgPrlt2 {
+//	background: #7fffbf;
+//}
 .btBgPrlt0 {
-	background: #bfff7f;
+	background: #d3ffa8;
 }
 .btBgPrlt1 {
-	background: #7fff7f;
+	background: #a8ffa8;
 }
 .btBgPrlt2 {
-	background: #7fffbf;
+	background: #a8ffd3;
 }
-.btBgPrlt3 {
-	background: #7fffff;
-}
-.btBgPrlt4 {
-	background: #7fbfff;
-}
+
 
 .btBgMinus {
 	background: #ff7f7f;

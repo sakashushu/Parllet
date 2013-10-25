@@ -15,10 +15,11 @@
 	lngBtIdBankIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.bank_in')).first().id
 	lngBtIdPrltIn = models.BalanceTypeMst.find("byBalance_type_name", messages.get('BalanceType.parllet_in')).first().id
 	hU = models.HaUser.find("byEmail", session.username).first()
-	vBgSizeReal = 3
-	vBgSizePrlt = 3
+	vBgSizeReal = 2
+	vBgSizePrlt = 2
 	intHdlgInvCnt=models.HandlingMst.count("ha_user = ? and handling_type_mst.handling_type_name != ? and invalidity_flg = true", hU, HANDLING_TYPE_CRECA)
 	intHdlgZeroExist=false
+	intStrokeWidth=0.5
 }%
 
 <script type="text/javascript">
@@ -31,8 +32,12 @@ var bolDlgFrmUpdMstInsBkem,
 	strTypeName,
 	lngUpdId,
 	strItemNm,
-	intDivBtStkdHtInit = 400 * 100,	//javascriptの小数点計算の誤差（バグ）回避のため100倍
+	intLwdaRealSize = ${lWDA_R.size},
+	intLwdaPrltSize = ${lWDA_P.size},
+	intDivBtStkdHtInit = 400*100,	//javascriptの小数点計算の誤差（バグ）回避のため100倍
 	intDivBtStkdHt,
+	intDivBtStkdHtReal,
+	intDivBtStkdHtPrlt,
 	aryLwdar = [],
 	aryLwdap = [],
 	intDivBtStkdRealSumAmnt = 0,
@@ -65,7 +70,7 @@ jQuery(function() {
 				${lwdar.bolInvFlg},
 				0);
 		aryLwdar[${vCnt}] = clsLwda;
-		intDivBtStkdRealSumAmnt += Math.abs(${lwdar.lstWdtd[0].lAmount})
+		intDivBtStkdRealSumAmnt += Math.abs(${lwdar.lstWdtd[0].lAmount});
 		%{vCnt++}%
 		
 		#{if lwdar.sItem!=HANDLING_TYPE_CASH && lwdar.lstWdtd[0].lAmount==0}
@@ -420,13 +425,16 @@ jQuery(function() {
 /* divBtStkdRealEach , divBtStkdPrltEach の表示処理 */
 function dspBtStkd() {
 	var jqHt,
-		jqHtReal = jQuery('#divBtTblRealFlm').height() - jQuery('#divBtStkdReal').children('.title').height() - 2,
-		jqHtPrlt = jQuery('#divBtTblPrltFlm').height() - jQuery('#divBtStkdPrlt').children('.title').height() - 2;
+		jqHtReal = jQuery('#divBtTblRealFlm').height()-jQuery('#divBtStkdReal').children('.title').height()-2,
+		jqHtPrlt = jQuery('#divBtTblPrltFlm').height()-jQuery('#divBtStkdPrlt').children('.title').height()-2;
 	jqHt = jqHtReal > jqHtPrlt ? jqHtReal : jqHtPrlt;
 	
 	intDivBtStkdHt = intDivBtStkdHtInit;
-	if (jqHt * 100 > intDivBtStkdHtInit)
-		intDivBtStkdHt = jqHt * 100;
+	if (jqHt*100 > intDivBtStkdHtInit)
+		intDivBtStkdHt = jqHt*100;
+	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSize*100;
+	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*100;
+	
 	dspDivBtStkdRealEach();
 	dspDivBtStkdPrltEach();
 }
@@ -440,8 +448,9 @@ function dspDivBtStkdRealEach() {
 		anyHtExistFlg = false,
 		intBgCnt = 0;
 	
-	for (i=0; i < ${lWDA_R.size}; i++) {
-		var intHt = (intDivBtStkdRealSumAmnt * intDivBtStkdHt)===0 ? 0 : Math.abs(aryLwdar[i].lngAmount) / intDivBtStkdRealSumAmnt * intDivBtStkdHt,
+	for (i=0; i < intLwdaRealSize; i++) {
+		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+				: Math.abs(aryLwdar[i].lngAmount) / intDivBtStkdRealSumAmnt*intDivBtStkdHtReal,
 				strHt = intHt.toFixed(0);
 		intHt = parseInt(strHt);
 		
@@ -456,27 +465,27 @@ function dspDivBtStkdRealEach() {
 		intSumHt += intHt;
 		
 		if (aryLwdar[i].lngAmount < 0) {
-			jQuery("#divBtStkdRealEach_" + i).css('background', jQuery('.btBgMinus').css('background-color'));
+			jQuery("#divBtStkdRealEach_"+i).css('background', jQuery('.btBgMinus').css('background-color'));
 		} else {
 			if (aryLwdar[i].bolInvFlg) {
-				jQuery("#divBtStkdRealEach_" + i).css('background', jQuery(".remBkemInv").children('.lrb_Line').css('background-color'));
+				jQuery("#divBtStkdRealEach_"+i).css('background', jQuery(".remBkemInv").children('.lrb_Line').css('background-color'));
 			} else {
 				if (intBgCnt===intBgSizeReal)
 					intBgCnt = 0;
-				jQuery("#divBtStkdRealEach_" + i).css('background', jQuery(".btBgReal" + intBgCnt).css('background-color'));
+				jQuery("#divBtStkdRealEach_"+i).css('background', jQuery(".btBgReal"+intBgCnt).css('background-color'));
 				intBgCnt++;
 			}
 		}
-		jQuery("#divBtStkdRealEach_" + i).height(aryIntHt[i] / 100);
-		jQuery("#divBtStkdRealEach_" + i).children('div').height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdRealEach_"+i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdRealEach_"+i).children('div').height(aryIntHt[i] / 100);
 	}
 	
 	
 	// 誤差を最大幅のセルに寄せる
 	if (anyHtExistFlg) {
-		aryIntHt[intMaxHtIdx] += intDivBtStkdHt - intSumHt;
-		jQuery("#divBtStkdRealEach_" + intMaxHtIdx).height(aryIntHt[i] / 100);
-		jQuery("#divBtStkdRealEach_" + intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHtReal-intSumHt;
+		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx] / 100);
+		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
 	}
 }
 
@@ -489,8 +498,9 @@ function dspDivBtStkdPrltEach() {
 		anyHtExistFlg = false,
 		intBgCnt = 0;
 	
-	for (i=0; i < ${lWDA_P.size}; i++) {
-		var intHt = (intDivBtStkdPrltSumAmnt * intDivBtStkdHt)===0 ? 0 : Math.abs(aryLwdap[i].lngAmount) / intDivBtStkdPrltSumAmnt * intDivBtStkdHt,
+	for (i=0; i < intLwdaPrltSize; i++) {
+		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+				: Math.abs(aryLwdap[i].lngAmount) / intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt,
 			strHt = intHt.toFixed(0);
 		intHt = parseInt(strHt);
 		
@@ -505,33 +515,33 @@ function dspDivBtStkdPrltEach() {
 		intSumHt += intHt;
 		
 		if (aryLwdap[i].lngAmount < 0) {
-			jQuery("#divBtStkdPrltEach_" + i).css('background', jQuery('.btBgMinus').css('background-color'));
+			jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery('.btBgMinus').css('background-color'));
 		} else {
 			if (aryLwdap[i].strItem==="&{'RemainderType.not_parllet'}") {
-				jQuery("#divBtStkdPrltEach_" + i).css('background','#eee');
+				jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery('.btMainInner').css('background-color'));
 			} else {
 				if (intBgCnt===intBgSizePrlt)
 					intBgCnt = 0;
-				jQuery("#divBtStkdPrltEach_" + i).css('background', jQuery(".btBgPrlt" + intBgCnt).css('background-color'));
+				jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery(".btBgPrlt"+intBgCnt).css('background-color'));
 				intBgCnt++;
 			}
 		}
-		jQuery("#divBtStkdPrltEach_" + i).height(aryIntHt[i] / 100);
-		jQuery("#divBtStkdPrltEach_" + i).children('div').height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdPrltEach_"+i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdPrltEach_"+i).children('div').height(aryIntHt[i] / 100);
 	}
 	
 	// 誤差を最大幅のセルに寄せる
 	if (anyHtExistFlg) {
-		aryIntHt[intMaxHtIdx] += intDivBtStkdHt - intSumHt;
-		jQuery("#divBtStkdPrltEach_" + intMaxHtIdx).height(aryIntHt[i] / 100);
-		jQuery("#divBtStkdPrltEach_" + intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHtPrlt-intSumHt;
+		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx] / 100);
+		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
 	} 
 }
 
 /* svgRealの（再）表示処理 */
 function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
-	var btTblEachHt = jQuery('#divBtTblReal_0').position().top - jQuery('#divBtTblReal_ttl').position().top,
-		yTop1 = jQuery('#divBtTblReal_0').position().top - jQuery('#divBtTblRealFlm').position().top,
+	var btTblEachHt = jQuery('#divBtTblReal_0').position().top-jQuery('#divBtTblReal_ttl').position().top,
+		yTop1 = jQuery('#divBtTblReal_0').position().top-jQuery('#divBtTblRealFlm').position().top-1,
 		yBtm1 = yTop1,
 		yTop2,
 		yBtm2,
@@ -540,16 +550,21 @@ function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
 		intBgCnt = 0;
 	jQuery('#divBtSvgReal').height(jQuery('#bt_tbl_flm').height());
 	
-	for (i=0; i < ${lWDA_R.size}; i++) {
-		var obj = document.getElementById("plgnReal_" + i);
-		yBtm1 = jQuery("#divBtTblReal_" + i).position().top - jQuery('#divBtTblRealFlm').position().top + btTblEachHt;
-		if ((bolZeroHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_" + i).attr('class')).hasClass('remBkemZero')) ||
-				(bolInvHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_" + i).attr('class')).hasClass('remBkemInv'))) {
+	for (i=0; i < intLwdaRealSize; i++) {
+		var obj = document.getElementById("plgnReal_"+i);
+		yBtm1 = jQuery("#divBtTblReal_"+i).position().top-jQuery('#divBtTblRealFlm').position().top+btTblEachHt-1;
+		if ((bolZeroHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_"+i).attr('class')).hasClass('remBkemZero')) ||
+				(bolInvHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_"+i).attr('class')).hasClass('remBkemInv'))) {
 			yBtm1 = yTop1;
 		}
-		yTop2 = jQuery("#divBtStkdRealEach_" + i).position().top;
-		yBtm2 = jQuery("#divBtStkdRealEach_" + i).position().top + jQuery("#divBtStkdRealEach_" + i).height();
-		strPoints = "0," + yTop1 + " 0," + yBtm1 + " " + svgRealWid + "," + yBtm2 + " " + svgRealWid + "," + yTop2;
+		yTop2 = jQuery("#divBtStkdRealEach_"+i).position().top-${intStrokeWidth};
+		if (i==intLwdaRealSize-1) {
+			yBtm2 = jQuery("#divBtStkdRealEach_"+i).position().top+jQuery("#divBtStkdRealEach_"+i).height()+${intStrokeWidth};
+		} else {
+			var j = i+1;
+			yBtm2 = jQuery("#divBtStkdRealEach_"+j).position().top-${intStrokeWidth};
+		}
+		strPoints = "0,"+yTop1+" 0,"+yBtm1+" "+svgRealWid+","+yBtm2+" "+svgRealWid+","+yTop2;
 		obj.setAttribute("points",strPoints);
 		yTop1 = yBtm1;
 		
@@ -562,7 +577,7 @@ function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
 			} else {
 				if (intBgCnt===intBgSizeReal)
 					intBgCnt = 0;
-				obj.setAttribute("fill", jQuery(".btBgReal" + intBgCnt).css('background-color'));
+				obj.setAttribute("fill", jQuery(".btBgReal"+intBgCnt).css('background-color'));
 				intBgCnt++;
 			}
 		}
@@ -571,37 +586,43 @@ function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
 
 /* svgPrltの（再）表示処理 */
 function dspSvgPrlt(bolZeroHddnPrlt) {
-	var btTblEachHt = jQuery('#divBtTblPrlt_0').position().top - jQuery('#divBtTblPrlt_ttl').position().top,
+	var btTblEachHt = jQuery('#divBtTblPrlt_0').position().top-jQuery('#divBtTblPrlt_ttl').position().top,
 		btStkdPrltTtlHt = jQuery('#divBtStkdPrlt').children('.title').height(),
-		yTop1 = jQuery('#divBtTblPrlt_0').position().top - jQuery('#divBtTblPrltFlm').position().top - btStkdPrltTtlHt,
+		yTop1 = jQuery('#divBtTblPrlt_0').position().top-jQuery('#divBtTblPrltFlm').position().top-btStkdPrltTtlHt-1,
 		yBtm1 = yTop1,
 		yTop2,
 		yBtm2,
 		strPoints,
 		svgPrltWid = jQuery('#svgPrlt').width(),
 		intBgCnt = 0;
-	jQuery('#divBtSvgPrlt').height(jQuery('#bt_tbl_flm').height() - btStkdPrltTtlHt);
+	jQuery('#divBtSvgPrlt').height(jQuery('#bt_tbl_flm').height()-btStkdPrltTtlHt);
 	
-	for (i=0; i < ${lWDA_P.size}; i++) {
-		var obj = document.getElementById("plgnPrlt_" + i);
-		yBtm1 = jQuery("#divBtTblPrlt_" + i).position().top - jQuery('#divBtTblPrltFlm').position().top + btTblEachHt - btStkdPrltTtlHt;
-		if (bolZeroHddnPrlt && jQuery('<b></b>').addClass(jQuery("#plgnPrlt_" + i).attr('class')).hasClass('remPrltZero')) {
+	for (i=0; i < intLwdaPrltSize; i++) {
+		var obj = document.getElementById("plgnPrlt_"+i);
+		yBtm1 = jQuery("#divBtTblPrlt_"+i).position().top-jQuery('#divBtTblPrltFlm').position().top+btTblEachHt-btStkdPrltTtlHt-1;
+		if (bolZeroHddnPrlt && jQuery('<b></b>').addClass(jQuery("#plgnPrlt_"+i).attr('class')).hasClass('remPrltZero')) {
 			yBtm1 = yTop1;
 		}
-		yTop2 = jQuery("#divBtStkdPrltEach_" + i).position().top - btStkdPrltTtlHt;
-		yBtm2 = jQuery("#divBtStkdPrltEach_" + i).position().top - btStkdPrltTtlHt + jQuery("#divBtStkdPrltEach_" + i).height();
-		strPoints = svgPrltWid + "," + yTop1 + " " + svgPrltWid + "," + yBtm1 + " 0," + yBtm2 + " 0," + yTop2;
+		yTop2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt-${intStrokeWidth};
+//		yBtm2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt+jQuery("#divBtStkdPrltEach_"+i).height();
+		if (i==intLwdaPrltSize-1) {
+			yBtm2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt+jQuery("#divBtStkdPrltEach_"+i).height()+${intStrokeWidth};
+		} else {
+			var j = i+1;
+			yBtm2 = jQuery("#divBtStkdPrltEach_"+j).position().top-btStkdPrltTtlHt-${intStrokeWidth};
+		}
+		strPoints = svgPrltWid+","+yTop1+" "+svgPrltWid+","+yBtm1+" 0,"+yBtm2+" 0,"+yTop2;
 		obj.setAttribute("points",strPoints);
 		yTop1 = yBtm1;
 		if (aryLwdap[i].lngAmount < 0) {
 			obj.setAttribute("fill", jQuery('.btBgMinus').css('background-color'));
 		} else {
 			if (aryLwdap[i].strItem==="&{'RemainderType.not_parllet'}") {
-				jQuery("#divBtStkdPrltEach_" + i).css('background','#eee');
+				obj.setAttribute("fill", jQuery('.btMainInner').css('background-color'));
 			} else {
 				if (intBgCnt===intBgSizePrlt)
 					intBgCnt = 0;
-				obj.setAttribute("fill", jQuery(".btBgPrlt" + intBgCnt).css('background-color'));
+				obj.setAttribute("fill", jQuery(".btBgPrlt"+intBgCnt).css('background-color'));
 				intBgCnt++;
 			}
 		}
@@ -825,7 +846,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 							%{vBgCnt = 0}%
 						#{/if}
 						%{
-							vBtBgReal = 'btBgReal' + vBgCnt
+							vBtBgReal = 'btBgReal'+vBgCnt
 							vBgCnt++
 						}%
 					#{/if}
@@ -851,7 +872,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 			#{/list}
 		</ul>
 	</div>  <!-- divBtTblRealFlm -->
-
+	
 	<div id="divBtSvgReal">
 		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svgReal" width="50">
 		%{vCnt=0}%
@@ -861,7 +882,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 		  		vRemBkemZero = (lwdar.sItem!=HANDLING_TYPE_CASH && wdtd.lAmount==0) ? 'remBkemZero' : ''
 		  		vRemBkemInv = (lwdar.sItem!=HANDLING_TYPE_CASH && lwdar.bolInvFlg) ? 'remBkemInv' : ''
 		  	}%
-			<polygon points="0,0" fill="#aaa" id="plgnReal_${vCnt}" class="${vRemBkemZero} ${vRemBkemInv}">
+			<polygon points="0,0" stroke="#aaa" stroke-width="${intStrokeWidth}" id="plgnReal_${vCnt}" class="${vRemBkemZero} ${vRemBkemInv}">
 			</polygon>
 			%{vCnt++}%
 		#{/list}
@@ -951,7 +972,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 							%{vBgCnt = 0}%
 						#{/if}
 						%{
-							vBtBgPrlt = 'btBgPrlt' + vBgCnt
+							vBtBgPrlt = 'btBgPrlt'+vBgCnt
 							vBgCnt++
 						}%
 					#{/if}
@@ -986,7 +1007,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 				wdtd = lwdap.lstWdtd[0]
 		  		vRemPrltZero = (lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET && wdtd.lAmount==0) ? 'remPrltZero' : ''
 			}%
-			<polygon points="0,0" fill="#eee" id="plgnPrlt_${vCnt}" class="${vRemPrltZero}">
+			<polygon points="0,0" stroke="#aaa" stroke-width="${intStrokeWidth}" id="plgnPrlt_${vCnt}" class="${vRemPrltZero}">
 			</polygon>
 			%{vCnt++}%
 		#{/list}

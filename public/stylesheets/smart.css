@@ -1205,10 +1205,21 @@ fieldset {
 	float: left;
 }
 
-#divBtStkdReal div, #divBtStkdPrlt div {
-	width: 116px;
-	border-left: 1px solid #aaa;
+#divBtStkdReal .title, #divBtStkdPrlt .title {
 	border-bottom: 1px solid #aaa;
+}
+#divBtStkdReal .child, #divBtStkdPrlt .child {
+	border-left: 1px solid #aaa;
+}
+#divBtStkdReal .child div, #divBtStkdPrlt .child div {
+	overflow: hidden;
+	border-bottom: 1px solid #aaa;
+}
+#divBtStkdReal .child div div, #divBtStkdPrlt .child div div {
+	width: 116px;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
 }
 #divBtStkdReal .title, #divBtStkdPrlt .title {
 	height: 26px;
@@ -1216,7 +1227,7 @@ fieldset {
 	background: white;
 	border-top: 1px solid #aaa;
 }
-#divBtStkdPrlt div {
+#divBtStkdPrlt .child {
 	border-right: 1px solid #aaa;
 }
 
