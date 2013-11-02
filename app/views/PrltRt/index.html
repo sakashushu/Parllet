@@ -7,6 +7,20 @@
 	</li>
 #{/set}
 
+#{set 'moreHeader'}
+<div id="fill2">
+	<div id="divIdxHdFrm">
+		<div id="divIdxHd">
+			<ul>
+				<li><a href="#divWhatIsParllet">Parllet とは</a></li>
+				<li><a href="#divTheOriginOfParllet">Parllet の由来</a></li>
+				<li><a href="#divBenefitsOfParllet">Parllet のメリット</a></li>
+			</ul>
+		</div><!-- divIdxHd -->
+	</div><!-- divIdxHdFrm -->
+</div><!-- fill2 -->
+#{/set}
+
 #{include 'dialogForm.html' /}
 #{include 'facebookLogin.html' /}
 
@@ -105,6 +119,10 @@ jQuery(function() {
 //			}, 'text');
 		}
 	});
+	
+	jQuery('.aToSignUp').click(function() {
+		jQuery('#email').focus();
+	});
 });
 // -->
 </script>
@@ -117,77 +135,108 @@ jQuery(function() {
 #{/form}
 
 
-<!-- 
-<h1>Parllet（パレット）</h1>
- -->
-<div id="logo_index">
-<img alt="Parllet（パレット）（Parallel + Wallet でParllet（パレット）です）" src="/public/images/logo_index.png">
-</div>
+<div id="divIdxMain">
 
-<div id="sidebar_r">
-	<div class="box">
-	<div class="box_inner">
-		<div id="signupNormal">
-			&{'views.index.sinup.normal.title'}
-			<div class="validateTips"></div>
-		    <p id="username-field">
-				<label for="email">&{'email'}:</label>
-				<input type="text" id="email" value="${haUser?.email}" />
-			</p>
-			
-		    <p id="password-field">
-				<label for="password">&{'password'}:</label>
-				<input type="password" id="password" value="${haUser?.password}" />
-			</p>
+<div id="divLogoFrm">
+	<div id="logo_index">
+		<img alt="Parllet（パレット）（Parallel + Wallet でParllet（パレット）です）" src="/public/images/logo_index.png">
+	</div>
 	
-			<p id="signup-field">
-				<input type="submit" id="signup" value="&{'views.index.signup.normal.button.text'}" />
-			</p>
-		</div>  <!-- signupNormal -->
+	<div id="sidebar_r">
+		<div class="box">
+		<div class="box_inner">
+			<div id="signupNormal">
+				&{'views.index.sinup.normal.title'}
+				<div class="validateTips"></div>
+			    <p id="username-field">
+					<label for="email">&{'email'}:</label>
+					<input type="text" id="email" value="${haUser?.email}" />
+				</p>
+				
+			    <p id="password-field">
+					<label for="password">&{'password'}:</label>
+					<input type="password" id="password" value="${haUser?.password}" />
+				</p>
 		
-		<hr>
-		
-		<div id="signupSns">
-			&{'views.index.sinup.sns.title'}
-			<a id="fb-signup" class="btn blCenter" tabindex="0">
-				<div><img src="/public/images/f_logo_18.png" border="0" /></div>
-				<div>&{'views.index.signup.sns.button.text'}</div>
-			</a>
-		</div>  <!-- signupSns -->
-	</div>
-	</div>
+				<p id="signup-field">
+					<input type="submit" id="signup" value="&{'views.index.signup.normal.button.text'}" />
+				</p>
+			</div><!-- signupNormal -->
+			
+			<hr>
+			
+			<div id="signupSns">
+				&{'views.index.sinup.sns.title'}
+				<a id="fb-signup" class="btn blCenter" tabindex="0">
+					<div><img src="/public/images/f_logo_18.png" border="0" /></div>
+					<div>&{'views.index.signup.sns.button.text'}</div>
+				</a>
+			</div><!-- signupSns -->
+		</div><!-- box_inner -->
+		</div><!-- box -->
+	</div><!-- sidebar_r -->
+</div><!-- divLogoFrm -->
+
+<div id="divIdxCntntTopic1">
+	<span>Parllet</span> は、ちょっと変わった
+	<br>
+	　<span id="spnWebHA">Web家計簿</span>　です。
 </div>
 
-<div style="clear: left;">
+<div id="divWhatIsParllet" class="divIdxParagraph">
+	Parllet とは
 </div>
-<div style="font-size: 12pt;">
-<p>　Parllet（パレット）は無料で使い始められる、ちょっと変わったWeb家計簿です。</p>
-<p>現在、α（アルファ）版として日々開発作業中ですが、誰でも使うことができるようにしました。</p>
-<p>データ100件までは無料で使うことができて、より多く保存したい方は月額100円～でデータ10万件～を保存しながら本格的に使うことも可能です。</p>
-<p style="font-weight: bold;">ただ、Parlletは管理人が完全に一人で作成したものです。</p>
-<p>まだ備わっていない機能や不具合も多いので、充分ご理解頂いた上でのご利用をお願い致します。</p>
 <br>
-<!-- 
-<p>　Parlletという単語は、Parallel（並行の）とWallet（財布）を合わせた、管理人の造語です。
-<p>今持っているお金（残高）を、使う目的に合わせて管理したいと思ったことはありませんか？</p>
-<p>もちろんこれはそんなに大げさなことではなく、目標金額を決めて貯金箱に貯めたり、目的別に通帳を作ったりすることで実現可能で、実際にそうされている人も多いことでしょう。</p>
-<p>しかし管理人は、もっと柔軟に気軽にそれが出来ないかと考えました。</p>
-<p>そして自分自身が使うためにこのWeb家計簿　Parllet を作りました。</p>
-<p>　・年に一回は遠くの実家に里帰りしたいから月に幾らかずつ貯金する。</p>
-<p>　・毎年市民税の支払いの時期になって慌てるのでなく、あらかじめ貯めておきたい。</p>
-<p>　・ご祝儀など、もらったお金には手を着けづに取っておいて、何かでお返しをするような時にそのお金を使いたい。</p>
-<p>他にも、細かく目的を分けてお金を管理したいことはいくらでも有り得ます。</p>
-<p>でもその都度口座を開設したり、ずっと現金を家に置いていたりするのは避けたい。</p>
-<p>もっと言えば、実際のお金がどこにどう分けて保存されているかということと、目的に合わせてお金（残高）を割り当てることとが、一致している必要は無く、それぞれを同時（パラレル）に管理できるはずなんです。</p>
-<p>Parlletは、そんな細かい管理人のニーズへの対応とイメージの実現のために生まれたWebアプリです。</p>
-<p>普通の家計簿としても使えますが、実際の財布や口座の収支や残高を管理しながら、平行して（パラレルに）別の財布や口座のようなもの（これをParlletと呼びます）を作り、所持している残高を目的別に分けて見ることができるのが他の家計簿アプリと違うところになっています。</p>
-<br>
-<p>　ここまで読んで頂けたことに感謝の意を込めながらここでもう一つ。</p>
-<p>既に目的の決まっているお金を管理できると何が良いか。</p>
-<p>一言で言うとお金を使いすぎないことです。</p>
-<p>目的の決まっているお金の残高と、目的の決まっていないお金の残高が分けて見えることで、口座や財布にいくら残っていたとしても、今自由に使っても差し支えない金額がいくらまでなのかということが分かるのです。</p>
-<p>さらにParllet では、月の予算の設定ができることに加えて、収入や支出を目的別残高（Parllet）に割り当てたものは予算の対象外として見ることが可能になっています。</p>
-<p>Parlletを使いこなすことが出来れば、自分自身で決めた目的に沿ったお金の使い方や貯め方が出来ているはずです。</p>
-<p>Parlletが、より多くの人の役に立つことを願って止みません。</p>
- -->
+<div class="divIdxTextNormal">
+	<p>　Parllet（パレット）は無料で使い始められる、ちょっと変わったWeb家計簿です。</p>
+	<p>現在、α（アルファ）版として日々開発作業中ですが、誰でも使うことができるようにしました。</p>
+	<p>データ100件までは無料で使うことができて、より多く保存したい方は月額100円～でデータ10万件～を保存しながら本格的に使うことも可能です。</p>
+	<p><span>ただ、Parlletは管理人が完全に一人で作成したものです。</span></p>
+	<p>まだ備わっていない機能や不具合も多いので、充分ご理解頂いた上でのご利用をお願い致します。</p>
+	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
 </div>
+
+<div id="divTheOriginOfParllet" class="divIdxParagraph">
+	Parllet の由来
+</div>
+<br>
+<div class="divIdxTextNormal">
+	<p>　Parlletという単語は、Parallel（並行の）とWallet（財布）を合わせた、管理人の造語です。
+	<p>今持っているお金（残高）を、使う目的に合わせて管理したいと思ったことはありませんか？</p>
+	<p>もちろんこれはそんなに大げさなことではなく、目標金額を決めて貯金箱に貯めたり、目的別に通帳を作ったりすることで実現可能で、実際にそうされている人も多いことでしょう。</p>
+	<p class="pOpenLine1">　しかし管理人は、もっと柔軟に気軽にそれが出来ないかと考えました。</p>
+	<p>そして自分自身が使うためにこのWeb家計簿　Parllet を作りました。</p>
+</div>
+<p class="pExampleOfParllet">・年に一回は遠くの実家に里帰りしたいから毎月少しずつ貯金する。</p>
+<p class="pExampleOfParllet">・毎年市民税の支払いの時期になって慌てるのでなく、あらかじめ貯めておきたい。</p>
+<p class="pExampleOfParllet">・ご祝儀など、もらったお金には手を付けずに取っておいて、何かでお返しをするような時にそのお金を使いたい。</p>
+<div class="divIdxTextNormal">
+	<img alt="残高表" src="@{'/public/images/balanceTableImg.png'}" id="imgIdxBalanceTable">
+	<p class="pOpenLine1">他にも、細かく目的を分けてお金を管理したいことはいくらでも有り得ます。</p>
+	<p>でもその都度口座を開設したり、ずっと現金を家に置いていたりするのは避けたい。</p>
+	<p>もっと言えば<br><span>実際のお金がどこに保管されているか</span><br>ということと、<br><span>目的ごとにお金を貯める</span><br>ということは実は全く別の話で、それぞれを<span>同時（パラレル）</span>に管理できるはずなんです。</p>
+	<p class="pOpenLine1">　Parlletは、そんな細かい管理人のニーズへの対応とイメージの実現のために生まれたWebアプリです。</p>
+	<p>普通の家計簿としても使えますが、財布や口座の収支・残高を管理しながら<span>平行して（パラレルに）</span>、イメージ上の<span>口座のようなもの（これをParlletと呼びます）</span>を作り、所持している残高を目的別に分けて見ることができるのが他の家計簿アプリと違うところになっています。</p>
+	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
+</div>
+
+<div id="divBenefitsOfParllet" class="divIdxParagraph">
+	Parllet のメリット
+</div>
+<br>
+<div class="divIdxTextNormal">
+	<p>　ここまで読んで頂けたことに感謝の意を込めながらここでもう一つ。</p>
+	<p>既に目的の決まっているお金を管理できると何の<span>メリット</span>があるかについて。</p>
+	<p>一言で言うと<span>お金を使いすぎない</span>ことです。</p>
+	<p>目的の決まっているお金の残高と、目的の決まっていないお金の残高が分けて見えることで、口座や財布にいくら残っていたとしても <span>自由に使える金額がいくらなのか</span> がハッキリ分かるのです。</p>
+	<p>　さらにParllet では、月の予算の設定ができることに加えて、収入や支出を目的別残高（Parllet）に割り当てたものは予算の対象外として見ることが可能になっています。</p>
+	<p>Parlletを使いこなすことが出来れば、自分自身で決めた目的に沿ったお金の使い方や貯め方が出来ているはずです。</p>
+	<p>Parlletが、より多くの人の役に立つことを願って止みません。</p>
+	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
+	<br>
+	<br>
+	<br>
+	<br>
+</div>
+
+</div><!-- divIdxMain -->

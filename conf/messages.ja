@@ -18,8 +18,8 @@ secure.error=ログイン情報が正しくありません
 
 views.main.tools.login=ログイン
 views.main.tools.logo.pre=イメージで貯金できる家計簿
-views.main.tools.logo.pre1=イメージで
-views.main.tools.logo.pre2=貯金できる家計簿
+views.main.tools.logo.pre1=ちょっと変わった
+views.main.tools.logo.pre2=Web家計簿
 views.main.tools.logo=Parllet
 views.main.tools.logo.alpha=α(ｱﾙﾌｧ)版
 views.main.tools.logo.alpha.caution1=Parllet(パレット)はアルファ版です。

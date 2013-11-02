@@ -66,24 +66,22 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 			updateTips(s);
 		}
 		function switchRslt(o) {
-	    	//var jsonO = JSON.parse(o);
-	    	var jsonO = o;
-			switch (jsonO.intRslt) {
+			switch (o.intRslt) {
 				case 0:
 		    		jQuery('#saUsername').css('display', 'none');
 		    		jQuery('#saUsername2').css('display', 'inline');
 		    		jQuery('#saPassword').css('display', 'none');
 		    		jQuery('#saPassword2').css('display', 'inline');
-					jQuery('#saUsername').val(jsonO.strEmail);
-					jQuery('#saPassword').val(jsonO.strPassword);
+					jQuery('#saUsername').val(o.strEmail);
+					jQuery('#saPassword').val(o.strPassword);
 					jQuery('#fmAuthenticate').submit();
 					jQuery("#dialog-form").dialog("close");
 					break;
 				case 1:
-					errValidateHaUser(email, jsonO.strErr);
+					errValidateHaUser(email, o.strErr);
 					break;
 				case 99:
-		    		alert(jsonO.strErr);
+		    		alert(o.strErr);
 					break;
 				default:
 		    		alert("case error");

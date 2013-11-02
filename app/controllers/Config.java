@@ -15,7 +15,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import notifiers.Mails;
+
 import org.apache.commons.lang.Validate;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 import models.BalanceTypeMst;
 import models.Budget;
@@ -26,6 +30,7 @@ import models.ParlletMst;
 import models.Record;
 import play.data.validation.Validation;
 import play.i18n.Messages;
+import play.libs.Mail;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -37,12 +42,34 @@ import controllers.Common.RefParlletMst;
 @With(Secure.class)
 public class Config extends Controller {
 
+	private static final String BR = System.getProperty("line.separator");
+	
 	@Before
 	static void setConnectedUser() {
 		if (Security.isConnected()) {
 			HaUser haUser  = HaUser.find("byEmail", Security.connected()).first();
 			renderArgs.put("haUser", haUser);
 		}
+	}
+	
+	public static void cf_sendMail() {
+//		SimpleEmail email = new SimpleEmail();
+//		try {
+//			email.setFrom("sakashushu@live.jp");
+//			email.addTo("sakashushu@gmail.com");
+//			email.setSubject("subject");
+//			email.setMsg("Message" + BR + "http://www.zenexity.fr/wp-content/themes/images/logo.png");
+//		} catch (EmailException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Mail.send(email);
+		
+		HaUser hU = (HaUser)renderArgs.get("haUser");
+		
+		Mails.welcome(hU);
+		
+		cf_io();
 	}
 	
 	public static void cf_io() {

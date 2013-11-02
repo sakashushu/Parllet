@@ -3,6 +3,8 @@ package controllers;
 import java.util.Calendar;
 import java.util.Date;
 
+import notifiers.Mails;
+
 import models.HaUser;
 import models.LevelMst;
 import models.WkSyEsFbUsRslt;
@@ -91,6 +93,9 @@ public class PrltRt extends Controller {
 			wr.setStrErr(Messages.get("err.unanticipated", "initUserConf"));
 			renderJSON(wr);
 		}
+		
+//		Mails.welcome(haUser);
+		
 		wr.setIntRslt(0);
 		wr.setStrEmail(haUser.email);
 		wr.setStrPassword(haUser.password);
