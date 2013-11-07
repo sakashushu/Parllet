@@ -10,16 +10,16 @@
 	<input type="text" id="from" name="down_date_fr" size="13" />
 	<label for="to">～</label>
 	<input type="text" id="to" name="down_date_to" size="13" />
-    <input type="submit" value="出力" />
+    <input type="submit" value="出力" class="grayBtn" />
 #{/form}
 <br>
 データの取込（インポート）
 #{form @cf_upload(), enctype:'multipart/form-data'}
     <input type="file" id="csv" name="csv" />
-    <input type="submit" value="取込" />
+    <input type="submit" value="取込" class="grayBtn" />
 #{/form}
 <br>
 メール送信テスト
 #{form @cf_sendMail()}
-    <input type="submit" value="送信" />
+    <input type="submit" value="送信" class="grayBtn" />
 #{/form}

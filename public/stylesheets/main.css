@@ -4,7 +4,8 @@ html {
 }
 
 html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget textarea, .ui-widget select, .ui-widget button {
-	font-family: Arial, Helvetica, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
+//	font-family: Arial, Helvetica, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
+	font-family: Arial, Verdana, sans-serif;
 }
 
 body {
@@ -40,6 +41,10 @@ html, body{
 	left: 0;
 }
 
+select {
+	font-weight: normal;
+}
+
 #divAppliIndex {
 	padding-top: 45px;
 }
@@ -53,9 +58,13 @@ h2 {
 	font-size: 10pt;
 	padding: 2px;
 }
+h3 {
+	font-size: 13pt;
+	font-weight: bold;
+}
 
-input[type="text"] {
-	height: 15px;
+input[type="text"], input[type="password"] {
+	height: 19px;
 }
 
 input[type="submit"],input[type="button"] {
@@ -83,7 +92,7 @@ input[type="submit"],input[type="button"] {
 
 .aBtn {
 	font-size: 90%;
-	padding: 4px 4px;
+	padding: 4px;
 	margin: 0;
 	text-decoration: none;
 	background-color: #eee;
@@ -106,9 +115,22 @@ a.aBtn span {
 	background-color:#ffffff;
 }
  
-a.aBtn:hover span{
+a.aBtn:hover span {
 	display:inline;
 	position:absolute;
+}
+
+.grayBtn {
+	font-size: 90%;
+	padding: 2px 6px;
+	margin: 0;
+	text-decoration: none;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+	cursor: pointer;
 }
 
 
@@ -141,11 +163,11 @@ a.aBtn:hover span{
 	z-index: 798;
 	margin-right: auto;
 	margin-left: auto;
+	padding: 10px 0;
 }
 #divIdxHd ul {
 	list-style: none;
 	margin: 0;
-	padding: 10px 0;
 }
 #divIdxHd ul li {
 	display: inline;
@@ -155,24 +177,31 @@ a.aBtn:hover span{
 #divIdxMain {
 	margin-top: 36px;
 }
+#divIdxMain p {
+	margin-top: 1em;
+}
 
 #divLogoFrm {
 	overflow: hidden;
 }
 
 #logo_index {
-	width: 512px;
-	height: 266px;
+//	max-width: 512px;
+//	height: 266px;
 	float: left;
 }
 
 #logo_index img {
-	margin: 10px;
+	margin: 10px 0;
+	max-width: 482px;
+	width: 100%
 }
 
 #sidebar_r {
 	float: right;
-	width: 400px;
+//	width: 400px;
+	max-width: 400px;
+	width: 100%;
 }
 
 
@@ -186,9 +215,7 @@ a.aBtn:hover span{
 	background: url(/public/images/white20.png);
 	text-align: left;
 	margin-top: 10px;
-	margin-left: 10px;
 	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない;
-	height: 246px;
 }
 #sidebar_r .box .box_inner {
 	padding: 10px;
@@ -227,7 +254,7 @@ a.aBtn:hover span{
 
 #imgIdxBalanceTable {
 	float: right;
-	width: 660px;
+	width: 70%;
 }
 
 .divIdxParagraph {
@@ -738,6 +765,9 @@ a.aBtn:hover span{
 #username-field {
 	margin-top: 10px !important;
 }
+#username-field, #password-field {
+	margin: 3px;
+}
 
 #username-field label, #password-field label {
 //	display: block;
@@ -771,6 +801,13 @@ a.aBtn:hover span{
 	margin-left: auto;
 	margin-right: auto;
 }
+#signup-field input[type="submit"] {
+	width: 120px;
+}
+#signin-field input[type="submit"] {
+	width: 70px;
+}
+
 
 /* facebook Login */
 input.text {
@@ -961,6 +998,7 @@ fieldset {
 }
 .da_tbl_all li {
 	clear: both;
+	overflow: hidden;
 }
 .da_tbl_all li div.da_tbl_all_div {
 	display: table-cell;
@@ -1001,7 +1039,6 @@ fieldset {
 	display: table-cell;
 	height: 35px;
 	padding-left: 150px;
-	vertical-align: bottom;
 }
 
 .da_tbl_rt li div.second {
@@ -1209,7 +1246,7 @@ fieldset {
 	padding-left: 20px;
 	padding-right: 20px;
 }
-#daPaddingYearMonth span {
+#daPaddingYearMonth span, #daPaddingYearMonth select {
 	font-weight: normal;
 }
 
@@ -1676,6 +1713,9 @@ fieldset {
 //	background: url(/public/images/brown4_60.png);
 	background: url(/public/images/brown3_90.png);
 	color: #e6be83;
+}
+.dl_head input {
+	font-weight: normal;
 }
 
 #dlRmChartFrame {

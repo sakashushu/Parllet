@@ -18,6 +18,10 @@ public class PrltRt extends Controller {
 		render();
 	}
 	
+	public static void responsive() {
+		render();
+	}
+	
 	public static void index() {
 		if (LevelMst.count()==0L) {
 			LevelMst lM = new LevelMst(Integer.parseInt(Play.configuration.getProperty("lvMst.lv.0")) , Play.configuration.getProperty("lvMst.lv.nm.0"), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.mAmnt.0")), Integer.parseInt(Play.configuration.getProperty("lvMst.lv.rcSize.0")));

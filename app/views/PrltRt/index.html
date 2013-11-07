@@ -1,6 +1,131 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.main.tools.logo') /}
 
+<style>
+<!--
+#pageTop {
+	background: #ddd;
+	border-radius: 5px;
+	color: #fff;
+	padding: 20px;
+	position: fixed;
+	bottom: 30px;
+	right: 20px;
+	font-weight: bold;
+}
+#pageTop:hover {
+	background:#eee;
+	color: #999;
+}
+
+
+body {
+	min-width: 0;
+}
+#main, #hdContainer, #divIdxHd, #ftContents {
+	width: 95%;
+	max-width: 980px;
+}
+#divIdxHd {
+	overflow: hidden;
+}
+#footerNavLink {
+	font-size: 13pt;
+	font-weight: bold;
+	float: right;
+}
+#sidebar_r, #logo_index {
+	float: none;
+}
+#sidebar_r, #logo_index {
+	margin: 0 auto;
+}
+#logo_index {
+	max-width: 472px;
+}
+
+/* スマホのスタイル */
+#headerNav {
+	display: none;
+}
+#divIdxHd ul li {
+	padding-right: 0;
+}
+#username-field label, #password-field label {
+	float: none;
+	width: 100%;
+	text-align: left;
+}
+#username-field div, #password-field div {
+	width: 170px;
+	margin: 0 auto;
+}
+
+#divIdxCntntTopic1 {
+	font-size: 24pt;
+}
+#spnWebHA {
+	font-size: 30pt;
+}
+
+
+
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	#footerNavLink {
+		display: none;
+	}
+	#headerNav {
+ 		display: block;
+	}
+	#footerNav {
+		display: none;
+	}
+	#divIdxHd ul li {
+		padding-right: 1em;
+	}
+	#username-field label, #password-field label {
+		float: left;
+		width: 120px;
+		text-align: right;
+	}
+	#username-field div, #password-field div {
+		width: 100%;
+	}
+}
+
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	#divIdxCntntTopic1 {
+		font-size: 42pt;
+	}
+	#spnWebHA {
+		font-size: 52pt;
+	}
+}
+
+/* カスタマイズスタイル（960px以上） */
+@media all and (min-width: 960px) {
+	#logo_index {
+		float: left;
+	}
+	#sidebar_r {
+		float: right;
+	}
+	#divIdxCntntTopic1 {
+		font-size: 52pt;
+	}
+	#spnWebHA {
+		font-size: 64pt;
+	}
+}
+
+
+-->
+</style>
+
 #{set 'headerTools'}
 	<li>
 		<a href="@{DailyAccount.balanceTable()}">&{'views.main.tools.login'}</a>
@@ -11,11 +136,14 @@
 <div id="fill2">
 	<div id="divIdxHdFrm">
 		<div id="divIdxHd">
-			<ul>
-				<li><a href="#divWhatIsParllet">Parllet とは</a></li>
-				<li><a href="#divTheOriginOfParllet">Parllet の由来</a></li>
-				<li><a href="#divBenefitsOfParllet">Parllet のメリット</a></li>
-			</ul>
+			<div id="footerNavLink"><a href="#footerNav">+</a>　</div>
+			<div id="headerNav">
+				<ul>
+					<li><a href="#divWhatIsParllet">&{'views.index.paragraph.WhatIsParllet'}</a></li>
+					<li><a href="#divTheOriginOfParllet">&{'views.index.paragraph.TheOriginOfParllet'}</a></li>
+					<li><a href="#divBenefitsOfParllet">&{'views.index.paragraph.BenefitsOfParllet'}</a></li>
+				</ul>
+			</div>
 		</div><!-- divIdxHd -->
 	</div><!-- divIdxHdFrm -->
 </div><!-- fill2 -->
@@ -120,13 +248,34 @@ jQuery(function() {
 		}
 	});
 	
+	/* 「ページトップへ」クリックイベント */
+	var topBtn = jQuery('#pageTop');
+	topBtn.hide();
+	jQuery(window).scroll(function() {
+		if (jQuery(this).scrollTop() > 100) {
+			topBtn.fadeIn();
+		} else {
+			topBtn.fadeOut();
+		}
+	});
+    topBtn.click(function() {
+		jQuery('body,html').animate({
+			scrollTop: 0
+		}, 1000);
+		return false;
+    });	
+	
+    /* 「新規ユーザー登録」クリックイベント */
 	jQuery('.aToSignUp').click(function() {
+		jQuery('body,html').animate({
+			scrollTop:  jQuery('#sidebar_r').offset().top - jQuery('#header').outerHeight(true)
+		}, 1000);
 		jQuery('#email').focus();
+		return false;
 	});
 });
 // -->
 </script>
-
 
 #{form @Secure.authenticate(), id:'fmAuthenticate'}
 	<input type="text" name="username" id="saUsername" class="invisible" />
@@ -134,10 +283,13 @@ jQuery(function() {
 	<input type="submit" id="signin" name="signin" class="invisible" />
 #{/form}
 
+<a id="pageTop" href="#contents">ページトップへ</a>
 
 <div id="divIdxMain">
 
 <div id="divLogoFrm">
+<!-- 
+ -->
 	<div id="logo_index">
 		<img alt="Parllet（パレット）（Parallel + Wallet でParllet（パレット）です）" src="/public/images/logo_index.png">
 	</div>
@@ -148,19 +300,23 @@ jQuery(function() {
 			<div id="signupNormal">
 				&{'views.index.sinup.normal.title'}
 				<div class="validateTips"></div>
-			    <p id="username-field">
-					<label for="email">&{'email'}:</label>
-					<input type="text" id="email" value="${haUser?.email}" />
-				</p>
+			    <div id="username-field">
+			    	<div>
+						<label for="email">&{'email'}:</label>
+						<input type="text" id="email" value="${haUser?.email}" />
+			    	</div>
+				</div>
 				
-			    <p id="password-field">
-					<label for="password">&{'password'}:</label>
-					<input type="password" id="password" value="${haUser?.password}" />
-				</p>
+			    <div id="password-field">
+			    	<div>
+						<label for="password">&{'password'}:</label>
+						<input type="password" id="password" value="${haUser?.password}" />
+			    	</div>
+				</div>
 		
-				<p id="signup-field">
-					<input type="submit" id="signup" value="&{'views.index.signup.normal.button.text'}" />
-				</p>
+				<div id="signup-field">
+					<input type="submit" id="signup" class="grayBtn" value="&{'views.index.signup.normal.button.text'}" />
+				</div>
 			</div><!-- signupNormal -->
 			
 			<hr>
@@ -184,7 +340,7 @@ jQuery(function() {
 </div>
 
 <div id="divWhatIsParllet" class="divIdxParagraph">
-	Parllet とは
+	&{'views.index.paragraph.WhatIsParllet'}
 </div>
 <br>
 <div class="divIdxTextNormal">
@@ -193,11 +349,11 @@ jQuery(function() {
 	<p>データ100件までは無料で使うことができて、より多く保存したい方は月額100円～でデータ10万件～を保存しながら本格的に使うことも可能です。</p>
 	<p><span>ただ、Parlletは管理人が完全に一人で作成したものです。</span></p>
 	<p>まだ備わっていない機能や不具合も多いので、充分ご理解頂いた上でのご利用をお願い致します。</p>
-	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 </div>
 
 <div id="divTheOriginOfParllet" class="divIdxParagraph">
-	Parllet の由来
+	&{'views.index.paragraph.TheOriginOfParllet'}
 </div>
 <br>
 <div class="divIdxTextNormal">
@@ -217,11 +373,11 @@ jQuery(function() {
 	<p>もっと言えば<br><span>実際のお金がどこに保管されているか</span><br>ということと、<br><span>目的ごとにお金を貯める</span><br>ということは実は全く別の話で、それぞれを<span>同時（パラレル）</span>に管理できるはずなんです。</p>
 	<p class="pOpenLine1">　Parlletは、そんな細かい管理人のニーズへの対応とイメージの実現のために生まれたWebアプリです。</p>
 	<p>普通の家計簿としても使えますが、財布や口座の収支・残高を管理しながら<span>平行して（パラレルに）</span>、イメージ上の<span>口座のようなもの（これをParlletと呼びます）</span>を作り、所持している残高を目的別に分けて見ることができるのが他の家計簿アプリと違うところになっています。</p>
-	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 </div>
 
 <div id="divBenefitsOfParllet" class="divIdxParagraph">
-	Parllet のメリット
+	&{'views.index.paragraph.BenefitsOfParllet'}
 </div>
 <br>
 <div class="divIdxTextNormal">
@@ -232,7 +388,7 @@ jQuery(function() {
 	<p>　さらにParllet では、月の予算の設定ができることに加えて、収入や支出を目的別残高（Parllet）に割り当てたものは予算の対象外として見ることが可能になっています。</p>
 	<p>Parlletを使いこなすことが出来れば、自分自身で決めた目的に沿ったお金の使い方や貯め方が出来ているはずです。</p>
 	<p>Parlletが、より多くの人の役に立つことを願って止みません。</p>
-	<p class="pOpenLine1"><a href="#" class="aToSignUp aBtn">新規ユーザー登録</a></p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 	<br>
 	<br>
 	<br>
@@ -240,3 +396,11 @@ jQuery(function() {
 </div>
 
 </div><!-- divIdxMain -->
+
+<div id="footerNav">
+	<ul>
+		<li><a href="#divWhatIsParllet">&{'views.index.paragraph.WhatIsParllet'}</a></li>
+		<li><a href="#divTheOriginOfParllet">&{'views.index.paragraph.TheOriginOfParllet'}</a></li>
+		<li><a href="#divBenefitsOfParllet">&{'views.index.paragraph.BenefitsOfParllet'}</a></li>
+	</ul>
+</div>
