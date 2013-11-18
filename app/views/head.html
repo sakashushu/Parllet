@@ -1,8 +1,8 @@
 <title>#{get 'title' /}</title>
 <meta charset="${_response_encoding}">
-<!-- 
- -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+
 #{get 'moreStyles' /}
 <!-- jQuery(GoogleAPIs経由) -->
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
@@ -17,9 +17,7 @@
 <!-- 
 <link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
  -->
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <link media="only screen and (max-device-width:480px)" href="${play.configuration.getProperty('head.forSmart')}" type="text/css" rel="stylesheet" />
 <link media="screen and (min-device-width:481px)" href="@{'/public/stylesheets/main.css'}" type="text/css" rel="stylesheet" />
@@ -28,6 +26,16 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <![endif]-->
 
 <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+
+<!-- AnimateBorderMenus -->
+<!-- 
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/AnimatedBorderMenus/normalize.css'}" />
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/AnimatedBorderMenus/demo.css'}" />
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/AnimatedBorderMenus/icons.css'}" />
+<script src="@{'/public/javascripts/AnimatedBorderMenus/modernizr.custom.js'}"></script>
+ -->
+<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/AnimatedBorderMenus/stylePrlt.css'}" />
+
 <!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
 <style>
 .ui-datepicker td span, .ui-datepicker td a {

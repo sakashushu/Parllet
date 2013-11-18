@@ -290,7 +290,32 @@ jQuery(function(){
 </div>
 <div id="dl_tblFrameFt">
 <div id="dl_tblContentFt">
-　
+  <ul class="dl_tbl">
+	<li>
+		#{if session.get('actionMode')!='View'}
+			<!-- 非公開フラグ -->
+			<div class="dl_secret_rec_flg dl_borderLeft${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		#{/if}
+		<!-- 引落日 -->
+		<div class="${clDlRmDebitDate}"></div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 引出 -->
+		<div class="dlRm_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 預入 -->
+		<div class="dlRm_amount${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- お店 -->
+		<div class="dl_common_column${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder${wdrr?.strBalanceTypeName==strBbf ? '' : ' menu_cell'}"></div>
+	</li>
+  </ul>
 </div>  <!-- dl_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">

@@ -1,6 +1,7 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.main.tools.logo') /}
 
+
 <style>
 <!--
 #pageTop {
@@ -28,11 +29,6 @@ body {
 }
 #divIdxHd {
 	overflow: hidden;
-}
-#footerNavLink {
-	font-size: 13pt;
-	font-weight: bold;
-	float: right;
 }
 #sidebar_r, #logo_index {
 	float: none;
@@ -73,14 +69,11 @@ body {
 
 /* タブレットのスタイル */
 @media all and (min-width: 480px) {
-	#footerNavLink {
+	#bt-menu {
 		display: none;
 	}
 	#headerNav {
  		display: block;
-	}
-	#footerNav {
-		display: none;
 	}
 	#divIdxHd ul li {
 		padding-right: 1em;
@@ -136,7 +129,22 @@ body {
 <div id="fill2">
 	<div id="divIdxHdFrm">
 		<div id="divIdxHd">
-			<div id="footerNavLink"><a href="#footerNav">+</a>　</div>
+			<nav id="bt-menu" class="bt-menu">
+<!-- 
+				<div id="divTriggerFrm"></div>
+ -->
+				<a href="#" class="bt-menu-trigger"><span></span></a>
+				<div id="divUlFrm">
+					<ul>
+						<li><a href="#"><span></span></a></li>
+						<li><a href="#divWhatIsParllet">&{'views.index.paragraph.WhatIsParllet'}</a></li>
+						<li><a href="#divTheOriginOfParllet">&{'views.index.paragraph.TheOriginOfParllet'}</a></li>
+						<li><a href="#divBenefitsOfParllet">&{'views.index.paragraph.BenefitsOfParllet'}</a></li>
+					</ul>
+				</div>
+				<div class="bt-overlay"></div>
+			</nav>
+			
 			<div id="headerNav">
 				<ul>
 					<li><a href="#divWhatIsParllet">&{'views.index.paragraph.WhatIsParllet'}</a></li>
@@ -155,6 +163,7 @@ body {
 <script type="text/javascript">
 <!-- 
 jQuery(function() {
+
 	/* 「Facebookで登録」クリック時は「login()」イベントへ */
 	jQuery('#fb-signup').click(function() {
 		login("&{'views.index.sinup.dialogTitle'}");
@@ -396,11 +405,3 @@ jQuery(function() {
 </div>
 
 </div><!-- divIdxMain -->
-
-<div id="footerNav">
-	<ul>
-		<li><a href="#divWhatIsParllet">&{'views.index.paragraph.WhatIsParllet'}</a></li>
-		<li><a href="#divTheOriginOfParllet">&{'views.index.paragraph.TheOriginOfParllet'}</a></li>
-		<li><a href="#divBenefitsOfParllet">&{'views.index.paragraph.BenefitsOfParllet'}</a></li>
-	</ul>
-</div>

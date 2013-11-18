@@ -1,6 +1,12 @@
 #{extends 'main.html' /}
 #{set title:messages.get('secure.title') /}
 
+#{set 'moreHeader'}
+	<nav id="bt-menu" class="bt-menu invisible">
+		<a href="#" id="bt-menu-trigger" class="bt-menu-trigger"><span>Menu</span></a>
+	</nav>
+#{/set}
+
 
 #{include 'dialogForm.html' /}
 #{include 'facebookLogin.html' /}
