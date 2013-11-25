@@ -1,0 +1,1918 @@
+html {
+	background-color: transparent;
+	background-image: none;
+}
+
+html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget textarea, .ui-widget select, .ui-widget button {
+	font-family: Arial, Verdana, sans-serif;
+}
+
+body {
+	word-break: break-all;
+	
+	margin: auto;
+	font-size: 11pt;
+	background: #efdeb4;
+	color: #612d00;
+	overflow-y: scroll;
+	min-width: 980px;
+}
+
+html, body{
+    height:100%;
+}
+#bg-img {
+	/* Set rules to fill background */
+	min-height: 100%;
+	min-width: 1024px;
+	/* Set up proportionate scaling */
+	width: 100%;
+	height: auto;
+	/* Set up positioning */
+	position: fixed;
+	/* またはabsolute; */
+	top: 0;
+	left: 0;
+}
+
+select {
+	font-weight: normal;
+}
+
+#divAppliIndex {
+	padding-top: 45px;
+}
+
+h1 {
+	font-size: 13pt;
+	padding: 3px;
+}
+h2 {
+	font-size: 10pt;
+	padding: 2px;
+}
+h3 {
+	font-size: 13pt;
+	font-weight: bold;
+}
+
+input[type="text"], input[type="password"] {
+	height: 19px;
+}
+
+input[type="submit"],input[type="button"] {
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	cursor: pointer;
+}
+
+.numeric {
+	text-align: right;
+}
+
+.padR4 {
+	padding-right: 4px;
+}
+
+.fntSize1_5 {
+	font-size: 150%;
+}
+
+.aBtn {
+	font-size: 90%;
+	padding: 4px;
+	margin: 0;
+	text-decoration: none;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+}
+
+.aBtn:hover , .aBtn:focus {
+	cursor: pointer;
+}
+
+a.aBtn span {
+	display:none;
+	padding:5px;
+	margin-left:10px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+ 
+a.aBtn:hover span {
+	display:inline;
+	position:absolute;
+}
+
+.grayBtn {
+	font-size: 90%;
+	padding: 2px 6px;
+	margin: 0;
+	text-decoration: none;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+	cursor: pointer;
+}
+
+
+.fontJura {
+	font-family: 'Jura';
+}
+
+.inlineVerticalMiddle {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.blCenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ptAbsolute {
+	position: absolute;
+}
+
+/** index **/
+
+#divIdxHdFrm {
+	background: url(../images/brown7_90.png);
+}
+#divIdxHd {
+	width: 980px;
+	z-index: 798;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 10px 0;
+}
+#divIdxHd ul {
+	list-style: none;
+	margin: 0;
+}
+#divIdxHd ul li {
+	display: inline;
+	padding: 0 1em;
+}
+
+#divIdxMain {
+	margin-top: 36px;
+}
+#divIdxMain p {
+	margin-top: 1em;
+}
+
+#divLogoFrm {
+	overflow: hidden;
+}
+
+#logo_index {
+	float: left;
+}
+
+#logo_index img {
+	margin: 10px 0;
+	max-width: 482px;
+	width: 100%
+}
+
+#sidebar_r {
+	float: right;
+	max-width: 400px;
+	width: 100%;
+}
+
+
+#signup-box {
+	background: url(../images/white40.png);
+	padding: 20px 0;
+}
+
+#sidebar_r .box {
+	border: 1px solid #aaa;
+	background: url(../images/white20.png);
+	text-align: left;
+	margin-top: 10px;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない;
+}
+#sidebar_r .box .box_inner {
+	padding: 10px;
+}
+
+#sidebar_r .box p {
+	margin: 3px;
+}
+
+#signupNormal {
+	padding-bottom: 15px;
+}
+#signupSns {
+	padding-bottom: 15px;
+}
+
+#fb-signup {
+	width: 140px;
+}
+
+.suField {
+	padding: 10px;
+	position: relative;
+}
+
+#divIdxCntntTopic1 {
+	margin: 20px 20px 0 20px;
+	font-size: 52pt;
+}
+#divIdxCntntTopic1 span {
+	font-weight: bold;
+}
+#spnWebHA {
+	font-size: 64pt;
+}
+
+#imgIdxBalanceTable {
+	float: right;
+	width: 70%;
+}
+
+.divIdxParagraph {
+	font-size: 22pt;
+	font-weight: bold;
+	padding-top: 80px;
+}
+
+.pOpenLine1 {
+	padding-top: 1em;
+}
+
+.pExampleOfParllet {
+	font-size: 13pt;
+	font-weight: bold;
+	padding-left: 2em;
+}
+
+.divIdxTextNormal {
+	font-size: 12pt;
+}
+.divIdxTextNormal span {
+	font-weight: bold;
+}
+
+
+/** dialogForm **/
+#dlgEmailVal {
+	padding: 3px 0 15px 3px;
+}
+
+#dlgPassword {
+	padding: 3px 0 0 3px;
+}
+
+
+/** dialogFrmUpdRec **/
+#dialog-updRec fieldset {
+	margin-top: 15px;
+}
+.dfurElem {
+	min-height: 32px;
+	min-width: 180px;
+}
+.dfurElem label {
+	display: block;
+	min-height: 14px;
+	padding-top: 1px;
+}
+.dfurElem a {
+	display: block;
+	float: left;
+	margin-bottom: 12px;
+	font-size: 80%;
+	min-width: 80px;
+	min-height: 14px;
+}
+.dfurElem input, .dfurElem select, .dfurElem textarea {
+	font-size: 150%;
+}
+.dfurElem select {
+	width: 100%;
+	margin-bottom: 12px;
+}
+.editable {
+	cursor: pointer;
+}
+
+
+/** header **/
+
+#header {
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	z-index: 800;
+}
+
+#header .fill {
+	background: url(../images/brown3_90.png);
+	z-index: 799;
+}
+#header #fill2 {
+	z-index: 799;
+}
+
+#hdContainer {
+	width: 980px;
+	height: 36px;
+	margin-left:auto;
+	margin-right:auto;
+	position: relative;
+}
+
+#dlHeader {
+	width: 980px;
+	z-index: 798;
+	margin-right: auto;
+	margin-left: auto;
+}
+#dlHeaderInner1 {
+	background: url(../images/brown7_90.png);
+}
+#dlHeaderInner2 {
+	height: 11px;
+	background: #efdeb4;
+}
+#dlHeaderInner3 {
+	height: 10px;
+	background: #f6f5d1;
+}
+#dlHeaderInner4 {
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+#cfHeader {
+	position: fixed;
+	margin-top: 36px;
+	width: 980px;
+	background: url(../images/brown7_90.png);
+	z-index: 798;
+	top:0;
+}
+
+
+/** footer **/
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	height: 30px;
+	left: 0;
+	right: 0;
+	text-align: right;
+	background: url(../images/brown7_90.png);
+}
+#footer .fill {
+	z-index: 799;
+}
+
+#ftContents {
+	height:30px;
+	line-height: 30px;
+	width: 980px;
+	margin: auto;
+	font-size: 80%;
+}
+#ftContents a {
+	padding-right: 10px;
+}
+
+
+/** main **/
+
+#main {
+	width: 980px;
+	margin-left:auto;
+	margin-right:auto;
+	padding-bottom: 45px;
+}
+
+#mainInner {
+	margin-left: auto;	/* IE以外用の中央寄せ */
+	margin-right: auto;	/* IE以外用の中央寄せ */
+	text-align:left;	/* IE以外用の中央寄せ */
+}
+
+#mainInnerBtm {
+	clear: both;
+	padding-bottom: 20px;	
+}
+
+.daMainInner {
+	width: 980px;
+	background: #f6f5d1;
+}
+
+.btMainInner {
+	width: 980px;
+	background: #f6f5d1;
+}
+
+.reMain {
+	width: 980px;
+}
+
+#reMainInner {
+	padding: 10px;
+	background: #f6f5d1;
+}
+
+#reMainInner h3 {
+	margin: 5px 0 10px 0;
+}
+
+#dlMain {
+	width: 980px;
+	margin-top: 42px;
+}
+
+#dlMainInner {
+	padding-right: 10px;
+	padding-left: 10px;
+	background: #f6f5d1;
+}
+
+#cfMain {
+	width: 980px;
+	margin-top: 30px;
+}
+#cfMainInner {
+	padding: 10px;
+	background: #f6f5d1;
+}
+
+#cfMain h3 {
+	margin: 0;
+}
+
+#cfMain .data {
+	padding: 4px;
+	margin: 0;
+	font-size: 90%;
+	background: white;
+}
+
+#cfMain .data.odd {
+	background: white;
+}
+
+#cfMain .data a {
+	color: #444;
+}
+
+
+
+#container {
+	width: 100%;
+	position: relative;
+	min-height: 100%;
+	height: auto;
+}
+
+
+#ltBlocks {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	top: 2px;
+}
+
+#ltBlocks li {
+	display: inline-block;
+	*display: inline;	/*スターハックしてる*/
+	*zoom: 1;			/*ここもスターハック*/
+	vertical-align: middle;
+}
+
+#logo {
+	padding: 0;
+	margin: 0;
+}
+
+#logo li {
+	display: inline-block;
+	*display: inline;	/*スターハックしてる*/
+	*zoom: 1;			/*ここもスターハック*/
+	vertical-align: middle;
+}
+
+#logo-pre {
+	color: #ffd391;
+	font-size: 12px;
+	padding-left: 4px;
+}
+#logo-pre div {
+	width: 100px;
+}
+
+#genLogo-img {
+	width: 180px;
+	height: 30px;
+	background: url(../images/genLogo.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
+}
+
+#logo-img {
+	width: 116px;
+	height: 30px;
+	background: url(../images/logo.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	margin-left: 10px;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
+}
+
+#logo_alpha-img {
+	width: 110px;
+	height: 30px;
+	background: url(../images/logo_alpha.png) no-repeat 0 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display: inline-block;
+	
+	position: absolute;
+	top: 5px;
+	left: 3px;
+	z-index: 802;
+	
+	/* 以下、IE6/7用 */
+	*height: 0;
+	*padding-top: 30px; 
+	*text-indent: 0;
+	*display: block;
+}
+
+#logo_alpha-img:hover {
+	width: 240px;
+	height: 60px;;
+}
+
+#logo_alpha-img span {
+	display:none;
+	padding:5px;
+	margin-left:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+	font-size: 11pt;
+}
+ 
+#logo_alpha-img:hover span{
+	display:block;
+	text-indent: 0;
+	white-space: normal;
+}
+
+
+#tools {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	top: 10px;
+	right: 10px;
+	position: absolute;
+	z-index: 801;
+}
+#tools a {
+	color: #ffd391;
+	text-decoration: none;
+}
+#tools li {
+	display: inline;
+	color: #ffd391;
+	background: url(../images/white20.png);
+	cursor: pointer;
+	padding: 2px 4px 0 4px;
+}
+#tools li ul {
+	padding: 5px;
+	background: #eee;
+	border: solid 1px #ccc;
+	position:absolute;
+	display: none;
+	width: 100px;
+}
+#tools li ul li {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+#tools li ul li a {
+	display: block;
+	height: 20px;
+	color: #633308;
+}
+#tools li ul li a#cfHauserEdit {
+	height: 40px;
+}
+#htProgressBar {
+	height: 4px;
+	margin-top: 5px;
+}
+
+
+/* login */
+
+#login {
+	width: 660px;
+	margin: 50px auto;
+	text-align: center;
+}
+
+#login h1 {
+	font-weight: bold;
+	color: #111;
+}
+
+#login .box {
+	border: 1px solid #aaa;
+	background: url(../images/white20.png);
+	padding: 10px;
+	text-align: left;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
+}
+
+#login .box p {
+	margin: 3px;
+}
+
+#loginSns {
+	float: left;
+	width: 266px;
+}
+
+#loginOrg {
+	float: right;
+	border-left: 1px solid rgba(0, 0, 0, .2);
+	box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+	padding-left: 10px;
+	width: 360px;
+}
+
+#fb-login {
+	width: 170px;
+}
+
+.btn {
+	cursor:pointer;
+	display: block;
+	margin-top: 10px;
+	padding: 5px 4px;
+	text-decoration: none;
+	color: #612d00;
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+}
+.btn div {
+	display: table-cell;
+	vertical-align: middle;
+	margin: 0;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#username-field {
+	margin-top: 10px !important;
+}
+#username-field, #password-field {
+	margin: 3px;
+}
+
+#username-field label, #password-field label {
+	display: block;
+	font-weight: bold;
+	width: 120px;
+	float: left;
+	color: #666;
+	text-align: right;
+	margin-right: 10px;
+}
+
+#username-field input, #password-field input {
+	width: 170px;
+	font-size: 13px;
+}
+
+#signup-field input, #signin-field input {
+	margin-top: 20px;
+	
+	/* 以下、左右中央寄せのため */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#signup-field input[type="submit"] {
+	width: 120px;
+}
+#signin-field input[type="submit"] {
+	width: 70px;
+}
+
+
+/* facebook Login */
+input.text {
+	margin-bottom:12px;
+	width:95%;
+	padding: .4em;
+	background: white;
+}
+fieldset {
+	padding:0;
+	border:0;
+	margin-top:25px;
+}
+.ui-state-error {
+	padding: .3em;
+}
+.validateTips {
+	border: 1px solid transparent;
+}
+
+
+
+/** Member , Admin **/
+
+#memberMenu, #adminMenu {
+	list-style: none;
+	padding: 5px 0px 8px 5px;
+	margin: 0;
+}
+
+#memberMenu li, #adminMenu li {
+	display: inline;
+}
+
+#memberMenu li a, #adminMenu li a {
+	color: #fff;
+	text-decoration: none;
+	padding: 2px 10px;
+	-webkit-border-radius: 9px;
+	-moz-border-radius: 9px;
+}
+#memberMenu li a {
+	background: #633308;
+}
+#adminMenu li a {
+	background: #591C64;
+}
+
+#memberMenu li.selected a, #adminMenu li.selected a {
+	background: #82A346;
+}
+
+#member {
+	position: relative;
+	margin: 0;
+	padding: 5px;
+	width: 120px;
+	height: 20px;
+	font-weight: bold;
+	
+	background: url(../images/white20.png);
+	z-index: 900;
+}
+#member:hover {
+	cursor: pointer;
+}
+#member ul {
+	display: none;
+	position: absolute;
+	top: 20px;
+	left: -1px;
+	padding: 5px;
+	width: 120px;
+	background: #eee;
+	border: solid 1px #ccc;
+}
+#member ul li {
+	margin: 0;
+	padding: 0;
+	width: 120px;
+	border: none;
+}
+#member ul li a {
+	display: inline-block;
+	width: 120px;
+	height: 20px;
+}
+#member ul li a:hover {
+	background: #999;
+	color: #fff;
+}
+
+
+/** Config **/
+
+#newData {
+	border-top: 1px dotted #C0CBE5;
+	padding-top: 15px;
+}
+
+#newData a {
+	background: #C88116;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	padding: 5px 10px;
+	font-size: 80%;
+	text-decoration: none;
+	color: #fff;
+	font-weight: bold;
+	-webkit-box-shadow: 1px 1px 2px rgba(0,0,0,.3);
+}
+
+#newData a span {
+	background: #7D510E;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	padding: 0 5px 2px 5px;
+	position: relative;
+	top: -1px;
+}
+
+.hasError {
+	background: pink;
+}
+
+#cfhuProgressBar, #cfhuProgressBarCrt {
+	height: 18px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+.spnUsed {
+	font-size: 80%;
+}
+
+/*
+ * DailyAccount
+ */
+
+/* すべての線を表示 */
+.allLine {
+	border: 1px solid #aaa;
+}
+
+/* 左右・下の線を表示 */
+.lrb_Line {
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+
+/* 上の線を表示 */
+.t_Line {
+	border-top: 1px solid #aaa;
+}
+
+/* 下の線を表示 */
+.b_Line {
+	border-bottom: 1px solid #aaa;
+}
+
+/* 左の線を表示 */
+.l_Line {
+	border-left: 1px solid #aaa;
+}
+
+/* すべての線を表示(色なし) */
+.allLineTransparence {
+	border: 1px;
+}
+
+#tblDailyAccount {
+	font-size: 80%;
+}
+
+
+/* .da_tbl_all 日計表の枠固定の上下を分けるテーブル */
+.da_tbl_all {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.da_tbl_all li {
+	clear: both;
+	overflow: hidden;
+}
+.da_tbl_all li div.da_tbl_all_div {
+	display: table-cell;
+	float: left;
+}
+
+/* .da_tbl_lt 日計表の枠固定の左上のテーブル */
+.da_tbl_lt {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 440px;
+}
+.da_tbl_lt li div.first {
+	display: table-cell;
+	border-right: 1px solid transparent;
+	height: 25px;
+}
+.da_tbl_lt li div.second {
+	display: table-cell;
+	border-right: 1px solid transparent;
+	height: 40px;
+}
+
+.da_tbl_lt li div.da_tree {
+	width: 20px;
+	border: none;
+}
+
+/* .da_tbl_rt 日計表の枠固定の右上のテーブル */
+.da_tbl_rt {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.da_tbl_rt li div.first {
+	display: table-cell;
+	height: 35px;
+	padding-left: 150px;
+}
+
+.da_tbl_rt li div.second {
+	display: table-cell;
+	/* border-right: 1px solid #transparent; としても幅を取っていない(CSSのバグ？)ようなので、
+	 * 下記は コメントアウトし、ヘッダー部分は「.da_hd_ary_day」で対応 */
+/*
+	border-right: 1px solid #transparent;
+*/
+	border-bottom: 1px solid #aaa;
+	height: 30px;
+}
+
+/* .da_tbl_lb 日計表の枠固定の左下のテーブル */
+.da_tbl_lb {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 440px;
+}
+.da_tbl_lb li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	height: 26px;
+	vertical-align: middle;
+}
+
+.da_tbl_lb li div.da_tree {
+	width: 20px;
+	border: none;
+}
+.da_tbl_lb li div.da_bottom {
+	width: 100%;
+	height: 20px;
+	border: none;
+}
+
+/* .da_tbl_rb 日計表の枠固定の右下のテーブル */
+.da_tbl_rb {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.da_tbl_rb li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	height: 26px;
+	vertical-align: middle;
+}
+.da_tbl_rb li div.da_bottom {
+	width: 100%;
+	height: 20px;
+	border: none;
+}
+
+#da_trow {
+	overflow: hidden;
+}
+
+#da_tcol {
+	overflow: hidden;
+}
+
+#da_tbody {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.da_head {
+	border-top: 1px solid transparent;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.da_hd_cate1 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid #aaa;
+	width: 22px;
+}
+
+.da_hd_cate1_2 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid #aaa;
+	width: 113px;
+}
+
+.da_hd_left_cell {
+	border-left: 1px solid transparent;
+}
+
+/*
+ * border-right: 1px solid #transparent; としても幅を取っていない(CSSのバグ？)ようなので、下記で対応
+ */
+.da_hd_ary_day {
+	/* 99px(da_ary_dayの幅)+1px(透明borderの代わり)=100px */
+	width: 100px;
+}
+
+.da_hd_ary_day_end {
+	width: 82px;
+}
+
+.da_tbl_rt li div.days5Move {
+	width: 18px;
+}
+
+.da_cate1 {
+	border-left: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	width: 22px;
+}
+
+.da_cate1_last {
+	border-bottom: 1px solid #aaa;
+}
+
+.da_cate1_2 {
+	border-left: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	width: 113px;
+}
+
+.da_cate2 {
+	border-bottom: 1px solid #aaa;
+	white-space: nowrap;
+}
+.da_cate2 span {
+	display:none;
+	padding:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+.da_cate2:hover span{
+	display:inline;
+	position:absolute;
+}
+
+.da_budget {
+	width: 96px;
+	border-bottom: 1px solid #aaa;
+}
+.da_budget input[type="text"] {
+	width: 90px;
+	background-color: #fff;
+	font-size: 100%
+}
+
+
+.da_cate2_budget {
+	width: 187px; /* 90(cate2)+1(border)+96(budget) */
+	max-width: 187px;
+	border-bottom: 1px solid #aaa;
+	white-space: nowrap;
+}
+.da_cate2_budget span {
+	display:none;
+	padding:5px;
+	border:1px solid #cccccc;
+	color:#8c5e00;
+	background-color:#ffffff;
+}
+.da_cate2_budget:hover span{
+	display:inline;
+	position:absolute;
+}
+
+.da_cate1_2_budget {
+	border-left: 1px solid #aaa;
+	width: 210px; /* 22(cate1)+1(border)+90(cate2)+1(border)+96(budget) */
+	border-bottom: 1px solid #aaa;
+}
+
+.da_sum_month , .da_prlt_link {
+	width: 96px;
+	border-bottom: 1px solid #aaa;
+}
+
+.da_budget_subject {
+	font-size: 90%;
+	font-weight: normal;
+}
+
+.da_left_cell {
+	border-left: 1px solid #aaa;
+}
+
+.da_ary_day {
+	width: 99px;
+}
+
+.daBtn_upd_budget {
+	font-size: 90%;
+	padding: 0px 2px;
+	text-decoration: none;
+}
+
+#daPaddingYearMonth {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+#daPaddingYearMonth span, #daPaddingYearMonth select {
+	font-weight: normal;
+}
+
+
+.daBudgetSubject {
+	background: rgb(230,232,125);
+}
+.daBudgetNotSubject {
+	background: rgb(242,255,168);
+}
+
+
+/* .menu_cell コンテキストメニューを出すセルのクリックイベント用 */
+.menu_cell, .menu_member {
+	background: white;
+}
+.menu_cell:hover, .menu_member:hover {
+	cursor: pointer;
+}
+
+.menu_cell2 {
+	background: url(../images/white20.png);
+}
+.menu_cell2:hover {
+	cursor: pointer;
+}
+
+
+.contextMenu {
+	position: absolute;
+	width: 120px;
+	z-index: 899;
+	border: solid 1px #CCC;
+	background: #EEE;
+	padding: 10px;
+	margin: 0px;
+	display: none;
+}
+.contextMenu LI {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+.contextMenu A {
+	color: #333;
+	text-decoration: none;
+	display: block;
+	line-height: 20px;
+	height: 20px;
+	background-position: 6px center;
+	background-repeat: no-repeat;
+	outline: none;
+	padding: 1px 5px;
+	padding-left: 28px;
+}
+.contextMenu LI.hover A {
+	color: #FFF;
+	background-color: red;
+}
+.contextMenu LI.disabled A {
+	color: #AAA;
+	cursor: default;
+}
+.contextMenu LI.hover.disabled A {
+	background-color: transparent;
+}
+.contextMenu LI.separator {
+	border-top: solid 1px #CCC;
+}
+/*
+   Adding Icons
+   
+   You can add icons to the context menu by adding
+   classes to the respective LI element(s)
+*/
+.contextMenu LI.edit A { background-image: url(img/icon/contextmenu/page_white_edit.png); }
+.contextMenu LI.cut A { background-image: url(img/icon/contextmenu/cut.png); }
+.contextMenu LI.copy A { background-image: url(img/icon/contextmenu/page_white_copy.png); }
+.contextMenu LI.paste A { background-image: url(img/icon/contextmenu/page_white_paste.png); }
+.contextMenu LI.delete A { background-image: url(img/icon/contextmenu/page_white_delete.png); }
+.contextMenu LI.quit A { background-image: url(img/icon/contextmenu/door.png); }
+
+
+/*
+ * BalanceTable
+ */
+ 
+#btChart {
+	margin-top: -30px;
+	margin-bottom: 15px;
+	height: 150px;
+}
+
+#btBasisDate {
+	font-weight: bold;
+	padding-top: 20px;
+	text-align: center;
+	height: 40px;
+}
+
+#btRemTotal {
+	margin-left: auto;
+	margin-right: auto;
+	width: 920px;
+	font-size: 150%;
+	background: white;
+}
+#btRemTotal ul {
+	list-style: none;
+	padding: 0;
+	display: table;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
+	margin: 0;
+}
+#btRemTotal li div {
+	display: table-cell;
+	vertical-align: middle;
+	white-space: nowrap;
+	width: 459px;
+	height: 40px;
+}
+
+
+.btHddnChkBox {
+	 height: 30px;
+}
+
+#bt_tbl_flm {
+	margin-top: 10px;
+	width: 920px;
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	overflow: hidden;
+}
+
+#divBtTblRealFlm, #divBtTblPrltFlm {
+	width: 292px;
+}
+
+#divBtTblRealFlm, #divBtSvgReal, #divBtStkdReal, #divBtStkdPrlt {
+	float: left;
+}
+
+#divBtStkdReal .title, #divBtStkdPrlt .title {
+	border-bottom: 1px solid #aaa;
+}
+#divBtStkdReal .child, #divBtStkdPrlt .child {
+	border-left: 1px solid #aaa;
+}
+#divBtStkdReal .child>div, #divBtStkdPrlt .child>div {
+	overflow: hidden;
+	border-bottom: 1px solid #aaa;
+}
+#divBtStkdReal .child div div, #divBtStkdPrlt .child div div {
+	width: 116px;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+#divBtStkdReal .title, #divBtStkdPrlt .title {
+	height: 26px;
+	line-height: 26px;
+	background: white;
+	border-top: 1px solid #aaa;
+}
+#divBtStkdPrlt .child {
+	border-right: 1px solid #aaa;
+}
+
+#divBtSvgReal {
+	width: 50px;
+	height: 100px;
+}
+
+#divBtSvgPrlt {
+	position: absolute;
+	top: 26px;
+	left: 577px;
+}
+
+#divBtTblPrltFlm {
+	float: right;
+}
+
+/* .bt_tbl_each 残高表の各々(実残高、Parllet・・・) */
+.bt_tbl_each {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 292px;
+	display: table;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
+}
+
+.bt_tbl_each li div {
+	display: table-cell;
+	height: 26px;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.bt_cate_large {
+	width: 190px;
+}
+
+.bt_cate_small_pre {
+	width: 20px;
+}
+
+.bt_cate_small span {
+	display: none;
+	padding: 5px;
+	border: 1px solid #cccccc;
+	color: #8c5e00;
+	background-color: #ffffff;
+}
+.bt_cate_small:hover span{
+	display: inline;
+	position: absolute;
+}
+
+.bt_ary_day {
+	width: 99px;
+}
+
+.bt_midChrt {
+	width: 116px;
+	height: 26px;
+	line-height: 26px;
+	background: white;
+}
+
+#bt_tbl_mdl_hd {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: table;
+	border-collapse: collapse;	/* 隣接する線を重ねて表示 */
+}
+
+#bt_tbl_mdl_hd li div {
+	display: table-cell;
+	height: 26px;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.remBkemInv .lrb_Line {
+	background: #777;
+}
+
+#svgReal {
+	height: 100%;
+}
+#svgReal, #svgPrlt {
+	height: 100%;
+}
+
+
+/*
+ * RecordEdit
+ */
+.re_w150 {
+	width:150px;
+}
+
+/*
+ * DetailList
+ */
+#frmDlBalance, #frmDlRemainder {
+	width: 960px;
+	overflow: hidden;
+}
+
+#dl_tblFrameHd {
+	overflow: hidden;
+}
+
+#dl_tblFrame {
+	width: 100%;
+	overflow: hidden;
+	padding-top: 90px;
+}
+
+#dl_tblFrameFt {
+	background: #eee;
+	overflow-y: hidden;
+	overflow-x: scroll;
+	width: 960px;
+}
+
+#dl_tblContentFt {
+	height: 0;
+}
+
+.dl_tbl {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.dl_tbl li div {
+	display: table-cell;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+
+.dl_srch_edit {
+	width:50px;
+	border-left: 1px solid #aaa;
+	text-align: center;
+	vertical-align: middle;
+	padding: 4px 0px;
+}
+
+.dl_borderLeft {
+	border-left: 1px solid #aaa;
+}
+
+/* 下記が無いと .dl_tbl の font-size: 90%; が効かない */
+.dl_tbl_content , .dl_edit_link {
+	font-size: 100%;
+}
+
+.dl_tbl_content {
+	width: 100%;
+}
+
+.dl_edit_link , .dl_edit_link:visited {
+	padding: 0px 8px;
+	background-color: transparent;
+	color: #aaa;
+	text-decoration: none;
+}
+
+.dl_edit_link:hover , .dl_edit_link:focus {
+	background-color: #eee;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	color: #000;
+	cursor: pointer;
+}
+
+.dl_edit_link:active {
+	border-style: inset;
+}
+
+
+.dl_secret_rec_flg {
+	width:45px;
+	min-width:45px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.dl_payment_date {
+	width:90px;
+	min-width:90px;
+	vertical-align: middle;
+}
+
+.dl_string {
+	padding-left: 4px;
+}
+
+.dl_payment_date_text {
+	width: 80px;
+}
+
+.dl_balance_type {
+	width:110px;
+	min-width:110px;
+	vertical-align: middle;
+	padding: 4px 0px;
+}
+
+.dl_amount {
+	width:90px;
+	min-width:90px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.dl_content {
+	width:120px;
+	min-width:120px;
+	vertical-align: middle;
+}
+
+.dl_common_column {
+	width:110px;
+	min-width:110px;
+	vertical-align: middle;
+}
+
+.dlRm_debit_date {
+	width:90px;
+	min-width:90px;
+	vertical-align: middle;
+	padding: 4px 0px;
+}
+
+.dlRm_secret_rec_flg {
+	width:45px;
+	border-left: 1px solid #aaa;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.dlRm_remainder {
+	width:110px;
+	min-width:110px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.dlRm_amount {
+	width:100px;
+	min-width:100px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.dl_head {
+	border-top: 1px solid #aaa;
+	height: 80px;
+	font-weight: bold;
+	text-align: center;
+	background: url(../images/brown3_90.png);
+	color: #e6be83;
+}
+.dl_head input {
+	font-weight: normal;
+}
+
+#dlRmChartFrame {
+	width: 960px;
+	border: 1px solid #aaa;
+	overflow: hidden;
+}
+#dlRmChart {
+	margin-left: -10px;
+}
+
+#dialog-delRec .lblDlgDelRec {
+	display: block;
+	width: 40%;
+	float: left;
+	text-align: right;
+}
+#dialog-delRec #pConfirm {
+	font-weight: bold;
+}
+
+
+/*
+ * Config
+ */
+#aUnsubscribe {
+	color: red;
+}
+
+
+/** Form **/
+
+form .error {
+	color: red;
+}
+
+.objectForm {
+	border: 1px solid #aaa;
+	background: white;
+}
+
+/** Show **/
+
+#crudShow {
+	position: relative;
+}
+
+.crudDelete input {
+	color: #fff;
+	border: none;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: #c00;
+	padding: 2px 10px;
+	font-size: 90%;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	cursor: pointer;
+}
+
+.crudDelete input:hover {
+	opacity: .7;
+}
+
+/** crud.cssの真似 **/
+label.fieldName {
+	display: block;
+	font-weight: bold;
+	width: 20%;
+	float: left;
+	color: #666;
+}
+
+.crudField {
+	padding: 10px;
+	border-bottom: 1px solid #bbb;
+	position: relative;
+}
+
+.crudField .right {
+	margin-left: 20%;
+}
+
+.crudField .upper {
+	margin-bottom: 10px;
+}
+.crudField div.bottom {
+	height: 6px;
+}
+
+.bbsNone {
+	border-bottom-style: none;
+}
+
+
+#configListPagination {
+	padding: 4px 5px;
+	border: 1px solid transparent;
+	border-top: 0;
+	font-size: 90%;
+	position: relative;
+	
+	width: 948px;
+	background: #f6f5d1;
+}
+
+#configListPagination .configCount {
+	margin: 0;
+}
+
+#configListPagination .configPages {
+	margin: 0;
+	position: absolute;
+	right: 5px;
+	top: 4px;
+}
+
+
+
+#dlFooter {
+	width: 960px;
+	padding-right: 10px;
+	padding-left: 10px;
+	background: #f6f5d1;
+}
+
+
+/* receipt, confirm, unsubscribe */
+
+#receipt, #confirm, #unsubscribe {
+	width: 660px;
+	margin: 50px auto;
+}
+
+#receipt h1, #confirm h1, #unsubscribe h1 {
+	font-weight: bold;
+	color: #111;
+}
+#receipt h1 span, #confirm h1 span, #unsubscribe h1 span {
+	font-size: 24px;
+}
+
+#receipt #instructions, #confirm #instructions, #unsubscribe #instructions {
+	padding-top: 10px;
+	margin-bottom: 30px;
+}
+#confirm #instructions p.bold {
+	font-weight: bold;
+}
+#unsubscribe #instructions p.caution {
+	color: red;
+	font-weight: bold;
+}
+
+#receipt .box {
+	border: 1px solid #aaa;
+	background: url(../images/white20.png);
+	padding: 10px;
+	text-align: left;
+	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
+}
+#receipt .box #inner {
+	width: 400px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#receipt .box #inner label {
+	width: 240px;
+	float: left;
+}
+#receipt .box #inner div {
+	font-weight: bold;
+}
+
+#receipt #flameConf, #unsubscribe #flameConf {
+	margin-top: 30px;
+	width: 100%;
+}
+#receipt #flameConf div {
+	width:132px;
+}
+#confirm #flameConf div {
+	width:136px;
+}
+#unsubscribe #flameConf div {
+	width:320px;
+}
+#receipt #flameConf div, #confirm #flameConf div, #unsubscribe #flameConf div {
+	height: 40px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#receipt #flameConf dif form {
+	line-height: 40px;
+}
+#receipt #flameConf div input[type="submit"] {
+	padding:5px 10px;
+	font-weight: bold;
+	font-size: 16px;
+}
+#confirm #flameConf div a, #unsubscribe #flameConf div a {
+	padding:5px 10px;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 40px;
+}
+
+
+/** Pagination **/
+
+#pagination {
+	list-style: none;
+	padding: 0;
+	position: relative;
+	color: #869AB1;
+	font-size: 90%;
+	top: -20px;
+	margin-bottom: 30px;
+}
+
+#pagination a {
+	color: #869AB1;
+	font-size: 90%;
+}
+
+#pagination #previous {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#pagination #previous:before {
+	content: '<< ';
+}
+
+#pagination #next {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+#pagination #next:after {
+	content: ' >>';
+}
+
+/** Flash message **/
+
+.crudFlash {
+	padding: 5px 20px;
+	border-bottom: 1px solid #ddd;
+	color: #fff;
+}
+
+.flashError {
+	background: #c00;
+}
+
+
+.invisible {
+	display: none;
+}
+.invisible2 {
+	display: none;
+}
+.toolTip {
+	z-index: 901;
+}
+
+.btBgReal0 {
+	background: #a8a8ff;
+}
+.btBgReal1 {
+	background: #a8d3ff;
+}
+
+
+.btBgPrltNot {
+	background: transparent;
+}
+.btBgPrlt0 {
+	background: #d3ffa8;
+}
+.btBgPrlt1 {
+	background: #a8ffa8;
+}
+.btBgPrlt2 {
+	background: #a8ffd3;
+}
+
+
+.btBgMinus {
+	background: #ff7f7f;
+}
+
+
+#divForSmart {
+	display: none;
+}
+#prltMain {
+	padding-top: 45px;
+}
+#prltMain, #footer, #tools {
+	
+}
+#main {
+	
+}
