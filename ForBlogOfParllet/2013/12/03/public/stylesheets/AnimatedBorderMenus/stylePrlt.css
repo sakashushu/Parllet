@@ -99,29 +99,10 @@
 	transform: translateY(250%);
 }
 
-//.bt-menu-open .bt-menu-trigger span:before {
-//	-webkit-transform: translateY(0) rotate(45deg);
-//	transform: translateY(0) rotate(45deg);
-//}
-//
-//.bt-menu-open .bt-menu-trigger span:after {
-//	-webkit-transform: translateY(0) rotate(-45deg);
-//	transform: translateY(0) rotate(-45deg);
-//}
 .bt-menu-open .bt-menu-trigger {
 	display: none;
 }
 
-//.bt-menu ul {
-//	position: fixed;
-//	margin: 0;
-//	padding: 0;
-//	list-style: none;
-//}
-//.bt-menu ul:first-of-type {
-//	top: 75px;
-//	left: 0;
-//}
 .bt-menu #divUlFrm {
 	position: fixed;
 	margin: 0;
@@ -131,8 +112,10 @@
 	top: 0;
 	left: 0;
 	overflow: hidden;
+	width: 0;
 }
 .bt-menu.bt-menu-open #divUlFrm {
+	width: auto;
 	height: 100%;
 	overflow-y: auto;
 }
