@@ -8,7 +8,7 @@
  * Copyright 2013, Codrops
  * http://www.codrops.com
  * 
- * 2013/12/5 sakashushu 上記を元にしてjQuery化等カスタマイズ
+ * 2013/12/1 sakashushu 上記を元にしてjQuery化等カスタマイズ
  */
 ;(function() {
 	// http://stackoverflow.com/a/11381730/989439
