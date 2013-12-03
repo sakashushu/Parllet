@@ -111,7 +111,7 @@
 	width: 0;
 }
 .bt-menu.bt-menu-open #divUlFrm {
-	width: auto;
+	width: 200px;
 	height: 100%;
 	overflow-y: auto;
 }
