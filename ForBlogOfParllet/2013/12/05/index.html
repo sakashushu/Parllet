@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AnimatedBorderMenu 好き勝手改修デモ</title>
+<meta charset="utf-8">
+<!-- 
+ -->
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+<!-- jQuery(GoogleAPIs経由) -->
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<!-- AnimatedBorderMenus -->
+<link rel="stylesheet" type="text/css" href="public/stylesheets/styleDemo.css" />
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+
+<style>
+<!--
+
+body {
+	font-family: Arial, Verdana, sans-serif;
+	width: 100%;
+	margin: 0 auto;
+}
+
+#header {
+	background: lightgray;
+	height: 40px;
+	position: fixed;
+	width:100%;
+}
+#headerNav ul {
+	list-style: none;
+	overflow: hidden;
+}
+
+#headerNav li {
+	float: left;
+	width: 33%;
+	text-align: center;
+}
+
+#divIdxHd {
+	overflow: hidden;
+}
+
+#main {
+	padding-top: 40px;
+}
+
+#main p {
+	width: 100%;
+	text-align: center;
+	height: 800px;
+	line-height: 800px;
+}
+
+/* スマホのスタイル */
+#headerNav {
+	display: none;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	#bt-menu {
+		display: none;
+	}
+	#headerNav {
+ 		display: block;
+	}
+}
+
+-->
+</style>
+
+</head>
+<body>
+<div id="header">
+<h1>Header</h1>
+<div id="divIdxHd">
+	<nav id="bt-menu" class="bt-menu">
+	    <a href="#" class="bt-menu-trigger"><span></span></a>
+		<div id="divUlFrm">
+		    <ul>
+				<li></li>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Contact</a></li>
+				<li><a href="#">Other1</a></li>
+				<li><a href="#">Other2</a></li>
+				<li><a href="#">Other3</a></li>
+				<li><a href="#">Other4</a></li>
+				<li><a href="#">Other5</a></li>
+				<li><a href="#">Other6</a></li>
+				<li><a href="#">Other7</a></li>
+				<li><a href="#">Other8</a></li>
+				<li><a href="#">Other9</a></li>
+				<li><a href="#">Other10</a></li>
+				<li><a href="#">Other11</a></li>
+				<li><a href="#">Other12</a></li>
+				<li><a href="#">Other13</a></li>
+				<li><a href="#">Other14</a></li>
+				<li><a href="#">Other15</a></li>
+				<li><a href="#">Other16</a></li>
+				<li><a href="#">Other17</a></li>
+				<li><a href="#">Other18</a></li>
+				<li><a href="#">Other19</a></li>
+				<li><a href="#">Other20</a></li>
+		    </ul>
+		</div>
+		<div class="bt-overlay"></div>
+	</nav>
+	
+	<div id="headerNav">
+		<ul>
+			<li><a href="">Home</a></li>
+			<li><a href="">About</a></li>
+			<li><a href="">Contact</a></li>
+		</ul>
+	</div>
+</div><!-- divIdxHd -->
+
+</div><!-- /header -->
+
+<div id="container">
+
+<div id="main">
+<h2>Main</h2>
+<p>Main contents</p>
+
+</div><!-- main -->
+
+</div><!-- /container -->
+
+<script src="public/javascripts/jquery.borderMenuDemo.js"></script>
+</body>
+</html>
