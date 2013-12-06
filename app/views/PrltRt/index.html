@@ -1,6 +1,7 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.main.tools.logo') /}
 
+
 <style>
 <!--
 #pageTop {
@@ -39,7 +40,7 @@ body {
 	max-width: 472px;
 }
 
-/* 繧ｹ繝槭�縺ｮ繧ｹ繧ｿ繧､繝ｫ */
+/* スマホのスタイル */
 #headerNav {
 	display: none;
 }
@@ -65,7 +66,7 @@ body {
 
 
 
-/* 繧ｿ繝悶Ξ繝�ヨ縺ｮ繧ｹ繧ｿ繧､繝ｫ */
+/* タブレットのスタイル */
 @media all and (min-width: 480px) {
 	#bt-menu {
 		display: none;
@@ -87,7 +88,7 @@ body {
 }
 
 
-/* PC縺ｮ繧ｹ繧ｿ繧､繝ｫ */
+/* PCのスタイル */
 @media all and (min-width: 768px) {
 	#divIdxCntntTopic1 {
 		font-size: 42pt;
@@ -97,7 +98,7 @@ body {
 	}
 }
 
-/* 繧ｫ繧ｹ繧ｿ繝槭う繧ｺ繧ｹ繧ｿ繧､繝ｫ��60px莉･荳奇ｼ�*/
+/* カスタマイズスタイル（960px以上） */
 @media all and (min-width: 960px) {
 	#logo_index {
 		float: left;
@@ -162,7 +163,7 @@ body {
 <!-- 
 jQuery(function() {
 
-	/* 縲熊acebook縺ｧ逋ｻ骭ｲ縲阪け繝ｪ繝�け譎ゅ�縲畦ogin()縲阪う繝吶Φ繝医∈ */
+	/* 「Facebookで登録」クリック時は「login()」イベントへ */
 	jQuery('#fb-signup').click(function() {
 		login("&{'views.index.sinup.dialogTitle'}");
 	});
@@ -223,7 +224,7 @@ jQuery(function() {
 		bValid = bValid && checkRegexp(email, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "&{'validation.email'}");
 		bValid = bValid && checkRequired(password, "&{'password'}");
 		bValid = bValid && checkLength(password, "&{'password'}", 6, 20);
-		bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "繝代せ繝ｯ繝ｼ繝峨�蜊願ｧ定恭謨ｰ縺ｧ縺吶�");
+		bValid = bValid && checkRegexp(password, /^([0-9a-zA-Z])+$/, "パスワードは半角英数です。");
 		if (bValid) {
 			var jqxhr_mDR_vHU = jQuery.post('@{validateHaUser}', {email: email.val(), password: password.val()});
 			jqxhr_mDR_vHU
@@ -255,7 +256,7 @@ jQuery(function() {
 		}
 	});
 	
-	/* 縲後�繝ｼ繧ｸ繝医ャ繝励∈縲阪け繝ｪ繝�け繧､繝吶Φ繝�*/
+	/* 「ページトップへ」クリックイベント */
 	var topBtn = jQuery('#pageTop');
 	topBtn.hide();
 	jQuery(window).scroll(function() {
@@ -272,7 +273,7 @@ jQuery(function() {
 		return false;
     });	
 	
-    /* 縲梧眠隕上Θ繝ｼ繧ｶ繝ｼ逋ｻ骭ｲ縲阪け繝ｪ繝�け繧､繝吶Φ繝�*/
+    /* 「新規ユーザー登録」クリックイベント */
 	jQuery('.aToSignUp').click(function() {
 		jQuery('body,html').animate({
 			scrollTop:  jQuery('#sidebar_r').offset().top - jQuery('#header').outerHeight(true)
@@ -290,7 +291,7 @@ jQuery(function() {
 	<input type="submit" id="signin" name="signin" class="invisible" />
 #{/form}
 
-<a id="pageTop" href="#contents">繝壹�繧ｸ繝医ャ繝励∈</a>
+<a id="pageTop" href="#contents">ページトップへ</a>
 
 <div id="divIdxMain">
 
@@ -298,7 +299,7 @@ jQuery(function() {
 <!-- 
  -->
 	<div id="logo_index">
-		<img alt="Parllet�医ヱ繝ｬ繝�ヨ�会ｼ�arallel + Wallet 縺ｧParllet�医ヱ繝ｬ繝�ヨ�峨〒縺呻ｼ� src="/public/images/logo_index.png">
+		<img alt="Parllet（パレット）（Parallel + Wallet でParllet（パレット）です）" src="/public/images/logo_index.png">
 	</div>
 	
 	<div id="sidebar_r">
@@ -341,9 +342,9 @@ jQuery(function() {
 </div><!-- divLogoFrm -->
 
 <div id="divIdxCntntTopic1">
-	<span>Parllet</span> 縺ｯ縲√■繧�▲縺ｨ螟峨ｏ縺｣縺�
+	<span>Parllet</span> は、ちょっと変わった
 	<br>
-	縲�span id="spnWebHA">Web螳ｶ險育ｰｿ</span>縲�〒縺吶�
+	　<span id="spnWebHA">Web家計簿</span>　です。
 </div>
 
 <div id="divWhatIsParllet" class="divIdxParagraph">
@@ -351,12 +352,12 @@ jQuery(function() {
 </div>
 <br>
 <div class="divIdxTextNormal">
-	<p>縲�arllet�医ヱ繝ｬ繝�ヨ�峨�辟｡譁吶〒菴ｿ縺�ｧ九ａ繧峨ｌ繧九�縺｡繧�▲縺ｨ螟峨ｏ縺｣縺欷eb螳ｶ險育ｰｿ縺ｧ縺吶�</p>
-	<p>迴ｾ蝨ｨ縲∃ｱ�医い繝ｫ繝輔ぃ�臥沿縺ｨ縺励※譌･縲�幕逋ｺ菴懈･ｭ荳ｭ縺ｧ縺吶′縲∬ｪｰ縺ｧ繧ゆｽｿ縺�％縺ｨ縺後〒縺阪ｋ繧医≧縺ｫ縺励∪縺励◆縲�/p>
-	<p>繝��繧ｿ100莉ｶ縺ｾ縺ｧ縺ｯ辟｡譁吶〒菴ｿ縺�％縺ｨ縺後〒縺阪※縲√ｈ繧雁､壹￥菫晏ｭ倥＠縺溘＞譁ｹ縺ｯ譛磯｡�00蜀�ｽ槭〒繝��繧ｿ10荳�ｻｶ�槭ｒ菫晏ｭ倥＠縺ｪ縺後ｉ譛ｬ譬ｼ逧�↓菴ｿ縺�％縺ｨ繧ょ庄閭ｽ縺ｧ縺吶�</p>
-	<p><span>縺溘□縲￣arllet縺ｯ邂｡逅�ｺｺ縺悟ｮ悟�縺ｫ荳�ｺｺ縺ｧ菴懈�縺励◆繧ゅ�縺ｧ縺吶�</span></p>
-	<p>縺ｾ縺�ｙ繧上▲縺ｦ縺�↑縺�ｩ溯�繧�ｸ榊�蜷医ｂ螟壹＞縺ｮ縺ｧ縲∝�蛻�＃逅�ｧ｣鬆ゅ＞縺滉ｸ翫〒縺ｮ縺泌茜逕ｨ繧偵♀鬘倥＞閾ｴ縺励∪縺吶�</p>
-	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">譁ｰ隕上Θ繝ｼ繧ｶ繝ｼ逋ｻ骭ｲ</a></p>
+	<p>　Parllet（パレット）は無料で使い始められる、ちょっと変わったWeb家計簿です。</p>
+	<p>現在、α（アルファ）版として日々開発作業中ですが、誰でも使うことができるようにしました。</p>
+	<p>データ100件までは無料で使うことができて、より多く保存したい方は月額100円～でデータ10万件～を保存しながら本格的に使うことも可能です。</p>
+	<p><span>ただ、Parlletは管理人が完全に一人で作成したものです。</span></p>
+	<p>まだ備わっていない機能や不具合も多いので、充分ご理解頂いた上でのご利用をお願い致します。</p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 </div>
 
 <div id="divTheOriginOfParllet" class="divIdxParagraph">
@@ -364,23 +365,23 @@ jQuery(function() {
 </div>
 <br>
 <div class="divIdxTextNormal">
-	<p>縲�arllet縺ｨ縺�≧蜊倩ｪ槭�縲￣arallel�井ｸｦ陦後��峨→Wallet�郁ｲ｡蟶�ｼ峨ｒ蜷医ｏ縺帙◆縲∫ｮ｡逅�ｺｺ縺ｮ騾�ｪ槭〒縺吶�
-	<p>莉頑戟縺｣縺ｦ縺�ｋ縺企≡�域ｮ矩ｫ假ｼ峨ｒ縲∽ｽｿ縺�岼逧�↓蜷医ｏ縺帙※邂｡逅�＠縺溘＞縺ｨ諤昴▲縺溘％縺ｨ縺ｯ縺ゅｊ縺ｾ縺帙ｓ縺具ｼ�/p>
-	<p>繧ゅ■繧阪ｓ縺薙ｌ縺ｯ縺昴ｓ縺ｪ縺ｫ螟ｧ縺偵＆縺ｪ縺薙→縺ｧ縺ｯ縺ｪ縺上�逶ｮ讓咎≡鬘阪ｒ豎ｺ繧√※雋ｯ驥醍ｮｱ縺ｫ雋ｯ繧√◆繧翫�逶ｮ逧�挨縺ｫ騾壼ｸｳ繧剃ｽ懊▲縺溘ｊ縺吶ｋ縺薙→縺ｧ螳溽樟蜿ｯ閭ｽ縺ｧ縲∝ｮ滄圀縺ｫ縺昴≧縺輔ｌ縺ｦ縺�ｋ莠ｺ繧ょ､壹＞縺薙→縺ｧ縺励ｇ縺��</p>
-	<p class="pOpenLine1">縲�＠縺九＠邂｡逅�ｺｺ縺ｯ縲√ｂ縺｣縺ｨ譟碑ｻ溘↓豌苓ｻｽ縺ｫ縺昴ｌ縺悟�譚･縺ｪ縺�°縺ｨ閠�∴縺ｾ縺励◆縲�/p>
-	<p>縺昴＠縺ｦ閾ｪ蛻��霄ｫ縺御ｽｿ縺�◆繧√↓縺薙�Web螳ｶ險育ｰｿ縲�arllet 繧剃ｽ懊ｊ縺ｾ縺励◆縲�/p>
+	<p>　Parlletという単語は、Parallel（並行の）とWallet（財布）を合わせた、管理人の造語です。
+	<p>今持っているお金（残高）を、使う目的に合わせて管理したいと思ったことはありませんか？</p>
+	<p>もちろんこれはそんなに大げさなことではなく、目標金額を決めて貯金箱に貯めたり、目的別に通帳を作ったりすることで実現可能で、実際にそうされている人も多いことでしょう。</p>
+	<p class="pOpenLine1">　しかし管理人は、もっと柔軟に気軽にそれが出来ないかと考えました。</p>
+	<p>そして自分自身が使うためにこのWeb家計簿　Parllet を作りました。</p>
 </div>
-<p class="pExampleOfParllet">繝ｻ蟷ｴ縺ｫ荳�屓縺ｯ驕�￥縺ｮ螳溷ｮｶ縺ｫ驥悟ｸｰ繧翫＠縺溘＞縺九ｉ豈取怦蟆代＠縺壹▽雋ｯ驥代☆繧九�</p>
-<p class="pExampleOfParllet">繝ｻ豈主ｹｴ蟶よｰ醍ｨ弱�謾ｯ謇輔＞縺ｮ譎よ悄縺ｫ縺ｪ縺｣縺ｦ諷後※繧九�縺ｧ縺ｪ縺上�縺ゅｉ縺九§繧∬ｲｯ繧√※縺翫″縺溘＞縲�/p>
-<p class="pExampleOfParllet">繝ｻ縺皮･晏о縺ｪ縺ｩ縲√ｂ繧峨▲縺溘♀驥代↓縺ｯ謇九ｒ莉倥￠縺壹↓蜿悶▲縺ｦ縺翫＞縺ｦ縲∽ｽ輔°縺ｧ縺願ｿ斐＠繧偵☆繧九ｈ縺�↑譎ゅ↓縺昴�縺企≡繧剃ｽｿ縺�◆縺��</p>
+<p class="pExampleOfParllet">・年に一回は遠くの実家に里帰りしたいから毎月少しずつ貯金する。</p>
+<p class="pExampleOfParllet">・毎年市民税の支払いの時期になって慌てるのでなく、あらかじめ貯めておきたい。</p>
+<p class="pExampleOfParllet">・ご祝儀など、もらったお金には手を付けずに取っておいて、何かでお返しをするような時にそのお金を使いたい。</p>
 <div class="divIdxTextNormal">
-	<img alt="谿矩ｫ倩｡ｨ" src="@{'/public/images/balanceTableImg.png'}" id="imgIdxBalanceTable">
-	<p class="pOpenLine1">莉悶↓繧ゅ�邏ｰ縺九￥逶ｮ逧�ｒ蛻�￠縺ｦ縺企≡繧堤ｮ｡逅�＠縺溘＞縺薙→縺ｯ縺�￥繧峨〒繧よ怏繧雁ｾ励∪縺吶�</p>
-	<p>縺ｧ繧ゅ◎縺ｮ驛ｽ蠎ｦ蜿｣蠎ｧ繧帝幕險ｭ縺励◆繧翫�縺壹▲縺ｨ迴ｾ驥代ｒ螳ｶ縺ｫ鄂ｮ縺�※縺�◆繧翫☆繧九�縺ｯ驕ｿ縺代◆縺��</p>
-	<p>繧ゅ▲縺ｨ險�∴縺ｰ<br><span>螳滄圀縺ｮ縺企≡縺後←縺薙↓菫晉ｮ｡縺輔ｌ縺ｦ縺�ｋ縺�/span><br>縺ｨ縺�≧縺薙→縺ｨ縲�br><span>逶ｮ逧�＃縺ｨ縺ｫ縺企≡繧定ｲｯ繧√ｋ</span><br>縺ｨ縺�≧縺薙→縺ｯ螳溘�蜈ｨ縺丞挨縺ｮ隧ｱ縺ｧ縲√◎繧後◇繧後ｒ<span>蜷梧凾�医ヱ繝ｩ繝ｬ繝ｫ��/span>縺ｫ邂｡逅�〒縺阪ｋ縺ｯ縺壹↑繧薙〒縺吶�</p>
-	<p class="pOpenLine1">縲�arllet縺ｯ縲√◎繧薙↑邏ｰ縺九＞邂｡逅�ｺｺ縺ｮ繝九�繧ｺ縺ｸ縺ｮ蟇ｾ蠢懊→繧､繝｡繝ｼ繧ｸ縺ｮ螳溽樟縺ｮ縺溘ａ縺ｫ逕溘∪繧後◆Web繧｢繝励Μ縺ｧ縺吶�</p>
-	<p>譎ｮ騾壹�螳ｶ險育ｰｿ縺ｨ縺励※繧ゆｽｿ縺医∪縺吶′縲∬ｲ｡蟶�ｄ蜿｣蠎ｧ縺ｮ蜿取髪繝ｻ谿矩ｫ倥ｒ邂｡逅�＠縺ｪ縺後ｉ<span>蟷ｳ陦後＠縺ｦ�医ヱ繝ｩ繝ｬ繝ｫ縺ｫ��/span>縲√う繝｡繝ｼ繧ｸ荳翫�<span>蜿｣蠎ｧ縺ｮ繧医≧縺ｪ繧ゅ��医％繧後ｒParllet縺ｨ蜻ｼ縺ｳ縺ｾ縺呻ｼ�/span>繧剃ｽ懊ｊ縲∵園謖√＠縺ｦ縺�ｋ谿矩ｫ倥ｒ逶ｮ逧�挨縺ｫ蛻�￠縺ｦ隕九ｋ縺薙→縺後〒縺阪ｋ縺ｮ縺御ｻ悶�螳ｶ險育ｰｿ繧｢繝励Μ縺ｨ驕輔≧縺ｨ縺薙ｍ縺ｫ縺ｪ縺｣縺ｦ縺�∪縺吶�</p>
-	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">譁ｰ隕上Θ繝ｼ繧ｶ繝ｼ逋ｻ骭ｲ</a></p>
+	<img alt="残高表" src="@{'/public/images/balanceTableImg.png'}" id="imgIdxBalanceTable">
+	<p class="pOpenLine1">他にも、細かく目的を分けてお金を管理したいことはいくらでも有り得ます。</p>
+	<p>でもその都度口座を開設したり、ずっと現金を家に置いていたりするのは避けたい。</p>
+	<p>もっと言えば<br><span>実際のお金がどこに保管されているか</span><br>ということと、<br><span>目的ごとにお金を貯める</span><br>ということは実は全く別の話で、それぞれを<span>同時（パラレル）</span>に管理できるはずなんです。</p>
+	<p class="pOpenLine1">　Parlletは、そんな細かい管理人のニーズへの対応とイメージの実現のために生まれたWebアプリです。</p>
+	<p>普通の家計簿としても使えますが、財布や口座の収支・残高を管理しながら<span>平行して（パラレルに）</span>、イメージ上の<span>口座のようなもの（これをParlletと呼びます）</span>を作り、所持している残高を目的別に分けて見ることができるのが他の家計簿アプリと違うところになっています。</p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 </div>
 
 <div id="divBenefitsOfParllet" class="divIdxParagraph">
@@ -388,14 +389,14 @@ jQuery(function() {
 </div>
 <br>
 <div class="divIdxTextNormal">
-	<p>縲�％縺薙∪縺ｧ隱ｭ繧薙〒鬆ゅ￠縺溘％縺ｨ縺ｫ諢溯ｬ昴�諢上ｒ霎ｼ繧√↑縺後ｉ縺薙％縺ｧ繧ゅ≧荳�▽縲�/p>
-	<p>譌｢縺ｫ逶ｮ逧��豎ｺ縺ｾ縺｣縺ｦ縺�ｋ縺企≡繧堤ｮ｡逅�〒縺阪ｋ縺ｨ菴輔�<span>繝｡繝ｪ繝�ヨ</span>縺後≠繧九°縺ｫ縺､縺�※縲�/p>
-	<p>荳�ｨ�〒險�≧縺ｨ<span>縺企≡繧剃ｽｿ縺�☆縺弱↑縺�/span>縺薙→縺ｧ縺吶�</p>
-	<p>逶ｮ逧��豎ｺ縺ｾ縺｣縺ｦ縺�ｋ縺企≡縺ｮ谿矩ｫ倥→縲∫岼逧��豎ｺ縺ｾ縺｣縺ｦ縺�↑縺�♀驥代�谿矩ｫ倥′蛻�￠縺ｦ隕九∴繧九％縺ｨ縺ｧ縲∝哨蠎ｧ繧�ｲ｡蟶�↓縺�￥繧画ｮ九▲縺ｦ縺�◆縺ｨ縺励※繧�<span>閾ｪ逕ｱ縺ｫ菴ｿ縺医ｋ驥鷹｡阪′縺�￥繧峨↑縺ｮ縺�/span> 縺後ワ繝�く繝ｪ蛻�°繧九�縺ｧ縺吶�</p>
-	<p>縲�＆繧峨↓Parllet 縺ｧ縺ｯ縲∵怦縺ｮ莠育ｮ励�險ｭ螳壹′縺ｧ縺阪ｋ縺薙→縺ｫ蜉�∴縺ｦ縲∝庶蜈･繧�髪蜃ｺ繧堤岼逧�挨谿矩ｫ假ｼ�arllet�峨↓蜑ｲ繧雁ｽ薙※縺溘ｂ縺ｮ縺ｯ莠育ｮ励�蟇ｾ雎｡螟悶→縺励※隕九ｋ縺薙→縺悟庄閭ｽ縺ｫ縺ｪ縺｣縺ｦ縺�∪縺吶�</p>
-	<p>Parllet繧剃ｽｿ縺�％縺ｪ縺吶％縺ｨ縺悟�譚･繧後�縲∬�蛻��霄ｫ縺ｧ豎ｺ繧√◆逶ｮ逧�↓豐ｿ縺｣縺溘♀驥代�菴ｿ縺�婿繧�ｲｯ繧∵婿縺悟�譚･縺ｦ縺�ｋ縺ｯ縺壹〒縺吶�</p>
-	<p>Parllet縺後�繧医ｊ螟壹￥縺ｮ莠ｺ縺ｮ蠖ｹ縺ｫ遶九▽縺薙→繧帝｡倥▲縺ｦ豁｢縺ｿ縺ｾ縺帙ｓ縲�/p>
-	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">譁ｰ隕上Θ繝ｼ繧ｶ繝ｼ逋ｻ骭ｲ</a></p>
+	<p>　ここまで読んで頂けたことに感謝の意を込めながらここでもう一つ。</p>
+	<p>既に目的の決まっているお金を管理できると何の<span>メリット</span>があるかについて。</p>
+	<p>一言で言うと<span>お金を使いすぎない</span>ことです。</p>
+	<p>目的の決まっているお金の残高と、目的の決まっていないお金の残高が分けて見えることで、口座や財布にいくら残っていたとしても <span>自由に使える金額がいくらなのか</span> がハッキリ分かるのです。</p>
+	<p>　さらにParllet では、月の予算の設定ができることに加えて、収入や支出を目的別残高（Parllet）に割り当てたものは予算の対象外として見ることが可能になっています。</p>
+	<p>Parlletを使いこなすことが出来れば、自分自身で決めた目的に沿ったお金の使い方や貯め方が出来ているはずです。</p>
+	<p>Parlletが、より多くの人の役に立つことを願って止みません。</p>
+	<p class="pOpenLine1"><a tabindex="0" class="aToSignUp grayBtn">新規ユーザー登録</a></p>
 	<br>
 	<br>
 	<br>

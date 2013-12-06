@@ -1,3 +1,15 @@
+/**
+ * borderMenu.js v1.0.0
+ * http://www.codrops.com
+ *
+ * Licensed under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
+ * Copyright 2013, Codrops
+ * http://www.codrops.com
+ * 
+ * 2013/11/18 shuichi sakamoto 上記を元にしてjQuery化等カスタマイズ
+ */
 ;(function() {
 	// http://stackoverflow.com/a/11381730/989439
 	function mobilecheck() {
@@ -11,7 +23,7 @@
 			trigger = menu.children('a.bt-menu-trigger'),
 			link = menu.find('ul').find('a'),
 			// event type (if mobile use touch events)
-			eventtype = mobilecheck() ? 'touchstart' : 'click',
+			eventtype = mobilecheck() ? 'touchstart click' : 'click',
 			overlay = menu.children('div.bt-overlay'),
 			resetMenu = function() {
 				menu.removeClass('bt-menu-open');
@@ -43,7 +55,7 @@
 			if (menu.hasClass('bt-menu-open')) resetMenu();
 		});
 		
-		// Androidでスクロールしないバグへの対応
+		// Android 2.3 でスクロールしないバグへの対応
 		if (navigator.userAgent.indexOf('Android') > 0) {
 			var box = jQuery('#divUlFrm'),
 				touchStartPositionX,

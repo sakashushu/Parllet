@@ -1876,7 +1876,7 @@ label.fieldName {
 
 
 #divForSmart {
-	padding-top: 45px;
+	padding-top: 20px;
 }
 #prltMain {
 	
@@ -1886,4 +1886,7 @@ label.fieldName {
 }
 #main {
 	width: auto;
+}
+#fill2 {
+	display: none;
 }
