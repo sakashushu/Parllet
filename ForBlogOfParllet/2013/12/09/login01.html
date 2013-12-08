@@ -33,6 +33,7 @@ jQuery(function() {
 <script type="text/javascript">
 <!-- 
 jQuery(function(){
+//	alert(jQuery('body').width());
 	jQuery('#overlay').height(jQuery('#container').height());
 	jQuery('a.clickOverlay').click(function() {
 		jQuery('#pageTop').click();
@@ -49,6 +50,34 @@ jQuery(function(){
 });
 // -->
 </script>
+
+<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#main, #ftContents {
+	width: 95%;
+	max-width: 980px;
+}
+
+
+/* スマホのスタイル */
+
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	
+}
+-->
+</style>
+
 
 <noscript>このページは javascript が有効になっている必要があります。</noscript>
 	</head>
@@ -105,12 +134,6 @@ jQuery(function(){
 			<div id="main">
 				
 <div id="prltMain">
-
-<style>
-<!--
-//ここに追加スタイル
--->
-</style>
 
 <script type="text/javascript">
 <!-- 
