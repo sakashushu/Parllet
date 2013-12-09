@@ -61,8 +61,28 @@ body {
 	width: 95%;
 	max-width: 980px;
 }
+#login {
+	width: 95%;
+	max-width: 660px;
+}
+#loginOrg, #loginSns {
+	margin: 0 auto;
+}
 
 /* スマホのスタイル */
+#loginOrg, #loginSns {
+	float: none;
+}
+#loginOrg {
+	border-left: none;
+	padding-left: 0;
+	border-bottom: 1px solid rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .3);
+	padding-bottom: 10px;
+}
+#loginSns {
+	padding: 10px 0;
+}
 
 
 /* タブレットのスタイル */
@@ -71,6 +91,22 @@ body {
 
 /* PCのスタイル */
 @media all and (min-width: 768px) {
+	#loginOrg {
+		float: right;
+	}
+	#loginSns {
+		float: left;
+	}
+	#loginOrg {
+		border-left: 1px solid rgba(0, 0, 0, .2);
+		box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+		border-bottom: none;
+		padding-left: 10px;
+		padding-bottom: 0;
+	}
+	#loginSns {
+		padding-top: 0;
+	}
 }
 -->
 </style>
