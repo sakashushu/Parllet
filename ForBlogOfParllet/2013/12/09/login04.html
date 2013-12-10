@@ -33,6 +33,8 @@ jQuery(function() {
 <script type="text/javascript">
 <!-- 
 jQuery(function(){
+	alert(jQuery(window).width());	//250
+	alert(jQuery(window).height());	//657
 	if (jQuery('#overlay').height() < jQuery('#container').height())
 		jQuery('#overlay').height(jQuery('#container').height());
 	if (jQuery('#overlay').width() < jQuery('#container').width())
@@ -86,6 +88,8 @@ body {
 	border-bottom: 1px solid rgba(0, 0, 0, .2);
 	box-shadow: 0 1px 0 rgba(255, 255, 255, .3);
 	padding-bottom: 10px;
+	width: 95%;
+	max-width: 360px;
 }
 #loginSns {
 	padding: 10px 0;
