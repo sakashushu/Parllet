@@ -33,11 +33,10 @@ jQuery(function() {
 <script type="text/javascript">
 <!-- 
 jQuery(function(){
-	var vWd = jQuery('#container').width() < 980 ? 980 : jQuery('#container').width() 
-	
-	jQuery('#overlay').height(jQuery('#container').height());
-	if (jQuery('#overlay').width() < vWd)
-		jQuery('#overlay').width(vWd);
+	if (jQuery('#overlay').height() < jQuery('#container').height())
+		jQuery('#overlay').height(jQuery('#container').height());
+	if (jQuery('#overlay').width() < jQuery('#container').width())
+		jQuery('#overlay').width(jQuery('#container').width());
 	jQuery('a.clickOverlay').click(function() {
 		jQuery('#pageTop').click();
 		jQuery('#overlay').fadeIn();
@@ -67,16 +66,73 @@ body {
 	width: 95%;
 	max-width: 980px;
 }
+#login {
+	width: 95%;
+}
+#loginOrg, #loginSns {
+	margin: 0 auto;
+}
 
 /* スマホのスタイル */
-
+#login {
+	max-width: 400px;
+}
+#loginOrg, #loginSns {
+	float: none;
+}
+#loginOrg {
+	border-left: none;
+	padding-left: 0;
+	border-bottom: 1px solid rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .3);
+	padding-bottom: 10px;
+	width: 95%;
+	max-width: 360px;
+}
+#loginSns {
+	padding: 10px 0;
+	width: 95%;
+	max-width: 266px;
+}
+#username-field label, #password-field label {
+	float: none;
+	width: 100%;
+	text-align: left;
+}
+#username-field div, #password-field div {
+	width: 170px;
+	margin: 0 auto;
+}
 
 /* タブレットのスタイル */
 @media all and (min-width: 480px) {
+	#username-field label, #password-field label {
+		float: left;
+		width: 120px;
+		text-align: right;
+	}
+	#username-field div, #password-field div {
+		width: 100%;
+	}
 }
 
 /* PCのスタイル */
 @media all and (min-width: 768px) {
+	#login {
+		max-width: 660px;
+	}
+	#loginOrg {
+		float: right;
+		border-left: 1px solid rgba(0, 0, 0, .2);
+		box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+		border-bottom: none;
+		padding-left: 10px;
+		padding-bottom: 0;
+	}
+	#loginSns {
+		float: left;
+		padding-top: 0;
+	}
 }
 -->
 </style>
@@ -157,20 +213,24 @@ jQuery(function() {
 			<div id="loginOrg">
 				<p>ノーマルログイン</p>
 												
-				<p id="username-field">
-					<label for="username">Ｅメール:</label>
-					<input type="text" name="username" id="saUsername" value="" />
-					<input type="text" id="saUsername2" class="invisible" />
-				</p>
-				<p id="password-field">
-					<label for="password">パスワード:</label>
-					<input type="password" name="password" id="saPassword" value="" />
-					<input type="password" id="saPassword2" class="invisible" />
-				</p>
+				<div id="username-field">
+			    	<div>
+						<label for="username">Ｅメール:</label>
+						<input type="text" name="username" id="saUsername" value="" />
+						<input type="text" id="saUsername2" class="invisible" />
+					</div>
+				</div>
+				<div id="password-field">
+			    	<div>
+						<label for="password">パスワード:</label>
+						<input type="password" name="password" id="saPassword" value="" />
+						<input type="password" id="saPassword2" class="invisible" />
+					</div>
+				</div>
 		
-				<p id="signin-field">
+				<div id="signin-field">
 					<input type="submit" id="signin" class="grayBtn" value="ログイン" />
-				</p>
+				</div>
 			</div>
 			
 		<div id="loginSns">
