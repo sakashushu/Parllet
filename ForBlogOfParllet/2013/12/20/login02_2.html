@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>ログイン</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+
+<!-- jQuery(GoogleAPIs経由) -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+
+<script type="text/javascript" src="public/javascripts/jquery.gpfloat-1.0.js" ></script>
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	jQuery('#header').gpFloatX();
+});
+// -->
+</script>
+
+<script src="public/javascripts/alertify.js"></script>
+<link rel="stylesheet" href="public/stylesheets/alertify.core.css">
+<link rel="stylesheet" href="public/stylesheets/alertify.default.css">
+<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	var strMsg = "" +
+	"<div style='text-align:left;'>"+
+	"このページは 2013年12月9日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版のログインページの見た目を模したものなので、Parllet の本来の機能は使えません。<br/>" +
+	"<br/>"+
+	"また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも12月9日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>" +
+	"<br/>"+
+	"とはいえ、PCであれば<a href='http://parllet.com' style='color: #eee;'>http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>" +
+	"<br/>"+
+	"ご興味がおありの方は是非お越しください。"+
+	"</div>"+
+	"<br/>";
+	jQuery('#fb-login, #signin, a.clickOverlay').click(function () {
+		alertify.alert(strMsg);
+		return false;
+	});
+});
+ -->
+</script>
+
+<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #ftContents {
+	width: 95%;
+	max-width: 980px;
+}
+#login {
+	width: 95%;
+}
+#loginOrg, #loginSns {
+	margin: 0 auto;
+}
+
+/* スマホのスタイル */
+#login {
+	max-width: 400px;
+}
+#loginOrg, #loginSns {
+	float: none;
+}
+#loginOrg {
+	border-left: none;
+	padding-left: 0;
+	border-bottom: 1px solid rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .3);
+	padding-bottom: 10px;
+	width: 95%;
+	max-width: 360px;
+}
+#loginSns {
+	padding: 10px 0;
+	width: 95%;
+	max-width: 266px;
+}
+#username-field label, #password-field label {
+	float: none;
+	width: 100%;
+	text-align: left;
+}
+#username-field div, #password-field div {
+	width: 170px;
+	margin: 0 auto;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	#username-field label, #password-field label {
+		float: left;
+		width: 120px;
+		text-align: right;
+	}
+	#username-field div, #password-field div {
+		width: 100%;
+	}
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	#login {
+		max-width: 660px;
+	}
+	#loginOrg {
+		float: right;
+		border-left: 1px solid rgba(0, 0, 0, .2);
+		box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+		border-bottom: none;
+		padding-left: 10px;
+		padding-bottom: 0;
+	}
+	#loginSns {
+		float: left;
+		padding-top: 0;
+	}
+}
+-->
+</style>
+
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+	</head>
+	<body>
+		<div id="container">
+			<div id="header">
+				<div class="fill">
+					<div id="hdContainer">
+						<ul id="ltBlocks">
+							<li>
+								<ul id="logo">
+									<li id="logo-pre">
+											<div>
+		ちょっと変わった
+		<br>
+		Web家計簿
+	</div>
+	<span id="logo_alpha-img">
+		Parllet
+		<span>
+			Parllet(パレット)はアルファ版です。
+			ご承知おきください。
+		</span>
+	</span>
+	</li>
+	<li>
+		<a href="#" class="clickOverlay" >
+			<span id="logo-img">Parllet</span>
+		</a>
+	</li>
+								</ul>
+							</li>
+													</ul>
+						<ul id="tools">
+													</ul>
+					</div>
+				</div>
+			</div>
+			<div id="main">
+				
+<div id="prltMain">
+
+<div id="login">
+	
+	<h1>ログイン</h1>
+		
+	<div class="box">
+			<div id="loginOrg">
+				<p>ノーマルログイン</p>
+												
+				<div id="username-field">
+			    	<div>
+						<label for="username">Ｅメール:</label>
+						<input type="text" name="username" id="saUsername" value="" />
+						<input type="text" id="saUsername2" class="invisible" />
+					</div>
+				</div>
+				<div id="password-field">
+			    	<div>
+						<label for="password">パスワード:</label>
+						<input type="password" name="password" id="saPassword" value="" />
+						<input type="password" id="saPassword2" class="invisible" />
+					</div>
+				</div>
+		
+				<div id="signin-field">
+					<input type="submit" id="signin" class="grayBtn" value="ログイン" />
+				</div>
+			</div>
+			
+		<div id="loginSns">
+			<p>SNSでログイン</p>
+			<a id="fb-login" class="btn blCenter" tabindex="0">
+				<div><img src="public/images/f_logo_18.png" border="0" /></div>
+				<div>Facebookでログイン</div>
+			</a>
+		</div>  <!-- loginSns -->
+		
+	</div>  <!-- box -->
+</div>  <!-- login -->
+
+</div>
+			</div>
+			<div id="footer">
+			<div class="fill">
+				<div id="ftContents">
+					<a href="#" class="clickOverlay">
+						parllet.com
+					</a>
+				</div>
+			</div>
+			</div>	<!-- footer -->
+		</div>
+	</body>
+</html>
