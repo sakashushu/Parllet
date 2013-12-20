@@ -33,10 +33,11 @@ jQuery(function() {
 <script type="text/javascript">
 <!-- 
 jQuery(function(){
-	if (jQuery('#overlay').height() < jQuery('#container').height())
-		jQuery('#overlay').height(jQuery('#container').height());
-	if (jQuery('#overlay').width() < jQuery('#container').width())
-		jQuery('#overlay').width(jQuery('#container').width());
+//	if (jQuery('#overlay').height() < jQuery('#container').height())
+//		jQuery('#overlay').height(jQuery('#container').height());
+//	if (jQuery('#overlay').width() < jQuery('#container').width())
+//		jQuery('#overlay').width(jQuery('#container').width());
+//	jQuery('#overlay').children('div').height(jQuery('html').height());
 	jQuery('a.clickOverlay').click(function() {
 		jQuery('#pageTop').click();
 		jQuery('#overlay').fadeIn();
@@ -46,12 +47,12 @@ jQuery(function(){
 		jQuery("#overlay").fadeOut();
 	});
 	
-	jQuery(window).resize(function() {
-		if (jQuery('#overlay').height() < jQuery('#container').height())
-			jQuery('#overlay').height(jQuery('#container').height());
-		if (jQuery('#overlay').width() < jQuery('#container').width())
-			jQuery('#overlay').width(jQuery('#container').width());
-	});
+//	jQuery(window).resize(function() {
+//		if (jQuery('#overlay').height() < jQuery('#container').height())
+//			jQuery('#overlay').height(jQuery('#container').height());
+//		if (jQuery('#overlay').width() < jQuery('#container').width())
+//			jQuery('#overlay').width(jQuery('#container').width());
+//	});
 });
 // -->
 </script>
@@ -142,7 +143,7 @@ body {
 	</head>
 	<body>
 <div id="overlay">
-	<div>
+	<div style="overflow: auto;">
 		<p id="text">
 			このページは 2013年12月9日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版のログインページの見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
 			<br/>

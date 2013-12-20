@@ -1,9 +1,10 @@
+
 #overlay{
 	display: none;
 	width: 100%;
-	height:auto;
+	height: 100%;
 	text-align: left;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	z-index: 801;
 	background: rgba(0,0,0,0.7);
@@ -11,14 +12,15 @@
 
 #overlay div {
 	max-width: 90%;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 1em auto 0 auto;
+	max-height: 90%;
 }
 
 #text{
 	font-size: 30px;
 	color: #eee;
-	padding-top: 100px;
+//	padding-top: 100px;
+	padding-top: 1em;
 	padding-bottom: 1em;
 	font-weight: bold;
 }
