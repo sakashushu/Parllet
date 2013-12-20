@@ -6,7 +6,7 @@
 	font-family: sans-serif;
 }
 .alertify {
-	background: #FFF;
+	background: #efdeb4;
 	border: 10px solid #333; /* browsers that don't support rgba */
 	border: 10px solid rgba(0,0,0,.7);
 	border-radius: 8px;
