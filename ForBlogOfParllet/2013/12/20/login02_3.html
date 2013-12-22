@@ -33,10 +33,6 @@ jQuery(function() {
 <script type="text/javascript">
 <!-- 
 jQuery(function(){
-//	if (jQuery('#overlay').height() < jQuery('#container').height())
-//		jQuery('#overlay').height(jQuery('#container').height());
-//	if (jQuery('#overlay').width() < jQuery('#container').width())
-//		jQuery('#overlay').width(jQuery('#container').width());
 	jQuery('a.clickOverlay').click(function() {
 		jQuery('body').css('overflow-y', 'hidden');
 		jQuery('#pageTop').click();
@@ -47,13 +43,44 @@ jQuery(function(){
 		jQuery('body').css('overflow-y', 'scroll');
 		jQuery("#overlay").fadeOut();
 	});
+	// Android 2.3 でスクロールしないバグへの対応
+	if (navigator.userAgent.indexOf('Android') > 0) {
+		var box = jQuery('#overlay div'),
+			touchStartPositionX,
+			touchStartPositionY,
+			touchMovePositionX,
+			touchMovePositionY,
+			moveFarX,
+			moveFarY,
+			startScrollX,
+			startScrollY,
+			moveScrollX,
+			moveScrollY;
 	
-//	jQuery(window).resize(function() {
-//		if (jQuery('#overlay').height() < jQuery('#container').height())
-//			jQuery('#overlay').height(jQuery('#container').height());
-//		if (jQuery('#overlay').width() < jQuery('#container').width())
-//			jQuery('#overlay').width(jQuery('#container').width());
-//	});
+		box.bind('touchstart', function(e) {
+			var touch = e.originalEvent.touches[0];
+			touchStartPositionX = touch.pageX;
+			touchStartPositionY = touch.pageY;
+			//タッチ前スクロールをとる
+			startScrollX = box.scrollLeft();
+			startScrollY = box.scrollTop();
+		});
+		box.bind('touchmove', function(e) {
+			var touch = e.originalEvent.touches[0];
+			e.preventDefault();
+			//現在の座標を取得
+			touchMovePositionX = touch.pageX;
+			touchMovePositionY = touch.pageY;
+			//差をとる
+			moveFarX = touchStartPositionX - touchMovePositionX;
+			moveFarY = touchStartPositionY - touchMovePositionY;
+			//スクロールを動かす
+			moveScrollX = startScrollX +moveFarX;
+			moveScrollY = startScrollY +moveFarY;
+			box.scrollLeft(moveScrollX);
+			box.scrollTop(moveScrollY);
+		});
+	}
 });
 // -->
 </script>
