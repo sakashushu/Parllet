@@ -14,13 +14,10 @@
 <script type="text/javascript">google.load('jquery', '1')</script>
 <script type="text/javascript">google.load('jqueryui', '1')</script>
 
-<!-- 
-<script type="text/javascript" src="public/javascripts/jquery-1.6.4.min.js" ></script>
- -->
-
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+<link rel="stylesheet" media="screen" href="public/stylesheets/overlay.css">
 
 <link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
 
@@ -33,29 +30,32 @@ jQuery(function() {
 // -->
 </script>
 
-<script src="public/javascripts/alertify.js"></script>
-<link rel="stylesheet" href="public/stylesheets/alertify.core.css">
-<link rel="stylesheet" href="public/stylesheets/alertify.default.css">
 <script type="text/javascript">
 <!-- 
-jQuery(function() {
-	var strMsg = "" +
-	"<div style='text-align:left;'>"+
-	"このページは 2013年12月9日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版のログインページの見た目を模したものなので、Parllet の本来の機能は使えません。<br/>" +
-	"<br/>"+
-	"また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも12月9日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>" +
-	"<br/>"+
-	"とはいえ、PCであれば<a href='http://parllet.com' style='color: #eee;'>http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>" +
-	"<br/>"+
-	"ご興味がおありの方は是非お越しください。"+
-	"</div>"+
-	"<br/>";
-	jQuery('#fb-login, #signin, a.clickOverlay').click(function () {
-		alertify.alert(strMsg);
+jQuery(function(){
+//	if (jQuery('#overlay').height() < jQuery('#container').height())
+//		jQuery('#overlay').height(jQuery('#container').height());
+//	if (jQuery('#overlay').width() < jQuery('#container').width())
+//		jQuery('#overlay').width(jQuery('#container').width());
+	jQuery('a.clickOverlay').click(function() {
+		jQuery('body').css('overflow-y', 'hidden');
+		jQuery('#pageTop').click();
+		jQuery('#overlay').fadeIn();
 		return false;
 	});
+	jQuery("#close").click(function() {
+		jQuery('body').css('overflow-y', 'scroll');
+		jQuery("#overlay").fadeOut();
+	});
+	
+//	jQuery(window).resize(function() {
+//		if (jQuery('#overlay').height() < jQuery('#container').height())
+//			jQuery('#overlay').height(jQuery('#container').height());
+//		if (jQuery('#overlay').width() < jQuery('#container').width())
+//			jQuery('#overlay').width(jQuery('#container').width());
+//	});
 });
- -->
+// -->
 </script>
 
 <style>
@@ -143,6 +143,21 @@ body {
 <noscript>このページは javascript が有効になっている必要があります。</noscript>
 	</head>
 	<body>
+<div id="overlay">
+	<div>
+		<p id="text">
+			このページは 2013年12月9日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版のログインページの見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			<br/>
+			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも12月9日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
+			<br/>
+			とはいえ、PCであれば<a href="http://parllet.com" style="color: #eee;">http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>
+			<br/>
+			ご興味がおありの方は是非お越しください。
+		</p>
+		<p id="close">閉じる</p>
+	</div>
+</div>
+		
 		<div id="container">
 			<div id="header">
 				<div class="fill">
@@ -180,6 +195,17 @@ body {
 			<div id="main">
 				
 <div id="prltMain">
+
+<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	jQuery('#fb-login, #signin').click(function() {
+		jQuery('a.clickOverlay').click();
+	});
+});
+// -->
+</script>
+
 
 <div id="login">
 	
