@@ -11,30 +11,14 @@
 }
 
 #overlay div {
-//	max-width: 90%;
-//	margin-left: auto;
-//	margin-right: auto;
 	height: 100%;
 	overflow-y: scroll;
 }
-
-//#overlay #divFrm {
-//	max-width: 100%;
-//	max-height: 100%;
-//	overflow: auto;
-//}
-//
-//#overlay #divInnr {
-//	max-width: 90%;
-//	margin: 1em auto 0 auto;
-//	max-height: 90%;
-//}
 
 #text{
 	font-size: 30px;
 	color: #eee;
 	padding-top: 100px;
-//	padding-top: 1em;
 	padding-bottom: 1em;
 	font-weight: bold;
 	max-width: 90%;
