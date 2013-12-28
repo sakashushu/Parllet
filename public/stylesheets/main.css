@@ -853,7 +853,7 @@ fieldset {
 
 /** Member , Admin **/
 
-#memberMenu, #adminMenu {
+.memberMenu, #adminMenu {
 	list-style: none;
 //	padding: 0;
 //	margin: 5px 0px 8px 5px;
@@ -861,11 +861,11 @@ fieldset {
 	margin: 0;
 }
 
-#memberMenu li, #adminMenu li {
+.memberMenu li, #adminMenu li {
 	display: inline;
 }
 
-#memberMenu li a, #adminMenu li a {
+.memberMenu li a, #adminMenu li a {
 	color: #fff;
 	text-decoration: none;
 //	font-size: 80%;
@@ -873,7 +873,7 @@ fieldset {
 	-webkit-border-radius: 9px;
 	-moz-border-radius: 9px;
 }
-#memberMenu li a {
+.memberMenu li a {
 //	background: #733405;
 //	background: #755a36;
 	background: #633308;
@@ -882,7 +882,7 @@ fieldset {
 	background: #591C64;
 }
 
-#memberMenu li.selected a, #adminMenu li.selected a {
+.memberMenu li.selected a, #adminMenu li.selected a {
 	background: #82A346;
 }
 
