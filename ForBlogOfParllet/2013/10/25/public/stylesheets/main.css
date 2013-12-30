@@ -1,17 +1,18 @@
-html {
-	background-color: transparent;
-	background-image: none;
-}
-
 html, body, textarea, input, select, .ui-widget, .ui-widget input, .ui-widget textarea, .ui-widget select, .ui-widget button {
-	font-family: Arial, Verdana, sans-serif;
+	font-family: Arial, Helvetica, "ＭＳ Ｐゴシック", MS PGothic, sans-serif;
 }
 
 body {
+//	word-wrap: break-word;
 	word-break: break-all;
+	
 	
 	margin: auto;
 	font-size: 11pt;
+//	background: url(../images/background_test.jpg);
+//	background-attachment: fixed;
+//	background: #e8cc8b;
+//	background: #ecd6a2;
 	background: #efdeb4;
 	color: #612d00;
 	overflow-y: scroll;
@@ -35,29 +36,22 @@ html, body{
 	left: 0;
 }
 
-select {
-	font-weight: normal;
-}
-
 #divAppliIndex {
 	padding-top: 45px;
 }
 
 h1 {
 	font-size: 13pt;
+//background-color: #dbb96b;
 	padding: 3px;
 }
 h2 {
 	font-size: 10pt;
 	padding: 2px;
 }
-h3 {
-	font-size: 13pt;
-	font-weight: bold;
-}
 
-input[type="text"], input[type="password"] {
-	height: 19px;
+input[type="text"] {
+	height: 15px;
 }
 
 input[type="submit"],input[type="button"] {
@@ -71,6 +65,10 @@ input[type="submit"],input[type="button"] {
 	text-align: right;
 }
 
+//.num3 {
+//	padding-right: 4px;
+//}
+
 .padR4 {
 	padding-right: 4px;
 }
@@ -81,7 +79,7 @@ input[type="submit"],input[type="button"] {
 
 .aBtn {
 	font-size: 90%;
-	padding: 4px;
+	padding: 4px 4px;
 	margin: 0;
 	text-decoration: none;
 	background-color: #eee;
@@ -104,22 +102,9 @@ a.aBtn span {
 	background-color:#ffffff;
 }
  
-a.aBtn:hover span {
+a.aBtn:hover span{
 	display:inline;
 	position:absolute;
-}
-
-.grayBtn {
-	font-size: 90%;
-	padding: 2px 6px;
-	margin: 0;
-	text-decoration: none;
-	background-color: #eee;
-	border-style: solid;
-	border-color: #aaa;
-	border-width: 1px;
-	color: #000;
-	cursor: pointer;
 }
 
 
@@ -144,51 +129,19 @@ a.aBtn:hover span {
 
 /** index **/
 
-#divIdxHdFrm {
-	background: url(../images/brown7_90.png);
-	height: 36px;
-}
-#divIdxHd {
-	width: 980px;
-	z-index: 798;
-	margin-right: auto;
-	margin-left: auto;
-	padding: 10px 0;
-}
-#divIdxHd ul {
-	list-style: none;
-	margin: 0;
-}
-#headerNav ul li {
-	display: inline;
-	padding: 0 1em;
-}
-
-#divIdxMain {
-	margin-top: 36px;
-}
-#divIdxMain p {
-	margin-top: 1em;
-}
-
-#divLogoFrm {
-	overflow: hidden;
-}
-
 #logo_index {
+	width: 512px;
+	height: 266px;
 	float: left;
 }
 
 #logo_index img {
-	margin: 10px 0;
-	max-width: 482px;
-	width: 100%
+	margin: 10px;
 }
 
 #sidebar_r {
 	float: right;
-	max-width: 400px;
-	width: 100%;
+	width: 400px;
 }
 
 
@@ -202,7 +155,9 @@ a.aBtn:hover span {
 	background: url(../images/white20.png);
 	text-align: left;
 	margin-top: 10px;
+	margin-left: 10px;
 	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない;
+	height: 246px;
 }
 #sidebar_r .box .box_inner {
 	padding: 10px;
@@ -228,61 +183,6 @@ a.aBtn:hover span {
 	position: relative;
 }
 
-#divIdxCntntTopic1 {
-	margin: 20px 20px 0 20px;
-	font-size: 52pt;
-}
-#divIdxCntntTopic1 span {
-	font-weight: bold;
-}
-#spnWebHA {
-	font-size: 64pt;
-}
-
-#imgIdxBalanceTable {
-	float: right;
-	width: 70%;
-}
-
-.divIdxParagraph {
-	font-size: 22pt;
-	font-weight: bold;
-	padding-top: 80px;
-}
-
-.pOpenLine1 {
-	padding-top: 1em;
-}
-
-.pExampleOfParllet {
-	font-size: 13pt;
-	font-weight: bold;
-	padding-left: 2em;
-}
-
-.divIdxTextNormal {
-	font-size: 12pt;
-}
-.divIdxTextNormal span {
-	font-weight: bold;
-}
-
-#pageTop {
-	background: #ddd;
-	border-radius: 5px;
-	color: #fff;
-	padding: 20px;
-	position: fixed;
-	bottom: 30px;
-	right: 20px;
-	font-weight: bold;
-}
-#pageTop:hover {
-	background:#eee;
-	color: #999;
-}
-
-
 
 /** dialogForm **/
 #dlgEmailVal {
@@ -297,6 +197,7 @@ a.aBtn:hover span {
 /** dialogFrmUpdRec **/
 #dialog-updRec fieldset {
 	margin-top: 15px;
+//	max-height: 400px;
 }
 .dfurElem {
 	min-height: 32px;
@@ -322,6 +223,9 @@ a.aBtn:hover span {
 	width: 100%;
 	margin-bottom: 12px;
 }
+.dfurElem div {
+//	float: left;
+}
 
 .editable {
 	cursor: pointer;
@@ -335,11 +239,13 @@ a.aBtn:hover span {
 	top:0;
 	left:0;
 	right:0;
+//	z-index: 10000;
 	z-index: 800;
 }
 
 #header .fill {
 	background: url(../images/brown3_90.png);
+//	z-index: 9999;
 	z-index: 799;
 }
 #header #fill2 {
@@ -355,8 +261,15 @@ a.aBtn:hover span {
 }
 
 #dlHeader {
+//	position: fixed;
 	width: 980px;
+//	background: url(../images/brown3_90.png);
+//	background: url(../images/brown7_90.png);
+//	z-index: 9998;
 	z-index: 798;
+//	top: 0;
+//	margin-top: 36px;
+//	top: 36px;
 	margin-right: auto;
 	margin-left: auto;
 }
@@ -380,7 +293,9 @@ a.aBtn:hover span {
 	position: fixed;
 	margin-top: 36px;
 	width: 980px;
+//	background: url(../images/brown3_90.png);
 	background: url(../images/brown7_90.png);
+//	z-index: 9998;
 	z-index: 798;
 	top:0;
 }
@@ -392,6 +307,7 @@ a.aBtn:hover span {
 	position: absolute;
 	bottom: 0;
 	height: 30px;
+//	width: 100%;
 	left: 0;
 	right: 0;
 	text-align: right;
@@ -417,6 +333,8 @@ a.aBtn:hover span {
 
 #main {
 	width: 980px;
+//	margin-top: 45px;
+//	padding-top: 45px;
 	margin-left:auto;
 	margin-right:auto;
 	padding-bottom: 45px;
@@ -440,6 +358,9 @@ a.aBtn:hover span {
 
 .btMainInner {
 	width: 980px;
+//	background: #f2e4c3;
+//	background: #f4e9cf;
+//	background: #f6edd8;
 	background: #f6f5d1;
 }
 
@@ -462,6 +383,7 @@ a.aBtn:hover span {
 }
 
 #dlMainInner {
+//	padding-top: 10px;
 	padding-right: 10px;
 	padding-left: 10px;
 	background: #f6f5d1;
@@ -481,6 +403,7 @@ a.aBtn:hover span {
 }
 
 #cfMain .data {
+//	background: url(../images/white20.png);
 	padding: 4px;
 	margin: 0;
 	font-size: 90%;
@@ -488,6 +411,10 @@ a.aBtn:hover span {
 }
 
 #cfMain .data.odd {
+//	background: #C0CBE5;
+//	background: #dbb96b;
+//	background: transparent;
+//	background: url(../images/white20.png);
 	background: white;
 }
 
@@ -507,6 +434,7 @@ a.aBtn:hover span {
 
 #ltBlocks {
 	position: relative;
+//	list-style: none;
 	padding: 0;
 	margin: 0;
 	top: 2px;
@@ -520,6 +448,8 @@ a.aBtn:hover span {
 }
 
 #logo {
+//	list-style: none;
+//	list-style-position: outside;
 	padding: 0;
 	margin: 0;
 }
@@ -532,8 +462,11 @@ a.aBtn:hover span {
 }
 
 #logo-pre {
+//	color: #a34c00;
 	color: #ffd391;
+//	font-size: 24px;
 	font-size: 12px;
+//	font-weight: bold;
 	padding-left: 4px;
 }
 #logo-pre div {
@@ -585,6 +518,7 @@ a.aBtn:hover span {
 	position: absolute;
 	top: 5px;
 	left: 3px;
+//	z-index: 10002;
 	z-index: 802;
 	
 	/* 以下、IE6/7用 */
@@ -623,9 +557,11 @@ a.aBtn:hover span {
 	top: 10px;
 	right: 10px;
 	position: absolute;
+//	z-index: 10001;
 	z-index: 801;
 }
 #tools a {
+//	color: #612d00;
 	color: #ffd391;
 	text-decoration: none;
 }
@@ -634,6 +570,7 @@ a.aBtn:hover span {
 	color: #ffd391;
 	background: url(../images/white20.png);
 	cursor: pointer;
+//	margin: 0 4px 0 0;
 	padding: 2px 4px 0 4px;
 }
 #tools li ul {
@@ -641,6 +578,7 @@ a.aBtn:hover span {
 	background: #eee;
 	border: solid 1px #ccc;
 	position:absolute;
+//	left:-9999px;
 	display: none;
 	width: 100px;
 }
@@ -709,6 +647,7 @@ a.aBtn:hover span {
 	cursor:pointer;
 	display: block;
 	margin-top: 10px;
+//	margin-left: 50px;
 	padding: 5px 4px;
 	text-decoration: none;
 	color: #612d00;
@@ -716,6 +655,7 @@ a.aBtn:hover span {
 	border-style: solid;
 	border-color: #aaa;
 	border-width: 1px;
+//	float: left;
 }
 .btn div {
 	display: table-cell;
@@ -728,13 +668,18 @@ a.aBtn:hover span {
 #username-field {
 	margin-top: 10px !important;
 }
-#username-field, #password-field {
-	margin: 3px;
-}
 
 #username-field label, #password-field label {
+//	display: block;
+//	width: 120px;
+//	float: left;
+//	text-align: right;
+//	margin-right: 10px;
+//	color: #333;
+//	font-size: 15px;
 	display: block;
 	font-weight: bold;
+//	width: 30%;
 	width: 120px;
 	float: left;
 	color: #666;
@@ -743,6 +688,7 @@ a.aBtn:hover span {
 }
 
 #username-field input, #password-field input {
+//	width: 200px;
 	width: 170px;
 	font-size: 13px;
 }
@@ -755,13 +701,6 @@ a.aBtn:hover span {
 	margin-left: auto;
 	margin-right: auto;
 }
-#signup-field input[type="submit"] {
-	width: 120px;
-}
-#signin-field input[type="submit"] {
-	width: 70px;
-}
-
 
 /* facebook Login */
 input.text {
@@ -788,6 +727,8 @@ fieldset {
 
 #memberMenu, #adminMenu {
 	list-style: none;
+//	padding: 0;
+//	margin: 5px 0px 8px 5px;
 	padding: 5px 0px 8px 5px;
 	margin: 0;
 }
@@ -799,11 +740,14 @@ fieldset {
 #memberMenu li a, #adminMenu li a {
 	color: #fff;
 	text-decoration: none;
+//	font-size: 80%;
 	padding: 2px 10px;
 	-webkit-border-radius: 9px;
 	-moz-border-radius: 9px;
 }
 #memberMenu li a {
+//	background: #733405;
+//	background: #755a36;
 	background: #633308;
 }
 #adminMenu li a {
@@ -823,6 +767,7 @@ fieldset {
 	font-weight: bold;
 	
 	background: url(../images/white20.png);
+//	z-index: 100000;
 	z-index: 900;
 }
 #member:hover {
@@ -946,7 +891,6 @@ fieldset {
 }
 .da_tbl_all li {
 	clear: both;
-	overflow: hidden;
 }
 .da_tbl_all li div.da_tbl_all_div {
 	display: table-cell;
@@ -958,6 +902,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+//	width: 320px;
 	width: 440px;
 }
 .da_tbl_lt li div.first {
@@ -986,6 +931,7 @@ fieldset {
 	display: table-cell;
 	height: 35px;
 	padding-left: 150px;
+	vertical-align: bottom;
 }
 
 .da_tbl_rt li div.second {
@@ -1004,6 +950,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+//	width: 320px;
 	width: 440px;
 }
 .da_tbl_lb li div {
@@ -1047,10 +994,13 @@ fieldset {
 }
 
 #da_tcol {
+//	width: 320px;
+//	height: 470px;
 	overflow: hidden;
 }
 
 #da_tbody {
+//	height: 470px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -1189,7 +1139,7 @@ fieldset {
 	padding-left: 20px;
 	padding-right: 20px;
 }
-#daPaddingYearMonth span, #daPaddingYearMonth select {
+#daPaddingYearMonth span {
 	font-weight: normal;
 }
 
@@ -1204,9 +1154,11 @@ fieldset {
 
 /* .menu_cell コンテキストメニューを出すセルのクリックイベント用 */
 .menu_cell, .menu_member {
+//	background: url(../images/white20.png);
 	background: white;
 }
 .menu_cell:hover, .menu_member:hover {
+//	background-color: #eee;
 	cursor: pointer;
 }
 
@@ -1221,6 +1173,7 @@ fieldset {
 .contextMenu {
 	position: absolute;
 	width: 120px;
+//	z-index: 99999;
 	z-index: 899;
 	border: solid 1px #CCC;
 	background: #EEE;
@@ -1247,6 +1200,7 @@ fieldset {
 }
 .contextMenu LI.hover A {
 	color: #FFF;
+//	background-color: #3399FF;
 	background-color: red;
 }
 .contextMenu LI.disabled A {
@@ -1286,6 +1240,8 @@ fieldset {
 #btBasisDate {
 	font-weight: bold;
 	padding-top: 20px;
+//	padding-left: 200px;
+//	padding-bottom: 10px;
 	text-align: center;
 	height: 40px;
 }
@@ -1363,6 +1319,21 @@ fieldset {
 #divBtSvgReal {
 	width: 50px;
 	height: 100px;
+//	position: absolute;
+//	top: 0;
+//	left: 292px;
+}
+
+#divBtStkdReal {
+//	position: absolute;
+//	top: 0;
+//	left: 342px;
+}
+
+#divBtStkdPrlt {
+//	position: absolute;
+//	top: 0;
+//	left: 459px;
 }
 
 #divBtSvgPrlt {
@@ -1400,6 +1371,9 @@ fieldset {
 	width: 20px;
 }
 
+.bt_cate_small {
+//	width: 150px;
+}
 .bt_cate_small span {
 	display: none;
 	padding: 5px;
@@ -1471,6 +1445,8 @@ fieldset {
 
 #dl_tblFrame {
 	width: 100%;
+//	height: 100%;
+//	overflow-x: auto;
 	overflow: hidden;
 	padding-top: 90px;
 }
@@ -1482,6 +1458,10 @@ fieldset {
 	width: 960px;
 }
 
+#dl_tblContentHd {
+//	width: 1220px;
+}
+
 #dl_tblContentFt {
 	height: 0;
 }
@@ -1490,6 +1470,7 @@ fieldset {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+//	font-size: 90%;
 }
 
 .dl_tbl li div {
@@ -1620,11 +1601,11 @@ fieldset {
 	height: 80px;
 	font-weight: bold;
 	text-align: center;
+//	background: url(../images/white20.png);
+//	background: url(../images/black40.png);
+//	background: url(../images/brown4_60.png);
 	background: url(../images/brown3_90.png);
 	color: #e6be83;
-}
-.dl_head input {
-	font-weight: normal;
 }
 
 #dlRmChartFrame {
@@ -1662,6 +1643,7 @@ form .error {
 }
 
 .objectForm {
+//	border: 1px solid #ddd;
 	border: 1px solid #aaa;
 	background: white;
 }
@@ -1702,6 +1684,7 @@ label.fieldName {
 
 .crudField {
 	padding: 10px;
+//	border-bottom: 1px solid #eee;
 	border-bottom: 1px solid #bbb;
 	position: relative;
 }
@@ -1724,7 +1707,11 @@ label.fieldName {
 
 #configListPagination {
 	padding: 4px 5px;
+//	border: 1px solid #ddd;
 	border: 1px solid transparent;
+//	background: #efefef;
+//	background: url(../images/background_test.jpg);
+//	background: #e8cc8b;
 	border-top: 0;
 	font-size: 90%;
 	position: relative;
@@ -1747,6 +1734,7 @@ label.fieldName {
 
 
 #dlFooter {
+//	width: 980px;;
 	width: 960px;
 	padding-right: 10px;
 	padding-left: 10px;
@@ -1759,6 +1747,7 @@ label.fieldName {
 #receipt, #confirm, #unsubscribe {
 	width: 660px;
 	margin: 50px auto;
+//	text-align: center;
 }
 
 #receipt h1, #confirm h1, #unsubscribe h1 {
@@ -1892,9 +1881,19 @@ label.fieldName {
 	display: none;
 }
 .toolTip {
+//	z-index: 100001;
 	z-index: 901;
 }
 
+//.btBgReal0 {
+//	background: #7fbfff;
+//}
+//.btBgReal1 {
+//	background: #7f7fff;
+//}
+//.btBgReal2 {
+//	background: #bf7fff;
+//}
 .btBgReal0 {
 	background: #a8a8ff;
 }
@@ -1906,6 +1905,25 @@ label.fieldName {
 .btBgPrltNot {
 	background: transparent;
 }
+//.btBgPrlt0 {
+//	background: #7fff7f;
+//}
+//.btBgPrlt1 {
+//	background: #bfff7f;
+//}
+//.btBgPrlt2 {
+//	background: #ffff7f;
+//}
+
+//.btBgPrlt0 {
+//	background: #bfff7f;
+//}
+//.btBgPrlt1 {
+//	background: #7fff7f;
+//}
+//.btBgPrlt2 {
+//	background: #7fffbf;
+//}
 .btBgPrlt0 {
 	background: #d3ffa8;
 }
@@ -1915,6 +1933,7 @@ label.fieldName {
 .btBgPrlt2 {
 	background: #a8ffd3;
 }
+
 
 .btBgMinus {
 	background: #ff7f7f;
@@ -1931,8 +1950,5 @@ label.fieldName {
 	
 }
 #main {
-	
-}
-#fill2 {
 	
 }

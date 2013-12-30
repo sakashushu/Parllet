@@ -146,7 +146,6 @@ a.aBtn:hover span {
 
 #divIdxHdFrm {
 	background: url(../images/brown7_90.png);
-	height: 36px;
 }
 #divIdxHd {
 	width: 980px;
@@ -159,7 +158,7 @@ a.aBtn:hover span {
 	list-style: none;
 	margin: 0;
 }
-#headerNav ul li {
+#divIdxHd ul li {
 	display: inline;
 	padding: 0 1em;
 }
@@ -267,22 +266,6 @@ a.aBtn:hover span {
 	font-weight: bold;
 }
 
-#pageTop {
-	background: #ddd;
-	border-radius: 5px;
-	color: #fff;
-	padding: 20px;
-	position: fixed;
-	bottom: 30px;
-	right: 20px;
-	font-weight: bold;
-}
-#pageTop:hover {
-	background:#eee;
-	color: #999;
-}
-
-
 
 /** dialogForm **/
 #dlgEmailVal {
@@ -322,7 +305,6 @@ a.aBtn:hover span {
 	width: 100%;
 	margin-bottom: 12px;
 }
-
 .editable {
 	cursor: pointer;
 }
@@ -1916,6 +1898,7 @@ label.fieldName {
 	background: #a8ffd3;
 }
 
+
 .btBgMinus {
 	background: #ff7f7f;
 }
@@ -1931,8 +1914,5 @@ label.fieldName {
 	
 }
 #main {
-	
-}
-#fill2 {
 	
 }

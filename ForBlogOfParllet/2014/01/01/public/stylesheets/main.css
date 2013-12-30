@@ -786,31 +786,31 @@ fieldset {
 
 /** Member , Admin **/
 
-#memberMenu, #adminMenu {
+.memberMenu, .tbMemberMenu, #adminMenu {
 	list-style: none;
 	padding: 5px 0px 8px 5px;
 	margin: 0;
 }
 
-#memberMenu li, #adminMenu li {
+.memberMenu li, .tbMemberMenu li, #adminMenu li {
 	display: inline;
 }
 
-#memberMenu li a, #adminMenu li a {
+.memberMenu li a, .tbMemberMenu li a, #adminMenu li a {
 	color: #fff;
 	text-decoration: none;
 	padding: 2px 10px;
 	-webkit-border-radius: 9px;
 	-moz-border-radius: 9px;
 }
-#memberMenu li a {
+.memberMenu li a {
 	background: #633308;
 }
 #adminMenu li a {
 	background: #591C64;
 }
 
-#memberMenu li.selected a, #adminMenu li.selected a {
+.memberMenu li.selected a, .tbMemberMenu li a, #adminMenu li.selected a {
 	background: #82A346;
 }
 
