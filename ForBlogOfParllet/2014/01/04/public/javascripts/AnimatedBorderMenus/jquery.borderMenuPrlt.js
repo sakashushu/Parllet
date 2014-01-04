@@ -28,7 +28,6 @@
 			resetMenu = function() {
 				menu.removeClass('bt-menu-open');
 				menu.addClass('bt-menu-close');
-				jQuery('.large_category, .small_category').attr('id', '');
 			};
 		jQuery(document).on(eventtype, '#aLarge_cate', function() {
 			jQuery('.large_cate').attr('id', 'bt-menu');
@@ -57,7 +56,7 @@
 		
 		// Android 2.3 でスクロールしないバグへの対応
 		if (navigator.userAgent.indexOf('Android') > 0) {
-			var box = jQuery('#divUlFrm'),
+			var box = menu.children('.divUlFrm'),
 				touchStartPositionX,
 				touchStartPositionY,
 				touchMovePositionX,

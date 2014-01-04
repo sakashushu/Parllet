@@ -19,15 +19,10 @@
 	}
 	
 	function init() {
-		var menu = jQuery('#bt-menu'),
-			trigger = menu.children('a.bt-menu-trigger'),
-			link = menu.find('ul').find('a'),
-			// event type (if mobile use touch events)
-			eventtype = mobilecheck() ? 'touchstart click' : 'click',
-			overlay = menu.children('div.bt-overlay'),
+		var eventtype = mobilecheck() ? 'touchstart click' : 'click',
 			resetMenu = function() {
-				menu.removeClass('bt-menu-open');
-				menu.addClass('bt-menu-close');
+				jQuery('#bt-menu').removeClass('bt-menu-open');
+				jQuery('#bt-menu').addClass('bt-menu-close');
 				jQuery('.large_category, .small_category').attr('id', '');
 			};
 		jQuery(document).on(eventtype, '#aLarge_cate', function() {
@@ -35,29 +30,29 @@
 			jQuery('#bt-menu').children('a.bt-menu-trigger').click();
 			return false;
 		});
-		jQuery(document).on(eventtype, trigger, function(ev) {
+		jQuery(document).on(eventtype, jQuery('#bt-menu').children('a.bt-menu-trigger'), function(ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			
-			if (menu.hasClass('bt-menu-open')) {
+			if (jQuery('#bt-menu').hasClass('bt-menu-open')) {
 				resetMenu();
 			} else {
-				menu.removeClass('bt-menu-close');
-				menu.addClass('bt-menu-open');
+				jQuery('#bt-menu').removeClass('bt-menu-close');
+				jQuery('#bt-menu').addClass('bt-menu-open');
 			}
 		});
-		jQuery(document).on(eventtype, overlay, function(ev) {
+		jQuery(document).on('click', jQuery('#bt-menu').children('div.bt-overlay'), function(ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			resetMenu();
 		});
-		link.click(function(ev) {
-			if (menu.hasClass('bt-menu-open')) resetMenu();
+		jQuery('#bt-menu').find('ul').find('a').click(function(ev) {
+			if (jQuery('#bt-menu').hasClass('bt-menu-open')) resetMenu();
 		});
 		
 		// Android 2.3 でスクロールしないバグへの対応
 		if (navigator.userAgent.indexOf('Android') > 0) {
-			var box = jQuery('#divUlFrm'),
+			var box = jQuery('#bt-menu').children('.divUlFrm'),
 				touchStartPositionX,
 				touchStartPositionY,
 				touchMovePositionX,
