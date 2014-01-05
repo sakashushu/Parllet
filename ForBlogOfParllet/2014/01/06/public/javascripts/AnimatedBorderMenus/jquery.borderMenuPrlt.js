@@ -24,7 +24,7 @@
 				jQuery('#bt-menu').removeClass('bt-menu-open');
 				jQuery('#bt-menu').addClass('bt-menu-close');
 			};
-		jQuery(document).on(eventtype, '#aLarge_cate', function() {
+		jQuery('#aLarge_cate').on(eventtype, function() {
 			jQuery('.large_cate').attr('id', 'bt-menu');
 			jQuery('#bt-menu').children('a.bt-menu-trigger').click();
 			return false;
@@ -40,7 +40,7 @@
 				jQuery('#bt-menu').addClass('bt-menu-open');
 			}
 		});
-		jQuery(document).on('click', jQuery('#bt-menu').children('div.bt-overlay'), function(ev) {
+		jQuery('#bt-menu').children('div.bt-overlay').on(eventtype, function(ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			resetMenu();
@@ -63,7 +63,7 @@
 				moveScrollX,
 				moveScrollY;
 		
-			jQuery(document).on('touchstart', box, function(e) {
+			box.on('touchstart', function(e) {
 				var touch = e.originalEvent.touches[0];
 				touchStartPositionX = touch.pageX;
 				touchStartPositionY = touch.pageY;
@@ -71,7 +71,7 @@
 				startScrollX = box.scrollLeft();
 				startScrollY = box.scrollTop();
 			});
-			jQuery(document).on('touchmove', box, function(e) {
+			box.on('touchmove', function(e) {
 				var touch = e.originalEvent.touches[0];
 				e.preventDefault();
 				//現在の座標を取得
