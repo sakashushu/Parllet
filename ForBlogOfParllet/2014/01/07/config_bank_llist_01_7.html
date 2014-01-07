@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>口座 リスト</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+
+<!-- jQuery(GoogleAPIs経由) -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+<script type="text/javascript" src="public/javascripts/jQuery.ui.touch-punch.min.js" ></script>
+<script type="text/javascript" src="public/javascripts/prtJsCommon.js" ></script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+<link rel="stylesheet" media="screen" href="public/stylesheets/overlay.css">
+
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+
+<!-- AnimatedBorderMenus -->
+<link rel="stylesheet" type="text/css" href="public/stylesheets/AnimatedBorderMenus/stylePrlt.css" />
+<script src="public/javascripts/AnimatedBorderMenus/modernizr.custom.js"></script>
+
+<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
+<style>
+.ui-datepicker td span, .ui-datepicker td a {
+    text-align: center;    /* 日付をセンタリング */
+}
+.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
+    width: auto;    /* そのままだと改行してしまう */
+}
+.ui-datepicker select.ui-datepicker-month {
+    margin-left: 1em;    /* ちょっと離す */
+}
+</style>
+<script type="text/javascript">
+<!--
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11312949-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+// -->
+</script>
+
+<script type="text/javascript" src="public/javascripts/jquery.gpfloat-1.0.js" ></script>
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	jQuery('#header').gpFloatX();
+});
+// -->
+</script>
+
+<script type="text/javascript">
+<!-- 
+jQuery(function(){
+	jQuery('a.clickOverlay').click(function() {
+		jQuery('body').css('overflow-y', 'hidden');
+		jQuery('#pageTop').click();
+		jQuery('#overlay').fadeIn();
+		return false;
+	});
+	jQuery("#close").click(function() {
+		jQuery('body').css('overflow-y', 'scroll');
+		jQuery("#overlay").fadeOut();
+	});
+	// Android 2.3 でスクロールしないバグへの対応
+	if (navigator.userAgent.indexOf('Android') > 0) {
+		var box = jQuery('#overlay div'),
+			touchStartPositionX,
+			touchStartPositionY,
+			touchMovePositionX,
+			touchMovePositionY,
+			moveFarX,
+			moveFarY,
+			startScrollX,
+			startScrollY,
+			moveScrollX,
+			moveScrollY;
+	
+		box.on('touchstart', function(e) { 
+			var touch = e.originalEvent.touches[0];
+			touchStartPositionX = touch.pageX;
+			touchStartPositionY = touch.pageY;
+			//タッチ前スクロールをとる
+			startScrollX = box.scrollLeft();
+			startScrollY = box.scrollTop();
+		});
+		box.on('touchmove', function(e) {
+			var touch = e.originalEvent.touches[0];
+			e.preventDefault();
+			//現在の座標を取得
+			touchMovePositionX = touch.pageX;
+			touchMovePositionY = touch.pageY;
+			//差をとる
+			moveFarX = touchStartPositionX - touchMovePositionX;
+			moveFarY = touchStartPositionY - touchMovePositionY;
+			//スクロールを動かす
+			moveScrollX = startScrollX +moveFarX;
+			moveScrollY = startScrollY +moveFarY;
+			box.scrollLeft(moveScrollX);
+			box.scrollTop(moveScrollY);
+		});
+	}
+});
+// -->
+</script>
+
+<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	jQuery('#fb-login, #signin').click(function() {
+		jQuery('a.clickOverlay').click();
+	});
+});
+// -->
+</script>
+
+<style>
+<!--
+/* 共通のスタイル */
+body {
+    min-width: 0;
+}
+#hdContainer, #main, #cfHeader, #ftContents {
+    width: 95%;
+}
+#cfMain {
+    width: 100%;
+}
+#hdContainer, #main, #cfHeader, #cfMain, #ftContents {
+    max-width: 980px;
+}
+.bt-menu-trigger {
+	display: none;
+}
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+.tbMemberMenu {
+	display: block;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	.tbMemberMenu {
+		display: none;
+	}
+}
+-->
+</style>
+
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+	</head>
+	<body>
+<div id="overlay">
+	<div>
+		<p id="text">
+			このページは 2013年12月29日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版の設定ページの見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			<br/>
+			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも12月29日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
+			<br/>
+			とはいえ、PCであれば <a href="http://parllet.com" style="color: #eee;">http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>
+			<br/>
+			ご興味がおありの方は是非お越しください。
+		</p>
+		<p id="close">閉じる</p>
+	</div>
+</div>
+	
+<nav class="bt-menu large_cate">
+    <a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	    <ul>
+			<li></li>
+			<li><a href="#" class="clickOverlay">残高表</a></li>
+			<li><a href="#" class="clickOverlay">日計表</a></li>
+			<li><a href="#" class="clickOverlay">明細表</a></li>
+			<li><a href="#" class="clickOverlay">家計簿入力</a></li>
+			<li><a href="#" class="clickOverlay">設定</a></li>
+	    </ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+<nav class="bt-menu small_cate">
+    <a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	    <ul>
+			<li></li>
+			<li><a href="#" class="clickOverlay">口座</a></li>
+			<li><a href="#" class="clickOverlay">クレジットカード</a></li>
+			<li><a href="#" class="clickOverlay">電子マネー</a></li>
+			<li><a href="#" class="clickOverlay">項目（収入）</a></li>
+			<li><a href="#" class="clickOverlay">項目（支出）</a></li>
+			<li><a href="#" class="clickOverlay">Parllet</a></li>
+			<li><a href="#" class="clickOverlay">会員情報</a></li>
+	    </ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+
+<div id="container">
+	<div id="header">
+		<div class="fill">
+			<div id="hdContainer">
+				<ul id="ltBlocks">
+					<li>
+						<ul id="logo">
+							<li id="logo-pre">
+									<div>
+		ちょっと変わった
+		<br>
+		Web家計簿
+	</div>
+	<span id="logo_alpha-img">
+		Parllet
+		<span>
+			Parllet(パレット)はアルファ版です。
+			ご承知おきください。
+		</span>
+	</span>
+	</li>
+	<li>
+		<a href="#" class="clickOverlay" >
+			<span id="logo-img">Parllet</span>
+		</a>
+	</li>
+								</ul>
+							</li>
+							
+<li>
+	<ul class="memberMenu" >
+		<li class="">
+			<a href="#" class="clickOverlay">残高表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">日計表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">明細表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay" id="aRecEdit">家計簿入力</a>
+		</li>
+		<li class="selected">
+			<a href="#" class="clickOverlay">設定</a>
+		</li>
+	</ul>
+</li>
+
+						</ul>
+						<ul id="tools">
+							
+	<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	var onMenu = 'out',
+		tlsLi = jQuery('#tlsLi'),
+		tlsLiUl = jQuery('#tlsLiUl'),
+		tlsLiUlLiA = jQuery('#tlsLiUl Li a');
+	
+	tlsLiUl.hide();
+	
+	/* 「#tools li ul」の位置確定 */
+	tlsLiUl.each(function() {
+		jQuery(this).css('left', jQuery(this).parent().width() - jQuery(this).width());
+	});
+	
+	jQuery(window).mousedown(function(e) {
+		if (onMenu==='out' && tlsLi.hasClass("click")) {
+			e.preventDefault();
+			tlsLi.removeClass("click");
+			tlsLiUl.hide();
+			tlsLi.blur();
+		}
+	});
+	
+	tlsLi.focus(function() {
+		jQuery(this).addClass("focused");
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	});
+	tlsLi.blur(function() {
+		jQuery(this).removeClass("focused");
+		jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.hover(function() {
+		onMenu = 'over';
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	},function() {
+		onMenu = 'out';
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.keypress(function(e) {
+		if (e.which===13) {
+			if (jQuery(e.target).is("li")) {
+				e.preventDefault();
+				jQuery(this).click();
+			}
+		}
+	});
+	tlsLi.click(function() {
+		if (jQuery(this).hasClass("click")) {
+			jQuery(this).removeClass("click");
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+			tlsLiUl.hide();
+		} else {
+			jQuery(this).addClass("click");
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+			jQuery("ul", this).show();
+		}
+	});
+	
+	
+	tlsLiUlLiA.focus(function() {
+		jQuery(this).addClass("focused");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	});
+	tlsLiUlLiA.blur(function() {
+		jQuery(this).removeClass("focused");
+		if (!jQuery(this).hasClass("hovered"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	tlsLiUlLiA.hover(function() {
+		jQuery(this).addClass("hovered");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	},function() {
+		jQuery(this).removeClass("hovered");
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	
+	
+	var vRecCnt = 34,
+		vUsePercent = roundup(vRecCnt*100/100, 0);
+	jQuery('#htProgressBar').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		var value = this.getAttribute("aria-valuenow");
+		
+		jQuery(selector).css('background','Green');
+		if (value >= 90) {
+			jQuery(selector).css('background', 'Red');
+		}
+	});
+});
+// -->
+</script>
+
+
+
+<li id="tlsLi" tabindex="0" class="open">
+	id:388527
+	<ul id="tlsLiUl">
+		<li>
+			<a href="#" class="clickOverlay" id="cfHauserEdit" >
+				会員情報
+				<div id="htProgressBar"></div>
+			</a>
+		</li>
+		<li><a href="#" class="clickOverlay" id="fb-logout" >ログアウト</a></li>
+		
+	</ul>
+</li>
+
+						</ul>
+					</div>
+				</div>
+							</div>
+			<div id="main">
+				
+<div id="prltMain">
+
+<div id="cfHeader">
+
+<div>
+	<ul class="memberMenu">
+		<li class="selected">
+			<a href="#" class="clickOverlay">口座</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">クレジットカード</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">電子マネー</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">項目(収入)</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">項目(支出)</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">Parllet</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">会員情報</a>
+		</li>
+		
+	</ul>
+	
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">設定</a>
+		</li>
+		<li>
+			　＞　
+		</li>
+		<li>
+			<a href="#" id="aSmall_cate">口座</a>
+		</li>
+	</ul>
+	
+</div>
+   	
+</div>  <!-- cfHeader -->
+
+<div id="cfMain">
+<div id="cfMainInner">
+	
+
+
+<h3>口座　編集</h3>
+
+
+　（※ドラッグ＆ドロップで並び替えができます。）
+
+
+<div class="objectForm sortable">
+
+	<p class="data odd crudField">
+		<a href="#" class="clickOverlay">
+		大宮銀行</a>
+	</p>
+	
+	<p class="data even crudField">
+		<a href="#" class="clickOverlay">
+		神宮銀行</a>
+	</p>
+	
+	<p class="data odd crudField bbsNone">
+		<a href="#" class="clickOverlay">
+		図書カード</a>
+	</p>
+
+</div>
+<script type="text/javascript">
+<!--
+jQuery('.sortable').sortable();
+jQuery('.sortable').sortable().on('sortupdate', function() {
+	//Triggered when the user stopped sorting and the DOM position has changed.
+	jQuery('.sortable .order').each(function(i) {
+		i++;
+		jQuery(this).val(i);
+	});
+});
+// -->
+</script>
+
+<p id="newData" >
+  
+	<a href="#" class="clickOverlay">
+    <span>+</span> 追加  [ 口座 ]</a>
+</p>
+
+</div>  <!-- cfMainInner -->
+</div>  <!-- cfMain -->
+
+</div>
+			</div>
+			<div id="footer">
+			<div class="fill">
+				<div id="ftContents">
+					<a href="#" class="clickOverlay">
+						parllet.com
+					</a>
+				</div>
+			</div>
+			</div>	<!-- footer -->
+		</div>
+		<script src="public/javascripts/AnimatedBorderMenus/jquery.borderMenuPrlt.js"></script>
+	</body>
+</html>
+
