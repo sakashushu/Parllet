@@ -48,7 +48,7 @@
 			ev.preventDefault();
 			resetMenu();
 		});
-		jQuery('#bt-menu').find('ul').find('a').click(function(ev) {
+		jQuery(document).on('click', '#bt-menu ul a', function(ev) { 
 			if (jQuery('#bt-menu').hasClass('bt-menu-open')) resetMenu();
 		});
 		
