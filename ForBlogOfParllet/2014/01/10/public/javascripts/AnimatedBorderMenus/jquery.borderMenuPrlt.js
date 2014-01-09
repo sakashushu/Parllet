@@ -54,8 +54,7 @@
 		
 		// Android 2.3 でスクロールしないバグへの対応
 		if (navigator.userAgent.indexOf('Android') > 0) {
-			var box = jQuery('#bt-menu').children('.divUlFrm'),
-				touchStartPositionX,
+			var touchStartPositionX,
 				touchStartPositionY,
 				touchMovePositionX,
 				touchMovePositionY,
@@ -66,7 +65,7 @@
 				moveScrollX,
 				moveScrollY;
 		
-			jQuery('#bt-menu .divUlFrm').on('touchstart', function(e) {
+			jQuery(document).on('touchstart', '#bt-menu .divUlFrm', function(e) {
 				var touch = e.originalEvent.touches[0];
 				touchStartPositionX = touch.pageX;
 				touchStartPositionY = touch.pageY;
@@ -74,7 +73,7 @@
 				startScrollX = jQuery(this).scrollLeft();
 				startScrollY = jQuery(this).scrollTop();
 			});
-			jQuery('#bt-menu .divUlFrm').on('touchmove', function(e) {
+			jQuery(document).on('touchmove', '#bt-menu .divUlFrm', function(e) {
 				var touch = e.originalEvent.touches[0];
 				e.preventDefault();
 				//現在の座標を取得
