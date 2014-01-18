@@ -39,7 +39,7 @@
 <script type="text/javascript">
 <!--
 jQuery('.sortable').sortable();
-jQuery('.sortable').sortable().bind('sortupdate', function() {
+jQuery('.sortable').sortable().on('sortupdate', function() {
 	//Triggered when the user stopped sorting and the DOM position has changed.
 	jQuery('.sortable .order').each(function(i) {
 		i++;

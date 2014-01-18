@@ -19,46 +19,42 @@
 	}
 	
 	function init() {
-		var menu = jQuery('#bt-menu'),
-			trigger = menu.children('a.bt-menu-trigger'),
-			link = menu.find('ul').find('a'),
-			// event type (if mobile use touch events)
-			eventtype = mobilecheck() ? 'touchstart click' : 'click',
-			overlay = menu.children('div.bt-overlay'),
+		var eventtype = mobilecheck() ? 'touchstart click' : 'click',
 			resetMenu = function() {
-				menu.removeClass('bt-menu-open');
-				menu.addClass('bt-menu-close');
-//			},
-//			closeClickFn = function( ev ) {
-//				resetMenu();
-//				overlay.unbind(eventtype, closeClickFn);
+				jQuery('#bt-menu').removeClass('bt-menu-open');
+				jQuery('#bt-menu').addClass('bt-menu-close');
+				if (typeof jQuery('.large_cate').attr("id") != 'undefined') jQuery('.large_cate').removeAttr('id');
+				if (typeof jQuery('.small_cate').attr("id") != 'undefined') jQuery('.small_cate').removeAttr('id');
 			};
-	
-		trigger.bind(eventtype, function(ev) {
+		jQuery('#aLarge_cate, #aSmall_cate').on(eventtype, function() {
+			var strCate = this.id==='aLarge_cate' ? '.large_cate' : '.small_cate';
+			jQuery(strCate).attr('id', 'bt-menu');
+			jQuery('#bt-menu').children('a.bt-menu-trigger').click();
+			return false;
+		});
+		jQuery(document).on(eventtype, '#bt-menu a.bt-menu-trigger', function(ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			
-			if (menu.hasClass('bt-menu-open')) {
+			if (jQuery('#bt-menu').hasClass('bt-menu-open')) {
 				resetMenu();
 			} else {
-				menu.removeClass('bt-menu-close');
-				menu.addClass('bt-menu-open');
-//				overlay.bind(eventtype, closeClickFn);
+				jQuery('#bt-menu').removeClass('bt-menu-close');
+				jQuery('#bt-menu').addClass('bt-menu-open');
 			}
 		});
-		overlay.bind(eventtype, function(ev) {
+		jQuery(document).on(eventtype, '#bt-menu div.bt-overlay', function(ev) {
 			ev.stopPropagation();
 			ev.preventDefault();
 			resetMenu();
 		});
-		link.click(function(ev) {
-			if (menu.hasClass('bt-menu-open')) resetMenu();
+		jQuery(document).on('click', '#bt-menu ul a', function(ev) { 
+			if (jQuery('#bt-menu').hasClass('bt-menu-open')) resetMenu();
 		});
 		
 		// Android 2.3 でスクロールしないバグへの対応
 		if (navigator.userAgent.indexOf('Android') > 0) {
-			var box = jQuery('#divUlFrm'),
-				touchStartPositionX,
+			var touchStartPositionX,
 				touchStartPositionY,
 				touchMovePositionX,
 				touchMovePositionY,
@@ -69,15 +65,15 @@
 				moveScrollX,
 				moveScrollY;
 		
-			box.bind('touchstart', function(e) {
+			jQuery(document).on('touchstart', '#bt-menu .divUlFrm', function(e) {
 				var touch = e.originalEvent.touches[0];
 				touchStartPositionX = touch.pageX;
 				touchStartPositionY = touch.pageY;
 				//タッチ前スクロールをとる
-				startScrollX = box.scrollLeft();
-				startScrollY = box.scrollTop();
+				startScrollX = jQuery(this).scrollLeft();
+				startScrollY = jQuery(this).scrollTop();
 			});
-			box.bind('touchmove', function(e) {
+			jQuery(document).on('touchmove', '#bt-menu .divUlFrm', function(e) {
 				var touch = e.originalEvent.touches[0];
 				e.preventDefault();
 				//現在の座標を取得
@@ -89,8 +85,8 @@
 				//スクロールを動かす
 				moveScrollX = startScrollX +moveFarX;
 				moveScrollY = startScrollY +moveFarY;
-				box.scrollLeft(moveScrollX);
-				box.scrollTop(moveScrollY);
+				jQuery(this).scrollLeft(moveScrollX);
+				jQuery(this).scrollTop(moveScrollY);
 			});
 		}
 	}

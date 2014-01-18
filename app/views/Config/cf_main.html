@@ -1,5 +1,81 @@
 #{extends 'main.html' /}
 
+<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #cfHeader, #ftContents {
+	width: 95%;
+}
+#cfMain {
+	width: 100%;
+}
+#hdContainer, #main, #cfHeader, #cfMain, #ftContents {
+	max-width: 980px;
+}
+.bt-menu-trigger {
+	display: none;
+}
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+.tbMemberMenu {
+    display: block;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	.tbMemberMenu {
+	    display: none;
+	}
+}
+-->
+</style>
+
+#{set 'slideMenus'}
+<nav class="bt-menu large_cate">
+    <a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	    <ul>
+			<li></li>
+			<li><a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a></li>
+			<li><a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a></li>
+			<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a></li>
+			<li><a href="#" id="aRecEdit">&{'views.login.recordEdit'}</a></li>
+			<li><a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a></li>
+	    </ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+<nav class="bt-menu small_cate">
+    <a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	    <ul>
+			<li></li>
+			<li><a href="@{Config.cf_bank_list()}">&{'HandlingType.bank'}</a></li>
+			<li><a href="@{Config.cf_creca_list()}">&{'HandlingType.creca'}</a></li>
+			<li><a href="@{Config.cf_emoney_list()}">&{'HandlingType.emoney'}</a></li>
+			<li><a href="@{Config.cf_item_in_list()}">&{'views.config.cf_item'}(&{'BalanceType.in'})</a></li>
+			<li><a href="@{Config.cf_item_out_list()}">&{'views.config.cf_item'}(&{'BalanceType.out'})</a></li>
+			<li><a href="@{Config.cf_parllet_list()}">&{'PrltType.prlt'}</a></li>
+			<li><a href="@{Config.cf_hauser_edit()}">&{'views.config.cf_hauser'}</a></li>
+	    </ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+#{/set}
+
 #{set 'moreMenu'}
 	#{include 'headerMenu.html' /}
 #{/set}
@@ -62,6 +138,36 @@
 		#{/secure.check}
 	</ul>
       	
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">設定</a>
+		</li>
+		<li>
+			　＞　
+		</li>
+		
+		%{
+			vSmall_cate = ''
+			if (request.actionMethod=='cf_bank_list' || request.actionMethod=='cf_bank_edit' || request.actionMethod=='cf_bank_save')
+				vSmall_cate=messages.get('HandlingType.bank')
+			if (request.actionMethod=='cf_creca_list' || request.actionMethod=='cf_creca_edit' || request.actionMethod=='cf_creca_save')
+				vSmall_cate=messages.get('HandlingType.creca')
+			if (request.actionMethod=='cf_emoney_list' || request.actionMethod=='cf_emoney_edit' || request.actionMethod=='cf_emoney_save')
+				vSmall_cate=messages.get('HandlingType.emoney')
+			if (request.actionMethod=='cf_item_in_list' || request.actionMethod=='cf_item_in_edit' || request.actionMethod=='cf_item_in_save')
+				vSmall_cate=messages.get('views.config.cf_item')+'('+messages.get('BalanceType.in')+')'
+			if (request.actionMethod=='cf_item_out_list' || request.actionMethod=='cf_item_out_edit' || request.actionMethod=='cf_item_out_save')
+				vSmall_cate=messages.get('views.config.cf_item')+'('+messages.get('BalanceType.out')+')'
+			if (request.actionMethod=='cf_parllet_list' || request.actionMethod=='cf_parllet_edit' || request.actionMethod=='cf_parllet_save')
+				vSmall_cate=messages.get('PrltType.prlt')
+			if (request.actionMethod=='cf_hauser_edit' || request.actionMethod=='cf_hauser_save' || request.actionMethod=='cf_hauser_pw_edit' || request.actionMethod=='cf_hauser_pw_save' ||
+				request.actionMethod=='cf_hauser_lv_edit' || request.actionMethod=='cf_hauser_unsubscribe' || request.actionMethod=='receipt' || request.actionMethod=='confirm')
+				vSmall_cate=messages.get('views.config.cf_hauser')
+		}%
+		<li>
+			<a href="#" id="aSmall_cate">${vSmall_cate}</a>
+		</li>
+	</ul>
 </div>
    	
 </div>  <!-- cfHeader -->
