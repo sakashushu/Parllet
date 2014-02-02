@@ -19,6 +19,25 @@ body {
 	display: none;
 }
 
+
+.bt-menu .divUlFrm {
+	position: fixed;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	left: 0;
+	overflow: hidden;
+	width: 0;
+}
+.bt-menu.bt-menu-open .divUlFrm {
+	height: 100%;
+	width: 200px;
+	overflow-y: auto;
+	-webkit-transition: width 0s 0.3s, height 0s 0.3s;
+	transition: width 0s 0.3s, height 0s 0.3s;
+}
+
+
 /* スマホのスタイル */
 .memberMenu {
 	display: none;
