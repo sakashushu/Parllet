@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import models.BalanceTypeMst;
+import models.Budget;
 import models.HaUser;
 import models.HandlingMst;
 import models.HandlingTypeMst;
@@ -27,6 +28,7 @@ import models.LevelMst;
 import models.ParlletMst;
 import models.Record;
 import models.WkAjaxRsltMin;
+import models.WkCmBdgtRslt;
 import models.WkCmHdlgRslt;
 import models.WkCmHuRslt;
 import models.WkCmMkItemRslt;
@@ -879,4 +881,86 @@ public class Common extends Controller {
 		renderJSON(wr);
 	}
 	
+	
+	/**
+	 * 予算更新
+	 * @param lngId
+	 * @param intHuId
+	 * @param strLargeCate
+	 * @param strItem
+	 * @param intYear
+	 * @param intMonth
+	 * @param strAmnt
+	 * @param intSum
+	 */
+	public static void updateBudget(
+			Long lngId,
+			String strLargeCate,
+			String strItem,
+			Integer intYear,
+			Integer intMonth,
+			Integer intAmnt,
+			Boolean bolDelFlg) {
+		WkCmBdgtRslt wr = new WkCmBdgtRslt();
+		Budget bG = null;
+		
+		// 更新・削除
+		if (lngId!=null) {
+			// 予算の読み込み
+			bG = Budget.findById(lngId);
+			//削除
+			if (bolDelFlg!=null && bolDelFlg) {
+				bG.delete();
+				wr.setIntRslt(0);
+				wr.setbG(bG);
+				renderJSON(wr);
+			}
+			//更新
+			bG.amount = intAmnt;
+			validation.valid(bG);
+			if (validation.hasErrors()) {
+				wr.setIntRslt(99);
+				wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+				renderJSON(wr);
+			}
+			bG.save();
+			wr.setIntRslt(0);
+			wr.setbG(bG);
+			renderJSON(wr);
+		}
+		
+		// 新規作成
+		HaUser hU = (HaUser)renderArgs.get("haUser");
+		ItemMst iM = null;
+		ParlletMst pM = null;
+		if (strLargeCate==null) {
+			wr.setIntRslt(99);
+			wr.setStrErr("strItemCate null Exception");
+			renderJSON(wr);
+		}
+		if (strLargeCate.equals(BALANCE_TYPE_IN) || strLargeCate.equals(BALANCE_TYPE_OUT)) {
+			iM = ItemMst.find("ha_user = ? and item_name = ?", hU, strItem).first();
+		} else if (strLargeCate.equals(BALANCE_TYPE_PARLLET_INOUT)) {
+			pM = ParlletMst.find("ha_user = ? and parllet_name = ?", hU, strItem).first();
+		} else {
+			wr.setIntRslt(99);
+			wr.setStrErr("strItemCate default Exception");
+			renderJSON(wr);
+		}
+		
+		// 予算の作成
+		bG = new Budget(hU, intYear, intMonth, intAmnt, iM, pM);
+		
+		validation.valid(bG);
+		if (validation.hasErrors()) {
+			wr.setIntRslt(99);
+			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+			renderJSON(wr);
+		}
+		bG.save();
+		wr.setIntRslt(0);
+		wr.setbG(bG);
+		renderJSON(wr);
+	}
+
 }

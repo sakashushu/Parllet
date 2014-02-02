@@ -278,6 +278,127 @@ jQuery(function() {
 			return true;
 		}
 	});
+	
+	/* 予算入力ボックス フォーカス取得イベント */
+	jQuery('.bdgtBox').focus(function() {
+		jQuery(this).data('valClnt', jQuery(this).val());
+	});
+	
+	/* 予算入力ボックス フォーカス喪失イベント */
+	jQuery('.bdgtBox').blur(function() {
+		if (jQuery(this).data('valClnt')===undefined) return false;	//フォーカス取得時に万が一 undefined だったら
+		if (jQuery(this).data('valClnt')===jQuery(this).val()) return false;	//変化していなければ無視
+		
+		var jqSum,
+			strLargeCateCode,
+			strSum,
+			intSum = 0,
+			strClnt,
+			intClnt = 0,
+			strChange,
+			intChange = 0;
+		// 予算合計
+		if (jQuery(this).hasClass('largeCateIn'))
+			strLargeCateCode = 'largeCateIn';
+		if (jQuery(this).hasClass('largeCateOut'))
+			strLargeCateCode = 'largeCateOut';
+		if (jQuery(this).hasClass('largeCatePrltInOut'))
+			strLargeCateCode = 'largeCatePrltInOut';
+		jqSum = jQuery('#'+strLargeCateCode);
+		strSum = jqSum.text().replace(/^\s+|\s+$|,/g, "");	//スペースとカンマを除去
+		if (strSum!=='')
+			intSum = parseInt(strSum);
+		
+		// 予算入力ボックスの変更前の値
+		strClnt = jQuery(this).data('valClnt').replace(/^\s+|\s+$|,/g, "");
+		if (strClnt!=='')
+			intClnt = parseInt(strClnt);
+		
+		// 予算入力ボックスの変更後の値
+		strChange = jQuery(this).val().replace(/^\s+|\s+$|,/g, "");
+		if (strChange!=='')
+			intChange = parseInt(strChange);
+		
+		intSum += (intChange - intClnt);
+		
+		jqSum.text(addFigure(intSum));
+		
+		// 全部空白なら予算合計削除
+		var bolDelFlg = true;
+		jQuery.each(jQuery('.'+strLargeCateCode), function() {
+			if (jQuery(this).val()!=='') bolDelFlg = false;
+		});
+		if (bolDelFlg) jqSum.text('');
+		
+		var jqxhr,
+			strErrMsg;
+		// 新規作成
+		if (jQuery(this).data('valClnt')==='') {
+			jqxhr = jQuery.post('@{Common.updateBudget}', {strLargeCate: jQuery(this).prevAll('input[name=e_large_category]').val(), strItem: jQuery(this).prev('input[name=e_item]').val(), intYear: vYear, intMonth: vMonth, intAmnt: intChange});
+			jqxhr
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						break;
+					case 99:
+						alert(z.strErr);
+						break;
+					default:
+						strErrMsg += " result Error";
+						alert(strErrMsg);
+				}
+			})
+			.fail(function() {
+				strErrMsg += " Failed";
+				alert(strErrMsg);
+			});
+			
+			return false;
+		}
+		// 削除
+		if (strChange==='') {
+			jqxhr = jQuery.post('@{Common.updateBudget}', {lngId: jQuery(this).prevAll('input[name=e_budget_id]').val(), bolDelFlg: true});
+			jqxhr
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						break;
+					case 99:
+						alert(z.strErr);
+						break;
+					default:
+						strErrMsg += " result Error";
+						alert(strErrMsg);
+				}
+			})
+			.fail(function() {
+				strErrMsg += " Failed";
+				alert(strErrMsg);
+			});
+			return false;
+		}
+		// 更新
+		jqxhr = jQuery.post('@{Common.updateBudget}', {lngId: jQuery(this).prevAll('input[name=e_budget_id]').val(), intAmnt: intChange});
+		jqxhr
+		.done(function(z) {
+			switch (z.intRslt) {
+				case 0:
+					break;
+				case 99:
+					alert(z.strErr);
+					break;
+				default:
+					strErrMsg += " result Error";
+					alert(strErrMsg);
+			}
+		})
+		.fail(function() {
+			strErrMsg += " Failed";
+			alert(strErrMsg);
+		});
+		
+	});
+	
 });
 
 /* 文字列を3桁区切りにする関数 */
@@ -342,9 +463,6 @@ function addFigure(str) {
 <div id="mainInner" class="daMainInner">
 
 <ul class="da_tbl_all">
-	#{form @updBudget()}
-	<input type="hidden" name="bg_basis_date" value="${sBasisDate}"/>
-	
 	<li>
 		<div class="da_tbl_all_div">
 			<!-- 枠固定の左上 -->
@@ -363,7 +481,6 @@ function addFigure(str) {
 					<div class="da_budget da_head second">
 						<!-- 予算 -->
 						&{'views.dailyaccount.lbl.monthBudget'}
-						<input type="submit" value="&{'views.common.update'}" id="idSbmtUpdBudget" name="sbmtUpdBudget" class="daBtn_upd_budget"/>
 					</div>
 					<div class="da_sum_month da_head second">
 						&{'views.dailyaccount.lbl.monthSum'}
@@ -442,6 +559,15 @@ function addFigure(str) {
 							</div>
 							<!-- 予算あり -->
 							#{if lwda.bBudgetFlg}
+								%{
+									vLargeCate = ''
+									if (lwda.sLargeCategory==messages.get('BalanceType.in'))
+										vLargeCate = 'largeCateIn'
+									if (lwda.sLargeCategory==messages.get('BalanceType.out'))
+										vLargeCate = 'largeCateOut'
+									if (lwda.sLargeCategory==messages.get('BalanceType.parllet_inOut'))
+										vLargeCate = 'largeCatePrltInOut'
+								}%
 								<!-- 項目・Parllet　毎 -->
 								#{if lwda.sItem != ''}
 									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
@@ -450,14 +576,14 @@ function addFigure(str) {
 										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" />
 										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
 										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
-										<input type="text" class="numeric" name="e_budget_amount" value="${lwda.lBudgetAmount?.format('###,###')}" />
+										<input type="text" class="numeric bdgtBox ${vLargeCate}" name="e_budget_amount" value="${lwda.lBudgetAmount?.format('###,###')}" />
 									</div>
 								#{/if}
 								<!-- 大分類毎 -->
 								#{else}
 									<div class="da_cate1_2">${lwda.sLargeCategory}</div>
 									<div class="da_budget numeric daBudgetSubject">
-										<span class="padR4">
+										<span class="padR4" id="${vLargeCate}">
 											${lwda.lBudgetAmount?.format('###,###')}
 										</span>
 									</div>
@@ -543,7 +669,6 @@ function addFigure(str) {
 			</div>
 		</div>
 	</li>
-	#{/form}
 
 	<li>
 		<div class="da_tbl_all_div" style="backgtound:white;">
