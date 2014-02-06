@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>収支明細</title>
+		<title>残高明細（口座系）</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
@@ -119,7 +119,7 @@ jQuery(function(){
 <div id="overlay">
 	<div>
 		<p id="text">
-			このページは 2014年2月6日時点の Parllet（ちょっと変わったWeb家計簿）の収支明細の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			このページは 2014年2月6日時点の Parllet（ちょっと変わったWeb家計簿）の明細表の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
 			<br/>
 			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも2月6日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
 			<br/>
@@ -130,7 +130,7 @@ jQuery(function(){
 		<p id="close">閉じる</p>
 	</div>
 </div>
-		<div id="container">
+				<div id="container">
 			<div id="header">
 				<div class="fill">
 					<div id="hdContainer">
@@ -164,7 +164,6 @@ jQuery(function(){
 
 <script type="text/javascript" src="public/javascripts/dateformat.js" ></script>
 <script type="text/javascript" src="public/javascripts/funcCheckVal.js" ></script>
-
 <li>
 	<ul class="memberMenu" >
 		<li class="">
@@ -316,21 +315,17 @@ jQuery(function() {
 <div id="fill2">
 	<div id="dlHeader">
 		<div id="dlHeaderInner1">
-			
 			<!-- 明細表共通ヘッダー -->
 			<script type="text/javascript">
 <!--
 jQuery(function() {
 	/* 起動時のCSS設定 */
 	
-	
-		/* 枠固定の左右の動き */
-	    jQuery('#dl_tblFrameFt').scroll(function() {
-	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
-	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
-	    });
-	
-	
+	/* 枠固定の左右の動き */
+    jQuery('#dl_tblFrameFt').scroll(function() {
+    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+    });
 	
 	jQuery('#main').css('padding-bottom', '30px');
 
@@ -390,11 +385,11 @@ jQuery(function() {
 	});
 	/* 起動時のdatepickerの選択可能範囲絞込 */
 	
+	
 		if (ckDate("2013/10/22"))
 			jQuery("#toJump").datepicker("option", "minDate", "2013/10/22");
-		if (ckDate("2014/01/20"))
-			jQuery("#frJump").datepicker("option", "maxDate", "2014/01/20");
-	
+		if (ckDate("2014/08/06"))
+			jQuery("#frJump").datepicker("option", "maxDate", "2014/08/06");
 	
 	
 	
@@ -420,8 +415,8 @@ function setCssFooter() {
 	if (winInHt < ctnHt) {
 		dlFtr.css('position', 'fixed');
 	
+		dlMn.css('padding-bottom', '192px');
 	
-		dlMn.css('padding-bottom', '41px');
 	
 		dlFtr.css('bottom', '0');
 		if (winSrBtm < ftrHt) {
@@ -443,95 +438,51 @@ function addFigure(str) {
 }
 
 
-// -->
-</script>
-
-<script type="text/javascript">
-<!-- 
-function openDialogConfirm(strCase, strUnableItem) {
-	jQuery(function() {
-		var title,
-			buttons = {},
-			btn1Title,
-			inTime = new Date(),
-			intRslt = 0;
+google.load('visualization', '1', {'packages':['corechart']});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+	var dateFormat = new DateFormat("yyyy/MM/dd"),
+		dateFormatMd = new DateFormat("M/d"),
+		data = google.visualization.arrayToDataTable([
+		["取扱日", "残高"],
+	  
+	  
 		
-		// 親画面でEnterが押された時はそれを無効に
-		jQuery(window).keypress(function(ek){
-			if ((ek.which && ek.which == 13) || (ek.keyCode && ek.keyCode == 13)) {
-				pressTime = new Date();
-				if (pressTime.getTime()-inTime.getTime() < 300) {
-					return false;
-				} else {
-					return true;
-				}
-			}else{
-				return true;
-			}
-		});
+		[""==="" ? "繰越金" : dateFormatMd.format(dateFormat.parse("")), -10600]
 		
-		title = strCase+"がありません";
-		jQuery("#text1").text(strCase+"が作られていないため、");
-		jQuery("#text2").text("「"+strUnableItem+"」は選択できません。");
-		jQuery("#text3").text(strCase+"を作成しますか？");
-		btn1Title = strCase+"を作成";
-		if (strCase=="口座か電子マネー") {
-			buttons["口座を作成"] = function() {
-				intRslt = 1;
-				jQuery(this).dialog("close");
-			}
-			buttons["電子マネーを作成"] = function() {
-				intRslt = 2;
-				jQuery(this).dialog("close");
-			}
-		}
-		if (strCase=="取扱（Parllet）") {
-			buttons[btn1Title] = function() {
-				intRslt = 3;
-				jQuery(this).dialog("close");
-			}
-		}
-		if (strCase=="項目（収入）") {
-			buttons[btn1Title] = function() {
-				intRslt = 4;
-				jQuery(this).dialog("close");
-			}
-		}
-		if (strCase=="項目（支出）") {
-			buttons[btn1Title] = function() {
-				intRslt = 5;
-				jQuery(this).dialog("close");
-			}
-		}
-		buttons["キャンセル"] = function() {
-			jQuery(this).dialog("close");
-		}
+	  
+		,
+		["2013/10/22"==="" ? "口座預入" : dateFormatMd.format(dateFormat.parse("2013/10/22")), 14400]
 		
-		jQuery("#dialog-confirm").dialog({
-			autoOpen: false,
-			resizable: false,
-			width:460,
-			modal: true,
-			title: title,
-			closeOnEscape: false,
-			buttons: buttons,
-			close: function() {
-				//ダイアログクローズ時の処理は呼び出し元で行う
-				whenDialogConfirmClosed(intRslt);
-			}
-		});
-		jQuery("#dialog-confirm").dialog("open");
-	});
+	  
+		,
+		["2013/10/31"==="" ? "支出" : dateFormatMd.format(dateFormat.parse("2013/10/31")), 14300]
+		
+	  
+	]);
+	
+	// グラフのオプションを指定する
+	var options = {
+			width: 1060,
+			height: 150,
+ 			backgroundColor: "white",
+ 			pointSize: 5
+	}
+	
+	// 描画する
+	var chart = new google.visualization.LineChart(document.getElementById('dlRmChart'));
+	chart.draw(data, options);
 }
+
 // -->
 </script>
 
 <div>
 	<ul class="memberMenu">
-		<li class="selected">
+		<li class="">
 			<a href="#" class="clickOverlay">収支明細</a>
 		</li>
-		<li class="">
+		<li class="selected">
 			<a href="#" class="clickOverlay">残高明細（口座系）</a>
 		</li>
 		<li class="">
@@ -548,153 +499,79 @@ function openDialogConfirm(strCase, strUnableItem) {
 		<div id="dlHeaderInner2"></div>
 		<div id="dlHeaderInner3"></div>
 <div id="dlHeaderInner4">
-<form action="/prlt/detailList/balance" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" id="frmDlBalance" ><input type="hidden" name="authenticityToken" value="3192abb4646f5988971f6c77b4eff0df80fa11fe">
+<form action="/prlt/detailList/remainderBank" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" id="frmDlRemainder" ><input type="hidden" name="authenticityToken" value="892a0a83e052a5fe9c33a873db99005c1f193706">
 
 
 <div id="dl_tblFrameHd">
 
-<div id="dl_tblContentHd">
+<div id="dlRm_tblContentHd" >
   <ul class="dl_tbl">
 	<!-- ヘッダー行 -->
 	<li>
 		
-		<!-- 支払日 -->
+		<!-- 引落日 -->
 		
-		<div class="dl_payment_date dl_head dl_borderLeft">
-			日付<br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="h_payment_date_fr" value="2013/10/22" />
+		<div class="dlRm_debit_date dl_head dl_borderLeft">
+			取扱日<br>
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="h_debit_date_fr" value="2013/10/22" />
 			<br><label for="to">～</label><br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="h_payment_date_to" value="2014/01/20" />
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="h_debit_date_to" value="2014/08/06" />
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date dl_head">
+			日付
 		</div>
 		<!-- 収支種類 -->
 		<div class="dl_balance_type dl_head">
 			収支種類<br>
-			<select id="dlCmbHdBalanceType" class="dl_tbl_content" name="h_balance_type_id">
-				<option value="0" selected>すべて</option>
-				
-				<option value="794">収入</option>
-				
-				<option value="795">支出</option>
-				
-				<option value="796">口座預入</option>
-				
-				<option value="797">口座引出</option>
-				
-				<option value="798">Parllet預入</option>
-				
-				<option value="799">Parllet引出</option>
-				
-			</select>
 		</div>
 		<!-- 取扱(実際) -->
 		<div class="dl_common_column dl_head">
 			取扱（実際）<br>
 			<select id="dlCmbHdHandling" class="dl_tbl_content" name="h_handling_id">
-				<option value="0" selected>すべて</option>
 				
-				<option value="388528">現金</option>
-				
-				<option value="389086">大宮銀行</option>
+				<option value="389086" selected>大宮銀行</option>
 				
 				<option value="389749">神宮銀行</option>
 				
 				<option value="389103">図書カード</option>
 				
-				<option value="390743">びざかーど</option>
-				
 				<option value="389713">Edy</option>
 				
 				<option value="390242">nanaco</option>
 				
-				<option value="-1">(空白)</option>
-				<option value="-2">(空白以外)</option>
 			</select>
 		</div>
 		<!-- 取扱(Parllet) -->
 		<div class="dl_common_column dl_head">
 			取扱（Parllet）<br>
-			<select id="dlCmbHdParllet" class="dl_tbl_content" name="h_parllet_id">
-				<option value="0" selected>すべて</option>
-				
-				<option value="389051">学資貯金</option>
-				
-				<option value="389102">旅行用</option>
-				
-				<option value="389568">交際用</option>
-				
-				<option value="390251">臨時用</option>
-				
-				<option value="-1">(空白)</option>
-				<option value="-2">(空白以外)</option>
-			</select>
 		</div>
-		<!-- 項目 -->
-		<div id="idHdItem" class="dl_common_column dl_head">
-			項目<br>
-			<select class="dl_tbl_content" id="h_combo" name="h_item_id">
-				<option value="0" selected>すべて</option>
-				
-				<option value="388888">給与</option>
-				
-				<option value="390253">その他</option>
-				
-				
-				<option value="388928">食費</option>
-				
-				<option value="390309">居住日用</option>
-				
-				<option value="390310">水道光熱</option>
-				
-				<option value="390859">衣類</option>
-				
-				<option value="390860">健康</option>
-				
-				<option value="390861">教育</option>
-				
-				<option value="390862">娯楽</option>
-				
-				<option value="390863">交通通信</option>
-				
-				<option value="390864">その他</option>
-				
-				<option value="-1">(空白)</option>
-				<option value="-2">(空白以外)</option>
-			</select>
+		<!-- 引出 -->
+		<div class="dlRm_amount dl_head">
+			引出<br>
 		</div>
-		<!-- 金額 -->
-		<div class="dl_amount dl_head">
-			金額<br>
-		</div>
-		<!-- 引落日 -->
-		<div class="dl_payment_date dl_head">
-			取扱日<br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump2" name="h_debit_date_fr" value="" />
-			<br><label for="to">～</label><br>
-			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump2" name="h_debit_date_to" value="" />
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content dl_head">
-			内容<br>
+		<!-- 預入 -->
+		<div class="dlRm_amount dl_head">
+			預入<br>
 		</div>
 		<!-- お店 -->
 		<div class="dl_common_column dl_head">
 			お店<br>
 		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column dl_head">
-			備考<br>
+		<!-- 残高 -->
+		<div class="dlRm_remainder dl_head">
+			残高<br>
 		</div>
-		
-			
 	</li>
-  </ul>	
-</div>  <!-- dl_tblContentHd -->
+  </ul>
+</div>  <!-- dlRm_tblContentHd -->
 </div>  <!-- dl_tblFrameHd -->
 
 </form>
 </div>  <!-- dlHeaderInner4 -->
-	
+		
 	</div>  <!-- dlHeader -->
+
 </div>  <!-- fill2 -->
 			</div>
 			<div id="main">
@@ -719,6 +596,7 @@ function openDialogConfirm(strCase, strUnableItem) {
 
 
 <script type="text/javascript" src="public/javascripts/funcCheckVal.js" ></script>
+<script type="text/javascript" src="public/javascripts/dateformat.js" ></script>
 
 <script type="text/javascript">
 <!--
@@ -728,7 +606,13 @@ jQuery(function(){
 		if (e.which==1 || e.which==3) {
 			//家計簿編集へジャンプする際のID・呼び出し元をセット
 			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
-			jQuery('#reEdCalledFrom').val("dl_balance");
+			jQuery('#reEdCalledFrom').val("dl_remainderBank");
+			
+			//収支明細へジャンプする際の絞込項目セット
+			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
+			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId', jQuery(this).closest("li")).val());
+			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).closest("li")).val());
+			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).closest("li")).val());
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -744,61 +628,24 @@ jQuery(function(){
 				},
 				items: {}
 			};
-			options.items.toRecordEdit = {name: "このデータを編集"};
-			options.items.toRecordDel = {name: "このデータを削除"};
+			if (jQuery('#idRecordEdit').val()!=0) {
+				options.items.toRecordEdit = {name: "このデータを編集"};
+				options.items.toRecordDel = {name: "このデータを削除"};
+			} else {
+				options.items.toDlBalance = {name: "収支明細へ"};
+			}
 			return options;
 		}
 	});
 	
-	/* 日付選択時にjumpするdatepicker(範囲指定) */
-	jQuery("#frJump2").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#toJump2").datepicker("option", "minDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
-	jQuery("#toJump2").datepicker({
-		defaultDate: "+1w",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOtherMonths: true,
-		selectOtherMonths: true,
-		showAnim: "drop",
-		changeMonth: true,
-		changeYear: true,
-		yearRange: '1900:2999',
-		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true,
-		onSelect: function( selectedDate ) {
-			jQuery("#frJump2").datepicker("option", "maxDate", selectedDate);
-			jQuery(this).change();
-		}
-	});
-	/* 起動時のdatepickerの選択可能範囲絞込 */
-	if (ckDate(""))
-		jQuery("#toJump2").datepicker("option", "minDate", "");
-	if (ckDate(""))
-		jQuery("#frJump2").datepicker("option", "maxDate", "");
-	
-	/* 「公開フラグ」・「収支種類」・「取扱(実際)」・「取扱(Parllet)」・「項目」の変更イベント */
-	jQuery("#idHdSecretRecFlg, #dlCmbHdBalanceType, #dlCmbHdHandling, #dlCmbHdParllet, #idHdItem").change(function() {
+	/* 「公開フラグ」・「取扱(実際)」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdHandling").change(function() {
 		jQuery('a.clickOverlay').click();
     });
 	
-	/* 「支払日」・「引落日」の変更イベント */
-	jQuery("#frJump, #toJump, #frJump2, #toJump2").change(function() {
-	});
+	/* 「引落日」の変更イベント */
+	jQuery("#frJump, #toJump").change(function() {
+    });
 });
 // -->
 </script>
@@ -816,114 +663,109 @@ jQuery(function(){
 <div id="dlMainInner">
 
 <div id="dl_tblFrame">
-<div id="dl_tblContent">
+<div id="dlRm_tblContent" >
   <ul class="dl_tbl">
 	<!-- 明細行 -->
 	
 	
 	
-	<!-- 編集ボタン -->
-	<div class="dl_srch_edit invisible" >
-		<!-- id -->
-		<input type="hidden" id="e_id_390311" name="e_id" value="390311"/>
-		<!-- 
-		<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='/recordedit/recordedit?id=390311'">
-		 -->
-		<a href="/recordedit/recordedit?id=390311" class="dl_edit_link">編集</a>
-	</div>
-
 	<li>
-		<input type="hidden" class="ToReId" value="390311" />
+		<input type="hidden" class="ToReId" value="" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="" />
+		<input type="hidden" class="ToDlDebitDateTo" value="" />
 		
 		
-		<!-- 支払日 -->
+		<!-- 引落日 -->
 		
-		<div class="dl_payment_date menu_cell dl_borderLeft">
+		<div class="dlRm_debit_date dl_borderLeft">
 		  <span class="dl_string">
-		  
-			2013/10/22
-		  
+			
+		  </span>
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date">
+		  <span class="dl_string">
 		  
 		  </span>
 		</div>
 		<!-- 収支種類 -->
-		<div class="dl_balance_type menu_cell">
+		<div class="dl_balance_type">
 		  <span class="dl_string">
-			Parllet預入
+			繰越金
 		  </span>
 		</div>
 		<!-- 取扱(実際) -->
-		<div class="dl_common_column menu_cell">
+		<div class="dl_common_column">
 		  <span class="dl_string">
 			
 		  </span>
 		</div>
 		<!-- 取扱(Parllet) -->
-		<div class="dl_common_column menu_cell">
+		<div class="dl_common_column">
 		  <span class="dl_string">
-			旅行用
+			
 		  </span>
 		</div>
 		<!-- 項目 -->
-		<div class="dl_common_column menu_cell">
+		<!-- 
+		<div class="dl_common_column">
 		  <span class="dl_string">
 			
 		  </span>
 		</div>
-		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount">
 		  <span class="padR4">
-			18,000
-		  </span>
-		</div>
-		<!-- 引落日 -->
-		<div class="dl_payment_date menu_cell">
-		  <span class="dl_string">
-			2013/10/22
-		  </span>
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content menu_cell">
 			
+		  </span>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount">
+		  <span class="padR4">
+			
+		  </span>
 		</div>
 		<!-- お店 -->
-		<div class="dl_common_column menu_cell">
+		<div class="dl_common_column">
 		  <span class="dl_string">
 			
 		  </span>
 		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
+		<!-- 残高 -->
+		<div class="dlRm_remainder">
+		  <span class="padR4">
+			-10,600
 		  </span>
 		</div>
-		
-		
 	</li>
 	
 	
-	<!-- 編集ボタン -->
-	<div class="dl_srch_edit invisible" >
-		<!-- id -->
-		<input type="hidden" id="e_id_390312" name="e_id" value="390312"/>
-		<!-- 
-		<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='/recordedit/recordedit?id=390312'">
-		 -->
-		<a href="/recordedit/recordedit?id=390312" class="dl_edit_link">編集</a>
-	</div>
-
 	<li>
 		<input type="hidden" class="ToReId" value="390312" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="2013/10/22" />
+		<input type="hidden" class="ToDlDebitDateTo" value="2013/10/22" />
 		
 		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date menu_cell dl_borderLeft">
+		  <span class="dl_string">
+			2013/10/22
+		  </span>
+		</div>
 		<!-- 支払日 -->
-		
-		<div class="dl_payment_date menu_cell dl_borderLeft">
+		<div class="dl_payment_date menu_cell">
 		  <span class="dl_string">
 		  
-			2013/10/22
-		  
+			
+			  2013/10/22
+			
+			
 		  
 		  </span>
 		</div>
@@ -946,146 +788,63 @@ jQuery(function(){
 		  </span>
 		</div>
 		<!-- 項目 -->
-		<div class="dl_common_column menu_cell">
+		<!-- 
+		<div class="dl_common_column">
 		  <span class="dl_string">
 			
 		  </span>
 		</div>
-		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			
+		  </span>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount menu_cell">
 		  <span class="padR4">
 			25,000
 		  </span>
 		</div>
-		<!-- 引落日 -->
-		<div class="dl_payment_date menu_cell">
-		  <span class="dl_string">
-			2013/10/22
-		  </span>
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content menu_cell">
-			
-		</div>
 		<!-- お店 -->
 		<div class="dl_common_column menu_cell">
 		  <span class="dl_string">
 			
 		  </span>
 		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
-		  </span>
-		</div>
-		
-		
-	</li>
-	
-	
-	<!-- 編集ボタン -->
-	<div class="dl_srch_edit invisible" >
-		<!-- id -->
-		<input type="hidden" id="e_id_390313" name="e_id" value="390313"/>
-		<!-- 
-		<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='/recordedit/recordedit?id=390313'">
-		 -->
-		<a href="/recordedit/recordedit?id=390313" class="dl_edit_link">編集</a>
-	</div>
-
-	<li>
-		<input type="hidden" class="ToReId" value="390313" />
-		
-		
-		<!-- 支払日 -->
-		
-		<div class="dl_payment_date menu_cell dl_borderLeft">
-		  <span class="dl_string">
-		  
-			2013/10/22
-		  
-		  
-		  </span>
-		</div>
-		<!-- 収支種類 -->
-		<div class="dl_balance_type menu_cell">
-		  <span class="dl_string">
-			口座引出
-		  </span>
-		</div>
-		<!-- 取扱(実際) -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			神宮銀行
-		  </span>
-		</div>
-		<!-- 取扱(Parllet) -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
-		  </span>
-		</div>
-		<!-- 項目 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
-		  </span>
-		</div>
-		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
+		<!-- 残高 -->
+		<div class="dlRm_remainder menu_cell">
 		  <span class="padR4">
-			30,000
+			14,400
 		  </span>
 		</div>
-		<!-- 引落日 -->
-		<div class="dl_payment_date menu_cell">
-		  <span class="dl_string">
-			2013/10/22
-		  </span>
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content menu_cell">
-			
-		</div>
-		<!-- お店 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
-		  </span>
-		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			
-		  </span>
-		</div>
-		
-		
 	</li>
 	
 	
-	<!-- 編集ボタン -->
-	<div class="dl_srch_edit invisible" >
-		<!-- id -->
-		<input type="hidden" id="e_id_390115" name="e_id" value="390115"/>
-		<!-- 
-		<input type="button" class="dl_tbl_content" value="編集" onClick="location.href='/recordedit/recordedit?id=390115'">
-		 -->
-		<a href="/recordedit/recordedit?id=390115" class="dl_edit_link">編集</a>
-	</div>
-
 	<li>
 		<input type="hidden" class="ToReId" value="390115" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="2013/10/31" />
+		<input type="hidden" class="ToDlDebitDateTo" value="2013/10/31" />
 		
 		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date menu_cell dl_borderLeft">
+		  <span class="dl_string">
+			2013/10/31
+		  </span>
+		</div>
 		<!-- 支払日 -->
-		
-		<div class="dl_payment_date menu_cell dl_borderLeft">
+		<div class="dl_payment_date menu_cell">
 		  <span class="dl_string">
 		  
-			2013/10/31
-		  
+			
+			  2013/10/31
+			
+			
 		  
 		  </span>
 		</div>
@@ -1108,26 +867,24 @@ jQuery(function(){
 		  </span>
 		</div>
 		<!-- 項目 -->
-		<div class="dl_common_column menu_cell">
+		<!-- 
+		<div class="dl_common_column">
 		  <span class="dl_string">
-			食費
+			
 		  </span>
 		</div>
-		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount menu_cell">
 		  <span class="padR4">
 			100
 		  </span>
 		</div>
-		<!-- 引落日 -->
-		<div class="dl_payment_date menu_cell">
-		  <span class="dl_string">
-			2013/10/31
+		<!-- 預入 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			
 		  </span>
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content menu_cell">
-			てすと
 		</div>
 		<!-- お店 -->
 		<div class="dl_common_column menu_cell">
@@ -1135,82 +892,50 @@ jQuery(function(){
 			てすと店
 		  </span>
 		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-			てすと備考
+		<!-- 残高 -->
+		<div class="dlRm_remainder menu_cell">
+		  <span class="padR4">
+			14,300
 		  </span>
 		</div>
-		
-		
 	</li>
 	
 	
   </ul>
-</div>  <!-- dl_tblContent -->
+</div>  <!-- dlRm_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
 </div>  <!-- dlMainInner -->
 </div>  <!-- dlMain -->
 
+
 <div id="dlFooter">
+<div id="dlRmChartFrame">
+<div id="dlRmChart"></div>
+</div>
 <div id="dl_tblFrameFt">
 <div id="dl_tblContentFt">
   <ul class="dl_tbl">
-	<!-- 編集ボタン -->
-	<div class="dl_srch_edit invisible" >
-	</div>
 	<li>
 		
-		<!-- 支払日 -->
-		<div class="dl_payment_date menu_cell dl_borderLeft">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 収支種類 -->
-		<div class="dl_balance_type menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 取扱(実際) -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 取扱(Parllet) -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 項目 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 金額 -->
-		<div class="dl_amount menu_cell">
-		  <span class="padR4">
-		  </span>
-		</div>
 		<!-- 引落日 -->
-		<div class="dl_payment_date menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 内容 -->
-		<div class="dl_content menu_cell">
-		</div>
+		<div class="dlRm_debit_date dl_head dl_borderLeft"></div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date dl_head"></div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type dl_head"></div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column dl_head"></div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column dl_head"></div>
+		<!-- 引出 -->
+		<div class="dlRm_amount dl_head"></div>
+		<!-- 預入 -->
+		<div class="dlRm_amount dl_head"></div>
 		<!-- お店 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		<!-- 備考 -->
-		<div class="dl_common_column menu_cell">
-		  <span class="dl_string">
-		  </span>
-		</div>
-		
+		<div class="dl_common_column dl_head"></div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder dl_head"></div>
 	</li>
   </ul>
 </div>  <!-- dl_tblContentFt -->
@@ -1218,13 +943,13 @@ jQuery(function(){
 <div id="configListPagination">
 	
 <p class="configCount">
-    4 収支データ
+    2 データ
 </p>
 
 
 
-</div>  <!-- configListPagination -->
-</div>  <!-- dlFooter -->
+</div>
+</div>
 
 </div>
 			</div>
