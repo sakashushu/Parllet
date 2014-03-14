@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>残高明細（口座系）</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+
+<!-- jQuery(GoogleAPIs経由) -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+<script type="text/javascript" src="public/javascripts/jquery.ui.touch-punch.min.js" ></script>
+<script type="text/javascript" src="public/javascripts/prtJsCommon.js" ></script>
+<!-- datepicker日本語化 -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+
+<!-- 
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+ -->
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link media="only screen and (max-device-width:768px)" href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<link media="screen and (min-device-width:769px)" href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<!--[if IE]>
+<link href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<![endif]-->
+
+<link rel="stylesheet" media="screen" href="public/stylesheets/overlay.css">
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+
+<!-- AnimatedBorderMenus -->
+<link rel="stylesheet" type="text/css" href="public/stylesheets/AnimatedBorderMenus/stylePrlt.css" />
+<script src="public/javascripts/AnimatedBorderMenus/modernizr.custom.js"></script>
+
+<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
+<style>
+.ui-datepicker td span, .ui-datepicker td a {
+    text-align: center;    /* 日付をセンタリング */
+}
+.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
+    width: auto;    /* そのままだと改行してしまう */
+}
+.ui-datepicker select.ui-datepicker-month {
+    margin-left: 1em;    /* ちょっと離す */
+}
+</style>
+
+<script type="text/javascript" src="public/javascripts/jquery.gpfloat-1.0.js" ></script>
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	jQuery('#header').gpFloatX();
+});
+// -->
+</script>
+
+<script type="text/javascript">
+<!-- 
+jQuery(function(){
+	jQuery('a.clickOverlay').click(function() {
+		jQuery('body').css('overflow-y', 'hidden');
+		jQuery('#pageTop').click();
+		jQuery('#overlay').fadeIn();
+		return false;
+	});
+	jQuery("#close").click(function() {
+		jQuery('body').css('overflow-y', 'scroll');
+		jQuery("#overlay").fadeOut();
+	});
+	// Android 2.3 でスクロールしないバグへの対応
+	if (navigator.userAgent.indexOf('Android') > 0) {
+		var box = jQuery('#overlay div'),
+			touchStartPositionX,
+			touchStartPositionY,
+			touchMovePositionX,
+			touchMovePositionY,
+			moveFarX,
+			moveFarY,
+			startScrollX,
+			startScrollY,
+			moveScrollX,
+			moveScrollY;
+	
+		box.bind('touchstart', function(e) {
+			var touch = e.originalEvent.touches[0];
+			touchStartPositionX = touch.pageX;
+			touchStartPositionY = touch.pageY;
+			//タッチ前スクロールをとる
+			startScrollX = box.scrollLeft();
+			startScrollY = box.scrollTop();
+		});
+		box.bind('touchmove', function(e) {
+			var touch = e.originalEvent.touches[0];
+			e.preventDefault();
+			//現在の座標を取得
+			touchMovePositionX = touch.pageX;
+			touchMovePositionY = touch.pageY;
+			//差をとる
+			moveFarX = touchStartPositionX - touchMovePositionX;
+			moveFarY = touchStartPositionY - touchMovePositionY;
+			//スクロールを動かす
+			moveScrollX = startScrollX +moveFarX;
+			moveScrollY = startScrollY +moveFarY;
+			box.scrollLeft(moveScrollX);
+			box.scrollTop(moveScrollY);
+		});
+	}
+});
+// -->
+</script>
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+	</head>
+	<body>
+<div id="overlay">
+	<div>
+		<p id="text">
+			このページは 2014年3月17日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版の残高明細（口座系）の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			<br/>
+			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも3月17日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
+			<br/>
+			とはいえ、PCであれば <a href="http://parllet.com" style="color: #eee;">http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>
+			<br/>
+			ご興味がおありの方は是非お越しください。
+		</p>
+		<p id="close">閉じる</p>
+	</div>
+</div>
+<nav class="bt-menu large_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	<ul>
+		<li></li>
+		<li><a href="#" class="clickOverlay">残高表</a></li>
+		<li><a href="#" class="clickOverlay">日計表</a></li>
+		<li><a href="#" class="clickOverlay">明細表</a></li>
+		<li><a href="#" class="clickOverlay">家計簿入力</a></li>
+		<li><a href="#" class="clickOverlay">設定</a></li>
+	</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+<nav class="bt-menu small_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+		<ul>
+			<li></li>
+			<li><a href="#" class="clickOverlay">収支明細</a></li>
+			<li><a href="#" class="clickOverlay" >残高明細（口座系）</a></li>
+			<li><a href="#" class="clickOverlay" >残高明細（Parllet）</a></li>
+		</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+		<div id="container">
+			<div id="header">
+				<div class="fill">
+					<div id="hdContainer">
+						<ul id="ltBlocks">
+							<li>
+								<ul id="logo">
+									<li id="logo-pre">
+											<div>
+		ちょっと変わった
+		<br>
+		Web家計簿
+	</div>
+	<span id="logo_alpha-img">
+		Parllet
+		<span>
+			Parllet(パレット)はアルファ版です。
+			ご承知おきください。
+		</span>
+	</span>
+									</li>
+	<li>
+		<a href="#" class="clickOverlay" >
+			<span id="logo-img">Parllet</span>
+		</a>
+	</li>
+								</ul>
+							</li>
+							
+<script type="text/javascript" src="public/javascripts/autoNumeric-1.7.5.js" ></script>
+<script type="text/javascript" src="public/javascripts/jquery.datepicker.js" ></script>
+
+<style>
+<!--
+input.text {
+	width:100%;
+	height: 100%;
+	padding: .1em .4em;
+}
+-->
+</style>
+
+<script type="text/javascript" src="public/javascripts/dateformat.js" ></script>
+<script type="text/javascript" src="public/javascripts/funcCheckVal.js" ></script>
+<li>
+	<ul class="memberMenu" >
+		<li class="">
+			<a href="#" class="clickOverlay">残高表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">日計表</a>
+		</li>
+		<li class="selected">
+			<a href="#" class="clickOverlay">明細表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">家計簿入力</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">設定</a>
+		</li>
+	</ul>
+</li>
+
+						</ul>
+						<ul id="tools">
+							
+	<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	var onMenu = 'out',
+		tlsLi = jQuery('#tlsLi'),
+		tlsLiUl = jQuery('#tlsLiUl'),
+		tlsLiUlLiA = jQuery('#tlsLiUl Li a');
+	
+	/* 「ログアウト」クリック時は「logout()」イベントへ */
+	jQuery('#fb-logout').click(function() {
+		logout();
+	});
+	
+	
+	tlsLiUl.hide();
+	
+	/* 「#tools li ul」の位置確定 */
+	tlsLiUl.each(function() {
+		jQuery(this).css('left', jQuery(this).parent().width() - jQuery(this).width());
+	});
+	
+	jQuery(window).mousedown(function(e) {
+		if (onMenu==='out' && tlsLi.hasClass("click")) {
+			e.preventDefault();
+			tlsLi.removeClass("click");
+			tlsLiUl.hide();
+			tlsLi.blur();
+		}
+	});
+	
+	tlsLi.focus(function() {
+		jQuery(this).addClass("focused");
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	});
+	tlsLi.blur(function() {
+		jQuery(this).removeClass("focused");
+		jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.hover(function() {
+		onMenu = 'over';
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	},function() {
+		onMenu = 'out';
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.keypress(function(e) {
+		if (e.which===13) {
+			if (jQuery(e.target).is("li")) {
+				e.preventDefault();
+				jQuery(this).click();
+			}
+		}
+	});
+	tlsLi.click(function() {
+		if (jQuery(this).hasClass("click")) {
+			jQuery(this).removeClass("click");
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+			tlsLiUl.hide();
+		} else {
+			jQuery(this).addClass("click");
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+			jQuery("ul", this).show();
+		}
+	});
+	
+	
+	tlsLiUlLiA.focus(function() {
+		jQuery(this).addClass("focused");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	});
+	tlsLiUlLiA.blur(function() {
+		jQuery(this).removeClass("focused");
+		if (!jQuery(this).hasClass("hovered"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	tlsLiUlLiA.hover(function() {
+		jQuery(this).addClass("hovered");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	},function() {
+		jQuery(this).removeClass("hovered");
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	
+	
+	var vRecCnt = 36,
+		vUsePercent = roundup(vRecCnt*100/100, 0);
+	jQuery('#htProgressBar').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		var value = this.getAttribute("aria-valuenow");
+		
+		jQuery(selector).css('background','Green');
+		if (value >= 90) {
+			jQuery(selector).css('background', 'Red');
+		}
+	});
+});
+// -->
+</script>
+
+
+
+<li id="tlsLi" tabindex="0" class="open">
+	id:388527
+	<ul id="tlsLiUl">
+		<li>
+			<a href="#" class="clickOverlay" id="cfHauserEdit" >
+				会員情報
+				<div id="htProgressBar"></div>
+			</a>
+		</li>
+		<li><a href="#" class="clickOverlay" id="fb-logout" >ログアウト</a></li>
+		
+	</ul>
+</li>
+
+						</ul>
+					</div>
+				</div>
+				
+<div id="fill2">
+	<div id="dlHeader">
+		<div id="dlHeaderInner1">
+			<!-- 明細表共通ヘッダー -->
+			<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #dlHeader, #ftContents {
+	width: 95%;
+}
+#dlMain, #dlFooter, #dl_tblFrameFt, #configListPagination, #frmDlBalance, #frmDlRemainder {
+	width: 100%;
+}
+#hdContainer, #main, #dlHeader, #dlMain, #dlFooter, #ftContents {
+	max-width: 980px;
+}
+#dl_tblFrameFt, #frmDlBalance, #frmDlRemainder {
+	max-width: 960px;
+}
+#configListPagination {
+	max-width: 948px;
+}
+.bt-menu-trigger {
+	display: none;
+}
+
+#dlMain {
+//	margin-top: 42px;
+}
+
+#dl_tblFrame {
+//	padding-top: 100px;
+}
+
+
+
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+.tbMemberMenu {
+	display: block;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	.tbMemberMenu {
+		display: none;
+	}
+}
+-->
+</style>
+
+
+
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	var intPadTop = jQuery('#header').height() - jQuery('#prltMain').css('padding-top').replace("px", "") - jQuery('#dlMain').css('margin-top').replace("px", "");
+	jQuery('#dl_tblFrame').css('padding-top', intPadTop);
+	jQuery('#aRecEdit2').click(function() {
+		jQuery('#aRecEdit').click();
+	});
+	
+	/* 起動時のCSS設定 */
+	
+	/* 枠固定の左右の動き */
+	if (!mobilecheck()) {
+		jQuery('#dl_tblFrameFt').scroll(function() {
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+		});
+	} else {
+		jQuery('#dl_tblFrameHd').css('overflow-x', 'scroll');
+		jQuery('#dl_tblFrame').css('overflow-x', 'scroll');
+		jQuery('#dl_tblFrameHd').scroll(function() {
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameFt').scrollLeft(jQuery(this).scrollLeft());
+		});
+		jQuery('#dl_tblFrame').scroll(function() {
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameFt').scrollLeft(jQuery(this).scrollLeft());
+		});
+		jQuery('#dl_tblFrameFt').scroll(function() {
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+		});
+	}
+	
+	jQuery('#main').css('padding-bottom', '30px');
+
+	/* dlFooterのCSS設定切替 */
+	setCssFooter();
+	
+	/* ウィンドウリサイズ時のCSS設定 */
+	jQuery(window).resize(function() {
+		setCssFooter();
+	});
+	
+	/* windowスクロール時のCSS設定 */
+	jQuery(window).scroll(function() {
+		setCssFooter();
+	});
+	
+//	/* 表示金額を3桁区切りに */
+//	jQuery('.num3').each(function(i) {
+//		var numStr = addFigure(jQuery(this).html());
+//		jQuery(this).html(numStr);
+//	});
+	
+	/* 日付選択時にjumpするdatepicker(範囲指定) */
+	jQuery("#frJump").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#toJump").datepicker("option", "minDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	jQuery("#toJump").datepicker({
+		defaultDate: "+1w",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		showButtonPanel: true,
+		onSelect: function( selectedDate ) {
+			jQuery("#frJump").datepicker("option", "maxDate", selectedDate);
+			jQuery(this).change();
+		}
+	});
+	/* 起動時のdatepickerの選択可能範囲絞込 */
+	
+	
+		if (ckDate("2013/10/22"))
+			jQuery("#toJump").datepicker("option", "minDate", "2013/10/22");
+		if (ckDate("2014/08/06"))
+			jQuery("#frJump").datepicker("option", "maxDate", "2014/08/06");
+	
+	
+	
+	/* Enterキーでのサブミット防止 */
+	jQuery('input[type!="submit"][type!="button"]').keypress(function(e){
+		if ((e.which && e.which===13) || (e.keyCode && e.keyCode===13)) {
+			return false;
+		}else{
+			return true;
+		}
+	});
+});
+
+/* dlFooterのCSS設定切替関数 */
+function setCssFooter() {
+	var dlFtr = jQuery('#dlFooter'),
+		dlMn = jQuery('#dlMain'),
+		ctnHt  = jQuery('#container').height(),
+		winInHt = jQuery(window).innerHeight(),
+		winSrTp = jQuery(window).scrollTop(),
+		ftrHt = jQuery('#footer').height(),
+		winSrBtm = ctnHt - winSrTp - winInHt;
+	if (winInHt < ctnHt) {
+		dlFtr.css('position', 'fixed').css('width', '95%');
+		dlMn.css('padding-bottom', jQuery('#dlFooterInner').height()+'px');
+		dlFtr.css('bottom', '0');
+		if (winSrBtm < ftrHt) {
+			dlFtr.css('bottom', ftrHt - winSrBtm + 'px');
+		}
+	} else {
+		dlFtr.css('position', '').css('width', '100%');
+		dlFtr.css('bottom', '');
+		dlMn.css('padding-bottom', '');
+	}
+}
+
+/* 文字列を3桁区切りにする関数 */
+function addFigure(str) {
+    var num = new String(str).replace(/,|\n| |\t/g, "");
+//    while(num != (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+    return num;
+}
+
+
+google.load('visualization', '1', {'packages':['corechart']});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+	var dateFormat = new DateFormat("yyyy/MM/dd"),
+		dateFormatMd = new DateFormat("M/d"),
+		data = google.visualization.arrayToDataTable([
+		["取扱日", "残高"],
+	  
+	  
+		
+		[""==="" ? "繰越金" : dateFormatMd.format(dateFormat.parse("")), -10600]
+		
+	  
+		,
+		["2013/10/22"==="" ? "口座預入" : dateFormatMd.format(dateFormat.parse("2013/10/22")), 14400]
+		
+	  
+		,
+		["2013/10/31"==="" ? "支出" : dateFormatMd.format(dateFormat.parse("2013/10/31")), 14300]
+		
+	  
+	]);
+	
+	// 表の幅と合わせる
+	var childElementWidth = 0;
+	jQuery("#dlRm_tblContentHd ul li div").each(function(i) {
+		childElementWidth += jQuery(this).outerWidth();
+	});
+	jQuery('#dlRmChartFrame').width(childElementWidth);
+	
+	// グラフのオプションを指定する
+	var options = {
+		width: childElementWidth + 10,
+		height: 150,
+		backgroundColor: "white",
+		pointSize: 5
+	}
+	
+	// 描画する
+	var chart = new google.visualization.LineChart(document.getElementById('dlRmChart'));
+	chart.draw(data, options);
+}
+
+// -->
+</script>
+
+<div>
+	<ul class="memberMenu">
+		<li class="">
+			<a href="#" class="clickOverlay">収支明細</a>
+		</li>
+		<li class="selected">
+			<a href="#" class="clickOverlay" >残高明細（口座系）</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay" >残高明細（Parllet）</a>
+		</li>
+	</ul>
+	
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">明細表</a>
+		</li>
+		<li>
+			　＞　
+		</li>
+		
+		
+		<li>
+		    <a href="#" id="aSmall_cate">残高明細（口座系）</a>
+		</li>
+	</ul>
+</div>
+
+
+
+	
+
+		</div>  <!-- dlHeaderInner1 -->
+		<div id="dlHeaderInner2"></div>
+		<div id="dlHeaderInner3"></div>
+<div id="dlHeaderInner4">
+<form action="/prlt/detailList/remainderBank" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" id="frmDlRemainder" ><input type="hidden" name="authenticityToken" value="2ab89c6e03fb2e2c60e59cc501c28699b162ca7c">
+
+
+<!-- 絞込のサブミット（非表示） -->
+<input type="submit" id="idSrch" name="srch" class="invisible" />
+
+<div id="dl_tblFrameHd">
+
+<div id="dlRm_tblContentHd" >
+  <ul class="dl_tbl">
+	<!-- ヘッダー行 -->
+	<li>
+		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date dl_head dl_borderLeft">
+			取扱日<br>
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="frJump" name="h_debit_date_fr" value="2013/10/22" />
+			<br><label for="to">～</label><br>
+			<input type="text" class="dl_tbl_content dl_payment_date_text" id="toJump" name="h_debit_date_to" value="2014/08/06" />
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date dl_head">
+			日付
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type dl_head">
+			収支種類<br>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column dl_head">
+			取扱（実際）<br>
+			<select id="dlCmbHdHandling" class="dl_tbl_content" name="h_handling_id">
+				
+				<option value="389086" selected>大宮銀行</option>
+				
+				<option value="389749">神宮銀行</option>
+				
+				<option value="389103">図書カード</option>
+				
+				<option value="389713">Edy</option>
+				
+				<option value="390242">nanaco</option>
+				
+			</select>
+		</div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column dl_head">
+			取扱（Parllet）<br>
+		</div>
+		<!-- 引出 -->
+		<div class="dlRm_amount dl_head">
+			引出<br>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount dl_head">
+			預入<br>
+		</div>
+		<!-- お店 -->
+		<div class="dl_common_column dl_head">
+			お店<br>
+		</div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder dl_head">
+			残高<br>
+		</div>
+	</li>
+  </ul>
+</div>  <!-- dlRm_tblContentHd -->
+</div>  <!-- dl_tblFrameHd -->
+
+</form>
+</div>  <!-- dlHeaderInner4 -->
+		
+	</div>  <!-- dlHeader -->
+
+</div>  <!-- fill2 -->
+			</div>
+			<div id="main">
+				
+<div id="divForSmart">
+	Parlletにお越しいただきありがとうございます。<br>
+	<br>
+	折角お越しいただいたのですが、現時点ではスマートフォン・タブレット対応作業に時間を割くことができません。<br>
+	<br>
+	あまりにも見た目と動きがボロボロ過ぎるので、一旦スマートフォン・タブレットからのご利用は出来ないという形にさせて頂きました。<br>
+	<br>
+	大変申し訳ございません。
+</div>
+
+<div id="prltMain">
+
+
+
+
+
+
+
+
+<style>
+<!--
+*,
+*:after,
+*::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+-->
+</style>
+
+<script type="text/javascript" src="public/javascripts/funcCheckVal.js" ></script>
+<script type="text/javascript" src="public/javascripts/dateformat.js" ></script>
+
+<script type="text/javascript">
+<!--
+jQuery(function(){
+	/* 左クリックか右クリックでメニュー表示 */
+	jQuery('.menu_cell').mousedown(function(e) {
+		if (e.which==1 || e.which==3) {
+			//家計簿編集へジャンプする際のID・呼び出し元をセット
+			jQuery('#idRecordEdit').val(jQuery('.ToReId', jQuery(this).closest("li")).val());
+			jQuery('#reEdCalledFrom').val("dl_remainderBank");
+			
+			//収支明細へジャンプする際の絞込項目セット
+			jQuery('#hBalanceTypeId').val(jQuery('.ToDlBalanceTypeId', jQuery(this).closest("li")).val());
+			jQuery('#hHandlingId').val(jQuery('.ToDlHandlingId', jQuery(this).closest("li")).val());
+			jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).closest("li")).val());
+			jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).closest("li")).val());
+			
+			e.preventDefault();
+			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
+		}
+	});
+	jQuery.contextMenu({
+		selector: '.menu_cell',
+		trigger: 'none',
+		build: function($trigger, e) {
+			var options = {
+				callback: function(key, options) {
+					jQuery('a.clickOverlay').click();
+				},
+				items: {}
+			};
+			if (jQuery('#idRecordEdit').val()!=0) {
+				options.items.toRecordEdit = {name: "このデータを編集"};
+				options.items.toRecordDel = {name: "このデータを削除"};
+			} else {
+				options.items.toDlBalance = {name: "収支明細へ"};
+			}
+			return options;
+		}
+	});
+	
+	/* 「公開フラグ」・「取扱(実際)」の変更イベント */
+	jQuery("#idHdSecretRecFlg, #dlCmbHdHandling").change(function() {
+		jQuery('a.clickOverlay').click();
+    });
+	
+	/* 「引落日」の変更イベント */
+	jQuery("#frJump, #toJump").change(function() {
+    });
+});
+// -->
+</script>
+
+<script type="text/javascript" src="public/javascripts/jquery.contextMenu.js"></script>
+<link rel="stylesheet" type="text/css" href="public/stylesheets/jquery.contextMenu.css" />
+
+
+
+
+
+
+
+<div id="dlMain">
+<div id="dlMainInner">
+
+<div id="dl_tblFrame">
+<div id="dlRm_tblContent" >
+  <ul class="dl_tbl">
+	<!-- 明細行 -->
+	
+	
+	
+	<li>
+		<input type="hidden" class="ToReId" value="" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="" />
+		<input type="hidden" class="ToDlDebitDateTo" value="" />
+		
+		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date dl_borderLeft">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date">
+		  <span class="dl_string">
+		  
+		  </span>
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type">
+		  <span class="dl_string">
+			繰越金
+		  </span>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 項目 -->
+		<!-- 
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount">
+		  <span class="padR4">
+			
+		  </span>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount">
+		  <span class="padR4">
+			
+		  </span>
+		</div>
+		<!-- お店 -->
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder">
+		  <span class="padR4">
+			-10,600
+		  </span>
+		</div>
+	</li>
+	
+	
+	<li>
+		<input type="hidden" class="ToReId" value="390312" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="2013/10/22" />
+		<input type="hidden" class="ToDlDebitDateTo" value="2013/10/22" />
+		
+		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date menu_cell dl_borderLeft">
+		  <span class="dl_string">
+			2013/10/22
+		  </span>
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date menu_cell">
+		  <span class="dl_string">
+		  
+			
+			  2013/10/22
+			
+			
+		  
+		  </span>
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type menu_cell">
+		  <span class="dl_string">
+			口座預入
+		  </span>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			大宮銀行
+		  </span>
+		</div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 項目 -->
+		<!-- 
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			
+		  </span>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			25,000
+		  </span>
+		</div>
+		<!-- お店 -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder menu_cell">
+		  <span class="padR4">
+			14,400
+		  </span>
+		</div>
+	</li>
+	
+	
+	<li>
+		<input type="hidden" class="ToReId" value="390115" />
+		<input type="hidden" class="ToDlBalanceTypeId" value="" />
+		<input type="hidden" class="ToDlHandlingId" value="" />
+		<input type="hidden" class="ToDlDebitDateFr" value="2013/10/31" />
+		<input type="hidden" class="ToDlDebitDateTo" value="2013/10/31" />
+		
+		
+		<!-- 引落日 -->
+		
+		<div class="dlRm_debit_date menu_cell dl_borderLeft">
+		  <span class="dl_string">
+			2013/10/31
+		  </span>
+		</div>
+		<!-- 支払日 -->
+		<div class="dl_payment_date menu_cell">
+		  <span class="dl_string">
+		  
+			
+			  2013/10/31
+			
+			
+		  
+		  </span>
+		</div>
+		<!-- 収支種類 -->
+		<div class="dl_balance_type menu_cell">
+		  <span class="dl_string">
+			支出
+		  </span>
+		</div>
+		<!-- 取扱(実際) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			大宮銀行
+		  </span>
+		</div>
+		<!-- 取扱(Parllet) -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			学資貯金
+		  </span>
+		</div>
+		<!-- 項目 -->
+		<!-- 
+		<div class="dl_common_column">
+		  <span class="dl_string">
+			
+		  </span>
+		</div>
+		 -->
+		<!-- 引出 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			100
+		  </span>
+		</div>
+		<!-- 預入 -->
+		<div class="dlRm_amount menu_cell">
+		  <span class="padR4">
+			
+		  </span>
+		</div>
+		<!-- お店 -->
+		<div class="dl_common_column menu_cell">
+		  <span class="dl_string">
+			てすと店
+		  </span>
+		</div>
+		<!-- 残高 -->
+		<div class="dlRm_remainder menu_cell">
+		  <span class="padR4">
+			14,300
+		  </span>
+		</div>
+	</li>
+	
+	
+  </ul>
+</div>  <!-- dlRm_tblContent -->
+</div>  <!-- dl_tblFrame -->
+
+</div>  <!-- dlMainInner -->
+</div>  <!-- dlMain -->
+
+
+<div id="dlFooter">
+<div id="dlFooterInner">
+<div id="dl_tblFrameFt">
+<div id="dlRmChartFrame">
+<div id="dlRmChart"></div>
+</div>
+</div>  <!-- dl_tblFrameFt -->
+<div id="configListPagination">
+	
+<p class="configCount">
+    2 データ
+</p>
+
+
+
+</div>
+</div>  <!-- dlFooterInner -->
+</div>  <!-- dlFooter -->
+
+</div>
+			</div>
+			<div id="footer">
+			<div class="fill">
+				<div id="ftContents">
+					<a href="#" class="clickOverlay">
+						parllet.com
+					</a>
+				</div>
+			</div>
+			</div>	<!-- footer -->
+		</div>
+		<script src="public/javascripts/AnimatedBorderMenus/jquery.borderMenuPrlt.js"></script>
+	</body>
+</html>
