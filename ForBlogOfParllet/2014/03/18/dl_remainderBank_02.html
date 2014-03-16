@@ -451,7 +451,7 @@ jQuery(function() {
 	jQuery('#main').css('padding-bottom', '30px');
 
 	/* dlFooterのCSS設定切替 */
-	setCssFooter();
+//	setCssFooter();
 	
 	/* ウィンドウリサイズ時のCSS設定 */
 	jQuery(window).resize(function() {
@@ -598,7 +598,9 @@ function drawChart() {
 	var chart = new google.visualization.LineChart(document.getElementById('dlRmChart'));
 	chart.draw(data, options);
 }
-
+window.onload = function() {
+	setCssFooter();
+}
 // -->
 </script>
 
