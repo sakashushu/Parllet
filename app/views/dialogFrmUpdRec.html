@@ -2,6 +2,16 @@
 
 #{include 'subCategory.html' /}
 
+<style>
+<!--
+input.text {
+	width:100%;
+	height: 100%;
+	padding: .1em .4em;
+}
+-->
+</style>
+
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 <script type="text/javascript">
@@ -338,7 +348,6 @@ jQuery(function() {
 				jNextInput.removeClass('invisible');
 			jNextInput.css('font-size', '70%')
 										.css('width', '80px')
-										.css('height', '8px')
 										.css('float', 'left')
 //										.css('margin-right', ((jQuery('#dialog-updRec').children('form').children('fieldset').width()/2)-jQuery('#dfurStore').children('label').width()-jQuery(this).width()-18)+'px')
 										.focus();

@@ -1,6 +1,18 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.detaillist.balance.title') /}
 
+<style>
+<!--
+*,
+*:after,
+*::before {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+ -->
+</style>
+
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 
 <script type="text/javascript">
@@ -369,6 +381,7 @@ jQuery(function(){
 </div>  <!-- dlMain -->
 
 <div id="dlFooter">
+<div id="dlFooterInner">
 <div id="dl_tblFrameFt">
 <div id="dl_tblContentFt">
   <ul class="dl_tbl">
@@ -443,4 +456,5 @@ jQuery(function(){
 <div id="configListPagination">
 	#{DetailList.dl_balance.pagination /}
 </div>  <!-- configListPagination -->
+</div>  <!-- dlFooterInner -->
 </div>  <!-- dlFooter -->

@@ -497,7 +497,7 @@ a.aBtn:hover span {
 
 #dlMain {
 	width: 980px;
-	margin-top: 42px;
+	margin-top: 32px;
 }
 
 #dlMainInner {
@@ -1575,7 +1575,6 @@ fieldset {
 }
 
 #dl_tblFrameFt {
-	background: #eee;
 	overflow-y: hidden;
 	overflow-x: scroll;
 	width: 960px;
@@ -1862,11 +1861,13 @@ label.fieldName {
 #dlFooter {
 //	width: 980px;;
 	width: 960px;
-	padding-right: 10px;
-	padding-left: 10px;
 	background: #f6f5d1;
 }
 
+#dlFooterInner {
+	padding-right: 10px;
+	padding-left: 10px;
+}
 
 /* receipt, confirm, unsubscribe */
 

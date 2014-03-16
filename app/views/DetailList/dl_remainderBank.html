@@ -1,6 +1,18 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.detaillist.remainderBank.title') /}
 
+<style>
+<!--
+*,
+*:after,
+*::before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+-->
+</style>
+
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 
@@ -295,40 +307,14 @@ jQuery(function(){
 
 
 <div id="dlFooter">
+<div id="dlFooterInner">
+<div id="dl_tblFrameFt">
 <div id="dlRmChartFrame">
 <div id="dlRmChart"></div>
 </div>
-<div id="dl_tblFrameFt">
-<div id="dl_tblContentFt">
-  <ul class="dl_tbl">
-	<li>
-		#{if session.get('actionMode')!='View'}
-			<!-- 非公開フラグ -->
-			<div id="idHdSecretRecFlg" class="dl_secret_rec_flg dl_head dl_borderLeft" ></div>
-		#{/if}
-		<!-- 引落日 -->
-		<div class="${clDlRmDebitDateHd}"></div>
-		<!-- 支払日 -->
-		<div class="dl_payment_date dl_head"></div>
-		<!-- 収支種類 -->
-		<div class="dl_balance_type dl_head"></div>
-		<!-- 取扱(実際) -->
-		<div class="dl_common_column dl_head"></div>
-		<!-- 取扱(Parllet) -->
-		<div class="dl_common_column dl_head"></div>
-		<!-- 引出 -->
-		<div class="dlRm_amount dl_head"></div>
-		<!-- 預入 -->
-		<div class="dlRm_amount dl_head"></div>
-		<!-- お店 -->
-		<div class="dl_common_column dl_head"></div>
-		<!-- 残高 -->
-		<div class="dlRm_remainder dl_head"></div>
-	</li>
-  </ul>
-</div>  <!-- dl_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_remainder_bank.pagination /}
 </div>
-</div>
+</div>  <!-- dlFooterInner -->
+</div>  <!-- dlFooter -->

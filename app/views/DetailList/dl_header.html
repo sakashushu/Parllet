@@ -1,6 +1,101 @@
+<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #dlHeader, #ftContents {
+	width: 95%;
+}
+#dlMain, #dlFooter, #dl_tblFrameFt, #configListPagination, #frmDlBalance, #frmDlRemainder {
+	width: 100%;
+}
+#hdContainer, #main, #dlHeader, #dlMain, #dlFooter, #ftContents {
+	max-width: 980px;
+}
+#dl_tblFrameFt, #frmDlBalance, #frmDlRemainder {
+	max-width: 960px;
+}
+#configListPagination {
+	max-width: 948px;
+}
+.bt-menu-trigger {
+	display: none;
+}
+
+#dlMain {
+//	margin-top: 42px;
+}
+
+#dl_tblFrame {
+//	padding-top: 100px;
+}
+
+
+
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+.tbMemberMenu {
+	display: block;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	.tbMemberMenu {
+		display: none;
+	}
+}
+-->
+</style>
+
+#{set 'slideMenus'}
+<nav class="bt-menu large_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	<ul>
+		<li></li>
+		<li><a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a></li>
+		<li><a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a></li>
+		<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a></li>
+		<li><a href="#" id="aRecEdit2">&{'views.login.recordEdit'}</a></li>
+		<li><a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a></li>
+	</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+<nav class="bt-menu small_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+		<ul>
+			<li></li>
+			<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a></li>
+			<li>#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}</li>
+			<li>#{a @DetailList.dl_remainderPrlt(), id:'aDlRemainderPrlt'}&{'views.detaillist.remainderPrlt.title'}#{/a}</li>
+		</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+#{/set}
+
 <script type="text/javascript">
 <!--
 jQuery(function() {
+	var intPadTop = jQuery('#header').height() - jQuery('#prltMain').css('padding-top').replace("px", "") - jQuery('#dlMain').css('margin-top').replace("px", "");
+	jQuery('#dl_tblFrame').css('padding-top', intPadTop);
+	jQuery('#aRecEdit2').click(function() {
+		jQuery('#aRecEdit').click();
+	});
+	
 	/* リンクのクリックイベント */
 	%{hu = models.HaUser.find("byEmail", session.username).first()}%
 	jQuery("#aDlRemainderBank").click(function(e) {
@@ -28,23 +123,30 @@ jQuery(function() {
 		}
     });
 	
-	
 	/* 起動時のCSS設定 */
 	
-	#{if request.actionMethod=='dl_balance'}
-		/* 枠固定の左右の動き */
-	    jQuery('#dl_tblFrameFt').scroll(function() {
-	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
-	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
-	    });
-	#{/if}
-	#{else}
-		/* 枠固定の左右の動き */
-	    jQuery('#dl_tblFrameFt').scroll(function() {
-	    	jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
-	    	jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
-	    });
-	#{/else}
+	/* 枠固定の左右の動き */
+	if (!mobilecheck()) {
+		jQuery('#dl_tblFrameFt').scroll(function() {
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+		});
+	} else {
+		jQuery('#dl_tblFrameHd').css('overflow-x', 'scroll');
+		jQuery('#dl_tblFrame').css('overflow-x', 'scroll');
+		jQuery('#dl_tblFrameHd').scroll(function() {
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameFt').scrollLeft(jQuery(this).scrollLeft());
+		});
+		jQuery('#dl_tblFrame').scroll(function() {
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrameFt').scrollLeft(jQuery(this).scrollLeft());
+		});
+		jQuery('#dl_tblFrameFt').scroll(function() {
+			jQuery('#dl_tblFrameHd').scrollLeft(jQuery(this).scrollLeft());
+			jQuery('#dl_tblFrame').scrollLeft(jQuery(this).scrollLeft());
+		});
+	}
 	
 	jQuery('#main').css('padding-bottom', '30px');
 
@@ -142,19 +244,14 @@ function setCssFooter() {
 		ftrHt = jQuery('#footer').height(),
 		winSrBtm = ctnHt - winSrTp - winInHt;
 	if (winInHt < ctnHt) {
-		dlFtr.css('position', 'fixed');
-	#{if request.actionMethod!='dl_balance'}
-		dlMn.css('padding-bottom', '192px');
-	#{/if}
-	#{else}
-		dlMn.css('padding-bottom', '41px');
-	#{/else}
+		dlFtr.css('position', 'fixed').css('width', '95%');
+		dlMn.css('padding-bottom', jQuery('#dlFooterInner').height()+'px');
 		dlFtr.css('bottom', '0');
 		if (winSrBtm < ftrHt) {
 			dlFtr.css('bottom', ftrHt - winSrBtm + 'px');
 		}
 	} else {
-		dlFtr.css('position', '');
+		dlFtr.css('position', '').css('width', '100%');
 		dlFtr.css('bottom', '');
 		dlMn.css('padding-bottom', '');
 	}
@@ -184,12 +281,19 @@ function drawChart() {
 	  #{/list}
 	]);
 	
+	// 表の幅と合わせる
+	var childElementWidth = 0;
+	jQuery("#dlRm_tblContentHd ul li div").each(function(i) {
+		childElementWidth += jQuery(this).outerWidth();
+	});
+	jQuery('#dlRmChartFrame').width(childElementWidth);
+	
 	// グラフのオプションを指定する
 	var options = {
-			width: 1060,
-			height: 150,
- 			backgroundColor: "white",
- 			pointSize: 5
+		width: childElementWidth + 10,
+		height: 150,
+		backgroundColor: "white",
+		pointSize: 5
 	}
 	
 	// 描画する
@@ -418,6 +522,28 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 		</li>
 		<li class="${request.actionMethod=='dl_remainderPrlt' ? 'selected' : ''}">
 			#{a @DetailList.dl_remainderPrlt(), id:'aDlRemainderPrlt'}&{'views.detaillist.remainderPrlt.title'}#{/a}
+		</li>
+	</ul>
+	
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">&{'views.detaillist'}</a>
+		</li>
+		<li>
+			　＞　
+		</li>
+		
+		%{
+			vSmall_cate = ''
+			if (request.actionMethod=='dl_balance')
+			    vSmall_cate=messages.get('views.detaillist.balance.title')
+			if (request.actionMethod=='dl_remainderBank')
+			    vSmall_cate=messages.get('views.detaillist.remainderBank.title')
+			if (request.actionMethod=='dl_remainderPrlt')
+			    vSmall_cate=messages.get('views.detaillist.remainderPrlt.title')
+		}%
+		<li>
+		    <a href="#" id="aSmall_cate">${vSmall_cate}</a>
 		</li>
 	</ul>
 </div>
