@@ -32,8 +32,6 @@ body {
 }
 
 
-
-
 /* スマホのスタイル */
 .memberMenu {
 	display: none;
@@ -149,9 +147,9 @@ jQuery(function() {
 	}
 	
 	jQuery('#main').css('padding-bottom', '30px');
-
+	
 	/* dlFooterのCSS設定切替 */
-	setCssFooter();
+//	setCssFooter();
 	
 	/* ウィンドウリサイズ時のCSS設定 */
 	jQuery(window).resize(function() {
@@ -301,6 +299,9 @@ function drawChart() {
 	chart.draw(data, options);
 }
 #{/if}
+window.onload = function() {
+	setCssFooter();
+}
 // -->
 </script>
 
