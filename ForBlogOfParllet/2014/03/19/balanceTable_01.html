@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>残高表</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.13.0/build/cssreset/cssreset-min.css">
+
+<!-- jQuery(GoogleAPIs経由) -->
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Jura">
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/pepper-grinder/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load('jquery', '1')</script>
+<script type="text/javascript">google.load('jqueryui', '1')</script>
+<script type="text/javascript" src="public/javascripts/jquery.ui.touch-punch.min.js" ></script>
+<script type="text/javascript" src="public/javascripts/prtJsCommon.js" ></script>
+<!-- datepicker日本語化 -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+
+<!-- 
+<link rel="stylesheet" media="screen" href="public/stylesheets/main.css">
+ -->
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link media="only screen and (max-device-width:768px)" href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<link media="screen and (min-device-width:769px)" href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<!--[if IE]>
+<link href="public/stylesheets/main.css" type="text/css" rel="stylesheet" />
+<![endif]-->
+
+<link rel="stylesheet" media="screen" href="public/stylesheets/overlay.css">
+<link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+
+<!-- AnimatedBorderMenus -->
+<link rel="stylesheet" type="text/css" href="public/stylesheets/AnimatedBorderMenus/stylePrlt.css" />
+<script src="public/javascripts/AnimatedBorderMenus/modernizr.custom.js"></script>
+
+<!-- datepickerの見た目の調整(floatingdays(http://fdays.blogspot.jp/2010/07/jquery-ui-datepicker.html)さんのサンプルコードの一部をそのまま使わせて頂きました。) -->
+<style>
+.ui-datepicker td span, .ui-datepicker td a {
+    text-align: center;    /* 日付をセンタリング */
+}
+.ui-datepicker select.ui-datepicker-year, .ui-datepicker select.ui-datepicker-month {
+    width: auto;    /* そのままだと改行してしまう */
+}
+.ui-datepicker select.ui-datepicker-month {
+    margin-left: 1em;    /* ちょっと離す */
+}
+</style>
+
+<script type="text/javascript" src="public/javascripts/jquery.gpfloat-1.0.js" ></script>
+<script type="text/javascript">
+<!--
+jQuery(function() {
+	jQuery('#header').gpFloatX();
+});
+// -->
+</script>
+
+<script type="text/javascript">
+<!-- 
+jQuery(function(){
+	jQuery('a.clickOverlay').click(function() {
+		jQuery('body').css('overflow-y', 'hidden');
+		jQuery('#pageTop').click();
+		jQuery('#overlay').fadeIn();
+		return false;
+	});
+	jQuery("#close").click(function() {
+		jQuery('body').css('overflow-y', 'scroll');
+		jQuery("#overlay").fadeOut();
+	});
+	// Android 2.3 でスクロールしないバグへの対応
+	if (navigator.userAgent.indexOf('Android') > 0) {
+		var box = jQuery('#overlay div'),
+			touchStartPositionX,
+			touchStartPositionY,
+			touchMovePositionX,
+			touchMovePositionY,
+			moveFarX,
+			moveFarY,
+			startScrollX,
+			startScrollY,
+			moveScrollX,
+			moveScrollY;
+	
+		box.bind('touchstart', function(e) {
+			var touch = e.originalEvent.touches[0];
+			touchStartPositionX = touch.pageX;
+			touchStartPositionY = touch.pageY;
+			//タッチ前スクロールをとる
+			startScrollX = box.scrollLeft();
+			startScrollY = box.scrollTop();
+		});
+		box.bind('touchmove', function(e) {
+			var touch = e.originalEvent.touches[0];
+			e.preventDefault();
+			//現在の座標を取得
+			touchMovePositionX = touch.pageX;
+			touchMovePositionY = touch.pageY;
+			//差をとる
+			moveFarX = touchStartPositionX - touchMovePositionX;
+			moveFarY = touchStartPositionY - touchMovePositionY;
+			//スクロールを動かす
+			moveScrollX = startScrollX +moveFarX;
+			moveScrollY = startScrollY +moveFarY;
+			box.scrollLeft(moveScrollX);
+			box.scrollTop(moveScrollY);
+		});
+	}
+});
+// -->
+</script>
+
+<noscript>このページは javascript が有効になっている必要があります。</noscript>
+	</head>
+	<body>
+<div id="overlay">
+	<div>
+		<p id="text">
+			このページは 2014年3月19日時点の Parllet（ちょっと変わったWeb家計簿）の明細表の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			<br/>
+			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも3月19日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
+			<br/>
+			とはいえ、PCであれば <a href="http://parllet.com" style="color: #eee;">http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>
+			<br/>
+			ご興味がおありの方は是非お越しください。
+		</p>
+		<p id="close">閉じる</p>
+	</div>
+</div>
+				<div id="container">
+			<div id="header">
+				<div class="fill">
+					<div id="hdContainer">
+						<ul id="ltBlocks">
+							<li>
+								<ul id="logo">
+									<li id="logo-pre">
+											<div>
+		ちょっと変わった
+		<br>
+		Web家計簿
+	</div>
+	<span id="logo_alpha-img">
+		Parllet
+		<span>
+			Parllet(パレット)はアルファ版です。
+			ご承知おきください。
+		</span>
+	</span>
+									</li>
+	<li>
+		<a href="#" class="clickOverlay" >
+			<span id="logo-img">Parllet</span>
+		</a>
+	</li>
+								</ul>
+							</li>
+							
+	<script type="text/javascript" src="public/javascripts/autoNumeric-1.7.5.js" ></script>
+<script type="text/javascript" src="public/javascripts/jquery.datepicker.js" ></script>
+
+<style>
+<!--
+input.text {
+	width:100%;
+	height: 100%;
+	padding: .1em .4em;
+}
+-->
+</style>
+
+<script type="text/javascript" src="public/javascripts/dateformat.js" ></script>
+<script type="text/javascript" src="public/javascripts/funcCheckVal.js" ></script>
+
+<li>
+	<ul class="memberMenu" >
+		<li class="selected">
+			<a href="#" class="clickOverlay">残高表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">日計表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">明細表</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">家計簿入力</a>
+		</li>
+		<li class="">
+			<a href="#" class="clickOverlay">設定</a>
+		</li>
+	</ul>
+</li>
+
+						</ul>
+						<ul id="tools">
+							
+	<script type="text/javascript">
+<!-- 
+jQuery(function() {
+	var onMenu = 'out',
+		tlsLi = jQuery('#tlsLi'),
+		tlsLiUl = jQuery('#tlsLiUl'),
+		tlsLiUlLiA = jQuery('#tlsLiUl Li a');
+	
+	tlsLiUl.hide();
+	
+	/* 「#tools li ul」の位置確定 */
+	tlsLiUl.each(function() {
+		jQuery(this).css('left', jQuery(this).parent().width() - jQuery(this).width());
+	});
+	
+	jQuery(window).mousedown(function(e) {
+		if (onMenu==='out' && tlsLi.hasClass("click")) {
+			e.preventDefault();
+			tlsLi.removeClass("click");
+			tlsLiUl.hide();
+			tlsLi.blur();
+		}
+	});
+	
+	tlsLi.focus(function() {
+		jQuery(this).addClass("focused");
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	});
+	tlsLi.blur(function() {
+		jQuery(this).removeClass("focused");
+		jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.hover(function() {
+		onMenu = 'over';
+		if (!jQuery(this).hasClass("click"))
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+	},function() {
+		onMenu = 'out';
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+	});
+	tlsLi.keypress(function(e) {
+		if (e.which===13) {
+			if (jQuery(e.target).is("li")) {
+				e.preventDefault();
+				jQuery(this).click();
+			}
+		}
+	});
+	tlsLi.click(function() {
+		if (jQuery(this).hasClass("click")) {
+			jQuery(this).removeClass("click");
+			jQuery(this).css('background', 'url(public/images/white40.png)');
+			tlsLiUl.hide();
+		} else {
+			jQuery(this).addClass("click");
+			jQuery(this).css('background', 'url(public/images/white20.png)');
+			jQuery("ul", this).show();
+		}
+	});
+	
+	
+	tlsLiUlLiA.focus(function() {
+		jQuery(this).addClass("focused");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	});
+	tlsLiUlLiA.blur(function() {
+		jQuery(this).removeClass("focused");
+		if (!jQuery(this).hasClass("hovered"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	tlsLiUlLiA.hover(function() {
+		jQuery(this).addClass("hovered");
+		jQuery(this).css('background', '#ccc').css('font-weight', 'bold');
+	},function() {
+		jQuery(this).removeClass("hovered");
+		if (!jQuery(this).hasClass("focused"))
+			jQuery(this).css('background', 'transparent').css('font-weight', 'normal');
+	});
+	
+	
+	var vRecCnt = 36,
+		vUsePercent = roundup(vRecCnt*100/100, 0);
+	jQuery('#htProgressBar').progressbar()
+							.progressbar("value", vUsePercent)
+							.each(function() {
+		var selector = jQuery(this).find('div');
+		var value = this.getAttribute("aria-valuenow");
+		
+		jQuery(selector).css('background','Green');
+		if (value >= 90) {
+			jQuery(selector).css('background', 'Red');
+		}
+	});
+});
+// -->
+</script>
+
+
+
+<li id="tlsLi" tabindex="0" class="open">
+	id:388527
+	<ul id="tlsLiUl">
+		<li>
+			<a href="#" class="clickOverlay" id="cfHauserEdit" >
+				会員情報
+				<div id="htProgressBar"></div>
+			</a>
+		</li>
+		<li><a href="#" class="clickOverlay" id="fb-logout" >ログアウト</a></li>
+		
+	</ul>
+</li>
+
+						</ul>
+					</div>
+				</div>
+							</div>
+			<div id="main">
+				
+<div id="divForSmart">
+	Parlletにお越しいただきありがとうございます。<br>
+	<br>
+	折角お越しいただいたのですが、現時点ではスマートフォン・タブレット対応作業に時間を割くことができません。<br>
+	<br>
+	あまりにも見た目と動きがボロボロ過ぎるので、一旦スマートフォン・タブレットからのご利用は出来ないという形にさせて頂きました。<br>
+	<br>
+	大変申し訳ございません。
+</div>
+
+<div id="prltMain">
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+<!--
+var bolDlgFrmUpdMstInsBkem,
+	bolDlgFrmUpdMstInsPrlt,
+	bolDlgFrmUpdMstUpdBkem,
+	bolDlgFrmUpdMstUpdPrlt,
+	bolDlgFrmUpdRecInsBkem,
+	strTypeName,
+	lngUpdId,
+	strItemNm,
+	intLwdaRealSize = 6,
+	intLwdaPrltSize = 5,
+	intDivBtStkdHtInit = 400*100,	//javascriptの小数点計算の誤差（バグ）回避のため100倍
+	intDivBtStkdHt,
+	intDivBtStkdHtReal,
+	intDivBtStkdHtPrlt,
+	aryLwdar = [],
+	aryLwdap = [],
+	intDivBtStkdRealSumAmnt = 0,
+	intDivBtStkdPrltSumAmnt = 0
+	intBgSizeReal = 2,
+	intBgSizePrlt = 2;
+
+/* lWDA系格納用クラス */
+function ClsLwda (
+		strItem,
+		lngAmount,
+		strTypeNm,
+		bolInvFlg,
+		IntHt
+		) {
+	this.strItem = strItem;
+	this.lngAmount = lngAmount;
+	this.strTypeNm = strTypeNm;
+	this.bolInvFlg = bolInvFlg;
+	this.IntHt = IntHt;
+}
+
+jQuery(function() {
+	
+	
+		var clsLwda = new ClsLwda(
+				"現金",
+				31985,
+				"現金",
+				false,
+				0);
+		aryLwdar[0] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(31985);
+		
+		
+		
+	
+		var clsLwda = new ClsLwda(
+				"大宮銀行",
+				14300,
+				"口座",
+				false,
+				0);
+		aryLwdar[1] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(14300);
+		
+		
+		
+	
+		var clsLwda = new ClsLwda(
+				"神宮銀行",
+				106015,
+				"口座",
+				false,
+				0);
+		aryLwdar[2] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(106015);
+		
+		
+		
+	
+		var clsLwda = new ClsLwda(
+				"図書カード",
+				0,
+				"口座",
+				true,
+				0);
+		aryLwdar[3] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(0);
+		
+		
+		
+			
+		
+	
+		var clsLwda = new ClsLwda(
+				"Edy",
+				6000,
+				"電子マネー",
+				false,
+				0);
+		aryLwdar[4] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(6000);
+		
+		
+		
+	
+		var clsLwda = new ClsLwda(
+				"nanaco",
+				0,
+				"電子マネー",
+				false,
+				0);
+		aryLwdar[5] = clsLwda;
+		intDivBtStkdRealSumAmnt += Math.abs(0);
+		
+		
+		
+			
+		
+	
+	
+	
+	
+		var clsLwda = new ClsLwda(
+				"Parlletに入れてないお金",
+				35880,
+				"",
+				false,
+				0);
+		aryLwdap[0] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(35880)
+		
+	
+		var clsLwda = new ClsLwda(
+				"学資貯金",
+				38900,
+				"",
+				false,
+				0);
+		aryLwdap[1] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(38900)
+		
+	
+		var clsLwda = new ClsLwda(
+				"旅行用",
+				13020,
+				"",
+				false,
+				0);
+		aryLwdap[2] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(13020)
+		
+	
+		var clsLwda = new ClsLwda(
+				"交際用",
+				50500,
+				"",
+				false,
+				0);
+		aryLwdap[3] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(50500)
+		
+	
+		var clsLwda = new ClsLwda(
+				"臨時用",
+				20000,
+				"",
+				false,
+				0);
+		aryLwdap[4] = clsLwda;
+		intDivBtStkdPrltSumAmnt += Math.abs(20000)
+		
+	
+	
+	/* table-cell内の文字列が入りきらない場合の調整 */
+//	var btCateSmallMaxWidth = parseInt(jQuery('.bt_cate_small').css('max-width').replace("px", "")),
+	var btCateSmallWidth = 170,
+		vYear, vMonth, vSelected;
+	jQuery('.bt_cate_small').width(btCateSmallWidth);
+	jQuery('.bt_cate_small').each(function() {
+		var jTh = jQuery(this),
+			strTh = jTh.text(),
+			strThOrg = jTh.text(),
+			strThEllipse;
+		if (jTh.width()>btCateSmallWidth) {
+			strTh = strTh.slice(0, strTh.length-1);
+			while(jTh.width()>btCateSmallWidth) {
+				strTh = strTh.slice(0, strTh.length-1);
+				strThEllipse = strTh+"...";
+				jTh.text(strThEllipse);
+			}
+			jTh.append("<span>"+strThOrg+"</span>");
+		}
+	});
+	jQuery('.bt_cate_small span').each(function() {
+		jQuery(this)
+			.css('top', jQuery(this).parent().position().top+10)
+			.css('left', jQuery(this).parent().position().left+10);
+	});
+	
+	/* 年コンボボックスのリスト作成 */
+	
+	vYear = Number("2014"), vSelected;
+	for(i=1900; i<3000; i++) {
+		vSelected = "";
+		if (vYear===i) vSelected = " selected";
+		jQuery('#idYear').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+	
+	/* 月コンボボックスのリスト作成 */
+	vMonth = Number("3");
+	for(i=1; i<=12; i++) {
+		vSelected = "";
+		if (vMonth===i) vSelected = " selected";
+		jQuery('#idMonth').append("<option value='"+i+"'"+vSelected+">"+i+"</option>");
+	}
+	
+	/* 年月コンボボックス選択変更時はjumpイベントへ */
+	jQuery('#idYear, #idMonth').change(function() {
+		jQuery('a.clickOverlay').click();
+	});
+	
+	/* 日付移動リンクEnter時はクリックイベントへ */
+	jQuery('#idPreMonth, #idNextMonth').keypress(function(e) {
+		if (e.which===13) {
+			e.preventDefault();
+			jQuery(this).click();
+		}
+	});
+	
+	/* 日付移動リンククリック時はjumpイベントへ */
+	jQuery('#idPreMonth, #idNextMonth').click(function() {
+		jQuery('a.clickOverlay').click();
+	});
+	
+//	/* 表示金額を3桁区切りに */
+//	jQuery('.num3').each(function(i) {
+//		var numStr = addFigure(jQuery(this).html());
+//		jQuery(this).html(numStr);
+//	});
+	
+	/* 日付選択時にjumpするdatepicker */
+	jQuery(".datepickerJump").datepicker({
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		showAnim: "drop",
+		changeMonth: true,
+		changeYear: true,
+		yearRange: '1900:2999',
+		dateFormat: 'yy/mm/dd',
+		onSelect: function( e_basis_date ) {
+			jQuery('a.clickOverlay').click();
+		},
+		showOn: "button",
+		buttonImage: "public/images/calendar_shu.gif",
+		buttonImageOnly: true,
+		buttonText: "カレンダー",
+		showButtonPanel: true
+	});
+	
+	/* 左クリックか右クリックでメニュー表示 */
+	jQuery('.menu_cell').mousedown(function(e) {
+		if (e.which===1 || e.which===3) {
+			jQuery('#hHandlingId').val('');
+			jQuery('#idDlRpHdParlletId').val('');
+			bolDlgFrmUpdMstInsBkem = false;
+			bolDlgFrmUpdMstInsPrlt = false;
+			bolDlgFrmUpdMstUpdBkem = false;
+			bolDlgFrmUpdMstUpdPrlt = false;
+			bolDlgFrmUpdRecInsBkem = false;
+			lngUpdId = null;
+			strItemNm = "";
+			
+			
+			if (jQuery(this).parent("li").children('.lHandlingId').val()!==undefined) {
+				if (!jQuery(this).parent("li").hasClass('remBkemInv'))
+					bolDlgFrmUpdRecInsBkem = true;
+//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
+				if (jqLwdaSItem.children('span').size())
+					jqLwdaSItem = jqLwdaSItem.children('span');
+				strItemNm = jQuery.trim(jqLwdaSItem.text());
+				strTypeName = jQuery('.strTypeName',  jQuery(this).parent("li")).val();
+				lngUpdId = parseInt(jQuery('.lHandlingId', jQuery(this).parent("li")).val(), 10);
+				
+				if (jQuery(this).parent("li").children('.strTypeName').val()!=="現金") {
+					bolDlgFrmUpdMstUpdBkem = true;
+					//残高明細（口座系）へジャンプする際の絞込項目セット
+					jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+					jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+					jQuery('#hHandlingId').val(jQuery('.lHandlingId', jQuery(this).parent("li")).val());
+				}
+			}
+			if (jQuery('.lParlletId', jQuery(this).parent("li")).val()!==undefined) {
+				bolDlgFrmUpdMstUpdPrlt = true;
+//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
+				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
+				if (jqLwdaSItem.children('span').size())
+					jqLwdaSItem = jqLwdaSItem.children('span');
+				strItemNm = jQuery.trim(jqLwdaSItem.text());
+				lngUpdId = parseInt(jQuery('.lParlletId', jQuery(this).parent("li")).val(), 10);
+				
+				//残高明細（Parllet）へジャンプする際の絞込項目セット
+				jQuery('#idDlRpHdDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
+				jQuery('#idDlRpHdDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
+				jQuery('#idDlRpHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
+			}
+			
+			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!==undefined)
+				bolDlgFrmUpdMstInsBkem = true;
+			if (jQuery('.bolRemPrlt', jQuery(this).parent("li")).val()!==undefined)
+				bolDlgFrmUpdMstInsPrlt = true;
+			
+			e.preventDefault();
+			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
+			jQuery('.context-menu-list').width(jQuery('.context-menu-list').width()*1.1);
+		}
+	});
+	jQuery.contextMenu({
+		selector: '.menu_cell',
+		trigger: 'none',
+		build: function($trigger, e) {
+			var options = {
+				callback: function(key, options) {
+					jQuery('a.clickOverlay').click();
+				},
+				items: {}
+			};
+			if (bolDlgFrmUpdMstInsBkem) {
+				options.items.dialogFrmUpdMstInsBank = {name: "口座を追加"};
+				options.items.dialogFrmUpdMstInsEmoney = {name: "電子マネーを追加"};
+			}
+			if (bolDlgFrmUpdMstInsPrlt)
+				options.items.dialogFrmUpdMstInsPrlt = {name: "Parlletを追加"};
+			if (bolDlgFrmUpdRecInsBkem)
+				options.items.dialogFrmInsRecBank = {name: strItemNm+"の家計簿を入力"};
+			if (bolDlgFrmUpdMstUpdBkem) {
+				if (strTypeName==="口座")
+					options.items.dialogFrmUpdMstUpdBank = {name: "口座を編集"};
+				if (strTypeName==="電子マネー")
+					options.items.dialogFrmUpdMstUpdEmoney = {name: "電子マネーを編集"};
+			}
+			if (bolDlgFrmUpdMstUpdPrlt) {
+				options.items.dialogFrmInsRecPrlt = {name: strItemNm+"の家計簿を入力"};
+				options.items.dialogFrmUpdMstUpdPrlt = {name: "Parlletを編集"};
+			}
+			if (jQuery('#hHandlingId').val()!=='')
+				options.items.toDlRemainderBank = {name: "残高明細（口座系）へ"};
+			if (jQuery('#idDlRpHdParlletId').val()!=='')
+				options.items.toDlRemainderPrlt = {name: "残高明細（Parllet）へ"};
+			return options;
+		}
+	});
+	function openDialogFrmUpdMstBt(strMst, lngUpdId) {
+		openDialogFrmUpdMst(strMst, "balanceTable", lngUpdId)
+	}
+	
+	/* チェックで隠すもの */
+	jQuery('#zeroHddnBkem, #zeroHddnPrlt, #invHddnBkem').click(function() {
+		jQuery('a.clickOverlay').click();
+	});
+	
+	// divBtStkdRealEach , divBtStkdPrltEach の表示
+	dspBtStkd();
+	
+	// svgReal , svgPrlt の初期表示
+	dspSvgReal(false, false);
+	dspSvgPrlt(false);
+});
+
+/* divBtStkdRealEach , divBtStkdPrltEach の表示処理 */
+function dspBtStkd() {
+	var jqHt,
+		jqHtReal = jQuery('#divBtTblRealFlm').height()-jQuery('#divBtStkdReal').children('.title').height()-2,
+		jqHtPrlt = jQuery('#divBtTblPrltFlm').height()-jQuery('#divBtStkdPrlt').children('.title').height()-2;
+	jqHt = jqHtReal > jqHtPrlt ? jqHtReal : jqHtPrlt;
+	
+	intDivBtStkdHt = intDivBtStkdHtInit;
+	if (jqHt*100 > intDivBtStkdHtInit)
+		intDivBtStkdHt = jqHt*100;
+	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSize*100;
+	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*100;
+	
+	dspDivBtStkdRealEach();
+	dspDivBtStkdPrltEach();
+}
+
+/* divBtStkdRealEach の表示処理 */
+function dspDivBtStkdRealEach() {
+	var aryIntHt = [],
+		intSumHt = 0,
+		intMaxHt = 0,
+		intMaxHtIdx = 0,
+		anyHtExistFlg = false,
+		intBgCnt = 0;
+	
+	for (i=0; i < intLwdaRealSize; i++) {
+		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+				: Math.abs(aryLwdar[i].lngAmount) / intDivBtStkdRealSumAmnt*intDivBtStkdHtReal,
+				strHt = intHt.toFixed(0);
+		intHt = parseInt(strHt);
+		
+		if (intHt!==0) anyHtExistFlg = true;
+		
+		if (intMaxHt < intHt) {
+			intMaxHt = intHt;
+			intMaxHtIdx = i;
+		}
+		
+		aryIntHt[i] = intHt;
+		intSumHt += intHt;
+		
+		if (aryLwdar[i].lngAmount < 0) {
+			jQuery("#divBtStkdRealEach_"+i).css('background', jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdar[i].bolInvFlg) {
+				jQuery("#divBtStkdRealEach_"+i).css('background', jQuery(".remBkemInv").children('.lrb_Line').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizeReal)
+					intBgCnt = 0;
+				jQuery("#divBtStkdRealEach_"+i).css('background', jQuery(".btBgReal"+intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+		jQuery("#divBtStkdRealEach_"+i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdRealEach_"+i).children('div').height(aryIntHt[i] / 100);
+	}
+	
+	
+	// 誤差を最大幅のセルに寄せる
+	if (anyHtExistFlg) {
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHtReal-intSumHt;
+		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx] / 100);
+		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+	}
+}
+
+/* divBtStkdPrltEach の表示処理 */
+function dspDivBtStkdPrltEach() {
+	var aryIntHt = [],
+		intSumHt = 0,
+		intMaxHt = 0,
+		intMaxHtIdx = 0,
+		anyHtExistFlg = false,
+		intBgCnt = 0;
+	
+	for (i=0; i < intLwdaPrltSize; i++) {
+		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+				: Math.abs(aryLwdap[i].lngAmount) / intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt,
+			strHt = intHt.toFixed(0);
+		intHt = parseInt(strHt);
+		
+		if (intHt!==0) anyHtExistFlg = true;
+		
+		if (intMaxHt < intHt) {
+			intMaxHt = intHt;
+			intMaxHtIdx = i;
+		}
+		
+		aryIntHt[i] = intHt;
+		intSumHt += intHt;
+		
+		if (aryLwdap[i].lngAmount < 0) {
+			jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdap[i].strItem==="Parlletに入れてないお金") {
+				jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery('.btMainInner').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizePrlt)
+					intBgCnt = 0;
+				jQuery("#divBtStkdPrltEach_"+i).css('background', jQuery(".btBgPrlt"+intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+		jQuery("#divBtStkdPrltEach_"+i).height(aryIntHt[i] / 100);
+		jQuery("#divBtStkdPrltEach_"+i).children('div').height(aryIntHt[i] / 100);
+	}
+	
+	// 誤差を最大幅のセルに寄せる
+	if (anyHtExistFlg) {
+		aryIntHt[intMaxHtIdx] += intDivBtStkdHtPrlt-intSumHt;
+		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx] / 100);
+		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx] / 100);
+	} 
+}
+
+/* svgRealの（再）表示処理 */
+function dspSvgReal(bolZeroHddnBkem, bolInvHddnBkem) {
+	var btTblEachHt = jQuery('#divBtTblReal_0').position().top-jQuery('#divBtTblReal_ttl').position().top,
+		yTop1 = jQuery('#divBtTblReal_0').position().top-jQuery('#divBtTblRealFlm').position().top-1,
+		yBtm1 = yTop1,
+		yTop2,
+		yBtm2,
+		strPoints,
+		svgRealWid = jQuery('#svgReal').width(),
+		intBgCnt = 0;
+	jQuery('#divBtSvgReal').height(jQuery('#bt_tbl_flm').height());
+	
+	for (i=0; i < intLwdaRealSize; i++) {
+		var obj = document.getElementById("plgnReal_"+i);
+		yBtm1 = jQuery("#divBtTblReal_"+i).position().top-jQuery('#divBtTblRealFlm').position().top+btTblEachHt-1;
+		if ((bolZeroHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_"+i).attr('class')).hasClass('remBkemZero')) ||
+				(bolInvHddnBkem && jQuery('<b></b>').addClass(jQuery("#plgnReal_"+i).attr('class')).hasClass('remBkemInv'))) {
+			yBtm1 = yTop1;
+		}
+		yTop2 = jQuery("#divBtStkdRealEach_"+i).position().top-0.5;
+		if (i==intLwdaRealSize-1) {
+			yBtm2 = jQuery("#divBtStkdRealEach_"+i).position().top+jQuery("#divBtStkdRealEach_"+i).height()+0.5;
+		} else {
+			var j = i+1;
+			yBtm2 = jQuery("#divBtStkdRealEach_"+j).position().top-0.5;
+		}
+		strPoints = "0,"+yTop1+" 0,"+yBtm1+" "+svgRealWid+","+yBtm2+" "+svgRealWid+","+yTop2;
+		obj.setAttribute("points",strPoints);
+		yTop1 = yBtm1;
+		
+		
+		if (aryLwdar[i].lngAmount < 0) {
+			obj.setAttribute("fill", jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdar[i].bolInvFlg) {
+				obj.setAttribute("fill", jQuery('.remBkemInv').children('.lrb_Line').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizeReal)
+					intBgCnt = 0;
+				obj.setAttribute("fill", jQuery(".btBgReal"+intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+	}
+}
+
+/* svgPrltの（再）表示処理 */
+function dspSvgPrlt(bolZeroHddnPrlt) {
+	var btTblEachHt = jQuery('#divBtTblPrlt_0').position().top-jQuery('#divBtTblPrlt_ttl').position().top,
+		btStkdPrltTtlHt = jQuery('#divBtStkdPrlt').children('.title').height(),
+		yTop1 = jQuery('#divBtTblPrlt_0').position().top-jQuery('#divBtTblPrltFlm').position().top-btStkdPrltTtlHt-1,
+		yBtm1 = yTop1,
+		yTop2,
+		yBtm2,
+		strPoints,
+		svgPrltWid = jQuery('#svgPrlt').width(),
+		intBgCnt = 0;
+	jQuery('#divBtSvgPrlt').height(jQuery('#bt_tbl_flm').height()-btStkdPrltTtlHt);
+	
+	for (i=0; i < intLwdaPrltSize; i++) {
+		var obj = document.getElementById("plgnPrlt_"+i);
+		yBtm1 = jQuery("#divBtTblPrlt_"+i).position().top-jQuery('#divBtTblPrltFlm').position().top+btTblEachHt-btStkdPrltTtlHt-1;
+		if (bolZeroHddnPrlt && jQuery('<b></b>').addClass(jQuery("#plgnPrlt_"+i).attr('class')).hasClass('remPrltZero')) {
+			yBtm1 = yTop1;
+		}
+		yTop2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt-0.5;
+//		yBtm2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt+jQuery("#divBtStkdPrltEach_"+i).height();
+		if (i==intLwdaPrltSize-1) {
+			yBtm2 = jQuery("#divBtStkdPrltEach_"+i).position().top-btStkdPrltTtlHt+jQuery("#divBtStkdPrltEach_"+i).height()+0.5;
+		} else {
+			var j = i+1;
+			yBtm2 = jQuery("#divBtStkdPrltEach_"+j).position().top-btStkdPrltTtlHt-0.5;
+		}
+		strPoints = svgPrltWid+","+yTop1+" "+svgPrltWid+","+yBtm1+" 0,"+yBtm2+" 0,"+yTop2;
+		obj.setAttribute("points",strPoints);
+		yTop1 = yBtm1;
+		if (aryLwdap[i].lngAmount < 0) {
+			obj.setAttribute("fill", jQuery('.btBgMinus').css('background-color'));
+		} else {
+			if (aryLwdap[i].strItem==="Parlletに入れてないお金") {
+				obj.setAttribute("fill", jQuery('.btMainInner').css('background-color'));
+			} else {
+				if (intBgCnt===intBgSizePrlt)
+					intBgCnt = 0;
+				obj.setAttribute("fill", jQuery(".btBgPrlt"+intBgCnt).css('background-color'));
+				intBgCnt++;
+			}
+		}
+	}
+}
+
+/* 文字列を3桁区切りにする関数 */
+function addFigure(str) {
+	var num = new String(str).replace(/,|\n| |\t/g, "");
+//	while(num !== (num = num.replace(/^(-?\d+)(\d{3})/, "$1,$2")));
+	num = num.replace(/(\d)(?=(\d{3})+$)/g , '$1,');
+	return num;
+}
+// -->
+</script>
+
+<script type="text/javascript" src="public/javascripts/jquery.contextMenu.js"></script>
+<link rel="stylesheet" type="text/css" href="public/stylesheets/jquery.contextMenu.css" />
+
+<link media="only screen and (max-device-width:480px)" href="public/stylesheets/smart.jquery.contextMenu.css" type="text/css" rel="stylesheet" />
+<link media="screen and (min-device-width:481px)" href="public/stylesheets/jquery.contextMenu.css" type="text/css" rel="stylesheet" />
+<!--[if IE]>
+<link href="public/stylesheets/jquery.contextMenu.css" type="text/css" rel="stylesheet" />
+<![endif]-->
+
+<!-- 
+<div id="btChart"></div>
+ -->
+
+<div id="mainInner" class="btMainInner">
+
+<div id="btBasisDate">
+	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>前月</span></a>
+	<span id="daPaddingYearMonth">
+		<select id="idYear">
+		</select>
+		年
+		<select id="idMonth">
+		</select>
+		月
+		&nbsp;&nbsp;
+		<span>
+		17
+		</span>
+		&nbsp;
+		日
+		<div class="inlineVerticalMiddle">
+			<input type="text" class="datepickerJump invisible dpClImg"
+				value="2014/03/17" />
+		</div>
+	</span>
+	
+	<a id="idNextMonth" class="aBtn fontJura" tabindex="0">><span>翌月</span></a>
+</div>
+
+<div id="btRemTotal">
+	<ul>
+		<li class="   ">
+			<div class="t_Line lrb_Line">
+				残高合計
+			</div>
+			<div class="t_Line lrb_Line padR4 numeric">
+				158,300
+			</div>
+		</li>
+	</ul>
+</div>
+
+<div id="bt_tbl_flm">
+	<div id="divBtTblRealFlm">
+		<div>
+			<div class="btHddnChkBox">
+			
+				<input type="checkbox" id="zeroHddnBkem"  />残高０を隠す
+			
+			
+				<input type="checkbox" id="invHddnBkem"  />無効にしたものを隠す
+			
+			</div>
+		</div>
+		
+		<ul class="bt_tbl_each">
+			<li>
+				<input type="hidden" class="bolRemReal" value="実際の残高" />
+				<div class="t_Line lrb_Line bt_cate_large menu_cell">
+					実際の残高
+				</div>
+				<div class="t_Line lrb_Line da_ary_day numeric menu_cell" id="divBtTblReal_ttl">
+					<span class="padR4">158,300</span>
+				</div>
+			</li>
+			
+				<li class="   ">
+					<input type="hidden" class="lHandlingId" value="388528" />
+					<input type="hidden" class="strTypeName" value="現金" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="388528" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem btBgReal0">
+						現金
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell btBgReal0" id="divBtTblReal_0">
+						<span class="padR4">31,985</span>
+					</div>
+				</li>
+			  	
+			
+			  	
+			  	
+				
+				
+					
+						
+						
+					
+				
+				<li class="   ">
+					<input type="hidden" class="lHandlingId" value="389086" />
+					<input type="hidden" class="strTypeName" value="口座" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="389086" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem btBgReal1">
+						大宮銀行
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell btBgReal1" id="divBtTblReal_1">
+						<span class="padR4">14,300</span>
+					</div>
+				</li>
+			  	
+			
+			  	
+			  	
+				
+				
+					
+						
+							
+						
+						
+					
+				
+				<li class="   ">
+					<input type="hidden" class="lHandlingId" value="389749" />
+					<input type="hidden" class="strTypeName" value="口座" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="389749" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem btBgReal0">
+						神宮銀行
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell btBgReal0" id="divBtTblReal_2">
+						<span class="padR4">106,015</span>
+					</div>
+				</li>
+			  	
+			
+			  	
+			  	
+				
+				
+					
+				
+				<li class="remBkemZero  remBkemInv ">
+					<input type="hidden" class="lHandlingId" value="389103" />
+					<input type="hidden" class="strTypeName" value="口座" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="389103" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem ">
+						図書カード
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell " id="divBtTblReal_3">
+						<span class="padR4">0</span>
+					</div>
+				</li>
+			  	
+			
+			  	
+			  	
+				
+				
+					
+						
+						
+					
+				
+				<li class="   ">
+					<input type="hidden" class="lHandlingId" value="389713" />
+					<input type="hidden" class="strTypeName" value="電子マネー" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="389713" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem btBgReal1">
+						Edy
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell btBgReal1" id="divBtTblReal_4">
+						<span class="padR4">6,000</span>
+					</div>
+				</li>
+			  	
+			
+			  	
+			  	
+				
+				
+					
+						
+							
+						
+						
+					
+				
+				<li class="remBkemZero   ">
+					<input type="hidden" class="lHandlingId" value="390242" />
+					<input type="hidden" class="strTypeName" value="電子マネー" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlHandlingId" value="390242" />
+ -->
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem btBgReal0">
+						nanaco
+					</div>
+					<div class="lrb_Line bt_ary_day numeric menu_cell btBgReal0" id="divBtTblReal_5">
+						<span class="padR4">0</span>
+					</div>
+				</li>
+			  	
+			
+		</ul>
+	</div>  <!-- divBtTblRealFlm -->
+	
+	<div id="divBtSvgReal">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svgReal" width="50">
+		
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_0" class=" ">
+			</polygon>
+			
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_1" class=" ">
+			</polygon>
+			
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_2" class=" ">
+			</polygon>
+			
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_3" class="remBkemZero remBkemInv">
+			</polygon>
+			
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_4" class=" ">
+			</polygon>
+			
+		
+		  	
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnReal_5" class="remBkemZero ">
+			</polygon>
+			
+		
+		</svg>
+	</div>  <!-- divBtSvgReal -->
+	
+	<div id="divBtStkdReal">
+		<div class="title child">
+			実際の残高
+		</div>
+		<div class="child">
+			
+			
+				<div id="divBtStkdRealEach_0">
+					<div>
+						現金
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdRealEach_1">
+					<div>
+						大宮銀行
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdRealEach_2">
+					<div>
+						神宮銀行
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdRealEach_3">
+					<div>
+						図書カード
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdRealEach_4">
+					<div>
+						Edy
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdRealEach_5">
+					<div>
+						nanaco
+					</div>
+				</div>
+				
+			
+		</div>
+	</div>  <!-- divBtStkdReal -->
+	
+	<div id="divBtStkdPrlt">
+		<div class="title child">
+			Parlletの残高
+		</div>
+		<div class="child">
+			
+			
+				<div id="divBtStkdPrltEach_0">
+					<div>
+						Parlletに入れてないお金
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdPrltEach_1">
+					<div>
+						学資貯金
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdPrltEach_2">
+					<div>
+						旅行用
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdPrltEach_3">
+					<div>
+						交際用
+					</div>
+				</div>
+				
+			
+				<div id="divBtStkdPrltEach_4">
+					<div>
+						臨時用
+					</div>
+				</div>
+				
+			
+		</div>
+	</div>  <!-- divBtStkdPrlt -->
+	
+	<div id="divBtTblPrltFlm">
+		<div>
+			
+			
+			  
+			
+			  
+			
+			  
+			
+			  
+			
+			  
+			
+			<div class="btHddnChkBox">
+			
+			</div>
+		</div>
+		
+		<ul class="bt_tbl_each">
+			<li>
+				<input type="hidden" class="bolRemPrlt" value="Parlletの残高" />
+				<div class="t_Line lrb_Line bt_cate_large menu_cell">
+					Parlletの残高
+				</div>
+				<div class="t_Line lrb_Line da_ary_day numeric menu_cell" id="divBtTblPrlt_ttl">
+					<span class="padR4">158,300</span>
+				</div>
+			</li>
+			
+			
+			
+			  	
+				
+				
+					
+				
+				<li class=" ">
+					<input type="hidden" class="lParlletId" value="" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="" />
+					<input type="hidden" class="ToDlDebitDateTo" value="" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="" />
+ -->
+					
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small  lwdaSItem btBgPrltNot">
+						Parlletに入れてないお金
+					</div>
+					<div class="lrb_Line da_ary_day numeric btBgPrltNot" id="divBtTblPrlt_0">
+						<span class="padR4">35,880</span>
+					</div>
+				</li>
+				
+			
+			  	
+				
+				
+					
+						
+						
+					
+				
+				<li class=" ">
+					<input type="hidden" class="lParlletId" value="389051" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="389051" />
+ -->
+					
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small  menu_cell lwdaSItem btBgPrlt0">
+						学資貯金
+					</div>
+					<div class="lrb_Line da_ary_day numeric menu_cell btBgPrlt0" id="divBtTblPrlt_1">
+						<span class="padR4">38,900</span>
+					</div>
+				</li>
+				
+			
+			  	
+				
+				
+					
+						
+						
+					
+				
+				<li class=" ">
+					<input type="hidden" class="lParlletId" value="389102" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="389102" />
+ -->
+					
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small  menu_cell lwdaSItem btBgPrlt1">
+						旅行用
+					</div>
+					<div class="lrb_Line da_ary_day numeric menu_cell btBgPrlt1" id="divBtTblPrlt_2">
+						<span class="padR4">13,020</span>
+					</div>
+				</li>
+				
+			
+			  	
+				
+				
+					
+						
+							
+						
+						
+					
+				
+				<li class=" ">
+					<input type="hidden" class="lParlletId" value="389568" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="389568" />
+ -->
+					
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small  menu_cell lwdaSItem btBgPrlt0">
+						交際用
+					</div>
+					<div class="lrb_Line da_ary_day numeric menu_cell btBgPrlt0" id="divBtTblPrlt_3">
+						<span class="padR4">50,500</span>
+					</div>
+				</li>
+				
+			
+			  	
+				
+				
+					
+						
+						
+					
+				
+				<li class=" ">
+					<input type="hidden" class="lParlletId" value="390251" />
+					
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+<!-- 
+					<input type="hidden" class="ToDlParlletId" value="390251" />
+ -->
+					
+					<div class="bt_cate_small_pre"></div>
+					<div class="lrb_Line bt_cate_small  menu_cell lwdaSItem btBgPrlt1">
+						臨時用
+					</div>
+					<div class="lrb_Line da_ary_day numeric menu_cell btBgPrlt1" id="divBtTblPrlt_4">
+						<span class="padR4">20,000</span>
+					</div>
+				</li>
+				
+			
+		</ul>
+	</div>  <!-- divBtTblPrltFlm -->
+	
+	<div id="divBtSvgPrlt">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="svgPrlt" width="71">
+		
+		
+			
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnPrlt_0" class="">
+			</polygon>
+			
+		
+			
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnPrlt_1" class="">
+			</polygon>
+			
+		
+			
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnPrlt_2" class="">
+			</polygon>
+			
+		
+			
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnPrlt_3" class="">
+			</polygon>
+			
+		
+			
+			<polygon points="0,0" stroke="#aaa" stroke-width="0.5" id="plgnPrlt_4" class="">
+			</polygon>
+			
+		
+		</svg>
+	</div>
+	
+</div>  <!-- bt_tbl_flm -->
+
+<div id="mainInnerBtm"></div>
+
+</div>  <!-- mainInner -->
+
+</div>
+			</div>
+			<div id="footer">
+			<div class="fill">
+				<div id="ftContents">
+					<a href="#" class="clickOverlay">
+						parllet.com
+					</a>
+				</div>
+			</div>
+			</div>	<!-- footer -->
+		</div>
+		<script src="public/javascripts/AnimatedBorderMenus/jquery.borderMenuPrlt.js"></script>
+	</body>
+</html>
