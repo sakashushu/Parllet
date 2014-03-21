@@ -119,9 +119,9 @@ jQuery(function(){
 <div id="overlay">
 	<div>
 		<p id="text">
-			このページは 2014年3月19日時点の Parllet（ちょっと変わったWeb家計簿）の残高表の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
+			このページは 2014年3月24日時点の Parllet（ちょっと変わったWeb家計簿）の作者のローカル開発版の残高表の見た目を模したものなので、Parllet の本来の機能は使えません。<br/>
 			<br/>
-			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも3月19日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
+			また、Parllet のレスポンシブWebデザイン導入についてのサンプルを兼ねたページではありますが、少なくとも3月24日時点では公開Parllet の方ではスマホ・タブレット対応はまだまだ終わっておらず、スマホ・タブレットからは見れないようになっています。<br/>
 			<br/>
 			とはいえ、PCであれば <a href="http://parllet.com" style="color: #eee;">http://parllet.com</a> でアルファ版のWeb家計簿（Parllet）を使い始めることができます。<br/>
 			<br/>
@@ -130,7 +130,22 @@ jQuery(function(){
 		<p id="close">閉じる</p>
 	</div>
 </div>
-				<div id="container">
+		
+<nav class="bt-menu large_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	<ul>
+		<li></li>
+		<li><a href="/dailyaccount/balancetable">残高表</a></li>
+		<li><a href="/dailyaccount/dailyaccount">日計表</a></li>
+		<li><a href="/prlt/detailList/balance">明細表</a></li>
+		<li><a href="#" id="aRecEdit2">家計簿入力</a></li>
+		<li><a href="/prlt/config/bank/list">設定</a></li>
+	</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+		<div id="container">
 			<div id="header">
 				<div class="fill">
 					<div id="hdContainer">
@@ -337,6 +352,57 @@ jQuery(function() {
 
 
 
+
+
+
+<style>
+<!--
+/* 共通のスタイル */
+.bt-menu-trigger {
+	display: none;
+}
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #btHeader, #ftContents {
+	width: 95%;
+}
+#hdContainer, #main, #btHeader, #ftContents {
+	max-width: 980px;
+}
+#mainInner {
+	overflow-x: auto;
+}
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+#btHeader {
+	display: block;
+}
+#prltMain {
+	padding-top: 75px;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	#btHeader {
+		display: none;
+	}
+	#prltMain {
+		padding-top: 45px;
+	}
+}
+-->
+</style>
 
 
 
@@ -939,7 +1005,16 @@ function addFigure(str) {
 <div id="btChart"></div>
  -->
 
-<div id="mainInner" class="btMainInner">
+<div id="btHeader">
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">残高表</a>
+		</li>
+	</ul>
+</div>  <!-- btHeader -->
+
+<div id="mainInner">
+<div class="btMainInner">
 
 <div id="btBasisDate">
 	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>前月</span></a>
@@ -1006,8 +1081,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="388528" />
 					<input type="hidden" class="strTypeName" value="現金" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="388528" />
  -->
@@ -1034,8 +1109,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="389086" />
 					<input type="hidden" class="strTypeName" value="口座" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="389086" />
  -->
@@ -1064,8 +1139,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="389749" />
 					<input type="hidden" class="strTypeName" value="口座" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="389749" />
  -->
@@ -1089,8 +1164,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="389103" />
 					<input type="hidden" class="strTypeName" value="口座" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="389103" />
  -->
@@ -1117,8 +1192,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="389713" />
 					<input type="hidden" class="strTypeName" value="電子マネー" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="389713" />
  -->
@@ -1147,8 +1222,8 @@ function addFigure(str) {
 					<input type="hidden" class="lHandlingId" value="390242" />
 					<input type="hidden" class="strTypeName" value="電子マネー" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlHandlingId" value="390242" />
  -->
@@ -1366,8 +1441,8 @@ function addFigure(str) {
 				<li class=" ">
 					<input type="hidden" class="lParlletId" value="389051" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlParlletId" value="389051" />
  -->
@@ -1393,8 +1468,8 @@ function addFigure(str) {
 				<li class=" ">
 					<input type="hidden" class="lParlletId" value="389102" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlParlletId" value="389102" />
  -->
@@ -1422,8 +1497,8 @@ function addFigure(str) {
 				<li class=" ">
 					<input type="hidden" class="lParlletId" value="389568" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlParlletId" value="389568" />
  -->
@@ -1449,8 +1524,8 @@ function addFigure(str) {
 				<li class=" ">
 					<input type="hidden" class="lParlletId" value="390251" />
 					
-					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/17" />
-					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/17" />
+					<input type="hidden" class="ToDlDebitDateFr" value="2014/02/21" />
+					<input type="hidden" class="ToDlDebitDateTo" value="2014/09/21" />
 <!-- 
 					<input type="hidden" class="ToDlParlletId" value="390251" />
  -->
@@ -1504,6 +1579,7 @@ function addFigure(str) {
 
 <div id="mainInnerBtm"></div>
 
+</div>  <!-- btMainInner -->
 </div>  <!-- mainInner -->
 
 </div>
