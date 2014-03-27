@@ -22,6 +22,72 @@
 	intStrokeWidth=0.5
 }%
 
+<style>
+<!--
+/* 共通のスタイル */
+.bt-menu-trigger {
+	display: none;
+}
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #btHeader, #ftContents {
+	width: 95%;
+}
+#hdContainer, #main, #btHeader, #ftContents {
+	max-width: 980px;
+}
+#mainInner {
+	overflow-x: auto;
+}
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+#btHeader {
+	display: block;
+}
+#prltMain {
+	padding-top: 75px;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	#btHeader {
+		display: none;
+	}
+	#prltMain {
+		padding-top: 45px;
+	}
+}
+-->
+</style>
+
+#{set 'slideMenus'}
+<nav class="bt-menu large_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	<ul>
+		<li></li>
+		<li><a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a></li>
+		<li><a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a></li>
+		<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a></li>
+		<li><a href="#" id="aRecEdit2">&{'views.login.recordEdit'}</a></li>
+		<li><a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a></li>
+	</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+#{/set}
+
 <script type="text/javascript">
 <!--
 var bolDlgFrmUpdMstInsBkem,
@@ -61,6 +127,10 @@ function ClsLwda (
 }
 
 jQuery(function() {
+	jQuery('#aRecEdit2').click(function() {
+		jQuery('#aRecEdit').click();
+	});
+	
 	%{vCnt = 0}%
 	#{list items:lWDA_R, as:'lwdar'}
 		var clsLwda = new ClsLwda(
@@ -759,7 +829,16 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 <div id="btChart"></div>
  -->
 
-<div id="mainInner" class="btMainInner">
+<div id="btHeader">
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">&{'views.dailyaccount.balancetable'}</a>
+		</li>
+	</ul>
+</div>  <!-- btHeader -->
+
+<div id="mainInner">
+<div class="btMainInner">
 
 <div id="btBasisDate">
 	<a id="idPreMonth" class="aBtn fontJura" tabindex="0"><<span>&{'views.dailyaccount.movetype.month.pre'}</span></a>
@@ -1018,4 +1097,5 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 
 <div id="mainInnerBtm"></div>
 
+</div>  <!-- btMainInner -->
 </div>  <!-- mainInner -->

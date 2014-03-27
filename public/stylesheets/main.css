@@ -407,7 +407,7 @@ a.aBtn:hover span {
 	padding-left: 10px;
 }
 
-#cfHeader {
+#cfHeader, #btHeader, #daHeader {
 	position: fixed;
 	margin-top: 36px;
 	width: 980px;

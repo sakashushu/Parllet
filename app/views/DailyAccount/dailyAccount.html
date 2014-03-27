@@ -1,9 +1,79 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.dailyaccount.dailyaccount') /}
 
+<style>
+<!--
+/* 共通のスタイル */
+.bt-menu-trigger {
+	display: none;
+}
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #daHeader, #ftContents {
+	width: 95%;
+}
+#hdContainer, #main, #daHeader, #ftContents {
+	max-width: 980px;
+}
+#mainInner {
+	overflow-x: auto;
+}
+
+/* スマホのスタイル */
+.memberMenu {
+	display: none;
+}
+#daHeader {
+	display: block;
+}
+#prltMain {
+	padding-top: 75px;
+}
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+}
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	.memberMenu {
+		display: block;
+	}
+	#daHeader {
+		display: none;
+	}
+	#prltMain {
+		padding-top: 45px;
+	}
+}
+-->
+</style>
+
+#{set 'slideMenus'}
+<nav class="bt-menu large_cate">
+	<a href="#" class="bt-menu-trigger"><span></span></a>
+	<div class="divUlFrm">
+	<ul>
+		<li></li>
+		<li><a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a></li>
+		<li><a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a></li>
+		<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a></li>
+		<li><a href="#" id="aRecEdit2">&{'views.login.recordEdit'}</a></li>
+		<li><a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a></li>
+	</ul>
+	</div>
+	<div class="bt-overlay"></div>
+</nav>
+#{/set}
+
 <script type="text/javascript">
 <!--
 jQuery(function() {
+	jQuery('#aRecEdit2').click(function() {
+		jQuery('#aRecEdit').click();
+	});
+	
 	/* table-cell内の文字列が入りきらない場合の調整 */
 	var daCate2Width = ${play.configuration.getProperty('daCate2_Width')};
 	jQuery('.da_cate2').width(daCate2Width);
@@ -411,8 +481,6 @@ function addFigure(str) {
 -->
 </script>
 
-<script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 <script type="text/javascript" src="@{'/public/javascripts/jquery.contextMenu.js'}"></script>
 <link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/jquery.contextMenu.css'}" />
 
@@ -460,7 +528,16 @@ function addFigure(str) {
     </p>
 #{/ifErrors}
 
-<div id="mainInner" class="daMainInner">
+<div id="daHeader">
+	<ul class="tbMemberMenu">
+		<li>
+			<a href="#" id="aLarge_cate">&{'views.dailyaccount.dailyaccount'}</a>
+		</li>
+	</ul>
+</div>  <!-- daHeader -->
+
+<div id="mainInner">
+<div class="daMainInner">
 
 <ul class="da_tbl_all">
 	<li>
@@ -688,4 +765,5 @@ function addFigure(str) {
 	
 </ul>
 
+</div>  <!-- daMainInner -->
 </div>  <!-- mainInner -->
