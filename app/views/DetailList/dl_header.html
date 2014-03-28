@@ -284,7 +284,7 @@ function drawChart() {
 	jQuery("#dlRm_tblContentHd ul li div").each(function(i) {
 		childElementWidth += jQuery(this).outerWidth();
 	});
-	jQuery('#dlRmChartFrame').width(childElementWidth);
+	jQuery('#dlRmChartFrame, #dl_tblContentFt').width(childElementWidth);
 	
 	// グラフのオプションを指定する
 	var options = {

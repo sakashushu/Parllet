@@ -14,7 +14,6 @@
 </style>
 
 <script type="text/javascript" src="@{'/public/javascripts/funcCheckVal.js'}" ></script>
-<script type="text/javascript" src="@{'/public/javascripts/dateformat.js'}" ></script>
 
 <script type="text/javascript">
 <!--
@@ -299,19 +298,21 @@ jQuery(function(){
 	#{/list}
 	#{/if}
   </ul>
+	<div id="dlRmChartFrame">
+	<div id="dlRmChart"></div>
+	</div>
 </div>  <!-- dlRm_tblContent -->
 </div>  <!-- dl_tblFrame -->
 
 </div>  <!-- dlMainInner -->
 </div>  <!-- dlMain -->
 
-
 <div id="dlFooter">
 <div id="dlFooterInner">
 <div id="dl_tblFrameFt">
-<div id="dlRmChartFrame">
-<div id="dlRmChart"></div>
-</div>
+<div id="dl_tblContentFt">
+　
+</div>  <!-- dl_tblContentFt -->
 </div>  <!-- dl_tblFrameFt -->
 <div id="configListPagination">
 	#{DetailList.dl_remainder_bank.pagination /}
