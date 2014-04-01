@@ -91,6 +91,10 @@ function openDialogForm(title, typeFb, pEmail, pPassword, pId, pName, pLink) {
 			autoOpen: false,
 	//		height: 300,
 	//		width: 350,
+			width:'auto',
+			create: function( event, ui ) {
+				jQuery(this).css("maxWidth", "350px");
+			},
 			modal: true,
 			title: title,
 			closeOnEscape: false,

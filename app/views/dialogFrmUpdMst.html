@@ -100,16 +100,20 @@ function openDialogFrmUpdMst(strType, calledFrom, lngId) {
 			updateTips(s);
 		}
 		
-		if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) ||
-				navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
-			dlFumWidth = 300;
-		}else {
-			dlFumWidth = 460;
-		}
+//		if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) ||
+//				navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+//			dlFumWidth = 300;
+//		}else {
+//			dlFumWidth = 460;
+//		}
 		jQuery("#dialog-makeMaster").dialog({
 			autoOpen: false,
 			resizable: false,
-			width: dlFumWidth,
+//			width: dlFumWidth,
+			width:'auto',
+			create: function( event, ui ) {
+				jQuery(this).css("maxWidth", "460px");
+			},
 			modal: true,
 			title: title,
 			closeOnEscape: false,

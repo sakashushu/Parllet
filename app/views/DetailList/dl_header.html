@@ -77,8 +77,8 @@ body {
 		<ul>
 			<li></li>
 			<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist.balance.title'}</a></li>
-			<li>#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank'}&{'views.detaillist.remainderBank.title'}#{/a}</li>
-			<li>#{a @DetailList.dl_remainderPrlt(), id:'aDlRemainderPrlt'}&{'views.detaillist.remainderPrlt.title'}#{/a}</li>
+			<li>#{a @DetailList.dl_remainderBank(), id:'aDlRemainderBank2'}&{'views.detaillist.remainderBank.title'}#{/a}</li>
+			<li>#{a @DetailList.dl_remainderPrlt(), id:'aDlRemainderPrlt2'}&{'views.detaillist.remainderPrlt.title'}#{/a}</li>
 		</ul>
 	</div>
 	<div class="bt-overlay"></div>
@@ -96,7 +96,7 @@ jQuery(function() {
 	
 	/* リンクのクリックイベント */
 	%{hu = models.HaUser.find("byEmail", session.username).first()}%
-	jQuery("#aDlRemainderBank").click(function(e) {
+	jQuery("#aDlRemainderBank, #aDlRemainderBank2").click(function(e) {
 		var jText = jQuery(this).text();
 		%{
 			hdlgCnt = models.HandlingMst.count("ha_user = ? and (handling_type_mst.handling_type_name = ? or handling_type_mst.handling_type_name = ?)", hu, messages.get('HandlingType.bank'), messages.get('HandlingType.emoney'));
@@ -375,8 +375,13 @@ function dl_recordDel(lngId) {
 		jQuery("#dialog-delRec").dialog({
 			autoOpen: false,
 			resizable: false,
-			width:380,
+//			width:380,
+			width:'auto',
+			create: function( event, ui ) {
+				jQuery(this).css("maxWidth", "380px");
+			},
 			modal: true,
+			fluid: true,
 			title: "&{'views.dialogFrmUpdRec.title.del'}",
 			closeOnEscape: false,
 			buttons: {
@@ -489,17 +494,51 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 </script>
 
 <div id="dialog-delRec" class="invisible">
-	<p><span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 5px 0;"></span>&{'dialog.message.info.del.text1'}</p>
-	<label class="lblDlgDelRec">&{'payment_date'}</label>&nbsp;：&nbsp;<span id="spnPayDate"></span><br>
-	<label class="lblDlgDelRec">&{'balance_type_mst'}</label>&nbsp;：&nbsp;<span id="spnBType"></span><br>
-	<label class="lblDlgDelRec">&{'handling_mst'}</label>&nbsp;：&nbsp;<span id="spnHdlg"></span><br>
-	<label class="lblDlgDelRec">&{'parllet_mst'}</label>&nbsp;：&nbsp;<span id="spnPrlt"></span><br>
-	<label class="lblDlgDelRec">&{'item_mst'}</label>&nbsp;：&nbsp;<span id="spnItem"></span><br>
-	<label class="lblDlgDelRec">&{'amount'}</label>&nbsp;：&nbsp;<span id="spnAmnt"></span><br>
-	<label class="lblDlgDelRec">&{'debit_date'}</label>&nbsp;：&nbsp;<span id="spnDebDate"></span><br>
-	<label class="lblDlgDelRec">&{'content'}</label>&nbsp;：&nbsp;<span id="spnCntnt"></span><br>
-	<label class="lblDlgDelRec">&{'store'}</label>&nbsp;：&nbsp;<span id="spnStore"></span><br>
-	<label class="lblDlgDelRec">&{'remarks'}</label>&nbsp;：&nbsp;<span id="spnRmrks"></span><br>
+	<p><span class="ui-icon ui-icon-info" style="float: left; margin: 0 7px 5px 0;"></span>&{'dialog.message.info.del.text1'}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+	<br />
+	<div id="divTbl">
+		<div class="divTblRow">
+			<div class="left">&{'payment_date'}</div>
+			<div><span id="spnPayDate"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'balance_type_mst'}</div>
+			<div><span id="spnBType"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'handling_mst'}</div>
+			<div><span id="spnHdlg"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'parllet_mst'}</div>
+			<div><span id="spnPrlt"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'item_mst'}</div>
+			<div><span id="spnItem"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'amount'}</div>
+			<div class="numeric"><span id="spnAmnt"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'debit_date'}</div>
+			<div><span id="spnDebDate"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'content'}</div>
+			<div><span id="spnCntnt"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'store'}</div>
+			<div><span id="spnStore"></span></div>
+		</div>
+		<div class="divTblRow">
+			<div>&{'remarks'}</div>
+			<div><span id="spnRmrks"></span></div>
+		</div>
+	</div>
+	<br />
 	<p id="pConfirm">&{'dialog.message.del.confirm'}</p>
 </div>  <!-- dialog-form -->
 

@@ -62,7 +62,11 @@ function openDialogConfirm(strCase, strUnableItem) {
 		jQuery("#dialog-confirm").dialog({
 			autoOpen: false,
 			resizable: false,
-			width:460,
+//			width:460,
+			width:'auto',
+			create: function( event, ui ) {
+				jQuery(this).css("maxWidth", "460px");
+			},
 			modal: true,
 			title: title,
 			closeOnEscape: false,

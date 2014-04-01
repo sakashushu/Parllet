@@ -1748,8 +1748,35 @@ fieldset {
 	float: left;
 	text-align: right;
 }
+#dialog-delRec br {
+	clear: left;
+}
 #dialog-delRec #pConfirm {
 	font-weight: bold;
+}
+#dialog-delRec #divTbl {
+	display: table;
+	width: 100%;
+	border-collapse: collapse;
+}
+#dialog-delRec #divTbl .divTblRow {
+	display: table-row;
+}
+#dialog-delRec #divTbl .divTblRow>div {
+	display: table-cell;
+	vertical-align: middle;
+	border: solid 1px #CCC;
+}
+#dialog-delRec #divTbl .divTblRow>div:first-child {
+	text-align: center;
+	background: #ddd;
+	font-weight: bold;
+}
+#dialog-delRec #divTbl .divTblRow>div:nth-child(2) {
+	padding: 0 0.5em;
+}
+#dialog-delRec #divTbl .divTblRow>.left {
+	width: 40%;
 }
 
 
