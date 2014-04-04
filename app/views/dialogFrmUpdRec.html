@@ -209,7 +209,8 @@ jQuery(function() {
 	/* 「収支種類」の選択変更イベント */
 	jQuery('#dfurBTypeSel').change(function(e) {
 		var jText = jQuery(this).children(':selected').text(),
-			jVal = jQuery(this).val();
+			jVal = jQuery(this).val(),
+			strCalledFrom = "dialogFrmUpdRec";
 		
 		//「収支種類」が収入・支出で、「項目」のリストがゼロの時
 		if ((jText==="&{'BalanceType.in'}" ||
@@ -218,10 +219,10 @@ jQuery(function() {
 			e.preventDefault();
 			if (jText==="&{'BalanceType.in'}")
 				//項目（収入）作成用ダイアログ
-				openDialogConfirm("&{'views.dialogConfirm.case.itemIn'}", jText);
+				openDialogConfirm("&{'views.dialogConfirm.case.itemIn'}", jText, strCalledFrom);
 			if (jText==="&{'BalanceType.out'}")
 				//項目（支出）作成用ダイアログ
-				openDialogConfirm("&{'views.dialogConfirm.case.itemOut'}", jText);
+				openDialogConfirm("&{'views.dialogConfirm.case.itemOut'}", jText, strCalledFrom);
 			
 		//「収支種類」が口座預入・口座引出で、「取扱(実際)」のリストがゼロの時
 		} else if ((jText==="&{'BalanceType.bank_in'}" ||
@@ -229,7 +230,7 @@ jQuery(function() {
 				jQuery(subCatHdlgSmall[subCatHdlgLarge[jVal]]).length===0) {
 			e.preventDefault();
 			//口座・電子マネー作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
+			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText, strCalledFrom);
 			
 		//「収支種類」がParllet預入・Parllet引出で、「取扱(Parllet)」のリストがゼロの時
 		} else if ((jText==="&{'BalanceType.parllet_in'}" ||
@@ -237,7 +238,7 @@ jQuery(function() {
 				jQuery(subCatPrlt).length===0) {
 			e.preventDefault();
 			//Parllet作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
+			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText, strCalledFrom);
 			
 		} else {
 			if (BTYPE_GROUP[gPreBType]!==BTYPE_GROUP[jVal]) {
@@ -696,7 +697,7 @@ function fDebitDate(dBasic,cutoffDay,debitMonth,debitDay){
 <script type="text/javascript">
 <!--
 /* dialogConfirmを閉じた時の動作は呼び出し元で行う */
-function whenDialogConfirmClosed(intRslt) {
+function whenDialogConfirmClosedDfur(intRslt) {
 	switch (intRslt) {
 		case 0:
 			jQuery('#dfurBType').children('select').val(gPreBType).change().focus();
@@ -748,7 +749,7 @@ function whenDialogFrmUpdMstClosedDfur(intRslt, strType, nameVal, zeroHddnChkd) 
 		strErrMsg = "Common.makeItem";
 	switch (intRslt) {
 		case 0:
-			whenDialogConfirmClosed(0);
+			whenDialogConfirmClosedDfur(0);
 			break;
 		case 1:
 			var jqxhrMkMst;
@@ -795,18 +796,18 @@ function whenDialogFrmUpdMstClosedDfur(intRslt, strType, nameVal, zeroHddnChkd) 
 						break;
 					case 99:
 						alert(z.strErr);
-						whenDialogConfirmClosed(0);
+						whenDialogConfirmClosedDfur(0);
 						break;
 					default:
 						strErrMsg += " result Error";
 						alert(strErrMsg);
-						whenDialogConfirmClosed(0);
+						whenDialogConfirmClosedDfur(0);
 				}
 			})
 			.fail(function() {
 				strErrMsg += " Failed";
 				alert(strErrMsg);
-				whenDialogConfirmClosed(0);
+				whenDialogConfirmClosedDfur(0);
 			});
 			break;
 		default:

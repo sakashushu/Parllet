@@ -1,6 +1,6 @@
 <script type="text/javascript">
 <!-- 
-function openDialogConfirm(strCase, strUnableItem) {
+function openDialogConfirm(strCase, strUnableItem, calledFrom) {
 	jQuery(function() {
 		var title,
 			buttons = {},
@@ -73,7 +73,17 @@ function openDialogConfirm(strCase, strUnableItem) {
 			buttons: buttons,
 			close: function() {
 				//ダイアログクローズ時の処理は呼び出し元で行う
-				whenDialogConfirmClosed(intRslt);
+//				whenDialogConfirmClosed(intRslt);
+				switch (calledFrom) {
+					case "dialogFrmUpdRec":
+						whenDialogConfirmClosedDfur(intRslt);
+						break;
+					case "dl_header":
+						whenDialogConfirmClosedDl(intRslt);
+						break;
+					default:
+						alert("Unanticipated calledFrom error");
+				}
 			}
 		});
 		jQuery("#dialog-confirm").dialog("open");

@@ -88,7 +88,8 @@ body {
 <script type="text/javascript">
 <!--
 jQuery(function() {
-	var intPadTop = jQuery('#header').height() - jQuery('#prltMain').css('padding-top').replace("px", "") - jQuery('#dlMain').css('margin-top').replace("px", "");
+	var intPadTop = jQuery('#header').height() - jQuery('#prltMain').css('padding-top').replace("px", "") - jQuery('#dlMain').css('margin-top').replace("px", ""),
+		strCalledFrom = "dl_header";
 	jQuery('#dl_tblFrame').css('padding-top', intPadTop);
 	jQuery('#aRecEdit2').click(function() {
 		jQuery('#aRecEdit').click();
@@ -103,7 +104,7 @@ jQuery(function() {
 		}%
 		if (${hdlgCnt}===0) {
 			//口座・電子マネー作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText);
+			openDialogConfirm("&{'views.dialogConfirm.case.bkem'}", jText, strCalledFrom);
 			
 			e.preventDefault();
 		}
@@ -115,7 +116,7 @@ jQuery(function() {
 		}%
 		if (${idpCnt}===0) {
 			//Parllet作成用ダイアログ
-			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText);
+			openDialogConfirm("&{'views.dialogConfirm.case.prlt'}", jText, strCalledFrom);
 			
 			e.preventDefault();
 		}
@@ -305,11 +306,10 @@ window.onload = function() {
 // -->
 </script>
 
-#{include 'dialogConfirm.html' /}
 <script type="text/javascript">
 <!--
 /* dialogConfirmを閉じた時の動作は呼び出し元で行う */
-function whenDialogConfirmClosed(intRslt) {
+function whenDialogConfirmClosedDl(intRslt) {
 	switch (intRslt) {
 		case 0:
 			break;
@@ -438,11 +438,10 @@ function dl_recordDel(lngId) {
 // -->
 </script>
 
-#{include 'dialogFrmUpdMst.html' /}
 <script type="text/javascript">
 <!--
 /* dialogFrmUpdMstを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
+function whenDialogFrmUpdMstClosedDl(intRslt, strType, nameVal, zeroHddnChkd) {
 	var strErrMsg;
 	if (strType==="&{'HandlingType.bank'}" || strType==="&{'HandlingType.emoney'}")
 		strErrMsg = "Common.updateHdlg";
@@ -450,7 +449,7 @@ function whenDialogFrmUpdMstClosedDh(intRslt, strType, nameVal, zeroHddnChkd) {
 		strErrMsg = "Common.updatePrlt";
 	switch (intRslt) {
 		case 0:
-			whenDialogConfirmClosed(0);
+			whenDialogConfirmClosedDl(0);
 			break;
 		case 1:
 			var jqxhrMkMst;
