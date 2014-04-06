@@ -50,23 +50,6 @@ body {
 -->
 </style>
 
-#{set 'slideMenus'}
-<nav class="bt-menu large_cate">
-	<a href="#" class="bt-menu-trigger"><span></span></a>
-	<div class="divUlFrm">
-	<ul>
-		<li></li>
-		<li><a href="@{DailyAccount.balanceTable()}">&{'views.dailyaccount.balancetable'}</a></li>
-		<li><a href="@{DailyAccount.dailyAccount()}">&{'views.dailyaccount.dailyaccount'}</a></li>
-		<li><a href="@{DetailList.dl_balance()}">&{'views.detaillist'}</a></li>
-		<li><a href="#" id="aRecEdit2">&{'views.login.recordEdit'}</a></li>
-		<li><a href="@{Config.cf_bank_list()}">&{'views.config.config'}</a></li>
-	</ul>
-	</div>
-	<div class="bt-overlay"></div>
-</nav>
-#{/set}
-
 <script type="text/javascript">
 <!--
 jQuery(function() {
