@@ -19,7 +19,7 @@ jQuery(function() {
 					selectedDate, instance.settings );
 			dates.not( this ).datepicker( "option", option, date );
 		},
-		showButtonPanel: true
+		showButtonPanel: true,
 	});
 });
 
@@ -49,7 +49,23 @@ jQuery(function() {
 });
 
 jQuery(function() {
-	jQuery(".datepicker").datepicker({
+//	jQuery(".datepicker").datepicker({
+//		changeMonth: true,
+//		numberOfMonths: 1,
+//		showOtherMonths: true,
+//		selectOtherMonths: true,
+//		showAnim: "drop",
+//		changeMonth: true,
+//		changeYear: true,
+//		yearRange: '1900:2999',
+//		dateFormat: 'yy/mm/dd',
+//		showButtonPanel: true,
+//		onSelect: function(date) {
+//			
+//		}
+//	});
+	var datepicker = jQuery(".datepicker");
+	datepicker.datepicker({
 		changeMonth: true,
 		numberOfMonths: 1,
 		showOtherMonths: true,
@@ -59,6 +75,16 @@ jQuery(function() {
 		changeYear: true,
 		yearRange: '1900:2999',
 		dateFormat: 'yy/mm/dd',
-		showButtonPanel: true
+		showButtonPanel: true,
+		onSelect: function(date) {
+			
+		}
 	});
+	$('.ui-datepicker-current').live('click', function() {
+		// set date to today and trigger the click event
+		datepicker.datepicker('setDate', new Date());
+		$('.ui-datepicker-current-day').click();
+	});
+	// trigger today button on initial page load
+	$('.ui-datepicker-current').trigger('click');
 });
