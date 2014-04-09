@@ -95,7 +95,7 @@ jQuery(function() {
 			e.preventDefault();
 		}
     });
-	jQuery("#aDlRemainderPrlt").click(function(e) {
+	jQuery("#aDlRemainderPrlt, #aDlRemainderPrlt2").click(function(e) {
 		var jText = jQuery(this).text();
 		%{
 			idpCnt = models.ParlletMst.count("byHa_user", hu);
