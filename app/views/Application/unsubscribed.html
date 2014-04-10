@@ -1,5 +1,20 @@
 #{extends 'main.html' /}
 
+<style>
+<!--
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #ftContents {
+	width: 95%;
+}
+#hdContainer, #main, #ftContents {
+	max-width: 980px;
+}
+-->
+</style>
+
 #{set 'headerTools'}
 	<li>
 		<a href="@{DailyAccount.balanceTable()}">&{'views.main.tools.login'}</a>

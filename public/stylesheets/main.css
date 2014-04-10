@@ -1899,9 +1899,9 @@ label.fieldName {
 /* receipt, confirm, unsubscribe */
 
 #receipt, #confirm, #unsubscribe {
-	width: 660px;
+	width: 100%;
+	max-width: 660px;
 	margin: 50px auto;
-//	text-align: center;
 }
 
 #receipt h1, #confirm h1, #unsubscribe h1 {
@@ -1932,12 +1932,14 @@ label.fieldName {
 	overflow: hidden;	//floatの親要素の高さを取り戻すおまじない
 }
 #receipt .box #inner {
-	width: 400px;
+	width: 100%;
+	max-width: 400px;
 	margin-right: auto;
 	margin-left: auto;
 }
 #receipt .box #inner label {
-	width: 240px;
+	width: 60%;
+	max-width: 240px;
 	float: left;
 }
 #receipt .box #inner div {
@@ -1955,7 +1957,8 @@ label.fieldName {
 	width:136px;
 }
 #unsubscribe #flameConf div {
-	width:320px;
+	width: 100%;
+	max-width: 320px;
 }
 #receipt #flameConf div, #confirm #flameConf div, #unsubscribe #flameConf div {
 	height: 40px;
