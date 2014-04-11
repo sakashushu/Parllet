@@ -1037,7 +1037,7 @@ fieldset {
 .da_tbl_lt li div.second {
 	display: table-cell;
 	border-right: 1px solid transparent;
-	height: 40px;
+	height: 45px;
 }
 
 .da_tbl_lt li div.da_tree {
@@ -1065,7 +1065,7 @@ fieldset {
 	border-right: 1px solid #transparent;
 */
 	border-bottom: 1px solid #aaa;
-	height: 30px;
+	height: 35px;
 }
 
 /* .da_tbl_lb 日計表の枠固定の左下のテーブル */
