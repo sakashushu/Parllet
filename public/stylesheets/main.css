@@ -1836,9 +1836,10 @@ label.fieldName {
 
 .crudField {
 	padding: 10px;
-//	border-bottom: 1px solid #eee;
 	border-bottom: 1px solid #bbb;
 	position: relative;
+	clear: left;
+	overflow: hidden;
 }
 
 .crudField .right {
