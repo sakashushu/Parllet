@@ -77,9 +77,6 @@ jQuery(function() {
 	var intPadTop = jQuery('#header').height() - jQuery('#prltMain').css('padding-top').replace("px", "") - jQuery('#dlMain').css('margin-top').replace("px", ""),
 		strCalledFrom = "dl_header";
 	jQuery('#dl_tblFrame').css('padding-top', intPadTop);
-	jQuery('#aRecEdit2').click(function() {
-		jQuery('#aRecEdit').click();
-	});
 	
 	/* リンクのクリックイベント */
 	%{hu = models.HaUser.find("byEmail", session.username).first()}%

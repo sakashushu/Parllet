@@ -110,10 +110,6 @@ function ClsLwda (
 }
 
 jQuery(function() {
-	jQuery('#aRecEdit2').click(function() {
-		jQuery('#aRecEdit').click();
-	});
-	
 	%{vCnt = 0}%
 	#{list items:lWDA_R, as:'lwdar'}
 		var clsLwda = new ClsLwda(
