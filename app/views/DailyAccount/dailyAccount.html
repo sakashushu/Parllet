@@ -448,6 +448,10 @@ jQuery(function() {
 		
 	});
 	
+	jQuery('input.numeric').on({
+		'focus': function(){ jQuery(this).attr('type', 'number'); },
+		'blur': function(){ jQuery(this).attr('type', 'text'); }
+	});
 });
 
 /* 文字列を3桁区切りにする関数 */
