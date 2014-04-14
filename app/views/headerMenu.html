@@ -33,7 +33,12 @@ jQuery(function() {
 	});
 	
 	/* 3桁区切りの数値入力フィールドとして設定 */
-	jQuery('input.numeric').autoNumeric({aPad: false, vMin: '-999999999.99', vMax: '999999999.99'});
+	jQuery('input.numeric').autoNumeric('init', {aPad: false, vMin: '-999999999', vMax: '999999999'});
+
+	jQuery('input.numeric').on({
+		'focus': function(){ jQuery(this).attr('type', 'number'); },
+		'blur': function(){ jQuery(this).attr('type', 'text'); }
+	});
 });
 	
 /* dialogFrmUpdRecを閉じた時の動作は呼び出し元で行う */

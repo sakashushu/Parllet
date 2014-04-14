@@ -383,11 +383,13 @@ jQuery(function() {
 			strErrMsg;
 		// 新規作成
 		if (jQuery(this).data('valClnt')==='') {
+			var strId = '#'+jQuery(this).prevAll('input[name=e_budget_id]').attr('id');
 			jqxhr = jQuery.post('@{Common.updateBudget}', {strLargeCate: jQuery(this).prevAll('input[name=e_large_category]').val(), strItem: jQuery(this).prev('input[name=e_item]').val(), intYear: vYear, intMonth: vMonth, intAmnt: intChange});
 			jqxhr
 			.done(function(z) {
 				switch (z.intRslt) {
 					case 0:
+						jQuery(strId).val(z.bG.id);
 						break;
 					case 99:
 						alert(z.strErr);
@@ -448,10 +450,6 @@ jQuery(function() {
 		
 	});
 	
-	jQuery('input.numeric').on({
-		'focus': function(){ jQuery(this).attr('type', 'number'); },
-		'blur': function(){ jQuery(this).attr('type', 'text'); }
-	});
 });
 
 /* 文字列を3桁区切りにする関数 */
@@ -633,10 +631,10 @@ function addFigure(str) {
 									<div class="da_cate1${lwda.bolLastItemFlg ? ' da_cate1_last' : ''}"></div>
 									<div class="da_cate2">${lwda.sItem}</div>
 									<div class="da_budget daBudgetSubject">
-										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" />
+										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" id="bdgtId_${lwda.lBudgetId}" />
 										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
 										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
-										<input type="text" class="numeric bdgtBox ${vLargeCate}" name="e_budget_amount" value="${lwda.lBudgetAmount?.format('###,###')}" />
+										<input type="text" class="numeric bdgtBox ${vLargeCate}" name="e_budget_amount" value="${lwda.lBudgetAmount}" />
 									</div>
 								#{/if}
 								<!-- 大分類毎 -->
