@@ -36,7 +36,7 @@ jQuery(function() {
 	jQuery('input.numeric').autoNumeric('init', {aPad: false, vMin: '-999999999', vMax: '999999999'});
 
 	jQuery('input.numeric').on({
-		'focus': function(){ jQuery(this).attr('type', 'number'); },
+		'focus': function(){ jQuery(this).attr('type', 'tel'); },
 		'blur': function(){ jQuery(this).attr('type', 'text'); }
 	});
 });

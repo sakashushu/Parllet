@@ -1203,7 +1203,7 @@ fieldset {
 	width: 96px;
 	border-bottom: 1px solid #aaa;
 }
-.da_budget input[type="text"], .da_budget input[type="number"] {
+.da_budget input[type="text"], .da_budget input[type="tel"] {
 	width: 90px;
 	background-color: #fff;
 	font-size: 100%
