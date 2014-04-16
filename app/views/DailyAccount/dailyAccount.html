@@ -634,7 +634,7 @@ function addFigure(str) {
 										<input type="hidden" name="e_budget_id" value="${lwda.lBudgetId}" id="bdgtId_${lwda.lBudgetId}" />
 										<input type="hidden" name="e_large_category" value="${lwda.sLargeCategory}" />
 										<input type="hidden" name="e_item" value="${lwda.sItem}"/>
-										<input type="text" class="numeric bdgtBox ${vLargeCate}" name="e_budget_amount" value="${lwda.lBudgetAmount}" />
+										<input type="text" class="numeric bdgtBox ${vLargeCate}" name="e_budget_amount" value="${lwda.lBudgetAmount}" pattern="[0-9]*" />
 									</div>
 								#{/if}
 								<!-- 大分類毎 -->

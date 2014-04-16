@@ -2043,6 +2043,10 @@ label.fieldName {
 	z-index: 901;
 }
 
+input.numeric {
+	ime-mode: disabled;
+}
+
 //.btBgReal0 {
 //	background: #7fbfff;
 //}
