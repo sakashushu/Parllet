@@ -39,6 +39,9 @@ jQuery(function() {
 		'focus': function(){ jQuery(this).attr('type', 'tel'); },
 		'blur': function(){ jQuery(this).attr('type', 'text'); }
 	});
+	if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0) {
+		jQuery('input.numeric').attr('pattern', '[0-9]*');
+	}
 });
 	
 /* dialogFrmUpdRecを閉じた時の動作は呼び出し元で行う */
