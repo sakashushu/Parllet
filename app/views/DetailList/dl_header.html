@@ -323,9 +323,9 @@ function dl_recordEdit(lngId) {
 	.done(function(z) {
 		var dfurFvPayDate = new DfurFlgVal(false, dateFormat.format(new Date(z.rec.payment_date)), false),
 			dfurFvBType = new DfurFlgVal(true, z.rec.balance_type_mst.id, true),
-			dfurFvHdlg = new DfurFlgVal(false, z.rec.handling_mst===undefined ? null : z.rec.handling_mst.id, false),
-			dfurFvPrlt = new DfurFlgVal(false, z.rec.parllet_mst===undefined ? null : z.rec.parllet_mst.id, true),
-			dfurFvItem = new DfurFlgVal(false, z.rec.item_mst===undefined ? null : z.rec.item_mst.id, true),
+			dfurFvHdlg = new DfurFlgVal(false, z.rec.handling_mst===undefined ? "" : z.rec.handling_mst.id, false),
+			dfurFvPrlt = new DfurFlgVal(false, z.rec.parllet_mst===undefined ? "" : z.rec.parllet_mst.id, true),
+			dfurFvItem = new DfurFlgVal(false, z.rec.item_mst===undefined ? "" : z.rec.item_mst.id, true),
 			dfurFvAmnt = new DfurFlgVal(true, z.rec.amount, true),
 			dfurFvDebDate = new DfurFlgVal(false, dateFormat.format(new Date(z.rec.debit_date)), false),
 			dfurFvCntnt = new DfurFlgVal(false, z.rec.content, true),
