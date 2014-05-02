@@ -83,7 +83,6 @@ var bolDlgFrmUpdMstInsBkem,
 	strItemNm,
 	intLwdaRealSize = ${lWDA_R.size},
 	intLwdaPrltSize = ${lWDA_P.size},
-	intDivBtStkdHtInit = 400*100,	//javascriptの小数点計算の誤差（バグ）回避のため100倍
 	intDivBtStkdHt,
 	intDivBtStkdHtReal,
 	intDivBtStkdHtPrlt,
@@ -474,13 +473,13 @@ jQuery(function() {
 /* divBtStkdRealEach , divBtStkdPrltEach の表示処理 */
 function dspBtStkd() {
 	var jqHt,
-		jqHtReal = jQuery('#divBtTblRealFlm').height()-jQuery('#divBtStkdReal').children('.title').height()-2,
-		jqHtPrlt = jQuery('#divBtTblPrltFlm').height()-jQuery('#divBtStkdPrlt').children('.title').height()-2;
+		jqHtReal = jQuery('#divBtTblRealFlm .bt_tbl_each').height()-jQuery('#divBtTblRealFlm .bt_tbl_each li:first-child').height(),
+		jqHtPrlt = jQuery('#divBtTblPrltFlm .bt_tbl_each').height()-jQuery('#divBtTblPrltFlm .bt_tbl_each li:first-child').height();
 	jqHt = jqHtReal > jqHtPrlt ? jqHtReal : jqHtPrlt;
 	
-	intDivBtStkdHt = intDivBtStkdHtInit;
-	if (jqHt*100 > intDivBtStkdHtInit)
-		intDivBtStkdHt = jqHt*100;
+	intDivBtStkdHt = jqHt*2*100;
+	
+	// セルのボーダーの高さ×セル数を予め引いておく
 	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSize*100;
 	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*100;
 	
