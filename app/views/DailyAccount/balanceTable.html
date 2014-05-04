@@ -84,14 +84,15 @@ var bolDlgFrmUpdMstInsBkem,
 	intLwdaRealSize = ${lWDA_R.size},
 	intLwdaPrltSize = ${lWDA_P.size},
 	intDivBtStkdHt,
-	intDivBtStkdHtReal,
-	intDivBtStkdHtPrlt,
+	intDivBtStkdHtReal,	//真ん中部分の罫線を除いた高さの合計（実残高）
+	intDivBtStkdHtPrlt,	//真ん中部分の罫線を除いた高さの合計（Parllet残高）
 	aryLwdar = [],
 	aryLwdap = [],
 	intDivBtStkdRealSumAmnt = 0,
-	intDivBtStkdPrltSumAmnt = 0
+	intDivBtStkdPrltSumAmnt = 0,
 	intBgSizeReal = ${vBgSizeReal},
-	intBgSizePrlt = ${vBgSizePrlt};
+	intBgSizePrlt = ${vBgSizePrlt},
+	intMinHt;	// 真ん中部分の最低高さ(＝左右端部分のセルの高さ)
 
 /* lWDA系格納用クラス */
 function ClsLwda (
@@ -479,9 +480,10 @@ function dspBtStkd() {
 	
 	intDivBtStkdHt = jqHt*2*100;
 	
-	// セルのボーダーの高さ×セル数を予め引いておく
-	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSize*100;
-	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*100;
+	// セルの(ボーダーの高さ＋最低高さ(＝左右端部分のセルの高さ))×セル数を予め引いておく
+	intMinHt = jQuery('.bt_tbl_each li div').height();	// 真ん中部分の最低高さ(＝左右端部分のセルの高さ)
+	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSize*(1+intMinHt)*100;
+	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*(1+intMinHt)*100;
 	
 	dspDivBtStkdRealEach();
 	dspDivBtStkdPrltEach();
@@ -509,7 +511,7 @@ function dspDivBtStkdRealEach() {
 			intMaxHtIdx = i;
 		}
 		
-		aryIntHt[i] = intHt;
+		aryIntHt[i] = intHt+intMinHt*100;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
 		intSumHt += intHt;
 		
 		if (aryLwdar[i].lngAmount < 0) {
@@ -559,7 +561,7 @@ function dspDivBtStkdPrltEach() {
 			intMaxHtIdx = i;
 		}
 		
-		aryIntHt[i] = intHt;
+		aryIntHt[i] = intHt+intMinHt*100;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
 		intSumHt += intHt;
 		
 		if (aryLwdap[i].lngAmount < 0) {
