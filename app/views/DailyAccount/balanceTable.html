@@ -84,6 +84,7 @@ var bolDlgFrmUpdMstInsBkem,
 	intLwdaRealSize = ${lWDA_R.size},
 	intLwdaRealSizeDsp = 0,
 	intLwdaPrltSize = ${lWDA_P.size},
+	intLwdaPrltSizeDsp = 0,
 	intDivBtStkdHt,
 	intDivBtStkdHtReal,	//真ん中部分の罫線を除いた高さの合計（実残高）
 	intDivBtStkdHtPrlt,	//真ん中部分の罫線を除いた高さの合計（Parllet残高）
@@ -488,11 +489,18 @@ function dspBtStkd() {
 			intLwdaRealSizeDsp++;
 		}
 	}
+	intLwdaPrltSizeDsp = 0;
+	for (i=0; i < intLwdaPrltSize; i++) {
+		if (!(jQuery('.remPrltZero').hasClass('invisible') && aryLwdap[i].lngAmount===0)) {
+			intLwdaPrltSizeDsp++;
+		}
+	}
+	
 	
 	// セルの(ボーダーの高さ＋最低高さ(＝左右端部分のセルの高さ))×セル数を予め引いておく
 	intMinHt = jQuery('.bt_tbl_each li div').height();	// 真ん中部分の最低高さ(＝左右端部分のセルの高さ)
 	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSizeDsp*(1+intMinHt)*100;
-	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSize*(1+intMinHt)*100;
+	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSizeDsp*(1+intMinHt)*100;
 	
 	dspDivBtStkdRealEach();
 	dspDivBtStkdPrltEach();
@@ -577,7 +585,13 @@ function dspDivBtStkdPrltEach() {
 			intMaxHtIdx = i;
 		}
 		
-		aryIntHt[i] = intHt+intMinHt*100;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
+		aryIntHt[i] = intHt;
+		if (!(jQuery('.remPrltZero').hasClass('invisible') && aryLwdap[i].lngAmount===0)) {
+			aryIntHt[i] += intMinHt*100;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
+			jQuery("#divBtStkdPrltEach_"+i).css('border-bottom', '1px solid #aaa');
+		} else {
+			jQuery("#divBtStkdPrltEach_"+i).css('border-bottom', '0');
+		}
 		intSumHt += intHt;
 		
 		if (aryLwdap[i].lngAmount < 0) {
