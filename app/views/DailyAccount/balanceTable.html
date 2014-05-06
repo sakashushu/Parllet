@@ -516,9 +516,10 @@ function dspDivBtStkdRealEach() {
 		intBgCnt = 0;
 	
 	for (i=0; i < intLwdaRealSize; i++) {
-		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+		var intHt = intDivBtStkdRealSumAmnt===0 ? intDivBtStkdHtReal / intLwdaRealSizeDsp
 				: Math.abs(aryLwdar[i].lngAmount) / intDivBtStkdRealSumAmnt*intDivBtStkdHtReal,
 				strHt = intHt.toFixed(0);
+		
 		intHt = parseInt(strHt);
 		
 		if (intHt!==0) anyHtExistFlg = true;
@@ -573,7 +574,7 @@ function dspDivBtStkdPrltEach() {
 		intBgCnt = 0;
 	
 	for (i=0; i < intLwdaPrltSize; i++) {
-		var intHt = (intDivBtStkdRealSumAmnt*intDivBtStkdHtReal===0 || intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt===0) ? 0
+		var intHt = intDivBtStkdPrltSumAmnt===0 ? intDivBtStkdHtPrlt / intLwdaPrltSizeDsp
 				: Math.abs(aryLwdap[i].lngAmount) / intDivBtStkdPrltSumAmnt*intDivBtStkdHtPrlt,
 			strHt = intHt.toFixed(0);
 		intHt = parseInt(strHt);
