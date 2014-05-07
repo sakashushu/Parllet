@@ -264,7 +264,6 @@ jQuery(function() {
 			if (jQuery(this).parent("li").children('.lHandlingId').val()!==undefined) {
 				if (!jQuery(this).parent("li").hasClass('remBkemInv'))
 					bolDlgFrmUpdRecInsBkem = true;
-//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
 				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
 				if (jqLwdaSItem.children('span').size())
 					jqLwdaSItem = jqLwdaSItem.children('span');
@@ -282,7 +281,6 @@ jQuery(function() {
 			}
 			if (jQuery('.lParlletId', jQuery(this).parent("li")).val()!==undefined) {
 				bolDlgFrmUpdMstUpdPrlt = true;
-//				strItemNm = jQuery.trim(jQuery('.lwdaSItem', jQuery(this).parent("li")).text());
 				jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
 				if (jqLwdaSItem.children('span').size())
 					jqLwdaSItem = jqLwdaSItem.children('span');
@@ -295,10 +293,14 @@ jQuery(function() {
 				jQuery('#idDlRpHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
 			}
 			
-			if (jQuery('.bolRemReal', jQuery(this).parent("li")).val()!==undefined)
-				bolDlgFrmUpdMstInsBkem = true;
-			if (jQuery('.bolRemPrlt', jQuery(this).parent("li")).val()!==undefined)
-				bolDlgFrmUpdMstInsPrlt = true;
+			if (jQuery(this).attr('data-idx')===undefined) {
+				if (jQuery(this).parents("#divBtTblRealFlm").size() > 0 ||
+						jQuery(this).parents("#divBtStkdReal").size() > 0)
+					bolDlgFrmUpdMstInsBkem = true;
+				if (jQuery(this).parents("#divBtTblPrltFlm").size() > 0 ||
+						jQuery(this).parents("#divBtStkdPrlt").size() > 0)
+					bolDlgFrmUpdMstInsPrlt = true;
+			}
 			
 			e.preventDefault();
 			jQuery('.menu_cell').contextMenu({x: e.pageX, y: e.pageY});
@@ -949,10 +951,10 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 					<input type="hidden" class="ToDlHandlingId" value="${wdtd?.lHandlingId}" />
  -->
 					<div class="bt_cate_small_pre"></div>
-					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem ${vBtBgReal}">
+					<div class="lrb_Line bt_cate_small menu_cell lwdaSItem ${vBtBgReal}" data-idx="${vCnt}">
 						${lwdar.sItem}
 					</div>
-					<div class="lrb_Line bt_ary_day numeric menu_cell ${vBtBgReal}" id="divBtTblReal_${vCnt}">
+					<div class="lrb_Line bt_ary_day numeric menu_cell ${vBtBgReal}" id="divBtTblReal_${vCnt}" data-idx="${vCnt}">
 						<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 					</div>
 				</li>
@@ -978,13 +980,13 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 	</div>  <!-- divBtSvgReal -->
 	
 	<div id="divBtStkdReal">
-		<div class="title child">
+		<div class="title child menu_cell">
 			${REMAINDER_TYPE_REAL}
 		</div>
 		<div class="child">
 			%{vCnt=0}%
 			#{list items:lWDA_R, as:'lwdar'}
-				<div id="divBtStkdRealEach_${vCnt}">
+				<div id="divBtStkdRealEach_${vCnt}" class="menu_cell" data-idx="${vCnt}">
 					<div>
 						${lwdar.sItem}
 					</div>
@@ -995,13 +997,14 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 	</div>  <!-- divBtStkdReal -->
 	
 	<div id="divBtStkdPrlt">
-		<div class="title child">
+		<div class="title child menu_cell">
 			${REMAINDER_TYPE_PARLLET}
 		</div>
 		<div class="child">
 			%{vCnt=0}%
 			#{list items:lWDA_P, as:'lwdap'}
-				<div id="divBtStkdPrltEach_${vCnt}">
+				%{vMenuCell = lwdap.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}%
+				<div id="divBtStkdPrltEach_${vCnt}" class="${vMenuCell}" data-idx="${vCnt}">
 					<div>
 						${lwdap.sItem}
 					</div>
@@ -1075,10 +1078,10 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
  -->
 					%{vMenuCell = lwdap.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}%
 					<div class="bt_cate_small_pre"></div>
-					<div class="lrb_Line bt_cate_small ${vMenuCell} lwdaSItem ${vBtBgPrlt}">
+					<div class="lrb_Line bt_cate_small ${vMenuCell} lwdaSItem ${vBtBgPrlt}" data-idx="${vCnt}">
 						${lwdap.sItem}
 					</div>
-					<div class="lrb_Line da_ary_day numeric${vMenuCell} ${vBtBgPrlt}" id="divBtTblPrlt_${vCnt}">
+					<div class="lrb_Line da_ary_day numeric${vMenuCell} ${vBtBgPrlt}" id="divBtTblPrlt_${vCnt}" data-idx="${vCnt}">
 						<span class="padR4">${wdtd.lAmount.format('###,###')}</span>
 					</div>
 				</li>
