@@ -270,12 +270,9 @@ jQuery(function() {
 				if (jQuery(this).parents("#divBtTblRealFlm").size() > 0 ||
 						jQuery(this).parents("#divBtStkdReal").size() > 0) {	// 左半分（実残高）のセルである
 					var clsLwdar = aryLwdar[intIdx];
-					if (!jQuery(this).parent("li").hasClass('remBkemInv'))
+					if (!clsLwdar.bolInvFlg)
 						bolDlgFrmUpdRecInsBkem = true;
-					jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
-					if (jqLwdaSItem.children('span').size())
-						jqLwdaSItem = jqLwdaSItem.children('span');
-					strItemNm = jQuery.trim(jqLwdaSItem.text());
+					strItemNm = clsLwdar.strItem;
 					strTypeName = clsLwdar.strTypeNm;
 					lngUpdId = clsLwdar.lngId;
 					
@@ -291,10 +288,7 @@ jQuery(function() {
 						jQuery(this).parents("#divBtStkdPrlt").size() > 0) {	// 右半分（Parllet残高）のセルである
 					var clsLwdap = aryLwdap[intIdx];
 					bolDlgFrmUpdMstUpdPrlt = true;
-					jqLwdaSItem = jQuery(this).hasClass('lwdaSItem') ? jQuery(this) : jQuery(this).prev('.lwdaSItem');
-					if (jqLwdaSItem.children('span').size())
-						jqLwdaSItem = jqLwdaSItem.children('span');
-					strItemNm = jQuery.trim(jqLwdaSItem.text());
+					strItemNm = clsLwdap.strItem;
 					lngUpdId = clsLwdap.lngId;
 					
 					//残高明細（Parllet）へジャンプする際の絞込項目セット
