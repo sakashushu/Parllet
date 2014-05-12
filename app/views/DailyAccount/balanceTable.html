@@ -103,7 +103,9 @@ function ClsLwda (
 		strTypeNm,
 		bolInvFlg,
 		IntHt,
-		lngId
+		lngId,
+		dteToDlDebitDateFr,
+		dteToDlDebitDateTo
 		) {
 	this.strItem = strItem;
 	this.lngAmount = lngAmount;
@@ -111,6 +113,8 @@ function ClsLwda (
 	this.bolInvFlg = bolInvFlg;
 	this.IntHt = IntHt;
 	this.lngId = lngId;
+	this.dteToDlDebitDateFr = dteToDlDebitDateFr;
+	this.dteToDlDebitDateTo = dteToDlDebitDateTo;
 }
 
 jQuery(function() {
@@ -122,7 +126,9 @@ jQuery(function() {
 				"${lwdar.strTypeNm}",
 				${lwdar.bolInvFlg},
 				0,
-				"${lwdar.lstWdtd[0].lHandlingId}");
+				"${lwdar.lstWdtd[0].lHandlingId}",
+				"${lwdar.lstWdtd[0]?.sDebitDateFr}",
+				"${lwdar.lstWdtd[0]?.sDebitDateTo}");
 		aryLwdar[${vCnt}] = clsLwda;
 		intDivBtStkdRealSumAmnt += Math.abs(${lwdar.lstWdtd[0].lAmount});
 		%{vCnt++}%
@@ -140,7 +146,9 @@ jQuery(function() {
 				"${lwdap.strTypeNm}",
 				${lwdap.bolInvFlg},
 				0,
-				"${lwdap.lstWdtd[0].lParlletId}");
+				"${lwdap.lstWdtd[0].lParlletId}",
+				"${lwdap.lstWdtd[0]?.sDebitDateFr}",
+				"${lwdap.lstWdtd[0]?.sDebitDateTo}");
 		aryLwdap[${vCnt}] = clsLwda;
 		intDivBtStkdPrltSumAmnt += Math.abs(${lwdap.lstWdtd[0].lAmount})
 		%{vCnt++}%
@@ -276,12 +284,12 @@ jQuery(function() {
 					strTypeName = clsLwdar.strTypeNm;
 					lngUpdId = clsLwdar.lngId;
 					
-					if (jQuery(this).parent("li").children('.strTypeName').val()!=="${HANDLING_TYPE_CASH}") {
+					if (strTypeName!=="${HANDLING_TYPE_CASH}") {
 						bolDlgFrmUpdMstUpdBkem = true;
 						//残高明細（口座系）へジャンプする際の絞込項目セット
-						jQuery('#hDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
-						jQuery('#hDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
-						jQuery('#hHandlingId').val(jQuery('.lHandlingId', jQuery(this).parent("li")).val());
+						jQuery('#hDebitDateFr').val(clsLwdar.dteToDlDebitDateFr);
+						jQuery('#hDebitDateTo').val(clsLwdar.dteToDlDebitDateTo);
+						jQuery('#hHandlingId').val(clsLwdar.lngId);
 					}
 				}
 				if (jQuery(this).parents("#divBtTblPrltFlm").size() > 0 ||
@@ -292,9 +300,9 @@ jQuery(function() {
 					lngUpdId = clsLwdap.lngId;
 					
 					//残高明細（Parllet）へジャンプする際の絞込項目セット
-					jQuery('#idDlRpHdDebitDateFr').val(jQuery('.ToDlDebitDateFr', jQuery(this).parent("li")).val());
-					jQuery('#idDlRpHdDebitDateTo').val(jQuery('.ToDlDebitDateTo', jQuery(this).parent("li")).val());
-					jQuery('#idDlRpHdParlletId').val(jQuery('.lParlletId', jQuery(this).parent("li")).val());
+					jQuery('#idDlRpHdDebitDateFr').val(clsLwdap.dteToDlDebitDateFr);
+					jQuery('#idDlRpHdDebitDateTo').val(clsLwdap.dteToDlDebitDateTo);
+					jQuery('#idDlRpHdParlletId').val(clsLwdap.lngId);
 				}
 			} else {	// ヘッダーセルである
 				if (jQuery(this).parents("#divBtTblRealFlm").size() > 0 ||
