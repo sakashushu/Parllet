@@ -45,46 +45,13 @@ jQuery(function() {
 });
 	
 /* dialogFrmUpdRecを閉じた時の動作は呼び出し元で行う */
-function whenDialogFrmUpdRecClosed(intRslt, dfurRec) {
-	var strErrMsg = "Common.updateRec";
-	if (dfurRec.id===null) dfurRec.id=undefined;
+function whenDialogFrmUpdRecClosed(intRslt) {
 	switch (intRslt) {
 		case 0:
 			break;
 		case 1:
-			var jqxhrUpdRec = jQuery.post('@{Common.updateRec}', {
-				id: dfurRec.id,
-				payment_date: dfurRec.payment_date,
-				balance_type_mst: dfurRec.balance_type_mst_id,
-				handling_mst: dfurRec.handling_mst_id,
-				parllet_mst: dfurRec.parllet_mst_id,
-				item_mst: dfurRec.item_mst_id,
-				amount: dfurRec.amount,
-				debit_date: dfurRec.debit_date,
-				content: dfurRec.content,
-				store: dfurRec.store,
-				remarks: dfurRec.remarks,
-				secret_remarks: dfurRec.secret_remarks,
-				secret_rec_flg: dfurRec.secret_rec_flg});
-			jqxhrUpdRec
-			.done(function(z) {
-				switch (z.intRslt) {
-					case 0:
-						//画面を再表示
-						location.replace(location.href);
-						break;
-					case 99:
-						alert(z.strErr);
-						break;
-					default:
-						strErrMsg += " result Error";
-						alert(strErrMsg);
-				}
-			})
-			.fail(function() {
-				strErrMsg += " Failed";
-				alert(strErrMsg);
-			});
+			//画面を再表示
+			location.replace(location.href);
 			break;
 		default:
 			alert("dialogFrmUpdMst return value error");
