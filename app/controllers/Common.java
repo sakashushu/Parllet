@@ -717,6 +717,7 @@ public class Common extends Controller {
 		if (validation.hasErrors()) {
 			wr.setIntRslt(99);
 			wr.setStrErr(Messages.get(validation.errors().get(0).message()));
+			wr.setValidation(validation);
 			renderJSON(wr);
 		}
 		// 保存
