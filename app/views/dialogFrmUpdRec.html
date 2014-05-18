@@ -1,6 +1,7 @@
 <script type="text/javascript" src="@{'/public/javascripts/jquery.datepicker.js'}" ></script>
 
 #{include 'subCategory.html' /}
+#{i18n /}
 
 <style>
 <!--
@@ -157,25 +158,20 @@ function openDialogFrmUpdRec(pDfurRec) {
 						case 0:
 							intRslt = 1;
 							jQuery('#dialog-updRec').dialog("close");
-							return;
 							break;
 						case 99:
-							alert(z.strErr);
-							bValid = false;
-							return;
+							var vld = z.validation.errors[0],
+								strKey = vld.key.replace('record.', '');
+							alert(i18n(strKey)+"は"+z.strErr);
 							break;
 						default:
 							strErrMsg += " result Error";
 							alert(strErrMsg);
-							bValid = false;
-							return;
 					}
 				})
 				.fail(function() {
 					strErrMsg += " Failed";
 					alert(strErrMsg);
-					bValid = false;
-					return;
 				});
 			}
 			
@@ -239,7 +235,6 @@ function openDialogFrmUpdRec(pDfurRec) {
 			closeOnEscape: false,
 			buttons: buttons,
 			close: function() {
-//				gDfurRec.payment_date = dfurPayDate.children('input').text();
 				//ダイアログクローズ時の処理は呼び出し元で行う
 				whenDialogFrmUpdRecClosed(intRslt);
 			}
@@ -964,4 +959,3 @@ function whenDialogFrmUpdMstClosedDfur(intRslt, strType, nameVal, zeroHddnChkd) 
 	</fieldset>
 	</form>
 </div>  <!-- dialog-updRec -->
-
