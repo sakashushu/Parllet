@@ -1,5 +1,7 @@
 common.timezone=Asia/Tokyo
 
+common.word1=は
+
 views.genMain.tools.logo.pre1=sakashushu
 views.genMain.tools.logo.pre2=の
 views.genMain.tools.logo=アプリ準備室

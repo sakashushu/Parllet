@@ -67,11 +67,21 @@ function openDialogFrmUpdRec(pDfurRec) {
 			dfurRmrks = jQuery('#dfurRmrks'),
 			title = pDfurRec.id===null ? "&{'views.dialogFrmUpdRec.title.ins'}" : "&{'views.dialogFrmUpdRec.title.upd'}",
 			buttons = {},
-			allFields = jQuery([]).add(dfurPayDate.children('input')),
+			allFields = jQuery([]).add(dfurPayDate.children('input')).add(dfurBType.children('select')).add(dfurHdlg.children('select')).add(dfurPrlt.children('select')).add(dfurItem.children('select')).add(dfurAmnt.children('input')).add(dfurDebDate.children('input')).add(dfurCntnt.children('input')).add(dfurStore.children('input')).add(dfurRmrks.children('textarea')),
 			tips = jQuery(".validateTips"),
 			intRslt = 0,
 			gEditingHdlgFlg = false
-			gEditingPrltFlg = false;
+			gEditingPrltFlg = false,
+			hshRec = {payment_date: dfurPayDate.children('input'),
+					balance_type_mst: dfurBType.children('select'),
+					handling_mst: dfurHdlg.children('select'),
+					parllet_mst: dfurPrlt.children('select'),
+					item_mst: dfurItem.children('select'),
+					amount: dfurAmnt.children('input'),
+					debit_date: dfurDebDate.children('input'),
+					content: dfurCntnt.children('input'),
+					store: dfurStore.children('input'),
+					remarks: dfurRmrks.children('textarea')};
 		
 		gPreBType = '';
 		gPreHdlg = '';
@@ -108,72 +118,73 @@ function openDialogFrmUpdRec(pDfurRec) {
 				return;
 			};
 			
-			if (bValid) {
-				var sel,
-					dtePayDate,
-					lngBTypeId,
-					lngHdlgId,
-					lngPrltId,
-					lngItemId,
-					intAmnt,
-					dteDebDate,
-					strCntnt,
-					strStore,
-					strRmrks;
-				
-				dtePayDate = dfurPayDate.children('input').val();
-				sel = dfurBType.children('select').val();
-				lngBTypeId = (sel==null || sel=="") ? undefined : parseInt(sel);
-				sel = dfurHdlg.children('select').val();
-				lngHdlgId = (sel==null || sel=="") ? undefined : parseInt(sel);
-				sel = dfurPrlt.children('select').val();
-				lngPrltId = (sel==null || sel=="") ? undefined : parseInt(sel);
-				sel = dfurItem.children('select').val();
-				lngItemId = (sel==null || sel=="") ? undefined : parseInt(sel);
-				intAmnt = parseInt(dfurAmnt.children('input').val().replace(/^\s+|\s+$|,/g, ""));	//スペースとカンマを除去してから数値化
-				dteDebDate = dfurDebDate.children('input').val();
-				strCntnt = dfurCntnt.children('input').val();
-				strStore = dfurStore.children('input').val();
-				strRmrks = dfurRmrks.children('textarea').val();
-				
-				var strErrMsg = "Common.updateRec";
-				if (gDfurRec.id===null) gDfurRec.id=undefined;
-				var jqxhrUpdRec = jQuery.post('@{Common.updateRec}', {
-					id: gDfurRec.id,
-					payment_date: dtePayDate,
-					balance_type_mst: lngBTypeId,
-					handling_mst: lngHdlgId,
-					parllet_mst: lngPrltId,
-					item_mst: lngItemId,
-					amount: intAmnt,
-					debit_date: dteDebDate,
-					content: strCntnt,
-					store: strStore,
-					remarks: strRmrks,
-					secret_remarks: gDfurRec.secret_remarks,
-					secret_rec_flg: gDfurRec.secret_rec_flg});
-				jqxhrUpdRec
-				.done(function(z) {
-					switch (z.intRslt) {
-						case 0:
-							intRslt = 1;
-							jQuery('#dialog-updRec').dialog("close");
-							break;
-						case 99:
-							var vld = z.validation.errors[0],
-								strKey = vld.key.replace('record.', '');
-							alert(i18n(strKey)+"は"+z.strErr);
-							break;
-						default:
-							strErrMsg += " result Error";
-							alert(strErrMsg);
-					}
-				})
-				.fail(function() {
-					strErrMsg += " Failed";
-					alert(strErrMsg);
-				});
-			}
+			var sel,
+				dtePayDate,
+				lngBTypeId,
+				lngHdlgId,
+				lngPrltId,
+				lngItemId,
+				intAmnt,
+				dteDebDate,
+				strCntnt,
+				strStore,
+				strRmrks;
+			
+			dtePayDate = dfurPayDate.children('input').val();
+			sel = dfurBType.children('select').val();
+			lngBTypeId = (sel==null || sel=="") ? undefined : parseInt(sel);
+			sel = dfurHdlg.children('select').val();
+			lngHdlgId = (sel==null || sel=="") ? undefined : parseInt(sel);
+			sel = dfurPrlt.children('select').val();
+			lngPrltId = (sel==null || sel=="") ? undefined : parseInt(sel);
+			sel = dfurItem.children('select').val();
+			lngItemId = (sel==null || sel=="") ? undefined : parseInt(sel);
+			intAmnt = parseInt(dfurAmnt.children('input').val().replace(/^\s+|\s+$|,/g, ""));	//スペースとカンマを除去してから数値化
+			dteDebDate = dfurDebDate.children('input').val();
+			strCntnt = dfurCntnt.children('input').val();
+			strStore = dfurStore.children('input').val();
+			strRmrks = dfurRmrks.children('textarea').val();
+			
+			var strErrMsg = "Common.updateRec";
+			if (gDfurRec.id===null) gDfurRec.id=undefined;
+			var jqxhrUpdRec = jQuery.post('@{Common.updateRec}', {
+				id: gDfurRec.id,
+				payment_date: dtePayDate,
+				balance_type_mst: lngBTypeId,
+				handling_mst: lngHdlgId,
+				parllet_mst: lngPrltId,
+				item_mst: lngItemId,
+				amount: intAmnt,
+				debit_date: dteDebDate,
+				content: strCntnt,
+				store: strStore,
+				remarks: strRmrks,
+				secret_remarks: gDfurRec.secret_remarks,
+				secret_rec_flg: gDfurRec.secret_rec_flg});
+			jqxhrUpdRec
+			.done(function(z) {
+				switch (z.intRslt) {
+					case 0:
+						intRslt = 1;
+						jQuery('#dialog-updRec').dialog("close");
+						break;
+					case 99:
+						var vld = z.validation.errors[0],
+							strKey = vld.key.replace('record.', '');
+						errValidateTable(hshRec[strKey], i18n(strKey)+"&{'common.word1'}"+z.strErr);
+						jQuery('body,html').animate({
+							scrollTop: jQuery('#validateTips').offset().top
+						}, 1000);
+						break;
+					default:
+						strErrMsg += " result Error";
+						alert(strErrMsg);
+				}
+			})
+			.fail(function() {
+				strErrMsg += " Failed";
+				alert(strErrMsg);
+			});
 			
 		}
 		buttons["&{'views.common.btn.cancel'}"] = function() {
