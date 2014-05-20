@@ -1986,6 +1986,128 @@ input.numeric {
 	z-index: 9999;
 }
 
+
+
+/* 共通のスタイル */
+body {
+	min-width: 0;
+}
+#hdContainer, #main, #divIdxHd, #btHeader, #daHeader, #dlHeader, #cfHeader, #ftContents {
+	width: 95%;
+}
+#dlMain, #dlFooter, #dl_tblFrameFt, #configListPagination, #frmDlBalance, #frmDlRemainder, #cfMain {
+	width: 100%;
+}
+#hdContainer, #main, #divIdxHd, #btHeader, #daHeader, #dlHeader, #dlMain, #dlFooter, #cfHeader, #cfMain, #ftContents {
+	max-width: 980px;
+}
+#dl_tblFrameFt, #frmDlBalance, #frmDlRemainder {
+	max-width: 960px;
+}
+#configListPagination {
+	max-width: 948px;
+}
+#sidebar_r, #logo_index {
+	float: none;
+	margin: 0 auto;
+}
+#logo_index {
+	max-width: 472px;
+}
+#divIdxHd {
+	overflow: hidden;
+}
+#mainInner {
+	overflow-x: auto;
+}
+
+
+/* スマホのスタイル */
+#headerNav {
+	display: none;
+}
+#divIdxHd ul li {
+	padding-right: 0;
+}
+#divIdxCntntTopic1 {
+	font-size: 24pt;
+}
+#spnWebHA {
+	font-size: 30pt;
+}
+#username-field label, #password-field label {
+	float: none;
+	width: 100%;
+	text-align: left;
+}
+#username-field div, #password-field div {
+	width: 170px;
+	margin: 0 auto;
+}
+.memberMenu {
+	display: none;
+}
+.tbMemberMenu {
+    display: block;
+}
+
+
+/* タブレットのスタイル */
+@media all and (min-width: 480px) {
+	#headerNav {
+ 		display: block;
+	}
+	#divIdxHd ul li {
+		padding-right: 1em;
+	}
+	#username-field label, #password-field label {
+		float: left;
+		width: 120px;
+		text-align: right;
+	}
+	#username-field div, #password-field div {
+		width: 100%;
+	}
+}
+
+
+/* PCのスタイル */
+@media all and (min-width: 768px) {
+	#divIdxCntntTopic1 {
+		font-size: 42pt;
+	}
+	#spnWebHA {
+		font-size: 52pt;
+	}
+	.memberMenu {
+		display: block;
+	}
+	.tbMemberMenu {
+	    display: none;
+	}
+}
+
+
+/* カスタマイズスタイル（960px以上） */
+@media all and (min-width: 960px) {
+	#logo_index {
+		float: left;
+	}
+	#sidebar_r {
+		float: right;
+	}
+	#divIdxCntntTopic1 {
+		font-size: 52pt;
+	}
+	#spnWebHA {
+		font-size: 64pt;
+	}
+}
+
+
+
+
+
 //.btBgReal0 {
 //	background: #7fbfff;
 //}
