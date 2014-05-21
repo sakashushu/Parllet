@@ -2050,6 +2050,9 @@ body {
 .tbMemberMenu {
     display: block;
 }
+#divBtTblRealFlm, #divBtSvgReal, #divBtTblPrltFlm, #divBtSvgPrlt {
+	display: none;
+}
 
 
 /* タブレットのスタイル */
@@ -2067,6 +2070,9 @@ body {
 	}
 	#username-field div, #password-field div {
 		width: 100%;
+	}
+	#divBtTblRealFlm, #divBtSvgReal, #divBtTblPrltFlm, #divBtSvgPrlt {
+		display: block;
 	}
 }
 
