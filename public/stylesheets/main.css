@@ -1432,7 +1432,7 @@ fieldset {
 }
 
 .bt_cate_small {
-//	width: 150px;
+	width: 170px;
 }
 .bt_cate_small span {
 	display: none;
@@ -2050,8 +2050,11 @@ body {
 .tbMemberMenu {
     display: block;
 }
-#divBtTblRealFlm, #divBtSvgReal, #divBtTblPrltFlm, #divBtSvgPrlt {
+#divBtSvgReal, #divBtSvgPrlt {
 	display: none;
+}
+#divBtTblRealFlm, #divBtTblPrltFlm, .bt_cate_large, .bt_ary_day, .bt_cate_small {
+	width: 0;
 }
 
 
@@ -2071,8 +2074,20 @@ body {
 	#username-field div, #password-field div {
 		width: 100%;
 	}
-	#divBtTblRealFlm, #divBtSvgReal, #divBtTblPrltFlm, #divBtSvgPrlt {
+	#divBtSvgReal, #divBtSvgPrlt {
 		display: block;
+	}
+	#divBtTblRealFlm, #divBtTblPrltFlm {
+		width: 292px;
+	}
+	.bt_cate_large {
+		width: 190px;
+	}
+	.bt_ary_day {
+		width: 99px;
+	}
+	.bt_cate_small {
+		width: 170px;
 	}
 }
 
