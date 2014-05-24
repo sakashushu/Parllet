@@ -471,7 +471,7 @@ a.aBtn:hover span {
 }
 
 .btMainInner {
-	width: 980px;
+//	width: 980px;
 //	background: #f2e4c3;
 //	background: #f4e9cf;
 //	background: #f6edd8;
@@ -1309,7 +1309,7 @@ fieldset {
 #btRemTotal {
 	margin-left: auto;
 	margin-right: auto;
-	width: 920px;
+//	width: 920px;
 	font-size: 150%;
 	background: white;
 }
@@ -1324,7 +1324,7 @@ fieldset {
 	display: table-cell;
 	vertical-align: middle;
 	white-space: nowrap;
-	width: 459px;
+//	width: 459px;
 	height: 40px;
 }
 
@@ -2056,6 +2056,18 @@ body {
 #divBtTblRealFlm, #divBtTblPrltFlm, .bt_cate_large, .bt_ary_day, .bt_cate_small {
 	width: 0;
 }
+.btMainInner, #btRemTotal {
+	width: 100%;
+}
+#btRemTotal ul, #btRemTotal li {
+	width: 100%;
+}
+#btRemTotal li {
+	display: table-row;
+}
+#btRemTotal li div {
+	width: 50%;
+}
 
 
 /* タブレットのスタイル */
@@ -2088,6 +2100,15 @@ body {
 	}
 	.bt_cate_small {
 		width: 170px;
+	}
+	.btMainInner {
+		width: 980px;
+	}
+	#btRemTotal {
+		width: 920px;
+	}
+	#btRemTotal li div {
+		width: 459px;
 	}
 }
 
