@@ -1300,10 +1300,8 @@ fieldset {
 #btBasisDate {
 	font-weight: bold;
 	padding-top: 20px;
-//	padding-left: 200px;
-//	padding-bottom: 10px;
 	text-align: center;
-	height: 40px;
+	height: 60px;
 }
 
 #btRemTotal {
@@ -1367,8 +1365,8 @@ fieldset {
 	vertical-align: middle;
 }
 #divBtStkdReal .title, #divBtStkdPrlt .title {
-	height: 26px;
-	line-height: 26px;
+	height: 27px;
+	line-height: 27px;
 	background: white;
 	border-top: 1px solid #aaa;
 }
@@ -1418,22 +1416,15 @@ fieldset {
 
 .bt_tbl_each li div {
 	display: table-cell;
-	height: 26px;
+	height: 27px;
 	vertical-align: middle;
 	white-space: nowrap;
-}
-
-.bt_cate_large {
-	width: 190px;
 }
 
 .bt_cate_small_pre {
 	width: 20px;
 }
 
-.bt_cate_small {
-	width: 170px;
-}
 .bt_cate_small span {
 	display: none;
 	padding: 5px;
@@ -1444,10 +1435,6 @@ fieldset {
 .bt_cate_small:hover span{
 	display: inline;
 	position: absolute;
-}
-
-.bt_ary_day {
-	width: 99px;
 }
 
 .bt_midChrt {
@@ -2096,13 +2083,13 @@ body {
 		width: 292px;
 	}
 	.bt_cate_large {
-		width: 190px;
+		width: 192px;
 	}
 	.bt_ary_day {
-		width: 99px;
+		width: 100px;
 	}
 	.bt_cate_small {
-		width: 170px;
+		width: 171px;
 	}
 	.btMainInner {
 		width: 980px;
