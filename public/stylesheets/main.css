@@ -2058,6 +2058,9 @@ body {
 #bt_tbl_flm {
 	width: 100%;
 }
+#divBtStkdReal, #divBtStkdPrlt {
+	width: 50%;
+}
 
 
 /* タブレットのスタイル */
@@ -2102,6 +2105,9 @@ body {
 	}
 	#bt_tbl_flm {
 		width: 920px;
+	}
+	#divBtStkdReal, #divBtStkdPrlt {
+		width: auto;
 	}
 }
 
