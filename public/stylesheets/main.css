@@ -2007,6 +2007,14 @@ body {
 #mainInner {
 	overflow-x: auto;
 }
+#divBtStkdReal > .child {
+	width: 100%;
+	display: table;
+}
+#divBtStkdReal > .child > div {
+	width: 100%;
+	display: table-row;
+}
 
 
 /* スマホのスタイル */
@@ -2061,6 +2069,12 @@ body {
 #divBtStkdReal, #divBtStkdPrlt {
 	width: 50%;
 }
+#divBtStkdReal > .child > div > div:first-child {
+	width: 60%;
+}
+#divBtStkdReal > .child > div > div:nth-child(2) {
+	width: 40%;
+}
 
 
 /* タブレットのスタイル */
@@ -2108,6 +2122,12 @@ body {
 	}
 	#divBtStkdReal, #divBtStkdPrlt {
 		width: auto;
+	}
+	#divBtStkdReal > .child > div > div:first-child {
+		width: 116px;
+	}
+	#divBtStkdReal > .child > div > div:nth-child(2) {
+		display: none;
 	}
 }
 
