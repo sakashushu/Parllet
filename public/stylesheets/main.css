@@ -2007,11 +2007,11 @@ body {
 #mainInner {
 	overflow-x: auto;
 }
-#divBtStkdReal > .child:nth-child(2) {
+#divBtStkdReal > .child:nth-child(2), #divBtStkdPrlt > .child:nth-child(2) {
 	width: 100%;
 	display: table;
 }
-#divBtStkdReal > .child > div {
+#divBtStkdReal > .child > div, #divBtStkdPrlt > .child > div {
 	width: 100%;
 	display: table-row;
 }
@@ -2069,11 +2069,13 @@ body {
 #divBtStkdReal, #divBtStkdPrlt {
 	width: 50%;
 }
-#divBtStkdReal > .child > div > div:first-child {
+#divBtStkdReal > .child > div > div:first-child, #divBtStkdPrlt > .child > div > div:first-child {
 	width: 60%;
 }
-#divBtStkdReal > .child > div > div:nth-child(2) {
+#divBtStkdReal > .child > div > div:nth-child(2), #divBtStkdPrlt > .child > div > div:nth-child(2) {
 	width: 40%;
+	text-align: right;
+	padding-right: 4px;
 }
 
 
@@ -2123,10 +2125,10 @@ body {
 	#divBtStkdReal, #divBtStkdPrlt {
 		width: auto;
 	}
-	#divBtStkdReal > .child > div > div:first-child {
+	#divBtStkdReal > .child > div > div:first-child, #divBtStkdPrlt > .child > div > div:first-child {
 		width: 116px;
 	}
-	#divBtStkdReal > .child > div > div:nth-child(2) {
+	#divBtStkdReal > .child > div > div:nth-child(2), #divBtStkdPrlt > .child > div > div:nth-child(2) {
 		display: none;
 	}
 }
