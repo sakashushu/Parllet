@@ -1976,8 +1976,8 @@ input.numeric {
 
 
 /* 共通のスタイル */
-body {
-	min-width: 0;
+body, #header {
+	min-width: 320px;
 }
 #hdContainer, #main, #divIdxHd, #btHeader, #daHeader, #dlHeader, #cfHeader, #ftContents {
 	width: 95%;
