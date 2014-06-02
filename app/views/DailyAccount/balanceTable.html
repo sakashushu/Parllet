@@ -522,10 +522,10 @@ function dspDivBtStkdRealEach() {
 		if (!((jQuery('.remBkemZero').hasClass('invisible') && aryLwdar[i].lngAmount===0) ||
 				(jQuery('.remBkemInv').hasClass('invisible2') && aryLwdar[i].bolInvFlg))) {
 			aryIntHt[i] += intMinHt;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
-			jQuery("#divBtStkdRealEach_"+i+" > div").css('border-bottom', '1px solid #aaa');
+			jQuery("#divBtStkdRealEach_"+i+" > div").css('border-bottom', '1px solid #aaa').removeClass('invisible');
 			jQuery("#divBtStkdRealEach_"+i+" > div:nth-child(2)").css('border-left', '1px solid #aaa');
 		} else {
-			jQuery("#divBtStkdRealEach_"+i+" > div").css('border-bottom', '0');
+			jQuery("#divBtStkdRealEach_"+i+" > div").css('border-bottom', '0').addClass('invisible');
 			jQuery("#divBtStkdRealEach_"+i+" > div:nth-child(2)").css('border-left', '0');
 		}
 		intSumHt += intHt;
@@ -578,10 +578,10 @@ function dspDivBtStkdPrltEach() {
 		aryIntHt[i] = intHt;
 		if (!(jQuery('.remPrltZero').hasClass('invisible') && aryLwdap[i].lngAmount===0)) {
 			aryIntHt[i] += intMinHt;	//真ん中部分の最低高さ(＝左右端部分のセルの高さ)をここで足す
-			jQuery("#divBtStkdPrltEach_"+i+" > div").css('border-bottom', '1px solid #aaa');
+			jQuery("#divBtStkdPrltEach_"+i+" > div").css('border-bottom', '1px solid #aaa').removeClass('invisible');
 			jQuery("#divBtStkdPrltEach_"+i+" > div:nth-child(2)").css('border-left', '1px solid #aaa');
 		} else {
-			jQuery("#divBtStkdPrltEach_"+i+" > div").css('border-bottom', '0');
+			jQuery("#divBtStkdPrltEach_"+i+" > div").css('border-bottom', '0').addClass('invisible');
 			jQuery("#divBtStkdPrltEach_"+i+" > div:nth-child(2)").css('border-left', '0');
 		}
 		intSumHt += intHt;

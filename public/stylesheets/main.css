@@ -2015,6 +2015,9 @@ body, #header {
 	width: 100%;
 	display: table-row;
 }
+#divBtStkdReal > .child > div > div.invisible, #divBtStkdPrlt > .child > div > div.invisible {
+	display: none;
+}
 
 
 /* スマホのスタイル */
