@@ -491,8 +491,8 @@ function dspBtStkd() {
 	
 	// セルの(ボーダーの高さ＋最低高さ(＝左右端部分のセルの高さ))×セル数を予め引いておく
 	intMinHt = jQuery('.bt_tbl_each li div').height();	// 真ん中部分の最低高さ(＝左右端部分のセルの高さ)
-	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSizeDsp*(1+intMinHt);
-	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSizeDsp*(1+intMinHt);
+	intDivBtStkdHtReal = intDivBtStkdHt-intLwdaRealSizeDsp*(intMinHt);
+	intDivBtStkdHtPrlt = intDivBtStkdHt-intLwdaPrltSizeDsp*(intMinHt);
 	
 	dspDivBtStkdRealEach();
 	dspDivBtStkdPrltEach();
@@ -543,7 +543,6 @@ function dspDivBtStkdRealEach() {
 			}
 		}
 		jQuery("#divBtStkdRealEach_"+i).css('height', aryIntHt[i]+'px');
-		jQuery("#divBtStkdRealEach_"+i).children('div').height(aryIntHt[i]);
 	}
 	
 	
@@ -551,7 +550,6 @@ function dspDivBtStkdRealEach() {
 	if (anyHtExistFlg) {
 		aryIntHt[intMaxHtIdx] += intDivBtStkdHtReal-intSumHt;
 		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx]);
-		jQuery("#divBtStkdRealEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx]);
 	}
 }
 
@@ -599,14 +597,12 @@ function dspDivBtStkdPrltEach() {
 			}
 		}
 		jQuery("#divBtStkdPrltEach_"+i).css('height', aryIntHt[i]+'px');
-		jQuery("#divBtStkdPrltEach_"+i).children('div').height(aryIntHt[i]);
 	}
 	
 	// 誤差を最大幅のセルに寄せる
 	if (anyHtExistFlg) {
 		aryIntHt[intMaxHtIdx] += intDivBtStkdHtPrlt-intSumHt;
 		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).height(aryIntHt[intMaxHtIdx]);
-		jQuery("#divBtStkdPrltEach_"+intMaxHtIdx).children('div').height(aryIntHt[intMaxHtIdx]);
 	}
 }
 
