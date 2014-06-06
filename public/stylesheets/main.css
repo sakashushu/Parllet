@@ -1353,6 +1353,7 @@ fieldset {
 }
 #divBtStkdReal .child, #divBtStkdPrlt .child {
 	border-left: 1px solid #aaa;
+	table-layout: fixed;
 }
 #divBtStkdReal .child>div, #divBtStkdPrlt .child>div {
 	overflow: hidden;
@@ -1363,6 +1364,11 @@ fieldset {
 	text-align: center;
 	display: table-cell;
 	vertical-align: middle;
+	text-overflow: ellipsis;
+	-webkit-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 #divBtStkdReal .title, #divBtStkdPrlt .title {
 	height: 27px;
