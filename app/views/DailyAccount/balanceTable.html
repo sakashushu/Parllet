@@ -1,6 +1,9 @@
 #{extends 'main.html' /}
 #{set title:messages.get('views.dailyaccount.balancetable') /}
 
+<link rel="stylesheet" href="@{'/public/stylesheets/tooltip.css'}">
+<script type="text/javascript" src="@{'/public/javascripts/tooltip.js'}" ></script>
+
 %{
 	REMAINDER_TYPE_TOTAL = messages.get('RemainderType.total')
 	REMAINDER_TYPE_REAL = messages.get('RemainderType.real')
@@ -970,7 +973,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 			%{vCnt=0}%
 			#{list items:lWDA_R, as:'lwdar'}
 				<div id="divBtStkdRealEach_${vCnt}" class="menu_cell" data-idx="${vCnt}">
-					<div>
+					<div title="${lwdar.sItem}" rel="tooltip">
 						${lwdar.sItem}
 					</div>
 					<div>
@@ -991,7 +994,7 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 			#{list items:lWDA_P, as:'lwdap'}
 				%{vMenuCell = lwdap.sItem==REMAINDER_TYPE_NOT_PARLLET ? '' : ' menu_cell'}%
 				<div id="divBtStkdPrltEach_${vCnt}" class="${vMenuCell}" data-idx="${vCnt}">
-					<div>
+					<div title="${lwdap.sItem}" rel="tooltip">
 						${lwdap.sItem}
 					</div>
 					<div>

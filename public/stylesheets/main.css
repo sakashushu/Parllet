@@ -1367,6 +1367,7 @@ fieldset {
 	text-overflow: ellipsis;
 	-webkit-text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
+	-moz-text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
 }
