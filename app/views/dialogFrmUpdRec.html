@@ -65,9 +65,10 @@ function openDialogFrmUpdRec(pDfurRec) {
 			dfurCntnt = jQuery('#dfurCntnt'),
 			dfurStore = jQuery('#dfurStore'),
 			dfurRmrks = jQuery('#dfurRmrks'),
+			dfurSecretRmrks = jQuery('#dfurSecretRmrks'),
 			title = pDfurRec.id===null ? "&{'views.dialogFrmUpdRec.title.ins'}" : "&{'views.dialogFrmUpdRec.title.upd'}",
 			buttons = {},
-			allFields = jQuery([]).add(dfurPayDate.children('input')).add(dfurBType.children('select')).add(dfurHdlg.children('select')).add(dfurPrlt.children('select')).add(dfurItem.children('select')).add(dfurAmnt.children('input')).add(dfurDebDate.children('input')).add(dfurCntnt.children('input')).add(dfurStore.children('input')).add(dfurRmrks.children('textarea')),
+			allFields = jQuery([]).add(dfurPayDate.children('input')).add(dfurBType.children('select')).add(dfurHdlg.children('select')).add(dfurPrlt.children('select')).add(dfurItem.children('select')).add(dfurAmnt.children('input')).add(dfurDebDate.children('input')).add(dfurCntnt.children('input')).add(dfurStore.children('input')).add(dfurRmrks.children('textarea')).add(dfurSecretRmrks.children('textarea')),
 			tips = jQuery(".validateTips"),
 			intRslt = 0,
 			gEditingHdlgFlg = false
@@ -81,7 +82,8 @@ function openDialogFrmUpdRec(pDfurRec) {
 					debit_date: dfurDebDate.children('input'),
 					content: dfurCntnt.children('input'),
 					store: dfurStore.children('input'),
-					remarks: dfurRmrks.children('textarea')};
+					remarks: dfurRmrks.children('textarea'),
+					secret_remarks: dfurSecretRmrks.children('textarea')};
 		
 		gPreBType = '';
 		gPreHdlg = '';
@@ -128,7 +130,8 @@ function openDialogFrmUpdRec(pDfurRec) {
 				dteDebDate,
 				strCntnt,
 				strStore,
-				strRmrks;
+				strRmrks,
+				strSecRmrks;
 			
 			dtePayDate = dfurPayDate.children('input').val();
 			sel = dfurBType.children('select').val();
@@ -144,6 +147,7 @@ function openDialogFrmUpdRec(pDfurRec) {
 			strCntnt = dfurCntnt.children('input').val();
 			strStore = dfurStore.children('input').val();
 			strRmrks = dfurRmrks.children('textarea').val();
+			strSecRmrks = dfurSecretRmrks.children('textarea').val();
 			
 			var strErrMsg = "Common.updateRec";
 			if (gDfurRec.id===null) gDfurRec.id=undefined;
@@ -159,7 +163,7 @@ function openDialogFrmUpdRec(pDfurRec) {
 				content: strCntnt,
 				store: strStore,
 				remarks: strRmrks,
-				secret_remarks: gDfurRec.secret_remarks,
+				secret_remarks: strSecRmrks,
 				secret_rec_flg: gDfurRec.secret_rec_flg});
 			jqxhrUpdRec
 			.done(function(z) {
@@ -228,6 +232,7 @@ function openDialogFrmUpdRec(pDfurRec) {
 			chgElem(dfurCntnt, gDfurRec.content, 'input', dfurDebDate);
 			chgElem(dfurStore, gDfurRec.store, 'input', dfurCntnt);
 			chgElem(dfurRmrks, gDfurRec.remarks, 'textarea', dfurStore);
+			chgElem(dfurSecretRmrks, gDfurRec.secret_remarks, 'textarea', dfurRmrks);
 			
 			dfurItem.children('label').css('clear', 'both');
 			dfurStore.children('label').css('clear', 'both');
@@ -482,7 +487,8 @@ function DfurRec(
 		debit_date,
 		content,
 		store,
-		remarks
+		remarks,
+		secret_remarks
 		) {
 	this.id = id;
 	this.payment_date = payment_date;
@@ -495,6 +501,7 @@ function DfurRec(
 	this.content = content;
 	this.store = store;
 	this.remarks = remarks;
+	this.secret_remarks = secret_remarks;
 }
 function DfurFlgVal(flg, val, modifiable) {
 	this.flg = flg;
@@ -967,6 +974,13 @@ function whenDialogFrmUpdMstClosedDfur(intRslt, strType, nameVal, zeroHddnChkd) 
 			<a class="ui-widget-content editable" tabindex="0"></a>
 			<textarea class="ui-widget-content"></textarea>
 		</div>
+		#{secure.check 'admin'}
+		<div id="dfurSecretRmrks" class="dfurElem">
+			<label class="editable">&{'secret_remarks'}:</label>
+			<a class="ui-widget-content editable" tabindex="0"></a>
+			<textarea class="ui-widget-content"></textarea>
+		</div>
+		#{/secure.check}
 	</fieldset>
 	</form>
 </div>  <!-- dialog-updRec -->

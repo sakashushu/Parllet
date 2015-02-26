@@ -2081,6 +2081,7 @@ body, #header {
 }
 #divBtStkdReal > .child > div > div:first-child, #divBtStkdPrlt > .child > div > div:first-child {
 	width: 60%;
+	max-width: 94px;
 }
 #divBtStkdReal > .child > div > div:nth-child(2), #divBtStkdPrlt > .child > div > div:nth-child(2) {
 	width: 40%;
@@ -2135,8 +2136,12 @@ body, #header {
 	#divBtStkdReal, #divBtStkdPrlt {
 		width: auto;
 	}
+	#divBtStkdReal > .child:nth-child(2), #divBtStkdPrlt > .child:nth-child(2) {
+		width: auto;
+	}
 	#divBtStkdReal > .child > div > div:first-child, #divBtStkdPrlt > .child > div > div:first-child {
 		width: 116px;
+		max-width: 116px;
 	}
 	#divBtStkdReal > .child > div > div:nth-child(2), #divBtStkdPrlt > .child > div > div:nth-child(2) {
 		display: none;

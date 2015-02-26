@@ -14,6 +14,7 @@ jQuery(function() {
 			dfurFvCntnt = new DfurFlgVal(false, "", true),
 			dfurFvStore = new DfurFlgVal(false, "", true),
 			dfurFvRmrks = new DfurFlgVal(false, "", true),
+			dfurFvSecRmrks = new DfurFlgVal(false, "", true),
 			dfurRec = new DfurRec(
 				null,
 				dfurFvPayDate,
@@ -25,7 +26,8 @@ jQuery(function() {
 				dfurFvDebDate,
 				dfurFvCntnt,
 				dfurFvStore,
-				dfurFvRmrks);
+				dfurFvRmrks,
+				dfurFvSecRmrks);
 		//家計簿入力フォームを開く
 		openDialogFrmUpdRec(dfurRec);
 		

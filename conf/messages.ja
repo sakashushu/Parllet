@@ -317,7 +317,8 @@ PrltType.prlt=Parllet
 RemainderType.total=残高合計
 RemainderType.real=実際の残高
 RemainderType.parllet=Parlletの残高
-RemainderType.not_parllet=Parlletに入れてないお金
+#RemainderType.not_parllet=Parlletに入れてないお金
+RemainderType.not_parllet=Parllet未入
 
 
 # 引落月(DebitMonth)

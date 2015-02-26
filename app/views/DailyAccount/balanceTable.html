@@ -317,6 +317,7 @@ jQuery(function() {
 							dfurFvCntnt = new DfurFlgVal(false, "", true),
 							dfurFvStore = new DfurFlgVal(false, "", true),
 							dfurFvRmrks = new DfurFlgVal(false, "", true),
+							dfurFvSecRmrks = new DfurFlgVal(false, "", true),
 							dfurRec = new DfurRec(
 								null,
 								dfurFvPayDate,
@@ -328,7 +329,8 @@ jQuery(function() {
 								dfurFvDebDate,
 								dfurFvCntnt,
 								dfurFvStore,
-								dfurFvRmrks);
+								dfurFvRmrks,
+								dfurFvSecRmrks);
 						//家計簿入力フォームを開く
 						openDialogFrmUpdRec(dfurRec);
 					}
@@ -343,6 +345,7 @@ jQuery(function() {
 							dfurFvCntnt = new DfurFlgVal(false, "", true),
 							dfurFvStore = new DfurFlgVal(false, "", true),
 							dfurFvRmrks = new DfurFlgVal(false, "", true),
+							dfurFvSecRmrks = new DfurFlgVal(false, "", true),
 							dfurRec = new DfurRec(
 								null,
 								dfurFvPayDate,
@@ -354,7 +357,8 @@ jQuery(function() {
 								dfurFvDebDate,
 								dfurFvCntnt,
 								dfurFvStore,
-								dfurFvRmrks);
+								dfurFvRmrks,
+								dfurFvSecRmrks);
 						//家計簿入力フォームを開く
 						openDialogFrmUpdRec(dfurRec);
 					}
@@ -973,6 +977,9 @@ function whenDialogFrmUpdMstClosedBt(intRslt, strType, nameVal, zeroHddnChkd, in
 			%{vCnt=0}%
 			#{list items:lWDA_R, as:'lwdar'}
 				<div id="divBtStkdRealEach_${vCnt}" class="menu_cell" data-idx="${vCnt}">
+				  #{if lwdap.sItem!=REMAINDER_TYPE_NOT_PARLLET &&
+				  		lwdap.lstWdtd[0].lAmount==0}
+				  #{/if}
 					<div title="${lwdar.sItem}" rel="tooltip">
 						${lwdar.sItem}
 					</div>
