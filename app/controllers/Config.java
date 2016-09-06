@@ -312,7 +312,9 @@ public class Config extends Controller {
 		
 		//明細行
 //		List<Record> records = Record.find(" payment_date between '" + down_date_fr + "' and '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
-		List<Record> records = Record.find(" payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+//		List<Record> records = Record.find(" payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ").fetch();
+		HaUser hU = (HaUser)renderArgs.get("haUser");
+		List<Record> records = Record.find("ha_user = ? and payment_date >= '" + down_date_fr + "' and payment_date < '" + down_date_to + "' order by payment_date, amount, balance_type_mst, handling_mst, parllet_mst, item_mst, content, store, remarks, secret_remarks ", hU).fetch();
 		for(Record rec : records) {
 			iCnt = 0;
 			
