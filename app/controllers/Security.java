@@ -132,7 +132,8 @@ public class Security extends Secure.Security {
 	 * セッションに保持する値の初期化
 	 */
 	void initializeSessionValue() {
-		session.put("actionMode", "View");		//actionModeは閲覧モード
+//		session.put("actionMode", "View");		//actionModeは閲覧モード
+		session.put("actionMode", "Edit");		//actionModeは編集モード
 		session.put("detailMode", "Balance");	//detailModeは収支モード
 	}
 	
